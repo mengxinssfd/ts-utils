@@ -1,0 +1,142 @@
+declare const Promise: any;
+declare const Object: any;
+declare const Number: any;
+declare const Array: any;
+
+/**
+ * 防抖函数
+ * @param callback 回调
+ * @param delay 延时
+ * @returns {Function}
+ */
+export function debounce(callback, delay: number) {
+    let timer: any = null;
+    return function (...args) {
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+        timer = setTimeout(() => {
+            timer = null;
+            callback.apply(this, args);
+        }, delay);
+    };
+}
+
+
+// 对象深拷贝办法
+export function deepCopy(obj: any): any {
+    let result: [] | any = Array.isArray(obj) ? [] : {};
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (typeof obj[key] === 'object') {
+                result[key] = deepCopy(obj[key]);   //递归复制
+            } else {
+                result[key] = obj[key];
+            }
+        }
+    }
+    return result;
+}
+
+
+/**
+ * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
+ * @param formatStr
+ * @returns String
+ */
+export function formatDate(formatStr: string): string {
+    let o: any = {
+        "M+": this.getMonth() + 1,                    //月份
+        "d+": this.getDate(),                         //日
+        "h+": this.getHours(),                        //小时
+        "m+": this.getMinutes(),                      //分
+        "s+": this.getSeconds(),                      //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3),  //季度
+        "S": this.getMilliseconds(),                   //毫秒
+    };
+    if (/(y+)/.test(formatStr)) {
+        formatStr = formatStr.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    for (let k in o) {
+        if (new RegExp("(" + k + ")").test(formatStr)) {
+            formatStr = formatStr.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+    }
+    return formatStr;
+}
+
+// 获取小数点后面数字的长度
+export function getNumberLenAfterDot(num: number | string): number {
+    num = Number(num);
+    if (Number.isNaN(num)) return 0;
+    let item = String(num).split(".")[1];
+    return item ? item.length : 0;
+}
+
+function getPow(a: number | string, b: number | string): number {
+    a = Number(a);
+    b = Number(b);
+    if (Number.isNaN(a) || Number.isNaN(b)) return 1;
+    let aLen = getNumberLenAfterDot(a);
+    let bLen = getNumberLenAfterDot(b);
+    return Math.pow(10, Math.max(aLen, bLen));
+}
+
+// 小数运算 小数位不能太长，整数位不能太大
+export const FloatCalc = {
+    add(a: number, b: number): number {
+        let pow = getPow(a, b);
+        return (a * pow + b * pow) / pow;
+    },
+    minus(a: number, b: number): number {
+        let pow = getPow(a, b);
+        return (a * pow - b * pow) / pow;
+    },
+    mul(a: number, b: number): number {
+        let pow = getPow(a, b);
+        return pow * a * (b * pow) / (pow * pow);
+    },
+    division(a: number, b: number): number {
+        let pow = getPow(a, b);
+        return a * pow / (b * pow);
+    },
+};
+
+// 获取数据类型
+Object.typeOf = function (target: any): string {
+    if (typeof target !== 'object') return typeof target;
+    return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
+};
+
+
+// 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
+export function isEmpty(target: any): boolean {
+    if ([undefined, null, "", NaN].includes(target)) return true;
+    switch (Object.typeOf(target)) {
+        case "array":
+            if (!target.length) return true;
+            break;
+        case "object":
+            if (JSON.stringify(target) === "{}") return true;
+            break;
+    }
+    return false;
+}
+
+// 生成start到end之间的随机数 包含start与end
+export function randomNumber(start: number, end: number): number {
+    if (!arguments.length) return Math.random();
+    const len = end - start + 1;
+    return ~~(Math.random() * len) + start;
+}
+
+/**
+ * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
+ * @param dateString
+ * @returns {Date}
+ */
+export function getDateFromStr(dateString: string): Date {
+    const arr: number[] = dateString.split(/[- :\/]/).map(item => Number(item) || 0);
+    return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
+}
