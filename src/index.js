@@ -178,3 +178,11 @@ function isEqual(a, b) {
     }
 }
 exports.isEqual = isEqual;
+/**
+ * 千位分隔 1,234,567,890
+ * @param num
+ */
+function qwSplit(num) {
+    return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
+}
+exports.qwSplit = qwSplit;

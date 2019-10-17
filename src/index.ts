@@ -142,7 +142,7 @@ export function getDateFromStr(dateString: string): Date {
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 
-export function objectIsEqual(obj1: any, obj2: any):boolean {
+export function objectIsEqual(obj1: any, obj2: any): boolean {
     for (const key in obj1) {
         const value1 = obj1[key];
         const value2 = obj2[key];
@@ -169,4 +169,12 @@ export function isEqual(a: any, b: any): boolean {
         case "object":
             return objectIsEqual(a, b);
     }
+}
+
+/**
+ * 千位分隔 1,234,567,890
+ * @param num
+ */
+export function qwSplit(num: string | number): string {
+    return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
 }

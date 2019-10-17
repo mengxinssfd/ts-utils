@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4eed5a16-0c0f-49c8-b60b-86d8e2aac129" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/urlParse.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/urlParse.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/urlParse.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/urlParse.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/urlParse.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,6 +18,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -35,6 +37,7 @@
   </component>
   <component name="ProjectId" id="1SJSWNxaHlSRQShDLM7jtyfdYkI" />
   <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -76,7 +79,7 @@
       <updated>1566365546539</updated>
       <workItem from="1566365547850" duration="3893000" />
       <workItem from="1566369508601" duration="43000" />
-      <workItem from="1571280237802" duration="7648000" />
+      <workItem from="1571280237802" duration="16312000" />
     </task>
     <servers />
   </component>
