@@ -9,9 +9,9 @@ declare const Array: any;
  * @param delay 延时
  * @returns {Function}
  */
-export function debounce(callback, delay: number) {
+export function debounce(callback: (...args: any[]) => void, delay: number) {
     let timer: any = null;
-    return function (...args) {
+    return function (...args: any[]) {
         if (timer) {
             clearTimeout(timer);
             timer = null;
@@ -104,14 +104,15 @@ export const FloatCalc = {
 };
 
 // 获取数据类型
-Object.typeOf = function (target: any): string {
+export function typeOf(target: any): string {
     if (typeof target !== 'object') return typeof target;
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
-};
+}
 
 
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target: any): boolean {
+    // @ts-ignore
     if ([undefined, null, "", NaN].includes(target)) return true;
     switch (Object.typeOf(target)) {
         case "array":
@@ -139,4 +140,33 @@ export function randomNumber(start: number, end: number): number {
 export function getDateFromStr(dateString: string): Date {
     const arr: number[] = dateString.split(/[- :\/]/).map(item => Number(item) || 0);
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
+}
+
+export function objectIsEqual(obj1: any, obj2: any):boolean {
+    for (const key in obj1) {
+        const value1 = obj1[key];
+        const value2 = obj2[key];
+        if (!isEqual(value1, value2)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export function isEqual(a: any, b: any): boolean {
+    if (a === b) return true;
+    const aType = typeOf(a);
+    const bType = typeOf(b);
+    if (aType !== bType) return false;
+    switch (aType) {
+        case "boolean":
+        case "number":
+        case "string":
+        case "function":
+            return false;
+        //  只有数组或者object不相等的时候才去对比是否相等
+        case "array":
+        case "object":
+            return objectIsEqual(a, b);
+    }
 }
