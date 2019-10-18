@@ -178,3 +178,14 @@ export function isEqual(a: any, b: any): boolean {
 export function qwSplit(num: string | number): string {
     return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
 }
+
+// es5的格式化字符串 example: getFormatStr("11%s111%s", 3, 4) => "1131114"
+export function getFormatStr() {
+    var args = Array.prototype.slice.call(arguments, 0);
+    if (!args.length) return "";
+    var str = args[0];
+    var params = args.slice(1);
+    return str.replace(/%s/g, function () {
+        return params.shift();
+    })
+}
