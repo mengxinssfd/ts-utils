@@ -126,8 +126,14 @@ export function isEmpty(target: any): boolean {
 }
 
 // 生成start到end之间的随机数 包含start与end
-export function randomNumber(start: number, end: number): number {
+// 传start不传end  end=start start=0 生成0-start之间的随机数
+// start end都不传  return Math.random()
+export function randomNumber(start?: number, end?: number): number {
     if (!arguments.length) return Math.random();
+    if (arguments.length === 1) {
+        end = start;
+        start = 0;
+    }
     const len = end - start + 1;
     return ~~(Math.random() * len) + start;
 }
@@ -187,5 +193,5 @@ export function getFormatStr() {
     var params = args.slice(1);
     return str.replace(/%s/g, function () {
         return params.shift();
-    })
+    });
 }
