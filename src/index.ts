@@ -114,13 +114,11 @@ export function typeOf(target: any): string {
 export function isEmpty(target: any): boolean {
     // @ts-ignore
     if ([undefined, null, "", NaN].includes(target)) return true;
-    switch (Object.typeOf(target)) {
+    switch (typeOf(target)) {
         case "array":
-            if (!target.length) return true;
-            break;
+            return !!target.length;
         case "object":
-            if (JSON.stringify(target) === "{}") return true;
-            break;
+            return JSON.stringify(target) === "{}";
     }
     return false;
 }
@@ -194,4 +192,16 @@ export function getFormatStr() {
     return str.replace(/%s/g, function () {
         return params.shift();
     });
+}
+
+/**
+ * 给长度不满足要求的字符串添加前缀
+ * @param target
+ * @param fill
+ * @param len
+ */
+export function strAddPrefix(target: string, fill: any, len: number): string {
+    if (target.length >= len) return target;
+    const fillStr = Array(len - target.length).fill(fill).join("");
+    return fillStr + target;
 }
