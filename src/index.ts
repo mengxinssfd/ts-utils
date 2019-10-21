@@ -245,7 +245,7 @@ export function oneByOne(sayWord: string, delay: number, callback?: (word: strin
 
 interface OneByOneConfig {
     delay: number,
-    loop: boolean,
+    loop?: boolean,
     callback?: (word: string, sayWord: string) => boolean | undefined
 }
 
