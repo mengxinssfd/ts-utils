@@ -137,6 +137,14 @@ export function randomNumber(start?: number, end?: number): number {
 }
 
 /**
+ * 随机颜色
+ */
+export function randomColor() {
+    const num = randomNumber(0xffffff).toString(16);
+    return "#" + strAddPrefix(num, 0, 6);
+}
+
+/**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
  * @param dateString
  * @returns {Date}
@@ -179,10 +187,11 @@ export function isEqual(a: any, b: any): boolean {
  * 千位分隔 1,234,567,890
  * @param num
  */
-export function qwSplit(num: string | number): string {
+export function qwFormat(num: string | number): string {
     return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
 }
 
+// 给不能用``模板字符串的环境使用
 // es5的格式化字符串 example: getFormatStr("11%s111%s", 3, 4) => "1131114"
 export function getFormatStr() {
     var args = Array.prototype.slice.call(arguments, 0);
@@ -190,7 +199,7 @@ export function getFormatStr() {
     var str = args[0];
     var params = args.slice(1);
     return str.replace(/%s/g, function () {
-        return params.shift();
+        return params.length ? params.shift() : "";
     });
 }
 
@@ -205,3 +214,108 @@ export function strAddPrefix(target: string, fill: any, len: number): string {
     const fillStr = Array(len - target.length).fill(fill).join("");
     return fillStr + target;
 }
+
+/**
+ * 每隔一段事件返回字符串中的一个单词
+ * @param sayWord
+ * @param delay
+ * @param callback
+ */
+export function oneByOne(sayWord: string, delay: number, callback?: (word: string, sayWord: string) => boolean | undefined) {
+    const wordArr = sayWord.split("");
+
+    function handler() {
+        const word = wordArr.shift();
+        let keepRun = !!wordArr.length;
+        if (callback) {
+            const flag = callback(word, sayWord);
+            keepRun = keepRun && flag !== false;
+        } else {
+            console.log(word);
+        }
+        if (keepRun) run();
+    }
+
+    function run() {
+        setTimeout(handler, delay);
+    }
+
+    handler();
+}
+
+interface OneByOneConfig {
+    delay: number,
+    loop: boolean,
+    callback?: (word: string, sayWord: string) => boolean | undefined
+}
+
+enum ONEBYONE_STATE { 'default', 'pause', 'stop'}
+
+export class OneByOne {
+    sayWord: string;
+    private wordArr: string[];
+    private timer: number;
+    status = ONEBYONE_STATE.default;
+    config: OneByOneConfig;
+
+    constructor(sayWord: string, config: OneByOneConfig) {
+        this.sayWord = sayWord;
+        this.wordArr = sayWord.split("");
+        this.config = config;
+    }
+
+    private run() {
+        const handler = () => {
+            if (this.status !== ONEBYONE_STATE.default) return;
+            const word = this.wordArr.shift();
+            let len = this.wordArr.length;
+            let keepRun = !!len;
+            if (this.config.callback) {
+                const flag = this.config.callback(word, this.sayWord);
+                if (len && flag === false) {
+                    this.status = ONEBYONE_STATE.pause;
+                }
+                keepRun = len && flag !== false;
+            } else {
+                console.log(word);
+            }
+            // 播放过一遍后，设为停止状态
+            if (!len) {
+                this.status = ONEBYONE_STATE.stop;
+                if (this.config.loop) {
+                    this.replay();
+                }
+                return;
+            }
+            if (keepRun) this.run();
+        };
+        this.timer = setTimeout(handler, this.config.delay);
+    }
+
+    public play() {
+        if (this.status === ONEBYONE_STATE.stop) return;
+        this.status = ONEBYONE_STATE.default;
+        this.run();
+    }
+
+    public replay() {
+        this.status = ONEBYONE_STATE.default;
+        this.wordArr = this.sayWord.split("");
+        this.run();
+    }
+
+    public pause() {
+        if (this.status === ONEBYONE_STATE.stop) return;
+        this.status = ONEBYONE_STATE.pause;
+        clearTimeout(this.timer);
+    }
+
+    public stop() {
+        if (this.status !== ONEBYONE_STATE.default) return;
+        this.status = ONEBYONE_STATE.stop;
+        clearTimeout(this.timer);
+    }
+
+}
+
+
