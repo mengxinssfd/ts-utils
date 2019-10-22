@@ -246,7 +246,7 @@ export function oneByOne(sayWord: string, delay: number, callback?: (word: strin
 interface OneByOneConfig {
     delay: number,
     loop?: boolean,
-    callback?: (word: string, sayWord: string) => boolean | undefined
+    callback?: (word: string, joinWord: string, sayWord: string) => boolean | undefined
 }
 
 enum ONEBYONE_STATE { 'default', 'pause', 'stop'}
@@ -257,6 +257,7 @@ export class OneByOne {
     private timer: number;
     status = ONEBYONE_STATE.default;
     config: OneByOneConfig;
+    joinWord: string = "";
 
     constructor(sayWord: string, config: OneByOneConfig) {
         this.sayWord = sayWord;
@@ -268,10 +269,11 @@ export class OneByOne {
         const handler = () => {
             if (this.status !== ONEBYONE_STATE.default) return;
             const word = this.wordArr.shift();
+            this.joinWord += word;
             let len = this.wordArr.length;
             let keepRun = !!len;
             if (this.config.callback) {
-                const flag = this.config.callback(word, this.sayWord);
+                const flag = this.config.callback.call(this, word, this.joinWord, this.sayWord);
                 if (len && flag === false) {
                     this.status = ONEBYONE_STATE.pause;
                 }
@@ -299,8 +301,10 @@ export class OneByOne {
     }
 
     public replay() {
+        clearTimeout(this.timer);
         this.status = ONEBYONE_STATE.default;
         this.wordArr = this.sayWord.split("");
+        this.joinWord = "";
         this.run();
     }
 
