@@ -6,7 +6,7 @@ exports.__esModule = true;
  * @Date: 2019-10-17 12:35
  * @Description:
  */
-var utils = require("./index");
+var utils = require("../index");
 var str1 = "123123";
 var str2 = "123123";
 var str3 = "12312";

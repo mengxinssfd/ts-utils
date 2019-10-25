@@ -3,6 +3,12 @@ declare const Object: any;
 declare const Number: any;
 declare const Array: any;
 
+import {OneByOne} from "./OneByOne";
+import {UrlParse} from "./urlParse";
+import {addClass, removeClass, isDom, prefixStyle} from "./dom";
+
+export {OneByOne, UrlParse, addClass, removeClass, isDom, prefixStyle};
+
 /**
  * 防抖函数
  * @param callback 回调
@@ -141,7 +147,7 @@ export function randomNumber(start?: number, end?: number): number {
  */
 export function randomColor() {
     const num = randomNumber(0xffffff).toString(16);
-    return "#" + strAddPrefix(num, 0, 6);
+    return "#" + strFillPrefix(num, 0, 6);
 }
 
 /**
@@ -209,7 +215,7 @@ export function getFormatStr() {
  * @param fill
  * @param len
  */
-export function strAddPrefix(target: string, fill: any, len: number): string {
+export function strFillPrefix(target: string, fill: any, len: number): string {
     if (target.length >= len) return target;
     const fillStr = Array(len - target.length).fill(fill).join("");
     return fillStr + target;
@@ -242,6 +248,7 @@ export function oneByOne(sayWord: string, delay: number, callback?: (word: strin
 
     handler();
 }
+
 
 
 

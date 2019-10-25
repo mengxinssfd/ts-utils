@@ -4,7 +4,9 @@
  * @Date: 2019-10-17 12:35
  * @Description:
  */
-import * as utils from "./index";
+import * as utils from "../index";
+
+
 
 const str1 = "123123";
 const str2 = "123123";
