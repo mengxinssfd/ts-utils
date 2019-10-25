@@ -1,3 +1,7 @@
+import { OneByOne } from "./OneByOne";
+import { UrlParse } from "./urlParse";
+import { addClass, removeClass, isDom, prefixStyle } from "./dom";
+export { OneByOne, UrlParse, addClass, removeClass, isDom, prefixStyle };
 /**
  * 防抖函数
  * @param callback 回调
@@ -130,7 +134,7 @@ export function randomNumber(start, end) {
  */
 export function randomColor() {
     const num = randomNumber(0xffffff).toString(16);
-    return "#" + strAddPrefix(num, 0, 6);
+    return "#" + strFillPrefix(num, 0, 6);
 }
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
@@ -195,7 +199,7 @@ export function getFormatStr() {
  * @param fill
  * @param len
  */
-export function strAddPrefix(target, fill, len) {
+export function strFillPrefix(target, fill, len) {
     if (target.length >= len)
         return target;
     const fillStr = Array(len - target.length).fill(fill).join("");
@@ -227,70 +231,4 @@ export function oneByOne(sayWord, delay, callback) {
     }
     handler();
 }
-var ONEBYONE_STATE;
-(function (ONEBYONE_STATE) {
-    ONEBYONE_STATE[ONEBYONE_STATE["default"] = 0] = "default";
-    ONEBYONE_STATE[ONEBYONE_STATE["pause"] = 1] = "pause";
-    ONEBYONE_STATE[ONEBYONE_STATE["stop"] = 2] = "stop";
-})(ONEBYONE_STATE || (ONEBYONE_STATE = {}));
-export class OneByOne {
-    constructor(sayWord, config) {
-        this.status = ONEBYONE_STATE.default;
-        this.sayWord = sayWord;
-        this.wordArr = sayWord.split("");
-        this.config = config;
-    }
-    run() {
-        const handler = () => {
-            if (this.status !== ONEBYONE_STATE.default)
-                return;
-            const word = this.wordArr.shift();
-            let len = this.wordArr.length;
-            let keepRun = !!len;
-            if (this.config.callback) {
-                const flag = this.config.callback(word, this.sayWord);
-                if (len && flag === false) {
-                    this.status = ONEBYONE_STATE.pause;
-                }
-                keepRun = len && flag !== false;
-            }
-            else {
-                console.log(word);
-            }
-            // 播放过一遍后，设为停止状态
-            if (!len) {
-                this.status = ONEBYONE_STATE.stop;
-                if (this.config.loop) {
-                    this.replay();
-                }
-                return;
-            }
-            if (keepRun)
-                this.run();
-        };
-        this.timer = setTimeout(handler, this.config.delay);
-    }
-    play() {
-        if (this.status === ONEBYONE_STATE.stop)
-            return;
-        this.status = ONEBYONE_STATE.default;
-        this.run();
-    }
-    replay() {
-        this.status = ONEBYONE_STATE.default;
-        this.wordArr = this.sayWord.split("");
-        this.run();
-    }
-    pause() {
-        if (this.status === ONEBYONE_STATE.stop)
-            return;
-        this.status = ONEBYONE_STATE.pause;
-        clearTimeout(this.timer);
-    }
-    stop() {
-        if (this.status !== ONEBYONE_STATE.default)
-            return;
-        this.status = ONEBYONE_STATE.stop;
-        clearTimeout(this.timer);
-    }
-}
+//# sourceMappingURL=index.js.map

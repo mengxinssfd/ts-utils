@@ -7,7 +7,6 @@
 import * as utils from "../index";
 
 
-
 const str1 = "123123";
 const str2 = "123123";
 const str3 = "12312";
