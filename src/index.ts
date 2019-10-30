@@ -250,6 +250,38 @@ export function oneByOne(sayWord: string, delay: number, callback?: (word: strin
 }
 
 
+const numberMap: any = {0: "零", 1: "一", 2: "二", 3: "三", 4: "四", 5: "五", 6: "六", 7: "七", 8: "八", 9: "九",};
+const units: any = {0: "", 1: "十", 2: "百", 3: "千", 4: "万"};
+const unitLen: number = Object.keys(units).length;
 
+/**
+ * 阿拉伯数字转为中文数字
+ * @param number
+ */
+export function getChineseNumber(number: number) {
+    let key = ~~number;
+    let chineseNumber = "";
+    let times = 0;
+    // 个位数
+    if (number >= 0 && number < 10) return numberMap[number];
 
+    while (key >= 1 && times < unitLen) {
+        let unit = units[times];
+        // 11 % 10 => 一
+        let end = numberMap[key % 10];
+        // 101 0没有单位
+        if (end !== numberMap[0]) {
+            chineseNumber = unit + chineseNumber;
+        }
+        // 11 => 一十一 => 十一
+        if (!(key === 1 && times === 1)) {
+            chineseNumber = end + chineseNumber;
+        }
+
+        key = ~~(key / 10);
+        times++;
+    }
+    // 一万零零一 => 一万零一 | 一万零零零 => 一万
+    return chineseNumber.replace(/(零+$)|((零)\3+)/g, "$3");
+}
 
