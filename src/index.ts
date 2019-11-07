@@ -285,3 +285,20 @@ export function getChineseNumber(number: number) {
     return chineseNumber.replace(/(零+$)|((零)\3+)/g, "$3");
 }
 
+// 代替扩展符"...", 实现apply的时候可以使用此方法
+function generateFunctionCode(argsArrayLength: number) {
+    let code = 'return arguments[0][arguments[1]](';
+    for (let i = 0; i < argsArrayLength; i++) {
+        if (i > 0) {
+            code += ',';
+        }
+        code += 'arguments[2][' + i + ']';
+    }
+    code += ')';
+    // return object.property(args)
+    // return arguments[0][arguments[1]](arg1, arg2, arg3...)
+    return code;
+}
+
+// const args = [1, 2, 3];
+// (new Function(generateFunctionCode(args.length)))(object, property, args);
