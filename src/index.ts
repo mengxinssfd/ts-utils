@@ -34,8 +34,9 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
  * @param interval
  * @param immediate
  */
-export function polling(callback: (...args: any[]) => void | Promise<void>, interval: number, immediate = true): () => void {
+export function polling(callback: (...args: any[]) => void | Promise<any>, interval: number, immediate = true): () => void {
     enum state {running, stopped}
+
     let timer: number;
     let status: state;
     let times = 0;
@@ -43,9 +44,7 @@ export function polling(callback: (...args: any[]) => void | Promise<void>, inte
     function handle() {
         const back = callback(times++);
         if (status === state.running) {
-            // TODO bug
-            console.log(back instanceof Promise);
-            (back instanceof Promise) ? (back as Promise<void>).then(function () {
+            (back instanceof Promise) ? (back as Promise<any>).then(function () {
                 timeout();
             }) : timeout();
         }
@@ -66,6 +65,7 @@ export function polling(callback: (...args: any[]) => void | Promise<void>, inte
         clearTimeout(timer);
     };
 }
+
 
 // 对象深拷贝办法
 export function deepCopy(obj: any): any {
