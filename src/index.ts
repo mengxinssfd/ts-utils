@@ -34,15 +34,21 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
  * @param interval
  * @param immediate
  */
-export function polling(callback: (...args: any[]) => void, interval: number, immediate = true): () => void {
+export function polling(callback: (...args: any[]) => void | Promise<void>, interval: number, immediate = true): () => void {
     enum state {running, stopped}
     let timer: number;
     let status: state;
     let times = 0;
 
     function handle() {
-        callback(times++);
-        if (status === state.running) timeout();
+        const back = callback(times++);
+        if (status === state.running) {
+            // TODO bug
+            console.log(back instanceof Promise);
+            (back instanceof Promise) ? (back as Promise<void>).then(function () {
+                timeout();
+            }) : timeout();
+        }
     }
 
     function timeout() {
