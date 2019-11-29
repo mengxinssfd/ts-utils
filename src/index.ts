@@ -2,7 +2,6 @@ declare const Promise: any;
 declare const Object: any;
 declare const Number: any;
 declare const Array: any;
-
 import {OneByOne} from "./OneByOne";
 import {UrlParse} from "./urlParse";
 import {addClass, removeClass, isDom, prefixStyle} from "./dom";
@@ -29,6 +28,38 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
     };
 }
 
+/**
+ * 轮询函数
+ * @param callback
+ * @param interval
+ * @param immediate
+ */
+export function polling(callback: (...args: any[]) => void, interval: number, immediate = true): () => void {
+    enum state {running, stopped}
+    let timer: number;
+    let status: state;
+    let times = 0;
+
+    function handle() {
+        callback(times++);
+        if (status === state.running) timeout();
+    }
+
+    function timeout() {
+        timer = setTimeout(handle, interval);
+    }
+
+    if (immediate) {
+        status = state.running;
+        handle();
+    } else {
+        timeout();
+    }
+    return function () {
+        status = state.stopped;
+        clearTimeout(timer);
+    };
+}
 
 // 对象深拷贝办法
 export function deepCopy(obj: any): any {
@@ -44,7 +75,6 @@ export function deepCopy(obj: any): any {
     }
     return result;
 }
-
 
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
@@ -114,7 +144,6 @@ export function typeOf(target: any): string {
     if (typeof target !== 'object') return typeof target;
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
-
 
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target: any): boolean {
@@ -223,34 +252,27 @@ export function strFillPrefix(target: string, fill: any, len: number): string {
 
 /**
  * 每隔一段事件返回字符串中的一个单词
- * @param sayWord
+ * @param words
  * @param delay
  * @param callback
  */
-export function oneByOne(sayWord: string, delay: number, callback?: (word: string, sayWord: string) => boolean | undefined) {
-    const wordArr = sayWord.split("");
-
-    function handler() {
+export function oneByOne(words: string, delay: number, callback?: (word: string, words: string) => boolean | undefined) {
+    let cancel: () => void;
+    const wordArr = words.split("");
+    cancel = polling(() => {
         const word = wordArr.shift();
         let keepRun = !!wordArr.length;
         if (callback) {
-            const flag = callback(word, sayWord);
+            const flag = callback(word, words);
             keepRun = keepRun && flag !== false;
         } else {
             console.log(word);
         }
-        if (keepRun) run();
-    }
-
-    function run() {
-        setTimeout(handler, delay);
-    }
-
-    handler();
+        if (!keepRun) cancel();
+    }, delay);
 }
 
-
-const numberMap: any = {0: "零", 1: "一", 2: "二", 3: "三", 4: "四", 5: "五", 6: "六", 7: "七", 8: "八", 9: "九",};
+const numberMap: any = {0: "零", 1: "一", 2: "二", 3: "三", 4: "四", 5: "五", 6: "六", 7: "七", 8: "八", 9: "九"};
 const units: any = {0: "", 1: "十", 2: "百", 3: "千", 4: "万"};
 const unitLen: number = Object.keys(units).length;
 
@@ -264,7 +286,6 @@ export function getChineseNumber(number: number) {
     let times = 0;
     // 个位数
     if (number >= 0 && number < 10) return numberMap[number];
-
     while (key >= 1 && times < unitLen) {
         let unit = units[times];
         // 11 % 10 => 一
@@ -277,7 +298,6 @@ export function getChineseNumber(number: number) {
         if (!(key === 1 && times === 1)) {
             chineseNumber = end + chineseNumber;
         }
-
         key = ~~(key / 10);
         times++;
     }
