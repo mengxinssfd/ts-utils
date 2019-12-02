@@ -1,10 +1,11 @@
 {
-  "name": "@dyh/ts-utils",
+  "name": "@mxssfd/ts-utils",
   "version": "1.0.0",
   "description": "ts工具函数",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pub": "npm publish --access=public"
   },
   "repository": {
     "type": "git",

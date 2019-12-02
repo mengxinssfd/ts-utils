@@ -1,21 +1,27 @@
 {
   "compilerOptions": {
-    "module": "es2015",
-    "target": "es6",
-    "allowJs": true,
-    "sourceMap": true,
-    "noImplicitAny": true,
-    "moduleResolution": "node"
+    // Target latest version of ECMAScript.
+    "target": "esnext",
+    // Search under node_modules for non-relative imports.
+    "moduleResolution": "node",
+    "module": "commonjs",
+    // Process & infer types from .js files.
+    //    "allowJs": true,
+    // Don't emit; allow Babel to transform files.
+    //    "noEmit": true,
+    // Enable strictest settings like strictNullChecks & noImplicitAny.
+    //    "strict": true,
+    // Disallow features that require cross-file information for emit.
+    //    "isolatedModules": true,
+    // Import non-ES modules as default imports.
+    //    "esModuleInterop": true,
+    "declaration": true,
+    // 生成d.ts文件
+    "outDir": "./lib"
   },
-  "include": [
-    "./src/"
-  ],
   "exclude": [
-    "./node_modules/"
+    "node_modules",
+    "example"
   ],
-  "suppressImplicitAnyIndexErrors": true,
-  "lib": [
-    "es2017"
-  ],
-  "baseUrl": "."
+  "suppressImplicitAnyIndexErrors": true
 }
