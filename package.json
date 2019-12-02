@@ -1,0 +1,26 @@
+{
+  "name": "@dyh/ts-utils",
+  "version": "1.0.0",
+  "description": "ts工具函数",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mengxinssfd/utilTs.git"
+  },
+  "keywords": [
+    "ts",
+    "typscript",
+    "js",
+    "javascript",
+    "utils"
+  ],
+  "author": "dyh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mengxinssfd/utilTs/issues"
+  },
+  "homepage": "https://github.com/mengxinssfd/utilTs#readme"
+}
