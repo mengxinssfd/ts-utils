@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/ts-utils",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "ts工具函数",
   "main": "lib/index.js",
   "typings": "types/index.d.ts",
