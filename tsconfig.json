@@ -15,8 +15,9 @@
     //    "isolatedModules": true,
     // Import non-ES modules as default imports.
     //    "esModuleInterop": true,
-    "declaration": true,
     // 生成d.ts文件
+    "declaration": true,
+    "declarationDir": "types",
     "outDir": "./lib"
   },
   "exclude": [
