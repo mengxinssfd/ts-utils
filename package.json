@@ -1,8 +1,13 @@
 {
   "name": "@mxssfd/ts-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ts工具函数",
   "main": "index.js",
+  "typings": "types/index.d.ts",
+  "files": [
+    "src",
+    "types/*.d.ts"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pub": "npm publish --access=public"
