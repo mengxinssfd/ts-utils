@@ -1,35 +1,21 @@
-/**
- * 将字符串按一定的时间间隔逐字输出 如：仿打字效果
- * @Author: dyh
- * @Date: 2019-10-23 9:12
- * @Description:
- */
-interface OneByOneConfig {
-    delay: number,
-    loop?: boolean,
-    callback?: (word: string, joinWord: string, sayWord: string) => boolean | undefined
-}
-
-enum ONEBYONE_STATE { 'default', 'pause', 'stop'}
-
-
+var ONEBYONE_STATE;
+(function (ONEBYONE_STATE) {
+    ONEBYONE_STATE[ONEBYONE_STATE["default"] = 0] = "default";
+    ONEBYONE_STATE[ONEBYONE_STATE["pause"] = 1] = "pause";
+    ONEBYONE_STATE[ONEBYONE_STATE["stop"] = 2] = "stop";
+})(ONEBYONE_STATE || (ONEBYONE_STATE = {}));
 export class OneByOne {
-    sayWord: string;
-    private wordArr: string[];
-    private timer: number;
-    status = ONEBYONE_STATE.default;
-    config: OneByOneConfig;
-    joinWord: string = "";
-
-    constructor(sayWord: string, config: OneByOneConfig) {
+    constructor(sayWord, config) {
+        this.status = ONEBYONE_STATE.default;
+        this.joinWord = "";
         this.sayWord = sayWord;
         this.wordArr = sayWord.split("");
         this.config = config;
     }
-
-    private run() {
+    run() {
         const handler = () => {
-            if (this.status !== ONEBYONE_STATE.default) return;
+            if (this.status !== ONEBYONE_STATE.default)
+                return;
             const word = this.wordArr.shift();
             this.joinWord += word;
             let len = this.wordArr.length;
@@ -40,7 +26,8 @@ export class OneByOne {
                     this.status = ONEBYONE_STATE.pause;
                 }
                 keepRun = !!len && flag !== false;
-            } else {
+            }
+            else {
                 console.log(word);
             }
             // 播放过一遍后，设为停止状态
@@ -51,35 +38,34 @@ export class OneByOne {
                 }
                 return;
             }
-            if (keepRun) this.run();
+            if (keepRun)
+                this.run();
         };
         this.timer = window.setTimeout(handler, this.config.delay);
     }
-
-    public play() {
-        if (this.status === ONEBYONE_STATE.stop) return;
+    play() {
+        if (this.status === ONEBYONE_STATE.stop)
+            return;
         this.status = ONEBYONE_STATE.default;
         this.run();
     }
-
-    public replay() {
+    replay() {
         clearTimeout(this.timer);
         this.status = ONEBYONE_STATE.default;
         this.wordArr = this.sayWord.split("");
         this.joinWord = "";
         this.run();
     }
-
-    public pause() {
-        if (this.status === ONEBYONE_STATE.stop) return;
+    pause() {
+        if (this.status === ONEBYONE_STATE.stop)
+            return;
         this.status = ONEBYONE_STATE.pause;
         clearTimeout(this.timer);
     }
-
-    public stop() {
-        if (this.status !== ONEBYONE_STATE.default) return;
+    stop() {
+        if (this.status !== ONEBYONE_STATE.default)
+            return;
         this.status = ONEBYONE_STATE.stop;
         clearTimeout(this.timer);
     }
-
 }

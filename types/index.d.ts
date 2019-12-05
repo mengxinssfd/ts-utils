@@ -8,7 +8,7 @@ declare const utils: {
     getNumberLenAfterDot(num: string | number): number;
     typeOf(target: any): string;
     isEmpty(target: any): boolean;
-    randomNumber(start?: number, end?: number): number;
+    randomNumber(start?: number | undefined, end?: number | undefined): number;
     randomColor(): string;
     getDateFromStr(dateString: string): Date;
     objectIsEqual(obj1: any, obj2: any): boolean;
@@ -16,8 +16,9 @@ declare const utils: {
     qwFormat(num: string | number): string;
     getFormatStr(): any;
     strFillPrefix(target: string, fill: any, len: number): string;
-    oneByOne(words: string, delay: number, callback?: (word: string, words: string) => boolean): void;
+    oneByOne(words: string, delay: number, callback?: ((word: string, words: string) => boolean | undefined) | undefined): void;
     getChineseNumber(number: number): any;
+    generateFunctionCode(argsArrayLength: number): string;
     FloatCalc: {
         add(a: number, b: number): number;
         minus(a: number, b: number): number;
@@ -26,7 +27,7 @@ declare const utils: {
     };
     removeClass(dom: any, className: string): string;
     prefixStyle(style: string): string | false;
-    eventProxy(containerEl: string | HTMLElement, eventType: string, targetEl: string | HTMLElement, callback: (e: Event) => void): () => void;
+    eventProxy(containerEl: string | HTMLElement | null, eventType: string, targetEl: string | HTMLElement, callback: (e: Event) => void): (() => void) | null;
     isDom: (target: any) => target is HTMLElement;
     addClass: (target: any, className: string | string[]) => any;
     OneByOne: typeof OneByOne;

@@ -66,3 +66,4 @@ export declare function oneByOne(words: string, delay: number, callback?: (word:
  * @param number
  */
 export declare function getChineseNumber(number: number): any;
+export declare function generateFunctionCode(argsArrayLength: number): string;

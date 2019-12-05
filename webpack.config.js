@@ -8,7 +8,7 @@ const config = {
         index: "./src/index.ts",
     },
     output: {
-        path: path.resolve(__dirname, "lib"),
+        path: path.resolve(__dirname, "lib-umd"),
         filename: "[name].js",
         library: 'tsUtils', // 指定类库名,主要用于直接引用的方式(比如使用script 标签)
         libraryExport: "default", // 对外暴露default属性，就可以直接调用default里的属性
@@ -28,12 +28,14 @@ const config = {
         extensions: [".ts", ".tsx", ".js"],
     },
     plugins: [
-        new CleanWebpackPlugin({
+        // package.js有了clean命令
+         /*new CleanWebpackPlugin({
             cleanOnceBeforeBuildPatterns: [
-                resolve("types/*"),
-                resolve("lib/*"),
+                resolve("types/!*"),
+                resolve("lib-umd/!*"),
+                resolve("lib-es/!*"),
             ],
-        }),
+        }),*/
     ],
 };
 module.exports = config;
