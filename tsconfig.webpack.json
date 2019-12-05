@@ -4,5 +4,7 @@
     "module": "esnext",
     "outDir": "lib-es",
     "target": "esnext",
+    "declaration": true,
+    "declarationDir": "types"
   }
 }
