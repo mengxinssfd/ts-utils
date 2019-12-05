@@ -26,7 +26,7 @@ declare const _default: {
     };
     removeClass(dom: any, className: string): string;
     prefixStyle(style: string): string | false;
-    eventProxy(containerEl: string | HTMLElement, eventType: "string", targetEl: string | HTMLElement, callback: (e: Event) => void): () => void;
+    eventProxy(containerEl: string | HTMLElement, eventType: string, targetEl: string | HTMLElement, callback: (e: Event) => void): () => void;
     isDom: (target: any) => target is HTMLElement;
     addClass: (target: any, className: string | string[]) => any;
     OneByOne: typeof OneByOne;

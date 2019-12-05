@@ -75,7 +75,7 @@ export function prefixStyle(style: string): string | false {
  */
 export function eventProxy(
     containerEl: string | HTMLElement | null,
-    eventType: "string",
+    eventType: string,
     targetEl: string | HTMLElement,
     callback: (e: Event) => void,
 ): () => void {

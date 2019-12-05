@@ -14,4 +14,4 @@ export declare function prefixStyle(style: string): string | false;
  * @param targetEl
  * @param callback
  */
-export declare function eventProxy(containerEl: string | HTMLElement | null, eventType: "string", targetEl: string | HTMLElement, callback: (e: Event) => void): () => void;
+export declare function eventProxy(containerEl: string | HTMLElement | null, eventType: string, targetEl: string | HTMLElement, callback: (e: Event) => void): () => void;
