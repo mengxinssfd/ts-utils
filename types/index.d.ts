@@ -1,6 +1,6 @@
 import { OneByOne } from "./OneByOne";
 import { UrlParse } from "./urlParse";
-declare const _default: {
+declare const utils: {
     debounce(callback: (...args: any[]) => void, delay: number): (...args: any[]) => void;
     polling(callback: (...args: any[]) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
     deepCopy(obj: any): any;
@@ -32,4 +32,4 @@ declare const _default: {
     OneByOne: typeof OneByOne;
     UrlParse: typeof UrlParse;
 };
-export default _default;
+export default utils;

@@ -4,7 +4,7 @@
     "target": "esnext",
     // Search under node_modules for non-relative imports.
     "moduleResolution": "node",
-    "module": "commonjs",
+    "module": "es6",
     // Process & infer types from .js files.
     //    "allowJs": true,
     // Don't emit; allow Babel to transform files.
@@ -17,12 +17,10 @@
     //    "esModuleInterop": true,
     // 生成d.ts文件
     "declaration": true,
-    "declarationDir": "types"
-    //"outDir": "./lib"
+    "declarationDir": "types",
+    "outDir": "./lib"
   },
   "exclude": [
-    "node_modules",
-    "example"
-  ],
-  "suppressImplicitAnyIndexErrors": true
+    "node_modules"
+  ]
 }
