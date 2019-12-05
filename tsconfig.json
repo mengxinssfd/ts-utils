@@ -17,8 +17,8 @@
     //    "esModuleInterop": true,
     // 生成d.ts文件
     "declaration": true,
-    "declarationDir": "types",
-    "outDir": "./lib"
+    "declarationDir": "types"
+    //"outDir": "./lib"
   },
   "exclude": [
     "node_modules",

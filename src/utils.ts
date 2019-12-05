@@ -41,7 +41,7 @@ export function polling(callback: (...args: any[]) => void | Promise<any>, inter
     }
 
     function timeout() {
-        timer = setTimeout(handle, interval);
+        timer = window.setTimeout(handle, interval);
     }
 
     if (immediate) {

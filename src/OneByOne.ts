@@ -53,7 +53,7 @@ export class OneByOne {
             }
             if (keepRun) this.run();
         };
-        this.timer = setTimeout(handler, this.config.delay);
+        this.timer = window.setTimeout(handler, this.config.delay);
     }
 
     public play() {
