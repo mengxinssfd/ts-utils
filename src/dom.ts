@@ -1,4 +1,4 @@
-import {typeOf} from "./index";
+import {typeOf} from "./utils";
 
 let elementStyle = document.createElement('div').style;
 let vendor = ((): string | false => {
