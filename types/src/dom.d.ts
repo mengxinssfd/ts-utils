@@ -1,5 +1,5 @@
 export declare const isDom: (target: any) => target is HTMLElement;
-export declare const addClass: (target: any, className: string | string[]) => any;
+export declare const addClass: (target: HTMLElement, className: string | string[]) => string;
 export declare function removeClass(dom: any, className: string): string;
 /**
  * 判断是什么种类的浏览器并返回拼接前缀后的数据

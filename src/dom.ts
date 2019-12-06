@@ -25,16 +25,17 @@ export const isDom: (target: any) => target is HTMLElement = (function () {
             return target && typeof target === 'object' && target.nodeType === 1 && typeof target.nodeName === 'string';
         };
 })();
-export const addClass = (function () {
+export const addClass: (target: HTMLElement, className: string | string[]) => string = (function () {
     // classList ie9以上支持
-    return !!document.documentElement.classList ? function (target: any, className: string | string[]) {
+    return !!document.documentElement.classList ? function (target: HTMLElement, className: string | string[]) {
         target.classList.add(...Array.isArray(className) ? className : [className]);
         return target.className;
-    } : function (target: any, className: string | string[]) {
+    } : function (target: HTMLElement, className: string | string[]) {
         const originClass = target.className;
         const originClassArr = originClass.split(" ");
         className = Array.isArray(className) ? className : [className];
-        className = [...new Set(className)];
+        // [...new Set(array)] ts不支持这种格式 只能使用Array.from替代
+        className = Array.from(new Set(className));
         className = className.filter(cname => !originClassArr.includes(cname));
         if (!className.length) return originClass;
         className = className.join(" ");

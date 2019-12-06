@@ -29,7 +29,7 @@ declare const utils: {
     prefixStyle(style: string): string | false;
     eventProxy(containerEl: string | HTMLElement | null, eventType: string, targetEl: string | HTMLElement, callback: (e: Event) => void): (() => void) | null;
     isDom: (target: any) => target is HTMLElement;
-    addClass: (target: any, className: string | string[]) => any;
+    addClass: (target: HTMLElement, className: string | string[]) => string;
     OneByOne: typeof OneByOne;
     UrlParse: typeof UrlParse;
 };

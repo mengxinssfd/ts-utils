@@ -34,7 +34,7 @@ export const addClass = (function () {
         const originClass = target.className;
         const originClassArr = originClass.split(" ");
         className = Array.isArray(className) ? className : [className];
-        className = [...new Set(className)];
+        className = Array.from(new Set(className));
         className = className.filter(cname => !originClassArr.includes(cname));
         if (!className.length)
             return originClass;
