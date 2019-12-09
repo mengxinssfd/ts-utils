@@ -92,6 +92,7 @@ export function eventProxy(
 
     function handle(e) {
         e = e || window.event;
+        // TODO 通过document.querySelectorAll匹配  并且该函数被滥用的话，会有性能问题
         let targetDom = isDom(targetEl) ? [targetEl] : Array.from(document.querySelectorAll(targetEl));
         if (targetDom.includes(e.target)) {
             callback(e);
