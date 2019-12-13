@@ -1,5 +1,5 @@
 // 所有主要浏览器都支持 createElement() 方法
-import {isArray, isFunction, typeOf} from "common";
+import {isArray, isFunction, isString, typeOf} from "common";
 
 let elementStyle = document.createElement('div').style;
 let vendor = ((): string | false => {
@@ -157,7 +157,7 @@ export function dragEvent({el, onDown, onMove, onUp, capture = false}: {
     capture: boolean,
 }) {
     let dom: HTMLElement | Window = el as HTMLElement;
-    if (typeOf(el) === "string") {
+    if (isString(el)) {
         dom = document.querySelector(<string>el) as HTMLElement;
         if (!dom) {
             throw new Error("element not found!");
