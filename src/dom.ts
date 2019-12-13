@@ -1,5 +1,5 @@
 // 所有主要浏览器都支持 createElement() 方法
-import {isFunction, typeOf} from "common";
+import {isArray, isFunction, typeOf} from "common";
 
 let elementStyle = document.createElement('div').style;
 let vendor = ((): string | false => {
@@ -147,11 +147,13 @@ export function onceEvent(
 }
 
 // TODO 未完成
+type xy = { x: number, y: number }
+
 export function dragEvent({el, onDown, onMove, onUp, capture = false}: {
     el: string | HTMLElement | undefined | null,
-    onDown: () => void,
-    onMove: () => void,
-    onUp: () => void,
+    onDown: (e: MouseEvent | TouchEvent, downXY: xy) => void,
+    onMove: (e: MouseEvent | TouchEvent, moveXY: xy, lastXY: xy, downXY: xy) => void,
+    onUp: (e: MouseEvent | TouchEvent, downXY: xy, upXY: xy) => void,
     capture: boolean,
 }) {
     let dom: HTMLElement | Window = el as HTMLElement;
@@ -163,19 +165,60 @@ export function dragEvent({el, onDown, onMove, onUp, capture = false}: {
     } else {
         dom = window;
     }
-    const getMove = function (isTouch = false) {
-        return function (e: Event) {
-        };
+    let lastXY: xy = {x: 0, y: 0};
+    let downXY: xy = {x: 0, y: 0};
+
+    function getXY(e: MouseEvent | TouchEvent): xy {
+        let xY: xy;
+        const touches = (e as TouchEvent).touches;
+        if (touches && isArray(touches) && touches.length) {
+            const touch = touches[0];
+            xY = {x: touch.screenX, y: touch.screenY};
+        } else {
+            const {screenX, screenY} = e as MouseEvent;
+            xY = {x: screenX, y: screenY};
+        }
+        return xY;
+    }
+
+    function move(e: MouseEvent | TouchEvent) {
+        const moveXY = getXY(e);
+        if (onMove && isFunction(onMove)) {
+            onMove.call(this, e, moveXY, lastXY, downXY);
+        }
+        lastXY = moveXY;
+    }
+
+    function up(e: MouseEvent | TouchEvent) {
+        const upXY = getXY(e);
+        lastXY = upXY;
+        if (onUp && isFunction(onUp)) {
+            onUp.call(this, e, downXY, upXY);
+        }
+        dom.removeEventListener("mousemove", move, capture);
+        dom.removeEventListener("mouseup", up, capture);
+        dom.removeEventListener("touchmove", move, capture);
+        dom.removeEventListener("touchend", up, capture);
+        dom.removeEventListener("touchcancel", up, capture);
+    }
+
+    function mousedown(event: MouseEvent) {
+        downXY = getXY(event);
+        dom.addEventListener("mousemove", move, capture);
+        dom.addEventListener("mouseup", up, capture);
+    }
+
+    function touchStart(event: TouchEvent) {
+        downXY = getXY(event);
+        dom.addEventListener("touchmove", move, capture);
+        dom.addEventListener("touchend", up, capture);
+        dom.addEventListener("touchcancel", up, capture);
+    }
+
+    dom.addEventListener("mousedown", mousedown, capture);
+    dom.addEventListener("touchstart", touchStart, capture);
+    return function () {
+        dom.removeEventListener("mousedown", mousedown, capture);
+        dom.removeEventListener("touchstart", touchStart, capture);
     };
-    const getUp = function (isTouch = false) {
-        return function (e: Event) {
-        };
-    };
-    const getDown = function (isTouch = false) {
-        return function (e: Event) {
-            dom.addEventListener("mousemove", getMove(), capture);
-            dom.addEventListener("mouseup", getUp(), capture);
-        };
-    };
-    dom.addEventListener("mousedown", getDown(), capture);
 }
