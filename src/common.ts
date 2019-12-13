@@ -139,6 +139,39 @@ export function typeOf(target: any): string {
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
 
+export function isObject(target: any): target is Object {
+    return typeOf(target) === "object";
+}
+
+export function isArray(target: any): target is Array<any> {
+    return typeOf(target) === "array";
+}
+
+export function isString(target: any): target is string {
+    return typeOf(target) === "string";
+}
+
+export function isNumber(target: any): target is number {
+    return typeOf(target) === "number";
+}
+
+export function isFunction(target: any): target is Function {
+    return typeOf(target) === "function";
+}
+
+export function isBoolean(target: any): target is boolean {
+    return typeOf(target) === "boolean";
+}
+
+export function isUndefined(target: any): target is undefined {
+    return target === void 0;
+}
+
+export function isNaN(target: any): boolean {
+    return isNumber(target) && target !== target;
+}
+
+
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target: any): boolean {
     // @ts-ignore

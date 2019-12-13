@@ -1,4 +1,6 @@
 // 所有主要浏览器都支持 createElement() 方法
+import {isFunction, typeOf} from "common";
+
 let elementStyle = document.createElement('div').style;
 let vendor = ((): string | false => {
     let transformName: any = {
@@ -109,3 +111,71 @@ export function eventProxy(
     };
 }
 
+/**
+ * 一次性事件
+ * @param el
+ * @param eventType
+ * @param callback
+ * @param capture 捕获还是冒泡，默认冒泡
+ */
+export function onceEvent(
+    el: Window | HTMLElement | string | null | undefined,
+    eventType: string,
+    callback: (e: Event) => false | undefined,
+    capture = false,
+) {
+    let dom: HTMLElement | Window | null = el as HTMLElement;
+    if (typeOf(el) === "string") {
+        dom = document.querySelector(<string>el) as HTMLElement;
+        if (!dom) {
+            throw new Error("element not found!");
+        }
+    } else {
+        dom = window;
+    }
+    let handler = (e) => {
+        let istRemove: false | undefined = false;
+        if (callback && isFunction(callback)) {
+            // callback 返回false的时候不remove事件
+            istRemove = callback(e);
+        }
+        // 移除的时候也要带上捕获还是冒泡
+        (istRemove !== false) && (<HTMLElement>dom).removeEventListener(eventType, handler, capture);
+    };
+    // 使用捕获优先度高，冒泡的话会在同一个事件里执行
+    dom.addEventListener(eventType, handler, capture);
+}
+
+// TODO 未完成
+export function dragEvent({el, onDown, onMove, onUp, capture = false}: {
+    el: string | HTMLElement | undefined | null,
+    onDown: () => void,
+    onMove: () => void,
+    onUp: () => void,
+    capture: boolean,
+}) {
+    let dom: HTMLElement | Window = el as HTMLElement;
+    if (typeOf(el) === "string") {
+        dom = document.querySelector(<string>el) as HTMLElement;
+        if (!dom) {
+            throw new Error("element not found!");
+        }
+    } else {
+        dom = window;
+    }
+    const getMove = function (isTouch = false) {
+        return function (e: Event) {
+        };
+    };
+    const getUp = function (isTouch = false) {
+        return function (e: Event) {
+        };
+    };
+    const getDown = function (isTouch = false) {
+        return function (e: Event) {
+            dom.addEventListener("mousemove", getMove(), capture);
+            dom.addEventListener("mouseup", getUp(), capture);
+        };
+    };
+    dom.addEventListener("mousedown", getDown(), capture);
+}
