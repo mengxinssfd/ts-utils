@@ -27,6 +27,15 @@ export declare const FloatCalc: {
     division(a: number, b: number): number;
 };
 export declare function typeOf(target: any): string;
+export declare function isObject(target: any): target is Object;
+export declare function isArray(target: any): target is Array<any>;
+export declare function isArrayLike(target: any): boolean;
+export declare function isString(target: any): target is string;
+export declare function isNumber(target: any): target is number;
+export declare function isFunction(target: any): target is Function;
+export declare function isBoolean(target: any): target is boolean;
+export declare function isUndefined(target: any): target is undefined;
+export declare function isNaN(target: any): boolean;
 export declare function isEmpty(target: any): boolean;
 export declare function randomNumber(start?: number, end?: number): number;
 /**

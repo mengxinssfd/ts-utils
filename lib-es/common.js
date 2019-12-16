@@ -137,6 +137,46 @@ export function typeOf(target) {
         return typeof target;
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
+export function isObject(target) {
+    return typeOf(target) === "object";
+}
+export function isArray(target) {
+    return typeOf(target) === "array";
+}
+// 类数组对象 jq的实现方式
+export function isArrayLike(target) {
+    // 如果target非null、undefined等，有length属性，则length等于target.length
+    // 否则，length为false
+    const length = !!target && "length" in target && target.length;
+    // 检测target的类型
+    const type = typeOf(target);
+    // 如果target是function类型 或者是window对象 则返回false
+    if (type === "function" || window === target) {
+        return false;
+    }
+    // target本身是数组，则返回true
+    // target不是数组，但有length属性且为0，例如{length : 0}，则返回true
+    // target不是数组,但有length属性且为整数数值，target[length - 1]存在，则返回true
+    return type === "array" || length === 0 || isNumber(length) && length > 0 && (length - 1) in target;
+}
+export function isString(target) {
+    return typeOf(target) === "string";
+}
+export function isNumber(target) {
+    return typeOf(target) === "number";
+}
+export function isFunction(target) {
+    return typeOf(target) === "function";
+}
+export function isBoolean(target) {
+    return typeOf(target) === "boolean";
+}
+export function isUndefined(target) {
+    return target === void 0;
+}
+export function isNaN(target) {
+    return isNumber(target) && target !== target;
+}
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target) {
     // @ts-ignore
