@@ -27,11 +27,18 @@ declare type xy = {
     x: number;
     y: number;
 };
+/**
+ * 拖动事件 返回取消事件
+ */
 export declare function addDragEventListener({ el, onDown, onMove, onUp, capture }: {
-    el: string | HTMLElement | undefined | null;
-    onDown: (e: MouseEvent | TouchEvent, downXY: xy) => void;
-    onMove: (e: MouseEvent | TouchEvent, moveXY: xy, lastXY: xy, downXY: xy) => void;
-    onUp: (e: MouseEvent | TouchEvent, downXY: xy, upXY: xy) => void;
-    capture: boolean;
+    el?: string | HTMLElement;
+    onDown?: (e: MouseEvent | TouchEvent, currentXY: xy) => any;
+    onMove?: (e: MouseEvent | TouchEvent, currentXY: xy, lastXY: xy, downXY: xy) => any;
+    onUp?: (e: MouseEvent | TouchEvent, currentXY: xy, downXY: xy) => any;
+    capture?: {
+        down?: boolean;
+        up?: boolean;
+        move?: boolean;
+    };
 }): () => void;
 export {};

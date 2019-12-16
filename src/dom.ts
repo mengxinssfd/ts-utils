@@ -1,5 +1,5 @@
 // 所有主要浏览器都支持 createElement() 方法
-import {isArrayLike, isFunction, isString, typeOf} from "./common";
+import {isFunction, isString, typeOf} from "./common";
 
 let elementStyle = document.createElement('div').style;
 let vendor = ((): string | false => {
@@ -148,76 +148,128 @@ export function onceEvent(
 
 type xy = { x: number, y: number }
 
-export function addDragEventListener({el, onDown, onMove, onUp, capture = false}: {
-    el: string | HTMLElement | undefined | null,
-    onDown: (e: MouseEvent | TouchEvent, downXY: xy) => void,
-    onMove: (e: MouseEvent | TouchEvent, moveXY: xy, lastXY: xy, downXY: xy) => void,
-    onUp: (e: MouseEvent | TouchEvent, downXY: xy, upXY: xy) => void,
-    capture: boolean,
-}) {
+/**
+ * 拖动事件 返回取消事件
+ */
+export function addDragEventListener({el, onDown, onMove, onUp, capture = {down: false, up: true, move: false}}: {
+    el?: string | HTMLElement,
+    onDown?: (e: MouseEvent | TouchEvent, currentXY: xy) => any,
+    onMove?: (e: MouseEvent | TouchEvent, currentXY: xy, lastXY: xy, downXY: xy) => any,
+    onUp?: (e: MouseEvent | TouchEvent, currentXY: xy, downXY: xy) => any,
+    capture?: {
+        down?: boolean,
+        up?: boolean,
+        move?: boolean
+    },
+}): () => void {
     let dom: HTMLElement | Window = el as HTMLElement;
-    if (isString(el)) {
-        dom = document.querySelector(<string>el) as HTMLElement;
-        if (!dom) {
-            throw new Error("element not found!");
+    if (!isDom(el)) {
+        if (isString(el)) {
+            dom = document.querySelector(<string>el) as HTMLElement;
+            if (!dom) {
+                throw new Error("element not found!");
+            }
+        } else {
+            dom = window;
         }
-    } else {
-        dom = window;
     }
     let lastXY: xy = {x: 0, y: 0};
     let downXY: xy = {x: 0, y: 0};
 
-    function getXY(e: MouseEvent | TouchEvent): xy {
-        let xY: xy;
-        const touches: TouchList = (e as TouchEvent).touches;
-        if (touches && isArrayLike(touches) && touches.length) {
-            const touch = touches[0];
-            xY = {x: touch.screenX, y: touch.screenY};
-        } else {
-            const {screenX, screenY} = e as MouseEvent;
-            xY = {x: screenX, y: screenY};
-        }
+    // mouse获取xy
+    function getXYWithMouse(e: MouseEvent): xy {
+        const {screenX, screenY} = e as MouseEvent;
+        const xY = {x: screenX, y: screenY};
+        xY.x = ~~xY.x;
+        xY.y = ~~xY.y;
         return xY;
     }
 
+    // touch获取xy
+    function getXYWithTouch(e: TouchEvent): xy {
+        const touches: TouchList = e.changedTouches;
+        const touch: Touch = touches[0];
+        const xY = {x: touch.clientX, y: touch.clientY};
+        xY.x = ~~xY.x;
+        xY.y = ~~xY.y;
+        return xY;
+    }
+
+    let getXY: (e: MouseEvent | TouchEvent) => xy;
+
+    // touch与mouse通用按下事件处理
+    function down(event: MouseEvent, mouseOrTouch: "mouse" | "touch") {
+        getXY = mouseOrTouch === "mouse" ? getXYWithMouse : getXYWithTouch;
+        downXY = getXY(event);
+        lastXY = downXY;
+        let backVal: any = void 0;
+        if (onDown && isFunction(onDown)) {
+            backVal = onDown.call(this, event, downXY, downXY);
+        }
+        return backVal;
+    }
+
+    // touch与mouse通用移动事件处理
     function move(e: MouseEvent | TouchEvent) {
         const moveXY = getXY(e);
+        let backVal: any = void 0;
         if (onMove && isFunction(onMove)) {
-            onMove.call(this, e, moveXY, lastXY, downXY);
+            backVal = onMove.call(this, e, moveXY, lastXY, downXY);
         }
         lastXY = moveXY;
+        return backVal;
     }
 
+    // touch与mouse通用移开事件处理
     function up(e: MouseEvent | TouchEvent) {
+        // console.log("up", e);
         const upXY = getXY(e);
+        let backVal: any = void 0;
         lastXY = upXY;
         if (onUp && isFunction(onUp)) {
-            onUp.call(this, e, downXY, upXY);
+            backVal = onUp.call(this, e, upXY, downXY);
         }
-        window.removeEventListener("mousemove", move, capture);
-        window.removeEventListener("mouseup", up, capture);
-        window.removeEventListener("touchmove", move, capture);
-        window.removeEventListener("touchend", up, capture);
-        window.removeEventListener("touchcancel", up, capture);
+        removeMoveAndUpEventListener();
+        return backVal;
     }
 
+    // 移除touch与mouse 的move与up事件
+    function removeMoveAndUpEventListener() {
+        window.removeEventListener("mousemove", move, capture.move);
+        window.removeEventListener("mouseup", up, capture.up);
+        window.removeEventListener("touchmove", move, capture.move);
+        window.removeEventListener("touchend", up, capture.up);
+        window.removeEventListener("touchcancel", up, capture.up);
+    }
+
+    // 移除全部事件
+    function removeAllEventListener() {
+        dom.removeEventListener("mousedown", mousedown, capture.down);
+        dom.removeEventListener("touchstart", touchStart, capture.down);
+        removeMoveAndUpEventListener();
+    }
+
+
     function mousedown(event: MouseEvent) {
-        downXY = getXY(event);
-        window.addEventListener("mousemove", move, capture);
-        window.addEventListener("mouseup", up, capture);
+        const backVal = down.call(this, event, "mouse");
+        window.addEventListener("mousemove", move, capture.move);
+        window.addEventListener("mouseup", up, capture.up);
+        return backVal;
     }
 
     function touchStart(event: TouchEvent) {
-        downXY = getXY(event);
-        window.addEventListener("touchmove", move, capture);
-        window.addEventListener("touchend", up, capture);
-        window.addEventListener("touchcancel", up, capture);
+        const backVal = down.call(this, event, "touch");
+        window.addEventListener("touchmove", move, capture.move);
+        window.addEventListener("touchend", up, capture.up);
+        window.addEventListener("touchcancel", up, capture.up);
+        return backVal;
     }
 
-    dom.addEventListener("mousedown", mousedown, capture);
-    dom.addEventListener("touchstart", touchStart, capture);
-    return function () {
-        window.removeEventListener("mousedown", mousedown, capture);
-        window.removeEventListener("touchstart", touchStart, capture);
-    };
+    dom.addEventListener("mousedown", mousedown, capture.down);
+    dom.addEventListener("touchstart", touchStart, capture.down);
+
+    // 返回取消全部事件函数
+    return removeAllEventListener;
 }
+
+

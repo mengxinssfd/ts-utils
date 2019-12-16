@@ -39,12 +39,12 @@ declare const utils: {
     eventProxy(containerEl: string | HTMLElement | null, eventType: string, targetEl: string | HTMLElement, callback: (e: Event) => void): (() => void) | null;
     onceEvent(el: string | HTMLElement | Window | null | undefined, eventType: string, callback: (e: Event) => false | undefined, capture?: boolean): void;
     addDragEventListener({ el, onDown, onMove, onUp, capture }: {
-        el: string | HTMLElement | null | undefined;
-        onDown: (e: MouseEvent | TouchEvent, downXY: {
+        el?: string | HTMLElement | undefined;
+        onDown?: ((e: MouseEvent | TouchEvent, currentXY: {
             x: number;
             y: number;
-        }) => void;
-        onMove: (e: MouseEvent | TouchEvent, moveXY: {
+        }) => any) | undefined;
+        onMove?: ((e: MouseEvent | TouchEvent, currentXY: {
             x: number;
             y: number;
         }, lastXY: {
@@ -53,15 +53,19 @@ declare const utils: {
         }, downXY: {
             x: number;
             y: number;
-        }) => void;
-        onUp: (e: MouseEvent | TouchEvent, downXY: {
+        }) => any) | undefined;
+        onUp?: ((e: MouseEvent | TouchEvent, currentXY: {
             x: number;
             y: number;
-        }, upXY: {
+        }, downXY: {
             x: number;
             y: number;
-        }) => void;
-        capture: boolean;
+        }) => any) | undefined;
+        capture?: {
+            down?: boolean | undefined;
+            up?: boolean | undefined;
+            move?: boolean | undefined;
+        } | undefined;
     }): () => void;
     isDom: (target: any) => target is HTMLElement;
     addClass: (target: HTMLElement, className: string | string[]) => string;
