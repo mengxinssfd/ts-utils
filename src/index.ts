@@ -1,8 +1,7 @@
-import {OneByOne} from "./OneByOne";
-import {UrlParse} from "./urlParse";
-import * as dom from "./dom";
-import * as common from "./common" ;
-
-const utils = {OneByOne, UrlParse, ...dom, ...common};
-export default utils;
+export * from "./dom";
+export * from "./common";
+export * from "./OneByOne";
+export * from "./urlParse";
+// const utils = {...OneByOne, ...UrlParse, ...dom, ...common};
+// export default utils;
 // module.exports = utils;

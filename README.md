@@ -2,8 +2,8 @@
 ##使用方法
    import导入
 ```javascript
-import tsUtils from "@mxssfd/ts-utils";
-tsUtils.debounce(() => { console.log("do something") }, 1000);
+import {debounce} from "@mxssfd/ts-utils";
+debounce(() => { console.log("do something") }, 1000);
 ```
    cdn
 ```html

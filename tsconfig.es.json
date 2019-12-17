@@ -2,7 +2,16 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "esnext",
-    "outDir": "lib-es",
     "target": "esnext",
-  }
+    "outDir": "lib-es",
+    "declaration": true,
+    "declarationDir": "types"
+  },
+  "exclude": [
+    "tslib",
+    "lib*",
+    "webpack.config.js",
+    "test",
+    "src/index-umd.ts"
+  ]
 }

@@ -6,7 +6,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const config = {
     mode: "production",
     entry: {
-        index: "./src/index.ts",
+        index: "./src/index-umd.ts",
     },
     output: {
         path: path.resolve(__dirname, "lib-umd"),
