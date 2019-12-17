@@ -3,6 +3,14 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
-    "declaration": false
-  }
+    "declaration": true,
+    "declarationDir": "lib-umd"
+  },
+  "exclude": [
+    "tslib",
+    "lib*",
+    "webpack.config.js",
+    "test.ts",
+    "src/index.ts"
+  ]
 }

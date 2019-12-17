@@ -1,12 +1,11 @@
 const path = require("path");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const resolve = dir => require('path').join(__dirname, dir);
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const config = {
     mode: "production",
     entry: {
-        index: "./src/index-umd.ts",
+        "index-umd": "./src/index-umd.ts",
     },
     output: {
         path: path.resolve(__dirname, "lib-umd"),
@@ -25,7 +24,7 @@ const config = {
                     {
                         loader: "ts-loader",
                         options: {
-                            configFile:  "tsconfig.webpack.json",
+                            configFile: "tsconfig.webpack.json",
                         },
                     },
                 ],
@@ -35,7 +34,6 @@ const config = {
     },
     resolve: {
         extensions: [".ts", ".tsx", ".js"],
-        // plugins: [new TsconfigPathsPlugin({configFile: "./tsconfig.webpack.json"})],
     },
     plugins: [
         // package.js有了clean命令
