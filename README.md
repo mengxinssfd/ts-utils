@@ -7,6 +7,6 @@ debounce(() => { console.log("do something") }, 1000);
 ```
    cdn
 ```html
-<script src="ts-utils.js"></script>
+<script src="lib-umd/index-umd.js"></script>
 <script >tsUtils.debounce(() => { console.log("do something") }, 1000);</script>
 ```
