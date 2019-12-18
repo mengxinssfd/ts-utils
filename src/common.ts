@@ -26,7 +26,6 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
  */
 export function polling(callback: (...args: any[]) => void | Promise<any>, interval: number, immediate = true): () => void {
     enum state {running, stopped}
-
     let timer: number;
     let status: state;
     let times = 0;
@@ -155,7 +154,6 @@ export function isArrayLike(target: any): boolean {
     const length = !!target && "length" in target && target.length;
     // 检测target的类型
     const type = typeOf(target);
-
     // 如果target是function类型 或者是window对象 则返回false
     if (type === "function" || window === target) {
         return false;
@@ -189,7 +187,6 @@ export function isUndefined(target: any): target is undefined {
 export function isNaN(target: any): boolean {
     return isNumber(target) && target !== target;
 }
-
 
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target: any): boolean {
@@ -369,3 +366,17 @@ export function generateFunctionCode(argsArrayLength: number) {
 
 // const args = [1, 2, 3];
 // (new Function(generateFunctionCode(args.length)))(object, property, args);
+/**
+ * 创建一个包含开始数字和结束数字的数组  包左不包右
+ */
+export function createArray(start: number, end: number, callback?: (index: number) => any): Array<any> {
+    // es6写法
+    // const list = [...Array(end - start).keys()].map(item => callback ? callback( item + start ) : ( item + start ));
+    // return list;
+    // 普通写法
+    const arr: any[] = [];
+    for (let i = start; i < end; i++) {
+        arr.push(callback ? callback(i) : i);
+    }
+    return arr;
+}
