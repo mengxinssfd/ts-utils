@@ -4,11 +4,20 @@
       "@babel/preset-env",
       {
         "useBuiltIns": "usage",
-        "corejs": "3.3.4"
+        "corejs": "3.3.4",
+        "targets": {
+          "browsers": [
+            "> 1%",
+            "last 2 versions",
+            "not ie <= 8"
+          ]
+        }
       }
     ]
   ],
   "plugins": [
-    ["@babel/transform-runtime"]
+    [
+      "@babel/transform-runtime"
+    ]
   ]
 }

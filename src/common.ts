@@ -190,11 +190,11 @@ export function isNaN(target: any): boolean {
 
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target: any): boolean {
-    // @ts-ignore
+    // TODO 可以替换array里的includes
     if ([undefined, null, "", NaN].includes(target)) return true;
     switch (typeOf(target)) {
         case "array":
-            return !!target.length;
+            return !target.length;
         case "object":
             return JSON.stringify(target) === "{}";
     }
@@ -366,25 +366,4 @@ export function generateFunctionCode(argsArrayLength: number) {
 
 // const args = [1, 2, 3];
 // (new Function(generateFunctionCode(args.length)))(object, property, args);
-/**
- * 创建一个包含开始数字和结束数字的数组 包左不包右: start <= item < (end || start + len)
- */
-export function createArray({start = 0, end, len, callback}: {
-    start?:number,
-    end?: number,
-    len?: number,
-    callback?: (index) => any
-}): Array<any> {
-    let e: number = start;
-    if (len !== undefined) {
-        e = start + len;
-    }
-    if (end !== undefined) {
-        e = end;
-    }
-    const arr: any[] = [];
-    for (let i = start; i < e; i++) {
-        arr.push(callback ? callback(i) : i);
-    }
-    return arr;
-}
+
