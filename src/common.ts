@@ -149,11 +149,12 @@ export function isArray(target: any): target is Array<any> {
 
 // 类数组对象 jq的实现方式
 export function isArrayLike(target: any): boolean {
+    // 检测target的类型
+    const type = typeOf(target);
+    if (["string", "null", "undefined", "number", "boolean"].indexOf(type) > -1) return false;
     // 如果target非null、undefined等，有length属性，则length等于target.length
     // 否则，length为false
     const length = !!target && "length" in target && target.length;
-    // 检测target的类型
-    const type = typeOf(target);
     // 如果target是function类型 或者是window对象 则返回false
     if (type === "function" || window === target) {
         return false;
@@ -224,11 +225,11 @@ export function randomColor() {
 
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
- * @param dateString
+ * @param date
  * @returns {Date}
  */
-export function getDateFromStr(dateString: string): Date {
-    const arr: number[] = dateString.split(/[- :\/]/).map(item => Number(item) || 0);
+export function getDateFromStr(date: string): Date {
+    const arr: number[] = date.split(/[- :\/]/).map(item => Number(item) || 0);
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 

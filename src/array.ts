@@ -10,7 +10,7 @@ export function createArray({start = 0, end, len, callback}: {
     start?: number,
     end?: number,
     len?: number,
-    callback?: (index) => any
+    callback?: (item, index) => any
 }): Array<any> {
     let e: number = start;
     if (len !== undefined) {
@@ -20,8 +20,8 @@ export function createArray({start = 0, end, len, callback}: {
         e = end;
     }
     const arr: any[] = [];
-    for (let i = start; i < e; i++) {
-        arr.push(callback ? callback(i) : i);
+    for (let item = start, index = 0; item < e; item++, index++) {
+        arr.push(callback ? callback(item, index) : item);
     }
     return arr;
 }
@@ -51,7 +51,7 @@ export function filter(callbackfn: (value: any, index: number, array: any[]) => 
 }
 
 // includes(searchElement: T, fromIndex?: number): boolean
-export function includes(searchElement: any, fromIndex = 0, thisArg: Array<any>): boolean {
+export function includes(thisArg: Array<any>, searchElement: any, fromIndex = 0): boolean {
     const arr = thisArg || this;
     if (!isArrayLike(arr)) throw new TypeError();
     for (let i = fromIndex; i < arr.length; i++) {
@@ -64,7 +64,7 @@ export function includes(searchElement: any, fromIndex = 0, thisArg: Array<any>)
 
 // 也可以给object用
 // Object.keys()
-export function keys(target: {} | []): Array<string> {
+export function keys(target: object | []): Array<string> {
     if (isEmpty(target)) return [];
     const type = typeOf(target);
     if (type !== "object" && type !== "array") return [];
@@ -81,7 +81,7 @@ export function keys(target: {} | []): Array<string> {
 // find(predicate: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): T | undefined;
 export function find(
     predicate: (value: any, index: number, obj: any[]) => boolean,
-    thisArg?: any,
+    thisArg?: any[],
 ): any | undefined {
     const arr = thisArg || this;
     if (!isArrayLike(arr)) throw new TypeError();
