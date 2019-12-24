@@ -1,3 +1,5 @@
+import {createArray} from "./array";
+
 /**
  * 防抖函数
  * @param callback 回调
@@ -21,10 +23,10 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
 /**
  * 轮询函数
  * @param callback
- * @param interval
- * @param immediate
+ * @param interval  间隔
+ * @param immediate 是否马上执行第一次
  */
-export function polling(callback: (...args: any[]) => void | Promise<any>, interval: number, immediate = true): () => void {
+export function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate = true): () => void {
     enum state {running, stopped}
     let timer: number;
     let status: state;
@@ -43,8 +45,8 @@ export function polling(callback: (...args: any[]) => void | Promise<any>, inter
         timer = window.setTimeout(handle, interval);
     }
 
+    status = state.running;
     if (immediate) {
-        status = state.running;
         handle();
     } else {
         timeout();
@@ -55,16 +57,24 @@ export function polling(callback: (...args: any[]) => void | Promise<any>, inter
     };
 }
 
+// 代替for循环
+export function forEachByLen(len, callback: (index: number) => any | false) {
+    for (let i = 0; i < len; i++) {
+        if (callback(i) !== false) continue;
+        break;
+    }
+}
+
 // 对象深拷贝办法
 export function deepCopy(obj: any): any {
     let result: [] | any = Array.isArray(obj) ? [] : {};
     for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            if (typeof obj[key] === 'object') {
-                result[key] = deepCopy(obj[key]);   //递归复制
-            } else {
-                result[key] = obj[key];
-            }
+        // if (!obj.hasOwnProperty(key)) continue; 继承的也要复制
+        const v = obj[key];
+        if (typeof v === 'object') {
+            result[key] = deepCopy(v);   //递归复制
+        } else {
+            result[key] = v;
         }
     }
     return result;
@@ -90,7 +100,10 @@ export function formatDate(formatStr: string): string {
     }
     for (let k in o) {
         if (new RegExp("(" + k + ")").test(formatStr)) {
-            formatStr = formatStr.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            const s1 = RegExp.$1;
+            const v = o[k];
+            const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
+            formatStr = formatStr.replace(s1, value);
         }
     }
     return formatStr;
@@ -99,15 +112,12 @@ export function formatDate(formatStr: string): string {
 // 获取小数点后面数字的长度
 export function getNumberLenAfterDot(num: number | string): number {
     num = Number(num);
-    if (Number.isNaN(num)) return 0;
+    if (isNaN(num)) return 0;
     let item = String(num).split(".")[1];
     return item ? item.length : 0;
 }
 
-function getPow(a: number | string, b: number | string): number {
-    a = Number(a);
-    b = Number(b);
-    if (Number.isNaN(a) || Number.isNaN(b)) return 1;
+function getPow(a: number, b: number): number {
     let aLen = getNumberLenAfterDot(a);
     let bLen = getNumberLenAfterDot(b);
     return Math.pow(10, Math.max(aLen, bLen));
@@ -115,18 +125,22 @@ function getPow(a: number | string, b: number | string): number {
 
 // 小数运算 小数位不能太长，整数位不能太大
 export const FloatCalc = {
+    // 加
     add(a: number, b: number): number {
         let pow = getPow(a, b);
         return (a * pow + b * pow) / pow;
     },
+    // 减
     minus(a: number, b: number): number {
         let pow = getPow(a, b);
         return (a * pow - b * pow) / pow;
     },
+    // 乘
     mul(a: number, b: number): number {
         let pow = getPow(a, b);
         return pow * a * (b * pow) / (pow * pow);
     },
+    // 除
     division(a: number, b: number): number {
         let pow = getPow(a, b);
         return a * pow / (b * pow);
@@ -148,7 +162,7 @@ export function isArray(target: any): target is Array<any> {
 }
 
 // 类数组对象 jq的实现方式
-export function isArrayLike(target: any): boolean {
+export function isArrayLike(target: any): target is ArrayLike<any> {
     // 检测target的类型
     const type = typeOf(target);
     if (["string", "null", "undefined", "number", "boolean"].indexOf(type) > -1) return false;
@@ -156,7 +170,7 @@ export function isArrayLike(target: any): boolean {
     // 否则，length为false
     const length = !!target && "length" in target && target.length;
     // 如果target是function类型 或者是window对象 则返回false
-    if (type === "function" || window === target) {
+    if (type === "function" || target === window) {
         return false;
     }
     // target本身是数组，则返回true
@@ -205,22 +219,36 @@ export function isEmpty(target: any): boolean {
 // 生成start到end之间的随机数 包含start与end
 // 传start不传end  end=start start=0 生成0-start之间的随机数
 // start end都不传  return Math.random()
-export function randomNumber(start?: number, end?: number): number {
+export function randomNumber(start?: number, end?: number, length = 1): number | number[] {
     if (!arguments.length) return Math.random();
     if (arguments.length === 1) {
         end = start;
         start = 0;
     }
     const len = (end as number) - (start as number) + 1;
-    return ~~(Math.random() * len) + (start as number);
+    const rand = ~~(Math.random() * len) + (start as number);
+    if (length === 1) {
+        return rand;
+    } else {
+        const arr = [rand];
+        forEachByLen(length - 1, () => arr.push(randomNumber(start, end) as number));
+        return arr;
+    }
 }
 
 /**
  * 随机颜色
  */
-export function randomColor() {
+export function randomColor(len = 1): string | string[] {
     const num = randomNumber(0xffffff).toString(16);
-    return "#" + strFillPrefix(num, 0, 6);
+    const color = "#" + strFillPrefix(num, "0", 6);
+    if (len === 1) {
+        return color;
+    } else {
+        const colorList: string[] = [];
+        forEachByLen(len, () => colorList.push(randomColor() as string));
+        return colorList;
+    }
 }
 
 /**
@@ -228,12 +256,14 @@ export function randomColor() {
  * @param date
  * @returns {Date}
  */
-export function getDateFromStr(date: string): Date {
+export function getDateFromStr(date: string): Date | void {
     const arr: number[] = date.split(/[- :\/]/).map(item => Number(item) || 0);
+    if (arr.length < 6) return;
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 
-export function objectIsEqual(obj1: any, obj2: any): boolean {
+export function objectIsEqual(obj1: object, obj2: object): boolean {
+    if (obj1 === obj2) return true;
     for (const key in obj1) {
         const value1 = obj1[key];
         const value2 = obj2[key];
@@ -249,12 +279,14 @@ export function isEqual(a: any, b: any): boolean {
     const aType = typeOf(a);
     const bType = typeOf(b);
     if (aType !== bType) return false;
+    // noinspection FallThroughInSwitchStatementJS
     switch (aType) {
         case "boolean":
-        case "number":
         case "string":
         case "function":
             return false;
+        case "number":
+            return isNaN(b);
         //  只有数组或者object不相等的时候才去对比是否相等
         case "array":
         case "object":
@@ -267,17 +299,20 @@ export function isEqual(a: any, b: any): boolean {
  * 千位分隔 1,234,567,890
  * @param num
  */
-export function qwFormat(num: string | number): string {
+export function thousandFormat(num: string | number): string {
     return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
 }
 
 // 给不能用``模板字符串的环境使用
 // es5的格式化字符串 example: getFormatStr("11%s111%s", 3, 4) => "1131114"
-export function getFormatStr() {
+export function getFormatStr(str, ...params) {
+    /*
+    // es5; typescript不需要str, ...params参数
     var args = Array.prototype.slice.call(arguments, 0);
     if (!args.length) return "";
     var str = args[0];
     var params = args.slice(1);
+    */
     return str.replace(/%s/g, function () {
         return params.length ? params.shift() : "";
     });
@@ -289,9 +324,10 @@ export function getFormatStr() {
  * @param fill
  * @param len
  */
-export function strFillPrefix(target: string, fill: any, len: number): string {
+export function strFillPrefix(target: string, fill: string, len: number): string {
     if (target.length >= len) return target;
-    const fillStr = Array(len - target.length).fill(fill).join("");
+    // const fillStr = Array(len - target.length).fill(fill).join("");
+    const fillStr = createArray({len: len - target.length, callback: () => fill}).join("");
     return fillStr + target;
 }
 
@@ -301,20 +337,21 @@ export function strFillPrefix(target: string, fill: any, len: number): string {
  * @param delay
  * @param callback
  */
-export function oneByOne(words: string, delay: number, callback?: (word: string, words: string) => boolean | undefined) {
+export function oneByOne(words: string, delay: number, callback?: (word: string, index: number, words: string) => false | void) {
     let cancel: () => void;
     const wordArr = words.split("");
-    cancel = polling(() => {
+    cancel = polling((index) => {
         const word = wordArr.shift();
         let keepRun = !!wordArr.length;
         if (callback) {
-            const flag = callback(word as string, words);
+            const flag = callback(word as string, index, words);
             keepRun = keepRun && flag !== false;
         } else {
             console.log(word);
         }
         if (!keepRun) cancel();
     }, delay);
+    return cancel;
 }
 
 const numberMap: any = {0: "零", 1: "一", 2: "二", 3: "三", 4: "四", 5: "五", 6: "六", 7: "七", 8: "八", 9: "九"};
@@ -353,6 +390,7 @@ export function getChineseNumber(number: number) {
 // 代替扩展符"...", 实现apply的时候可以使用此方法
 export function generateFunctionCode(argsArrayLength: number) {
     let code = 'return arguments[0][arguments[1]](';
+    // 拼接args
     for (let i = 0; i < argsArrayLength; i++) {
         if (i > 0) {
             code += ',';
@@ -367,4 +405,9 @@ export function generateFunctionCode(argsArrayLength: number) {
 
 // const args = [1, 2, 3];
 // (new Function(generateFunctionCode(args.length)))(object, property, args);
+export function generateFunction(obj: object, property: string, args: any[]) {
+    return (new Function(generateFunctionCode(args.length)))(obj, property, args);
+}
+
+
 

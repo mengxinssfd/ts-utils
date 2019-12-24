@@ -19,7 +19,8 @@
     "lib:es": "tsc --build tsconfig.es.json",
     "pub": "npm publish --access=public",
     "rename": "reName lib-umd\\index-umd.d.ts index.d.ts",
-    "test": "jest"
+    "test": "jest",
+    "cov": "jest --coverage"
   },
   "repository": {
     "type": "git",
