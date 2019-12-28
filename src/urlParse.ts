@@ -1,18 +1,19 @@
+import {isArray} from "./common";
 /**
  * 解析url
  * @Author: dyh
  * @Date: 2019-10-17 10:44
  * @Description:
  */
-
 export class UrlParse {
     schema: string;
     port: number | string;
     host: string;
-    pathname: string;
+    path: string;
     href: string;
     hash: string;
-    query: object;
+    query: any;
+    queryStr:string;
 
     constructor(url?: string) {
         if (!url) return;
@@ -24,14 +25,13 @@ export class UrlParse {
         this.schema = this.parseSchema(url);
         this.host = this.parseHost(url);
         this.port = this.parsePort(url);
-        this.pathname = this.parsePathname(url);
+        this.path = this.parsePath(url);
         this.hash = this.parseHash(url);
         this.query = this.parseQuery(url);
     }
 
     public parseSchema(url: string): string {
-        url = url.split("?")[0];
-        const reg = /(https?):\/\//;
+        const reg = /^(https?):\/\//;
         let schema = "";
         if (reg.test(url)) {
             schema = RegExp.$1;
@@ -60,14 +60,14 @@ export class UrlParse {
         return "";
     }
 
-    public parsePathname(url: string): string {
-        url = url.split("?")[0];
-        let pathname = "";
+    public parsePath(url: string): string {
+        // 去掉query、hash
+        url = url.split(/[\?#]/)[0];
         if (/^\//.test(url)) {
-            return url.substr(1);
+            return  url.substr(1);
         }
-        pathname = url.split(/[\?#]/)[0].replace(/(https?:\/\/)?((\w-?)+\.?)+(:\d+)?\/?/, "");
-        return pathname;
+        // 去掉schema
+        return url.replace(/(https?:\/\/)?((\w-?)+\.?)+(:\d+)?\/?/, "");
     }
 
     public parseHash(url: string): string {
@@ -82,22 +82,25 @@ export class UrlParse {
         url = url.split("?")[1];
         // 去掉hash
         url = url.split("#")[0];
+        this.queryStr = url;
         let params = url.split("&");
 
-        for (const index in params) {
-            let [key, value] = params[index].split("=");
+        for (const k in params) {
+            const v = params[k];
+            let [key, value] = v.split("=");
             key = decodeURIComponent(key);
             // a[]=0&a[]=1 || a[0]=0&a[1]=1 转成 a=0&a=1 TODO 看看vue的路由参数是怎么解析的
             key = key.replace(/\[\w*\]/g, "");
             value = decodeURIComponent(value);
 
-            if (query[key] === undefined) {
+            const queryValue = query[key];
+            if (queryValue === undefined) {
                 query[key] = value;
             } else {
-                if (Object.prototype.toString.call(query[key]) === "[object Array]") {
+                if (isArray(queryValue)) {
                     query[key].push(value);
                 } else {
-                    query[key] = [query[key], value];
+                    query[key] = [queryValue, value];
                 }
             }
         }
