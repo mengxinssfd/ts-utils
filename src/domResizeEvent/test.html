@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        #demo {
+            background: blue;
+            height: 200px;
+            width: 100%;
+        }
+
+        .hide {
+            width: 100%;
+            height: 100%;
+            overflow: scroll;
+        }
+
+        .hide-content {
+            width: 200%;
+            height: 200%;
+        }
+    </style>
+</head>
+<body>
+<div id="demo">
+    demo 内容
+    <div class="hide">
+        <div class="hide-content"></div>
+    </div>
+</div>
+<script>
+var observer = new MutationObserver(function(mutations, observer) {
+    console.log("oooooooooo");
+    mutations.forEach(function(mutation) {
+        console.log(mutation);
+    });
+});
+var config = {
+    attributes: true,
+    attributeOldValue: true,
+    attributeFilter: [
+        'style',
+    ],
+};
+var el = document.getElementById('demo');
+
+observer.observe(el, config);
+const hide = document.querySelector(".hide");
+hide.scrollLeft = 1000000;
+hide.scrollTop = 1000000;
+hide.addEventListener("scroll", function(e) {
+    const content = document.querySelector(".hide-content");
+    console.log("hhhhhhhhhhhhhh", this, e, content.getBoundingClientRect().left);
+});
+</script>
+</body>
+</html>
