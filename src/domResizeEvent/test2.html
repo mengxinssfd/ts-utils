@@ -42,6 +42,13 @@
         cursor: se-resize;
         font-size: 0px;
     }
+
+    .test1 {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: pink;
+    }
 </style>
 
 <div class="container">
@@ -56,6 +63,9 @@
         </div>
     </div>
 </div>
+<div class="test1">
+
+</div>
 
 <script>
 // https://blog.crimx.com/2017/07/15/element-onresize/
@@ -64,22 +74,26 @@ var right = document.getElementById('item-right');
 var controllerLeft = document.getElementById('controller-left');
 var controllerRight = document.getElementById('controller-right');
 
-onElResize(left, function() {
+onElResize(left, function () {
     right.style.width = left.offsetWidth + 'px';
     right.style.height = left.offsetHeight + 'px';
 });
 
-onElResize(right, function() {
+onElResize(right, function () {
     left.style.width = right.offsetWidth + 'px';
     left.style.height = right.offsetHeight + 'px';
 });
 
+const test1 = document.querySelector(".test1");
+onElResize(test1, function () {
+
+});
 var isLeftMousedown = false;
 var isRightMousedown = false;
 var lastMouseX = 0;
 var lastMouseY = 0;
 
-document.addEventListener('mousemove', function(e) {
+document.addEventListener('mousemove', function (e) {
     var el;
     if (isLeftMousedown) {
         el = left;
@@ -96,7 +110,7 @@ document.addEventListener('mousemove', function(e) {
     lastMouseY = e.clientY;
 });
 
-controllerLeft.addEventListener('mousedown', function(e) {
+controllerLeft.addEventListener('mousedown', function (e) {
     e.preventDefault();
     lastMouseX = e.clientX;
     lastMouseY = e.clientY;
@@ -104,7 +118,7 @@ controllerLeft.addEventListener('mousedown', function(e) {
     left.style.willChange = 'width,height';
 });
 
-controllerRight.addEventListener('mousedown', function(e) {
+controllerRight.addEventListener('mousedown', function (e) {
     e.preventDefault();
     lastMouseX = e.clientX;
     lastMouseY = e.clientY;
@@ -112,7 +126,7 @@ controllerRight.addEventListener('mousedown', function(e) {
     right.style.willChange = 'width,height';
 });
 
-document.addEventListener('mouseup', function() {
+document.addEventListener('mouseup', function () {
     isLeftMousedown = false;
     isRightMousedown = false;
     left.style.willChange = '';
@@ -125,7 +139,7 @@ document.addEventListener('mouseup', function() {
 var passiveEvents = false;
 try {
     var opts = Object.defineProperty({}, 'passive', {
-        get: function() {
+        get: function () {
             passiveEvents = {passive: true};
         },
     });
@@ -151,8 +165,10 @@ function onElResize(el, handler) {
     var maxHeight = 10000 * (lastHeight);
 
     var expand = document.createElement('div');
+    expand.className = "expand";
     expand.style.cssText = 'position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;';
     var shrink = expand.cloneNode(false);
+    shrink.className = "shrink";
 
     var expandChild = document.createElement('div');
     expandChild.style.cssText = 'transition:0s;animation:none;';
