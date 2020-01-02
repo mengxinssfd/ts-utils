@@ -49,9 +49,28 @@
         height: 100%;
         background-color: pink;
     }
+
+    .l, .r {
+        float: left;
+        width: 50%;
+        height: 100%;
+        background-color: red;
+    }
+
+    .r {
+        background-color: #2ecc71;
+    }
+
+    .full-r .l {
+        width: 0;
+    }
+
+    .full-r .r {
+        width: 100%;
+    }
 </style>
 
-<div class="container">
+<!--<div class="container">
     <div class="container-left">
         <div id="item-left">
             <div id="controller-left" class="controller"></div>
@@ -62,9 +81,10 @@
             <div id="controller-right" class="controller"></div>
         </div>
     </div>
-</div>
+</div>-->
 <div class="test1">
-
+    <div class="l"></div>
+    <div class="r"></div>
 </div>
 
 <script>
@@ -74,6 +94,7 @@ var right = document.getElementById('item-right');
 var controllerLeft = document.getElementById('controller-left');
 var controllerRight = document.getElementById('controller-right');
 
+/*
 onElResize(left, function () {
     right.style.width = left.offsetWidth + 'px';
     right.style.height = left.offsetHeight + 'px';
@@ -83,11 +104,20 @@ onElResize(right, function () {
     left.style.width = right.offsetWidth + 'px';
     left.style.height = right.offsetHeight + 'px';
 });
+*/
 
 const test1 = document.querySelector(".test1");
-onElResize(test1, function () {
+const r = document.querySelector(".r");
+onElResize(r, function () {
 
 });
+test1.addEventListener("click", () => {
+    if (Array.prototype.includes.call(test1.classList, "full-r")) {
+        test1.classList.remove("full-r");
+    } else
+        test1.classList.add("full-r");
+});
+/*
 var isLeftMousedown = false;
 var isRightMousedown = false;
 var lastMouseX = 0;
@@ -134,7 +164,7 @@ document.addEventListener('mouseup', function () {
 });
 
 //////////\\\///\\\\\\\\\\
-
+*/
 // scroll passive events
 var passiveEvents = false;
 try {
@@ -146,6 +176,7 @@ try {
     window.addEventListener('test', null, opts);
 } catch (e) {
 }
+
 
 function onElResize(el, handler) {
     if (!(el instanceof HTMLElement)) {
@@ -198,12 +229,13 @@ function onElResize(el, handler) {
         if (newWidth !== lastWidth || newHeight !== lastHeight) {
             lastWidth = newWidth;
             lastHeight = newHeight;
+            console.log("onResize");
             handler();
         }
     }
 
     function onScroll() {
-        console.log("ssssssssssssss");
+        console.log("onScroll");
         newWidth = el.offsetWidth || 1;
         newHeight = el.offsetHeight || 1;
         if (newWidth !== lastWidth || newHeight !== lastHeight) {

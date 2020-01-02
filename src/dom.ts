@@ -249,7 +249,6 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
         removeMoveAndUpEventListener();
     }
 
-
     function mousedown(event: MouseEvent) {
         const backVal = down.call(this, event, "mouse");
         window.addEventListener("mousemove", move, capture.move);
@@ -272,4 +271,80 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
     return removeAllEventListener;
 }
 
+// from => https://blog.crimx.com/2017/07/15/element-onresize/
+// TODO 未测
+/**
+ * dom resize event
+ * @param el
+ * @param handler
+ */
+export function onElResize(el: HTMLElement, handler: () => void) {
+    if (!(el instanceof HTMLElement)) {
+        throw new TypeError("Parameter 1 is not instance of 'HTMLElement'.");
+    }
+    // https://www.w3.org/TR/html/syntax.html#writing-html-documents-elements
+    if (/^(area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr|script|style|textarea|title)$/i.test(el.tagName)) {
+        throw new TypeError('Unsupported tag type. Change the tag or wrap it in a supported tag(e.g. div).');
+    }
+    if (typeof handler !== 'function') {
+        throw new TypeError("Parameter 2 is not of type 'function'.");
+    }
 
+    let lastWidth = el.offsetWidth || 1;
+    let lastHeight = el.offsetHeight || 1;
+    const maxWidth = 10000 * (lastWidth);
+    const maxHeight = 10000 * (lastHeight);
+
+    const expand: HTMLElement = document.createElement('div');
+    expand.className = "expand";
+    expand.style.cssText = 'position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;';
+    const shrink: HTMLElement = expand.cloneNode(false) as HTMLElement;
+    shrink.className = "shrink";
+
+    const expandChild: HTMLElement = document.createElement('div') as HTMLElement;
+    expandChild.style.cssText = 'transition:0s;animation:none;';
+    const shrinkChild: HTMLElement = expandChild.cloneNode(false) as HTMLElement;
+
+    expandChild.style.width = maxWidth + 'px';
+    expandChild.style.height = maxHeight + 'px';
+    shrinkChild.style.width = '250%';
+    shrinkChild.style.height = '250%';
+
+    expand.appendChild(expandChild);
+    shrink.appendChild(shrinkChild);
+    el.appendChild(expand);
+    el.appendChild(shrink);
+
+    if (expand.offsetParent !== el) {
+        el.style.position = 'relative';
+    }
+
+    expand.scrollTop = shrink.scrollTop = maxHeight;
+    expand.scrollLeft = shrink.scrollLeft = maxWidth;
+
+    let newWidth = 0;
+    let newHeight = 0;
+
+    function onResize() {
+        if (newWidth !== lastWidth || newHeight !== lastHeight) {
+            lastWidth = newWidth;
+            lastHeight = newHeight;
+            console.log("onResize");
+            handler();
+        }
+    }
+
+    function onScroll() {
+        console.log("onScroll");
+        newWidth = el.offsetWidth || 1;
+        newHeight = el.offsetHeight || 1;
+        if (newWidth !== lastWidth || newHeight !== lastHeight) {
+            requestAnimationFrame(onResize);
+        }
+        expand.scrollTop = shrink.scrollTop = maxHeight;
+        expand.scrollLeft = shrink.scrollLeft = maxWidth;
+    }
+
+    expand.addEventListener('scroll', onScroll);
+    shrink.addEventListener('scroll', onScroll);
+}
