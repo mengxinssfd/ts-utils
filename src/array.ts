@@ -34,8 +34,10 @@ export function createArray({start = 0, end, len, callback}: {
 // forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void;
 export function forEach(callbackfn: (value: any, index: number, array: ArrayLike<any>) => any | false, thisArg?: ArrayLike<any>) {
     const arr = thisArg || this;
+    // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
+    const len = arr.length;
     // if (!isArrayLike(arr)) throw new TypeError();
-    for (let i = 0; i < arr.length; i++) {
+    for (let i = 0; i < len; i++) {
         if (callbackfn(arr[i], i, arr) === false) break;
     }
 }
@@ -54,7 +56,8 @@ export function filter(callbackfn: (value: any, index: number, array: ArrayLike<
     const arr = thisArg || this;
     // if (!isArrayLike(arr)) throw new TypeError();
     const fList: any[] = [];
-    for (let i = 0; i < arr.length; i++) {
+    const len = arr.length;
+    for (let i = 0; i < len; i++) {
         const value = arr[i];
         if (callbackfn(value, i, arr)) {
             fList.push(value);
@@ -67,7 +70,8 @@ export function filter(callbackfn: (value: any, index: number, array: ArrayLike<
 export function includes(thisArg: ArrayLike<any>, searchElement: any, fromIndex = 0): boolean {
     const arr = thisArg || this;
     // if (!isArrayLike(arr)) throw new TypeError();
-    for (let i = fromIndex; i < arr.length; i++) {
+    const len = arr.length;
+    for (let i = fromIndex; i < len; i++) {
         const item = arr[i];
         if (item === searchElement) return true;
         if (isNaN(item) && isNaN(searchElement)) return true;
@@ -97,7 +101,8 @@ export function find(
     const arr = thisArg || this;
     // if (!isArrayLike(arr)) throw new TypeError();
     // if (!isFunction(predicate)) return; // 在typescript中有类型检查，不需要这一句
-    for (let i = 0; i < arr.length; i++) {
+    const len = arr.length;
+    for (let i = 0; i < len; i++) {
         const item = arr[i];
         if (predicate(item, i, arr)) return item;
     }
