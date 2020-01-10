@@ -9,8 +9,10 @@
   "exclude": [
     "tslib",
     "lib*",
+    "__test__",
     "webpack.config.js",
     "test.ts",
-    "src/index.ts"
+    "src/index.ts",
+    "jest.config.js"
   ]
 }

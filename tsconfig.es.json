@@ -12,6 +12,8 @@
     "lib*",
     "webpack.config.js",
     "test",
+    "__test__",
+    "jest.config.js",
     "src/index-umd.ts"
   ]
 }
