@@ -73,7 +73,11 @@ export function includes(thisArg: ArrayLike<any>, searchElement: any, fromIndex 
     const len = arr.length;
     for (let i = fromIndex; i < len; i++) {
         const item = arr[i];
-        if (item === searchElement) return true;
+        if (typeof searchElement === "function") {
+            if (searchElement(item, i, arr)) return true;
+        } else {
+            if (item === searchElement) return true;
+        }
         if (isNaN(item) && isNaN(searchElement)) return true;
     }
     return false;
