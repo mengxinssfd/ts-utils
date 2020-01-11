@@ -3,15 +3,27 @@
  */
 import {isEmpty, typeOf} from "./common";
 
-/**
- * 创建一个包含开始数字和结束数字的数组 包左不包右: start <= item < (end || start + len)
- */
-export function createArray({start = 0, end, len, fill}: {
+// @overload
+// ({start: 0, end: 2}) => [0, 1];
+// (start: 0, len: 2, fill: item => item+1) => [1, 2];
+export function createArray({start, end, len, fill}: {
     start?: number,
     end?: number,
     len?: number,
-    fill?: ((item: number, index: number) => any) | any
-}): Array<any> {
+    fill?: ((item: number, index: number) => any)
+}): any[];
+// @overload
+// ({start:0, end:2, len:2, fill:1}) => [1, 1];
+export function createArray({start, end, len, fill}: {
+    start?: number,
+    end?: number,
+    len?: number,
+    fill?: any
+}): any[];
+/**
+ * 创建一个包含开始数字和结束数字的数组 包左不包右: start <= item < (end || start + len)
+ */
+export function createArray({start = 0, end, len, fill}) {
     let e: number = start;
     if (len && end) {
         e = Math.min(start + len, end);

@@ -39,6 +39,7 @@ test('createArray', () => {
     expect(arr.createArray({start: 0, end: 2})).toEqual([0, 1]);
     expect(arr.createArray({start: 0, len: 2})).toEqual([0, 1]);
     expect(arr.createArray({len: 2})).toEqual([0, 1]);
+    expect(arr.createArray({len: 5, end: 3})).toEqual([0, 1, 2]);
     expect(arr.createArray({start: 3, end: 2})).toEqual([]);
     expect(arr.createArray({start: 3, len: 2})).toEqual([3, 4]);
     expect(arr.createArray({start: 3, len: 5, end: 5})).toEqual([3, 4]);
