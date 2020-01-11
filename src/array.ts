@@ -1,16 +1,16 @@
 /**
  * ie9不支持的数组函数
  */
-import {isEmpty} from "./common";
+import {isEmpty, typeOf} from "./common";
 
 /**
  * 创建一个包含开始数字和结束数字的数组 包左不包右: start <= item < (end || start + len)
  */
-export function createArray({start = 0, end, len, callback}: {
+export function createArray({start = 0, end, len, fill}: {
     start?: number,
     end?: number,
     len?: number,
-    callback?: (item, index) => any
+    fill?: ((item: number, index: number) => any) | any
 }): Array<any> {
     let e: number = start;
     if (len && end) {
@@ -23,9 +23,21 @@ export function createArray({start = 0, end, len, callback}: {
             e = end;
         }
     }
+    let callback: (item: number, index: number) => any;
+    switch (typeOf(fill)) {
+        case "function":
+            callback = fill;
+            break;
+        case "undefined":
+        case "null":
+            callback = (i) => i;
+            break;
+        default:
+            callback = (i) => fill;
+    }
     const arr: any[] = [];
     for (let item = start, index = 0; item < e; item++, index++) {
-        arr.push(callback ? callback(item, index) : item);
+        arr.push(callback(item, index));
     }
     return arr;
 }

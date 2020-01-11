@@ -328,7 +328,7 @@ export function getFormatStr(str, ...params) {
 export function strFillPrefix(target: string, fill: string, len: number): string {
     if (target.length >= len) return target;
     // const fillStr = Array(len - target.length).fill(fill).join("");
-    const fillStr = createArray({len: len - target.length, callback: () => fill}).join("");
+    const fillStr = createArray({len: len - target.length, fill}).join("");
     return fillStr + target;
 }
 

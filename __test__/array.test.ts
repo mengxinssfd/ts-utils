@@ -47,10 +47,11 @@ test('createArray', () => {
         start: 3,
         len: 5,
         end: 5,
-        callback(item, index) {
+        fill(item, index) {
             return item + "" + index;
         },
     })).toEqual(["30", "41"]);
+    expect(arr.createArray({start: 3, len: 5, end: 6, fill: 0})).toEqual([0, 0, 0]);
 });
 test('filter', () => {
     // 未找到
