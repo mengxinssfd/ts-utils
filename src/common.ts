@@ -1,4 +1,4 @@
-import {createArray} from "./array";
+// import {includes} from "./array";
 
 /**
  * 防抖函数
@@ -199,6 +199,7 @@ export function isUndefined(target: any): target is undefined {
     return target === void 0;
 }
 
+// 有native isNaN函数 但是 {} "abc"会是true
 export function isNaN(target: any): boolean {
     // return String(target) === "NaN"; // "NaN" 会被判断为true
     return isNumber(target) && target !== target;
@@ -206,8 +207,9 @@ export function isNaN(target: any): boolean {
 
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target: any): boolean {
-    // TODO 可以替换array里的includes
+    // TO DO 可以替换array里的includes
     if ([undefined, null, "", NaN].includes(target)) return true;
+    // if (includes([undefined, null, "", NaN], target)) return true;
     switch (typeOf(target)) {
         case "array":
             return !target.length;
@@ -328,7 +330,8 @@ export function getFormatStr(str, ...params) {
 export function strFillPrefix(target: string, fill: string, len: number): string {
     if (target.length >= len) return target;
     // const fillStr = Array(len - target.length).fill(fill).join("");
-    const fillStr = createArray({len: len - target.length, fill}).join("");
+    // const fillStr = createArray({len: len - target.length, fill}).join("");
+    const fillStr = Array(len - target.length + 1).join(fill); // 与上面两行一样
     return fillStr + target;
 }
 

@@ -151,9 +151,11 @@ test('isNaN', () => {
     expect(cm.isNaN(null)).toBeFalsy();
     expect(cm.isNaN("")).toBeFalsy();
     expect(cm.isNaN({})).toBeFalsy();
+    expect(cm.isNaN({a: 1})).toBeFalsy();
     expect(cm.isNaN([])).toBeFalsy();
-    expect(cm.isNaN("123")).toBeFalsy();
+    expect(cm.isNaN([1, 2, 3])).toBeFalsy();
     expect(cm.isNaN(["bdsdf", 12323])).toBeFalsy();
+    expect(cm.isNaN("123")).toBeFalsy();
     expect(cm.isNaN("NaN")).toBeFalsy();
 });
 test('isEmpty', () => {
@@ -188,6 +190,8 @@ test('randomNumber', () => {
 });
 test('strFillPrefix', () => {
     expect(cm.strFillPrefix("123", "0", 6)).toBe("000123");
+    expect(cm.strFillPrefix("123", "0", 0)).toBe("123");
+    expect(cm.strFillPrefix("123", "0", -1)).toBe("123");
 });
 test('randomColor', () => {
     const reg = /#[0-9a-f]{6}/;

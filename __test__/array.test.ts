@@ -31,6 +31,8 @@ test('includes', () => {
     expect(arr.includes(["", undefined, 0, NaN, null], 0)).toBe(true);
     expect(arr.includes(["", undefined, 0, NaN, null], undefined)).toBe(true);
     expect(arr.includes(["", undefined, 0, NaN, null], "")).toBe(true);
+    expect(arr.includes(["", undefined, 0, NaN, null], true)).toBeFalsy();
+    expect(arr.includes(["", undefined, 0, NaN, null], {})).toBeFalsy();
     expect(arr.includes(["", undefined, 0, NaN, null], (item) => !item)).toBe(true);
     expect(arr.includes(["", undefined, 0, NaN, null], (item) => item === undefined)).toBe(true);
     expect(arr.includes.call(["", undefined, 0, NaN, null], undefined, NaN)).toBe(true);

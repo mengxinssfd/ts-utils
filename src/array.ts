@@ -1,7 +1,7 @@
 /**
  * ie9不支持的数组函数
  */
-import {isEmpty, typeOf} from "./common";
+import {isEmpty, typeOf, isNaN} from "./common";
 
 // @overload
 // ({start: 0, end: 2}) => [0, 1];
