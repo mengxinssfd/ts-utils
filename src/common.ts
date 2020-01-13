@@ -200,8 +200,8 @@ export function isUndefined(target: any): target is undefined {
 }
 
 export function isNaN(target: any): boolean {
-    // return isNumber(target) && target !== target;
-    return String(target) === "NaN";
+    // return String(target) === "NaN"; // "NaN" 会被判断为true
+    return isNumber(target) && target !== target;
 }
 
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true

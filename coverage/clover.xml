@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1578731498113" clover="3.2.0">
-  <project timestamp="1578731498113" name="All files">
-    <metrics statements="298" coveredstatements="298" conditionals="160" coveredconditionals="160" methods="64" coveredmethods="64" elements="522" coveredelements="522" complexity="0" loc="298" ncloc="298" packages="1" files="3" classes="3"/>
+<coverage generated="1578901594314" clover="3.2.0">
+  <project timestamp="1578901594315" name="All files">
+    <metrics statements="298" coveredstatements="298" conditionals="162" coveredconditionals="162" methods="64" coveredmethods="64" elements="524" coveredelements="524" complexity="0" loc="298" ncloc="298" packages="1" files="3" classes="3"/>
     <file name="array.ts" path="D:\project\utilTs\src\array.ts">
       <metrics statements="60" coveredstatements="60" conditionals="42" coveredconditionals="42" methods="10" coveredmethods="10"/>
       <line num="4" count="3" type="stmt"/>
@@ -66,7 +66,7 @@
       <line num="135" count="7" type="cond" truecount="2" falsecount="0"/>
     </file>
     <file name="common.ts" path="D:\project\utilTs\src\common.ts">
-      <metrics statements="186" coveredstatements="186" conditionals="100" coveredconditionals="100" methods="46" coveredmethods="46"/>
+      <metrics statements="186" coveredstatements="186" conditionals="102" coveredconditionals="102" methods="46" coveredmethods="46"/>
       <line num="1" count="3" type="stmt"/>
       <line num="9" count="3" type="stmt"/>
       <line num="10" count="1" type="stmt"/>
@@ -133,8 +133,8 @@
       <line num="145" count="1" type="stmt"/>
       <line num="146" count="1" type="stmt"/>
       <line num="151" count="3" type="stmt"/>
-      <line num="152" count="123" type="cond" truecount="2" falsecount="0"/>
-      <line num="153" count="44" type="stmt"/>
+      <line num="152" count="153" type="cond" truecount="2" falsecount="0"/>
+      <line num="153" count="49" type="stmt"/>
       <line num="156" count="3" type="stmt"/>
       <line num="157" count="7" type="stmt"/>
       <line num="160" count="3" type="stmt"/>
@@ -149,7 +149,7 @@
       <line num="182" count="3" type="stmt"/>
       <line num="183" count="2" type="stmt"/>
       <line num="186" count="3" type="stmt"/>
-      <line num="187" count="14" type="stmt"/>
+      <line num="187" count="44" type="stmt"/>
       <line num="190" count="3" type="stmt"/>
       <line num="191" count="2" type="stmt"/>
       <line num="194" count="3" type="stmt"/>
@@ -157,7 +157,7 @@
       <line num="198" count="3" type="stmt"/>
       <line num="199" count="7" type="stmt"/>
       <line num="202" count="3" type="stmt"/>
-      <line num="204" count="17" type="stmt"/>
+      <line num="204" count="30" type="cond" truecount="2" falsecount="0"/>
       <line num="208" count="3" type="stmt"/>
       <line num="210" count="10" type="cond" truecount="2" falsecount="0"/>
       <line num="211" count="8" type="stmt"/>

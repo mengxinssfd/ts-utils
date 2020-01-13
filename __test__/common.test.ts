@@ -142,6 +142,19 @@ test('isUndefined', () => {
 test('isNaN', () => {
     expect(NaN === NaN).toBeFalsy();
     expect(cm.isNaN(NaN)).toBeTruthy();
+    expect(cm.isNaN({a: 1})).toBeFalsy();
+    expect(cm.isNaN(1)).toBeFalsy();
+    expect(cm.isNaN(0)).toBeFalsy();
+    expect(cm.isNaN(-1)).toBeFalsy();
+    expect(cm.isNaN(false)).toBeFalsy();
+    expect(cm.isNaN(undefined)).toBeFalsy();
+    expect(cm.isNaN(null)).toBeFalsy();
+    expect(cm.isNaN("")).toBeFalsy();
+    expect(cm.isNaN({})).toBeFalsy();
+    expect(cm.isNaN([])).toBeFalsy();
+    expect(cm.isNaN("123")).toBeFalsy();
+    expect(cm.isNaN(["bdsdf", 12323])).toBeFalsy();
+    expect(cm.isNaN("NaN")).toBeFalsy();
 });
 test('isEmpty', () => {
     expect(cm.isEmpty(NaN)).toBeTruthy();
