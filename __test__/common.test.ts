@@ -32,6 +32,33 @@ test('formatDate', () => {
     expect(cm.formatDate.call(date1, "yyyy-MM-dd")).toBe("2019-12-29");
     expect(cm.formatDate.call(date1, "hh:mm:ss")).toBe("10:10:10");
     expect(cm.formatDate.call(date1, "dd-MM-yyyy")).toBe("29-12-2019");
+    // week start
+    /* expect(cm.formatDate.call(new Date("2020-01-12"), "周w")).toBe("周日");
+    expect(cm.formatDate.call(new Date("2020-01-12"), "w")).toBe("日");
+    expect(cm.formatDate.call(new Date("2020-01-13"), "w")).toBe("一");
+    expect(cm.formatDate.call(new Date("2020-01-14"), "w")).toBe("二");
+    expect(cm.formatDate.call(new Date("2020-01-15"), "w")).toBe("三");
+    expect(cm.formatDate.call(new Date("2020-01-16"), "w")).toBe("四");
+    expect(cm.formatDate.call(new Date("2020-01-17"), "w")).toBe("五");
+    expect(cm.formatDate.call(new Date("2020-01-18"), "w")).toBe("六"); */
+    // week end
+    // season start
+    expect(cm.formatDate.call(new Date("2020-01-12"), "q")).toBe("春");
+    expect(cm.formatDate.call(new Date("2020-02-12"), "q")).toBe("春");
+    expect(cm.formatDate.call(new Date("2020-03-13"), "q")).toBe("春");
+    expect(cm.formatDate.call(new Date("2020-04-14"), "q")).toBe("夏");
+    expect(cm.formatDate.call(new Date("2020-05-15"), "q")).toBe("夏");
+    expect(cm.formatDate.call(new Date("2020-06-16"), "q")).toBe("夏");
+    expect(cm.formatDate.call(new Date("2020-07-17"), "q")).toBe("秋");
+    expect(cm.formatDate.call(new Date("2020-08-18"), "q")).toBe("秋");
+    expect(cm.formatDate.call(new Date("2020-09-18"), "q")).toBe("秋");
+    expect(cm.formatDate.call(new Date("2020-10-18"), "q")).toBe("冬");
+    expect(cm.formatDate.call(new Date("2020-11-18"), "q")).toBe("冬");
+    expect(cm.formatDate.call(new Date("2020-12-18"), "q")).toBe("冬");
+
+    cm.formatDate.seasonText = ["spring"];
+    expect(cm.formatDate.call(new Date("2020-01-12"), "q")).toBe("spring");
+    // season end
     const date2 = cm.getDateFromStr("2019-12-1 10:10:10");
     expect(cm.formatDate.call(date2, "d-MM-yy")).toBe("1-12-19");
 });

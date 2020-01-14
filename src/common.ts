@@ -1,4 +1,4 @@
-// import {includes} from "./array";
+import {createArray} from "./array";
 
 /**
  * 防抖函数
@@ -80,34 +80,58 @@ export function deepCopy(obj: any): any {
     return result;
 }
 
+interface formatDateInterface {
+    (format: string): string;
+    seasonText: string[];
+    weekText: string[];
+}
+
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
- * @param formatStr
+ * @param format
  * @returns String
  */
-export function formatDate(formatStr: string): string {
+export const formatDate: formatDateInterface = function (format) {
     let o: any = {
         "M+": this.getMonth() + 1,                    //月份
         "d+": this.getDate(),                         //日
         "h+": this.getHours(),                        //小时
         "m+": this.getMinutes(),                      //分
         "s+": this.getSeconds(),                      //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3),  //季度
-        "S": this.getMilliseconds(),                   //毫秒
+        "q": (function (__this) {          //季度
+            const q = Math.floor((__this.getMonth() + 3) / 3) - 1;
+            return formatDate.seasonText[q];
+        })(this),
+        "S+": this.getMilliseconds(),                   //毫秒
+        "w": (function (__this) {        //周
+            const d = __this.getDay();
+            // 星期
+            if (!formatDate.weekText || !formatDate.weekText.length) {
+                formatDate.weekText = createArray({
+                    end: 7,
+                    fill(item, index) {
+                        return index === 0 ? "日" : getChineseNumber(index);
+                    },
+                });
+            }
+            return formatDate.weekText[d];
+        })(this),
     };
-    if (/(y+)/.test(formatStr)) {
-        formatStr = formatStr.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    if (/(y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     }
     for (let k in o) {
-        if (new RegExp("(" + k + ")").test(formatStr)) {
+        if (new RegExp("(" + k + ")").test(format)) {
             const s1 = RegExp.$1;
             const v = o[k];
             const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
-            formatStr = formatStr.replace(s1, value);
+            format = format.replace(s1, value);
         }
     }
-    return formatStr;
-}
+    return format;
+};
+formatDate.weekText = [];
+formatDate.seasonText = ["春", "夏", "秋", "冬"];
 
 // 获取小数点后面数字的长度
 export function getNumberLenAfterDot(num: number | string): number {
