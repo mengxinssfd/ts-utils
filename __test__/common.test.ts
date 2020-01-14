@@ -26,6 +26,7 @@ test('getDateFromStr', () => {
     const t2 = (cm.getDateFromStr("2019-12-20 10:10:10") as Date).getTime();
     expect(t1).toBeGreaterThan(t2);
     expect(cm.getDateFromStr("abcd")).toBeUndefined();
+    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29"), "yyyy")).toBe("2019");
 });
 test('formatDate', () => {
     const date1 = cm.getDateFromStr("2019-12-29 10:10:10");
@@ -33,14 +34,14 @@ test('formatDate', () => {
     expect(cm.formatDate.call(date1, "hh:mm:ss")).toBe("10:10:10");
     expect(cm.formatDate.call(date1, "dd-MM-yyyy")).toBe("29-12-2019");
     // week start
-    /* expect(cm.formatDate.call(new Date("2020-01-12"), "周w")).toBe("周日");
+    expect(cm.formatDate.call(new Date("2020-01-12"), "周w")).toBe("周日");
     expect(cm.formatDate.call(new Date("2020-01-12"), "w")).toBe("日");
     expect(cm.formatDate.call(new Date("2020-01-13"), "w")).toBe("一");
     expect(cm.formatDate.call(new Date("2020-01-14"), "w")).toBe("二");
     expect(cm.formatDate.call(new Date("2020-01-15"), "w")).toBe("三");
     expect(cm.formatDate.call(new Date("2020-01-16"), "w")).toBe("四");
     expect(cm.formatDate.call(new Date("2020-01-17"), "w")).toBe("五");
-    expect(cm.formatDate.call(new Date("2020-01-18"), "w")).toBe("六"); */
+    expect(cm.formatDate.call(new Date("2020-01-18"), "w")).toBe("六");
     // week end
     // season start
     expect(cm.formatDate.call(new Date("2020-01-12"), "q")).toBe("春");

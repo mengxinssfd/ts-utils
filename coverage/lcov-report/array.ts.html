@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>74/74</span>
+        <span class='fraction'>76/76</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>10/10</span>
+        <span class='fraction'>11/11</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>60/60</span>
+        <span class='fraction'>62/62</span>
       </div>
     </div>
     <p class="quiet">
@@ -184,7 +184,15 @@
 <a name='L136'></a><a href='#L136'>136</a>
 <a name='L137'></a><a href='#L137'>137</a>
 <a name='L138'></a><a href='#L138'>138</a>
-<a name='L139'></a><a href='#L139'>139</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -243,18 +251,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -274,6 +286,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -380,7 +396,7 @@ export function createArray({start = 0, end, len, fill}) {
 &nbsp;
 // ie9支持
 // forEach(callbackfn: (value: T, index: number, array: T[]) =&gt; void, thisArg?: any): void;
-export function forEach(callbackfn: (value: any, index: number, array: ArrayLike&lt;any&gt;) =&gt; any | false, thisArg?: ArrayLike&lt;any&gt;) {
+export function forEach&lt;T&gt;(callbackfn: (value: T, index: number, array: ArrayLike&lt;T&gt;) =&gt; (any | false), thisArg?: ArrayLike&lt;T&gt; | Iterable&lt;T&gt;) {
     const arr = thisArg || this;
     // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
     const len = arr.length;
@@ -391,19 +407,23 @@ export function forEach(callbackfn: (value: any, index: number, array: ArrayLike
 }
 &nbsp;
 // from&lt;T, U&gt;(iterable: Iterable&lt;T&gt; | ArrayLike&lt;T&gt;, mapfn: (v: T, k: number) =&gt; U, thisArg?: any): U[];
-export function from(iterable: ArrayLike&lt;any&gt;, mapFn?: (v: any, k: number, array: ArrayLike&lt;any&gt;) =&gt; any): any[] {
-    const arr: any[] = [];
+export function from&lt;T, U&gt;(iterable: Iterable&lt;T&gt; | ArrayLike&lt;T&gt;, mapFn?: (v: T, k: number) =&gt; U): U[] {
+    const arr: U[] = [];
+    let callback: (v: T, k: number) =&gt; any;
+    callback = mapFn || function (value: T, index: number) {
+        return value;
+    };
     forEach(((v, k, array) =&gt; {
-        arr.push(mapFn ? mapFn(v, k, array) : v);
+        arr.push(callback(v, k));
     }), iterable);
     return arr;
 }
 &nbsp;
 // filter&lt;S extends T&gt;(callbackfn: (value: T, index: number, array: T[]) =&gt; value is S, thisArg?: any): S[]
-export function filter(callbackfn: (value: any, index: number, array: ArrayLike&lt;any&gt;) =&gt; boolean, thisArg?: ArrayLike&lt;any&gt;): any[] {
+export function filter&lt;T&gt;(callbackfn: (value: T, index: number, array: ArrayLike&lt;T&gt;) =&gt; boolean, thisArg?: ArrayLike&lt;T&gt;): T[] {
     const arr = thisArg || this;
     // if (!isArrayLike(arr)) throw new TypeError();
-    const fList: any[] = [];
+    const fList: T[] = [];
     const len = arr.length;
     for (let i = 0; i &lt; len; i++) {
         const value = arr[i];
@@ -414,8 +434,12 @@ export function filter(callbackfn: (value: any, index: number, array: ArrayLike&
     return fList;
 }
 &nbsp;
+// @overload
+export function includes&lt;T&gt;(thisArg: ArrayLike&lt;T&gt;, searchElement: (v: T, index: number, arr: ArrayLike&lt;T&gt;) =&gt; boolean, fromIndex?: number): boolean;
+// @overload
+export function includes&lt;T&gt;(thisArg: ArrayLike&lt;T&gt;, searchElement: T, fromIndex?: number): boolean;
 // includes(searchElement: T, fromIndex?: number): boolean
-export function includes(thisArg: ArrayLike&lt;any&gt;, searchElement: any, fromIndex = 0): boolean {
+export function includes(thisArg, searchElement, fromIndex = 0) {
     const arr = thisArg || this;
     // if (!isArrayLike(arr)) throw new TypeError();
     const len = arr.length;
@@ -433,11 +457,11 @@ export function includes(thisArg: ArrayLike&lt;any&gt;, searchElement: any, from
 &nbsp;
 // 也可以给object用
 // Object.keys()
-export function keys(target: object | []): Array&lt;string&gt; {
+export function keys(target: object | []): Array&lt;string | number | symbol&gt; {
     if (isEmpty(target)) return [];
     // const type = typeOf(target); // typescript里不需要
     // if (type !== "object" &amp;&amp; type !== "array") return [];
-    const arr: string[] = [];
+    const arr: (string | number | symbol)[] = [];
     for (let key in target) {
         arr.push(key);
     }
@@ -446,16 +470,16 @@ export function keys(target: object | []): Array&lt;string&gt; {
 &nbsp;
 // find&lt;S extends T&gt;(predicate: (this: void, value: T, index: number, obj: T[]) =&gt; value is S, thisArg?: any): S | undefined;
 // find(predicate: (value: T, index: number, obj: T[]) =&gt; unknown, thisArg?: any): T | undefined;
-export function find(
-    predicate: (value: any, index: number, obj: any[]) =&gt; boolean,
-    thisArg?: ArrayLike&lt;any&gt;,
-): any | undefined {
+export function find&lt;T&gt;(
+    predicate: (value: T, index: number, obj: T[]) =&gt; boolean,
+    thisArg?: ArrayLike&lt;T&gt;,
+): T | void {
     const arr = thisArg || this;
     // if (!isArrayLike(arr)) throw new TypeError();
     // if (!isFunction(predicate)) return; // 在typescript中有类型检查，不需要这一句
     const len = arr.length;
     for (let i = 0; i &lt; len; i++) {
-        const item = arr[i];
+        const item: T = arr[i];
         if (predicate(item, i, arr)) return item;
     }
 }
@@ -466,7 +490,7 @@ export function find(
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 14 2020 10:02:26 GMT+0800 (GMT+08:00)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 14 2020 16:05:35 GMT+0800 (GMT+08:00)
 </div>
 </div>
 <script src="prettify.js"></script>

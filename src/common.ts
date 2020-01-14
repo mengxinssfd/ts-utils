@@ -173,7 +173,8 @@ export const FloatCalc = {
 
 // 获取数据类型
 export function typeOf(target: any): string {
-    if (typeof target !== 'object') return typeof target;
+    const tp = typeof target;
+    if (tp !== 'object') return tp;
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
 
@@ -285,7 +286,7 @@ export function randomColor(len = 1): string | string[] {
  */
 export function getDateFromStr(date: string): Date | void {
     const arr: number[] = date.split(/[- :\/]/).map(item => Number(item) || 0);
-    if (arr.length < 6) return;
+    if (arr.length < 2) return;
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 

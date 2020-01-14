@@ -56,7 +56,7 @@ export function createArray({start = 0, end, len, fill}) {
 
 // ie9支持
 // forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void;
-export function forEach(callbackfn: (value: any, index: number, array: ArrayLike<any>) => any | false, thisArg?: ArrayLike<any>) {
+export function forEach<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>) {
     const arr = thisArg || this;
     // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
     const len = arr.length;
@@ -67,19 +67,23 @@ export function forEach(callbackfn: (value: any, index: number, array: ArrayLike
 }
 
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
-export function from(iterable: ArrayLike<any>, mapFn?: (v: any, k: number, array: ArrayLike<any>) => any): any[] {
-    const arr: any[] = [];
+export function from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapFn?: (v: T, k: number) => U): U[] {
+    const arr: U[] = [];
+    let callback: (v: T, k: number) => any;
+    callback = mapFn || function (value: T, index: number) {
+        return value;
+    };
     forEach(((v, k, array) => {
-        arr.push(mapFn ? mapFn(v, k, array) : v);
+        arr.push(callback(v, k));
     }), iterable);
     return arr;
 }
 
 // filter<S extends T>(callbackfn: (value: T, index: number, array: T[]) => value is S, thisArg?: any): S[]
-export function filter(callbackfn: (value: any, index: number, array: ArrayLike<any>) => boolean, thisArg?: ArrayLike<any>): any[] {
+export function filter<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => boolean, thisArg?: ArrayLike<T>): T[] {
     const arr = thisArg || this;
     // if (!isArrayLike(arr)) throw new TypeError();
-    const fList: any[] = [];
+    const fList: T[] = [];
     const len = arr.length;
     for (let i = 0; i < len; i++) {
         const value = arr[i];
@@ -90,8 +94,12 @@ export function filter(callbackfn: (value: any, index: number, array: ArrayLike<
     return fList;
 }
 
+// @overload
+export function includes<T>(thisArg: ArrayLike<T>, searchElement: (v: T, index: number, arr: ArrayLike<T>) => boolean, fromIndex?: number): boolean;
+// @overload
+export function includes<T>(thisArg: ArrayLike<T>, searchElement: T, fromIndex?: number): boolean;
 // includes(searchElement: T, fromIndex?: number): boolean
-export function includes(thisArg: ArrayLike<any>, searchElement: any, fromIndex = 0): boolean {
+export function includes(thisArg, searchElement, fromIndex = 0) {
     const arr = thisArg || this;
     // if (!isArrayLike(arr)) throw new TypeError();
     const len = arr.length;
@@ -109,11 +117,11 @@ export function includes(thisArg: ArrayLike<any>, searchElement: any, fromIndex 
 
 // 也可以给object用
 // Object.keys()
-export function keys(target: object | []): Array<string> {
+export function keys(target: object | []): Array<string | number | symbol> {
     if (isEmpty(target)) return [];
     // const type = typeOf(target); // typescript里不需要
     // if (type !== "object" && type !== "array") return [];
-    const arr: string[] = [];
+    const arr: (string | number | symbol)[] = [];
     for (let key in target) {
         arr.push(key);
     }
@@ -122,16 +130,16 @@ export function keys(target: object | []): Array<string> {
 
 // find<S extends T>(predicate: (this: void, value: T, index: number, obj: T[]) => value is S, thisArg?: any): S | undefined;
 // find(predicate: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): T | undefined;
-export function find(
-    predicate: (value: any, index: number, obj: any[]) => boolean,
-    thisArg?: ArrayLike<any>,
-): any | undefined {
+export function find<T>(
+    predicate: (value: T, index: number, obj: T[]) => boolean,
+    thisArg?: ArrayLike<T>,
+): T | void {
     const arr = thisArg || this;
     // if (!isArrayLike(arr)) throw new TypeError();
     // if (!isFunction(predicate)) return; // 在typescript中有类型检查，不需要这一句
     const len = arr.length;
     for (let i = 0; i < len; i++) {
-        const item = arr[i];
+        const item: T = arr[i];
         if (predicate(item, i, arr)) return item;
     }
 }

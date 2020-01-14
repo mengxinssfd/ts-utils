@@ -16,6 +16,12 @@ test('forEach', () => {
         return k !== 1;
     }, arr1);
     expect(arr1).toEqual([1, 2, 4]);
+
+    const arr2: (number | string)[] = [2, 3, 4];
+    arr.forEach((v, k) => arr2[k] = "a" + v, arr2);
+    expect(arr2).toEqual(["a2", "a3", "a4"]);
+    arr.forEach((v, k) => arr2[k] = "a" + k, arr2);
+    expect(arr2).toEqual(["a0", "a1", "a2"]);
 });
 test('from', () => {
     expect(arr.from([1, 2, 3])).toEqual([1, 2, 3]);
@@ -25,17 +31,18 @@ test('from', () => {
     expect(arr.from([1, 2, 3], (v, k) => v + "" + k)).toEqual(["10", "21", "32"]);
 });
 test('includes', () => {
+    const list: any[] = ["", undefined, 0, NaN, null];
     expect(arr.includes([1, 2, 3], 10)).toBe(false);
-    expect(arr.includes(["", undefined, 0, NaN, null], NaN)).toBe(true);
-    expect(arr.includes(["", undefined, 0, NaN, null], null)).toBe(true);
-    expect(arr.includes(["", undefined, 0, NaN, null], 0)).toBe(true);
-    expect(arr.includes(["", undefined, 0, NaN, null], undefined)).toBe(true);
-    expect(arr.includes(["", undefined, 0, NaN, null], "")).toBe(true);
-    expect(arr.includes(["", undefined, 0, NaN, null], true)).toBeFalsy();
-    expect(arr.includes(["", undefined, 0, NaN, null], {})).toBeFalsy();
-    expect(arr.includes(["", undefined, 0, NaN, null], (item) => !item)).toBe(true);
-    expect(arr.includes(["", undefined, 0, NaN, null], (item) => item === undefined)).toBe(true);
-    expect(arr.includes.call(["", undefined, 0, NaN, null], undefined, NaN)).toBe(true);
+    expect(arr.includes(list, NaN)).toBe(true);
+    expect(arr.includes(list, null)).toBe(true);
+    expect(arr.includes(list, 0)).toBe(true);
+    expect(arr.includes(list, undefined)).toBe(true);
+    expect(arr.includes(list, "")).toBe(true);
+    expect(arr.includes(list, true)).toBeFalsy();
+    expect(arr.includes(list, {})).toBeFalsy();
+    expect(arr.includes(list, (item) => !item)).toBe(true);
+    expect(arr.includes(list, (item) => item === undefined)).toBe(true);
+    expect(arr.includes.call(list, undefined, NaN)).toBe(true);
 });
 test('createArray', () => {
     expect(arr.createArray({start: 0, end: 2})).toEqual([0, 1]);
