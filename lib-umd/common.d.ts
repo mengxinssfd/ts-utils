@@ -50,7 +50,7 @@ export declare function randomNumber(start?: number, end?: number, length?: numb
 export declare function randomColor(len?: number): string | string[];
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
- * @param date
+ * @param date 格式：yyyy-MM-dd hh:mm:ss
  * @returns {Date}
  */
 export declare function getDateFromStr(date: string): Date | void;
