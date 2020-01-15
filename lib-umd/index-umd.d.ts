@@ -1,23 +1,30 @@
+import * as common from "./common";
 import * as OneByOne from "./OneByOne";
 import * as UrlParse from "./urlParse";
 declare const utils: {
-    createArray({ start, end, len, callback }: {
+    createArray({ start, end, len, fill }: {
         start?: number | undefined;
         end?: number | undefined;
         len?: number | undefined;
-        callback?: ((item: any, index: any) => any) | undefined;
+        fill?: ((item: number, index: number) => any) | undefined;
     }): any[];
-    forEach(callbackfn: (value: any, index: number, array: ArrayLike<any>) => any, thisArg?: ArrayLike<any> | undefined): void;
-    from(iterable: ArrayLike<any>, mapFn?: ((v: any, k: number, array: ArrayLike<any>) => any) | undefined): any[];
-    filter(callbackfn: (value: any, index: number, array: ArrayLike<any>) => boolean, thisArg?: ArrayLike<any> | undefined): any[];
-    includes(thisArg: ArrayLike<any>, searchElement: any, fromIndex?: number): boolean;
-    keys(target: object | []): string[];
-    find(predicate: (value: any, index: number, obj: any[]) => boolean, thisArg?: ArrayLike<any> | undefined): any;
+    createArray({ start, end, len, fill }: {
+        start?: number | undefined;
+        end?: number | undefined;
+        len?: number | undefined;
+        fill?: any;
+    }): any[];
+    forEach<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => any, thisArg?: ArrayLike<T> | Iterable<T> | undefined): void;
+    from<T_1, U>(iterable: Iterable<T_1> | ArrayLike<T_1>, mapFn?: ((v: T_1, k: number) => U) | undefined): U[];
+    filter<T_2>(callbackfn: (value: T_2, index: number, array: ArrayLike<T_2>) => boolean, thisArg?: ArrayLike<T_2> | undefined): T_2[];
+    includes<T_3>(thisArg: ArrayLike<T_3>, searchElement: (v: T_3, index: number, arr: ArrayLike<T_3>) => boolean, fromIndex?: number | undefined): boolean;
+    includes<T_4>(thisArg: ArrayLike<T_4>, searchElement: T_4, fromIndex?: number | undefined): boolean;
+    keys(target: object | []): (string | number | symbol)[];
+    find<T_5>(predicate: (value: T_5, index: number, obj: T_5[]) => boolean, thisArg?: ArrayLike<T_5> | undefined): void | T_5;
     debounce(callback: (...args: any[]) => void, delay: number): (...args: any[]) => void;
     polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
     forEachByLen(len: any, callback: (index: number) => any): void;
     deepCopy(obj: any): any;
-    formatDate(formatStr: string): string;
     getNumberLenAfterDot(num: string | number): number;
     typeOf(target: any): string;
     isObject(target: any): target is Object;
@@ -42,6 +49,7 @@ declare const utils: {
     getChineseNumber(number: number): any;
     generateFunctionCode(argsArrayLength: number): string;
     generateFunction(obj: object, property: string, args: any[]): any;
+    formatDate: common.formatDateInterface;
     FloatCalc: {
         add(a: number, b: number): number;
         minus(a: number, b: number): number;

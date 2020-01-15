@@ -27,6 +27,14 @@ test('getDateFromStr', () => {
     expect(t1).toBeGreaterThan(t2);
     expect(cm.getDateFromStr("abcd")).toBeUndefined();
     expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29"), "yyyy")).toBe("2019");
+    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29"), "MM")).toBe("12");
+    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29"), "dd")).toBe("29");
+    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29"), "yy")).toBe("19");
+    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29 12:00:00"), "hh")).toBe("12");
+    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29 12:00:00"), "mm")).toBe("00");
+    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29 12:00:00"), "ss")).toBe("00");
+    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29 12:00:10"), "ss")).toBe("10");
+    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29 12:11:10"), "mm")).toBe("11");
 });
 test('formatDate', () => {
     const date1 = cm.getDateFromStr("2019-12-29 10:10:10");

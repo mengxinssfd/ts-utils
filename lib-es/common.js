@@ -81,32 +81,50 @@ export function deepCopy(obj) {
 }
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
- * @param formatStr
+ * @param format
  * @returns String
  */
-export function formatDate(formatStr) {
+export const formatDate = function (format) {
     let o = {
         "M+": this.getMonth() + 1,
         "d+": this.getDate(),
         "h+": this.getHours(),
         "m+": this.getMinutes(),
         "s+": this.getSeconds(),
-        "q+": Math.floor((this.getMonth() + 3) / 3),
-        "S": this.getMilliseconds(),
+        "q": (function (__this) {
+            const q = Math.floor((__this.getMonth() + 3) / 3) - 1;
+            return formatDate.seasonText[q];
+        })(this),
+        "S+": this.getMilliseconds(),
+        "w": (function (__this) {
+            const d = __this.getDay();
+            // 星期
+            if (!formatDate.weekText || !formatDate.weekText.length) {
+                formatDate.weekText = createArray({
+                    end: 7,
+                    fill(item, index) {
+                        return index === 0 ? "日" : getChineseNumber(index);
+                    },
+                });
+            }
+            return formatDate.weekText[d];
+        })(this),
     };
-    if (/(y+)/.test(formatStr)) {
-        formatStr = formatStr.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    if (/(y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     }
     for (let k in o) {
-        if (new RegExp("(" + k + ")").test(formatStr)) {
+        if (new RegExp("(" + k + ")").test(format)) {
             const s1 = RegExp.$1;
             const v = o[k];
             const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
-            formatStr = formatStr.replace(s1, value);
+            format = format.replace(s1, value);
         }
     }
-    return formatStr;
-}
+    return format;
+};
+formatDate.weekText = [];
+formatDate.seasonText = ["春", "夏", "秋", "冬"];
 // 获取小数点后面数字的长度
 export function getNumberLenAfterDot(num) {
     num = Number(num);
@@ -145,8 +163,9 @@ export const FloatCalc = {
 };
 // 获取数据类型
 export function typeOf(target) {
-    if (typeof target !== 'object')
-        return typeof target;
+    const tp = typeof target;
+    if (tp !== 'object')
+        return tp;
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
 export function isObject(target) {
@@ -188,15 +207,17 @@ export function isBoolean(target) {
 export function isUndefined(target) {
     return target === void 0;
 }
+// 有native isNaN函数 但是 {} "abc"会是true
 export function isNaN(target) {
-    // return isNumber(target) && target !== target;
-    return String(target) === "NaN";
+    // return String(target) === "NaN"; // "NaN" 会被判断为true
+    return isNumber(target) && target !== target;
 }
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target) {
-    // TODO 可以替换array里的includes
+    // TO DO 可以替换array里的includes
     if ([undefined, null, "", NaN].includes(target))
         return true;
+    // if (includes([undefined, null, "", NaN], target)) return true;
     switch (typeOf(target)) {
         case "array":
             return !target.length;
@@ -248,7 +269,7 @@ export function randomColor(len = 1) {
  */
 export function getDateFromStr(date) {
     const arr = date.split(/[- :\/]/).map(item => Number(item) || 0);
-    if (arr.length < 6)
+    if (arr.length < 2)
         return;
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
@@ -317,7 +338,8 @@ export function strFillPrefix(target, fill, len) {
     if (target.length >= len)
         return target;
     // const fillStr = Array(len - target.length).fill(fill).join("");
-    const fillStr = createArray({ len: len - target.length, callback: () => fill }).join("");
+    // const fillStr = createArray({len: len - target.length, fill}).join("");
+    const fillStr = Array(len - target.length + 1).join(fill); // 与上面两行一样
     return fillStr + target;
 }
 /**

@@ -1,11 +1,11 @@
 /**
  * ie9不支持的数组函数
  */
-import { isEmpty } from "./common";
+import { isEmpty, typeOf, isNaN } from "./common";
 /**
  * 创建一个包含开始数字和结束数字的数组 包左不包右: start <= item < (end || start + len)
  */
-export function createArray({ start = 0, end, len, callback }) {
+export function createArray({ start = 0, end, len, fill }) {
     let e = start;
     if (len && end) {
         e = Math.min(start + len, end);
@@ -18,9 +18,21 @@ export function createArray({ start = 0, end, len, callback }) {
             e = end;
         }
     }
+    let callback;
+    switch (typeOf(fill)) {
+        case "function":
+            callback = fill;
+            break;
+        case "undefined":
+        case "null":
+            callback = (i) => i;
+            break;
+        default:
+            callback = (i) => fill;
+    }
     const arr = [];
     for (let item = start, index = 0; item < e; item++, index++) {
-        arr.push(callback ? callback(item, index) : item);
+        arr.push(callback(item, index));
     }
     return arr;
 }
@@ -39,8 +51,12 @@ export function forEach(callbackfn, thisArg) {
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
 export function from(iterable, mapFn) {
     const arr = [];
+    let callback;
+    callback = mapFn || function (value, index) {
+        return value;
+    };
     forEach(((v, k, array) => {
-        arr.push(mapFn ? mapFn(v, k, array) : v);
+        arr.push(callback(v, k));
     }), iterable);
     return arr;
 }

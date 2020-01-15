@@ -13,7 +13,7 @@
     "types/*.d.ts"
   ],
   "scripts": {
-    "clean": "rimraf lib-* types",
+    "clean": "rimraf lib-* types coverage",
     "build": "run-p clean lib:es lib:umd",
     "lib:umd": "set NODE_ENV=production&webpack --mode production",
     "lib:es": "tsc --build tsconfig.es.json",

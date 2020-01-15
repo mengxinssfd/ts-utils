@@ -80,7 +80,7 @@ export function deepCopy(obj: any): any {
     return result;
 }
 
-interface formatDateInterface {
+export interface formatDateInterface {
     (format: string): string;
     seasonText: string[];
     weekText: string[];
@@ -281,12 +281,17 @@ export function randomColor(len = 1): string | string[] {
 
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
- * @param date
+ * @param date 格式：yyyy-MM-dd hh:mm:ss
  * @returns {Date}
  */
 export function getDateFromStr(date: string): Date | void {
-    const arr: number[] = date.split(/[- :\/]/).map(item => Number(item) || 0);
-    if (arr.length < 2) return;
+    if (/[^\/^\d^:^ ^-]/.test(date)) return; // 去除不符合规范的字符串
+    const arr: number[] = date.split(/[- :\/]/).map(item => Number(item));
+    if (arr.length < 6) {
+        for (let i = arr.length; i < 6; i++) {
+            arr[i] = i < 4 ? 1 : 0;
+        }
+    }
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 

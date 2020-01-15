@@ -14,12 +14,17 @@ export declare function debounce(callback: (...args: any[]) => void, delay: numb
 export declare function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
 export declare function forEachByLen(len: any, callback: (index: number) => any | false): void;
 export declare function deepCopy(obj: any): any;
+export interface formatDateInterface {
+    (format: string): string;
+    seasonText: string[];
+    weekText: string[];
+}
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
- * @param formatStr
+ * @param format
  * @returns String
  */
-export declare function formatDate(formatStr: string): string;
+export declare const formatDate: formatDateInterface;
 export declare function getNumberLenAfterDot(num: number | string): number;
 export declare const FloatCalc: {
     add(a: number, b: number): number;

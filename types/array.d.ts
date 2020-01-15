@@ -1,15 +1,19 @@
-/**
- * 创建一个包含开始数字和结束数字的数组 包左不包右: start <= item < (end || start + len)
- */
-export declare function createArray({ start, end, len, callback }: {
+export declare function createArray({ start, end, len, fill }: {
     start?: number;
     end?: number;
     len?: number;
-    callback?: (item: any, index: any) => any;
-}): Array<any>;
-export declare function forEach(callbackfn: (value: any, index: number, array: ArrayLike<any>) => any | false, thisArg?: ArrayLike<any>): void;
-export declare function from(iterable: ArrayLike<any>, mapFn?: (v: any, k: number, array: ArrayLike<any>) => any): any[];
-export declare function filter(callbackfn: (value: any, index: number, array: ArrayLike<any>) => boolean, thisArg?: ArrayLike<any>): any[];
-export declare function includes(thisArg: ArrayLike<any>, searchElement: any, fromIndex?: number): boolean;
-export declare function keys(target: object | []): Array<string>;
-export declare function find(predicate: (value: any, index: number, obj: any[]) => boolean, thisArg?: ArrayLike<any>): any | undefined;
+    fill?: ((item: number, index: number) => any);
+}): any[];
+export declare function createArray({ start, end, len, fill }: {
+    start?: number;
+    end?: number;
+    len?: number;
+    fill?: any;
+}): any[];
+export declare function forEach<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): void;
+export declare function from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapFn?: (v: T, k: number) => U): U[];
+export declare function filter<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => boolean, thisArg?: ArrayLike<T>): T[];
+export declare function includes<T>(thisArg: ArrayLike<T>, searchElement: (v: T, index: number, arr: ArrayLike<T>) => boolean, fromIndex?: number): boolean;
+export declare function includes<T>(thisArg: ArrayLike<T>, searchElement: T, fromIndex?: number): boolean;
+export declare function keys(target: object | []): Array<string | number | symbol>;
+export declare function find<T>(predicate: (value: T, index: number, obj: T[]) => boolean, thisArg?: ArrayLike<T>): T | void;
