@@ -80,7 +80,13 @@ test('filter', () => {
 test('keys', () => {
     // array
     expect(arr.keys([1, 2, 3, 4])).toEqual(["0", "1", "2", "3"]);
-    // ArrayLike
+    // object
+    const keys = arr.keys({a: 1, b: 2});
+    const [a, b, c] = keys;
+    expect(a).toEqual("a");
+    expect(b).toEqual("b");
+    expect(c).toEqual(undefined);
+
     expect(arr.keys({a: 1, b: 2})).toEqual(["a", "b"]);
     // if (isEmpty(target)) return [];
     expect(arr.keys([])).toEqual([]);

@@ -117,11 +117,11 @@ export function includes(thisArg, searchElement, fromIndex = 0) {
 
 // 也可以给object用
 // Object.keys()
-export function keys(target: object | []): Array<string | number | symbol> {
+export function keys<T>(target: T): (keyof T)[] {
     if (isEmpty(target)) return [];
     // const type = typeOf(target); // typescript里不需要
     // if (type !== "object" && type !== "array") return [];
-    const arr: (string | number | symbol)[] = [];
+    const arr: (keyof T)[] = [];
     for (let key in target) {
         arr.push(key);
     }
