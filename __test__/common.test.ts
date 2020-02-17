@@ -155,6 +155,11 @@ test('isObject', () => {
     expect(cm.isObject([])).toBeFalsy();
     //
     expect(cm.isObject({})).toBeTruthy();
+    // function
+    const f = function () {
+    };
+    expect(typeof f === "object").toBeFalsy();
+    expect(cm.isObject(f)).toBeFalsy();
 });
 test('isBoolean', () => {
     expect(cm.isBoolean(0)).toBeFalsy();
@@ -193,6 +198,18 @@ test('isNaN', () => {
     expect(cm.isNaN(["bdsdf", 12323])).toBeFalsy();
     expect(cm.isNaN("123")).toBeFalsy();
     expect(cm.isNaN("NaN")).toBeFalsy();
+});
+test('isEmptyObject', () => {
+    expect(cm.isEmptyObject({})).toBeTruthy();
+    expect(cm.isEmptyObject({a: 1})).toBeFalsy();
+    expect(cm.isEmptyObject({true: 1})).toBeFalsy();
+    expect(cm.isEmptyObject({false: 1})).toBeFalsy();
+    expect(cm.isEmptyObject({0: 1})).toBeFalsy();
+    expect(cm.isEmptyObject({undefined: 1})).toBeFalsy();
+    expect(cm.isEmptyObject({null: 1})).toBeFalsy();
+    expect(cm.isEmptyObject([])).toBeFalsy();
+    expect(cm.isEmptyObject(function () {
+    })).toBeFalsy();
 });
 test('isEmpty', () => {
     expect(cm.isEmpty(NaN)).toBeTruthy();

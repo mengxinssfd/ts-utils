@@ -28,6 +28,7 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
  */
 export function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate = true): () => void {
     enum state {running, stopped}
+
     let timer: number;
     let status: state;
     let times = 0;
@@ -82,6 +83,7 @@ export function deepCopy(obj: any): any {
 
 export interface formatDateInterface {
     (format: string): string;
+
     seasonText: string[];
     weekText: string[];
 }
@@ -230,6 +232,15 @@ export function isNaN(target: any): boolean {
     return isNumber(target) && target !== target;
 }
 
+// 判断是否是空object
+export function isEmptyObject(target: object): boolean {
+    if (!isObject(target)) return false;
+    for (let i in target) {
+        return i === undefined;
+    }
+    return true;
+}
+
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target: any): boolean {
     // TO DO 可以替换array里的includes
@@ -239,10 +250,11 @@ export function isEmpty(target: any): boolean {
         case "array":
             return !target.length;
         case "object":
-            return JSON.stringify(target) === "{}";
+            return isEmptyObject(target);
     }
     return false;
 }
+
 
 // 生成start到end之间的随机数 包含start与end
 // 传start不传end  end=start start=0 生成0-start之间的随机数
