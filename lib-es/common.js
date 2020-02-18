@@ -212,6 +212,15 @@ export function isNaN(target) {
     // return String(target) === "NaN"; // "NaN" 会被判断为true
     return isNumber(target) && target !== target;
 }
+// 判断是否是空object
+export function isEmptyObject(target) {
+    if (!isObject(target))
+        return false;
+    for (let i in target) {
+        return i === undefined;
+    }
+    return true;
+}
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target) {
     // TO DO 可以替换array里的includes
@@ -222,7 +231,9 @@ export function isEmpty(target) {
         case "array":
             return !target.length;
         case "object":
-            return JSON.stringify(target) === "{}";
+            // {a(){}} 使用JSON.stringify是会判断为空的
+            // return JSON.stringify(target) === "{}";
+            return isEmptyObject(target);
     }
     return false;
 }

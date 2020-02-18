@@ -250,11 +250,12 @@ export function isEmpty(target: any): boolean {
         case "array":
             return !target.length;
         case "object":
+            // {a(){}} 使用JSON.stringify是会判断为空的
+            // return JSON.stringify(target) === "{}";
             return isEmptyObject(target);
     }
     return false;
 }
-
 
 // 生成start到end之间的随机数 包含start与end
 // 传start不传end  end=start start=0 生成0-start之间的随机数

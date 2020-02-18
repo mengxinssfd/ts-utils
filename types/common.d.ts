@@ -42,6 +42,7 @@ export declare function isFunction(target: any): target is Function;
 export declare function isBoolean(target: any): target is boolean;
 export declare function isUndefined(target: any): target is undefined;
 export declare function isNaN(target: any): boolean;
+export declare function isEmptyObject(target: object): boolean;
 export declare function isEmpty(target: any): boolean;
 export declare function randomNumber(start?: number, end?: number, length?: number): number | number[];
 /**

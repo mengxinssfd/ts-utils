@@ -19,8 +19,8 @@ declare const utils: {
     filter<T_2>(callbackfn: (value: T_2, index: number, array: ArrayLike<T_2>) => boolean, thisArg?: ArrayLike<T_2> | undefined): T_2[];
     includes<T_3>(thisArg: ArrayLike<T_3>, searchElement: (v: T_3, index: number, arr: ArrayLike<T_3>) => boolean, fromIndex?: number | undefined): boolean;
     includes<T_4>(thisArg: ArrayLike<T_4>, searchElement: T_4, fromIndex?: number | undefined): boolean;
-    keys(target: object | []): (string | number | symbol)[];
-    find<T_5>(predicate: (value: T_5, index: number, obj: T_5[]) => boolean, thisArg?: ArrayLike<T_5> | undefined): void | T_5;
+    keys<T_5>(target: T_5): (keyof T_5)[];
+    find<T_6>(predicate: (value: T_6, index: number, obj: T_6[]) => boolean, thisArg?: ArrayLike<T_6> | undefined): void | T_6;
     debounce(callback: (...args: any[]) => void, delay: number): (...args: any[]) => void;
     polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
     forEachByLen(len: any, callback: (index: number) => any): void;
@@ -36,6 +36,7 @@ declare const utils: {
     isBoolean(target: any): target is boolean;
     isUndefined(target: any): target is undefined;
     isNaN(target: any): boolean;
+    isEmptyObject(target: object): boolean;
     isEmpty(target: any): boolean;
     randomNumber(start?: number | undefined, end?: number | undefined, length?: number): number | number[];
     randomColor(len?: number): string | string[];
