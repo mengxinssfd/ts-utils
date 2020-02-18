@@ -90,6 +90,7 @@ test('typeOf', () => {
     })).toBe("function");
     expect(cm.typeOf([])).toBe("array");
     expect(cm.typeOf(NaN)).toBe("number");
+    expect(cm.typeOf(/abc/)).toBe("regexp");
 });
 test('isArrayLike', () => {
     expect(cm.isArrayLike([1, 2, 3])).toBe(true);
@@ -219,6 +220,14 @@ test('isEmpty', () => {
     expect(cm.isEmpty({a: 1})).toBeFalsy();
     expect(cm.isEmpty([1])).toBeFalsy();
     expect(cm.isEmpty(0)).toBeFalsy();
+    expect(cm.isEmpty(function () {
+
+    })).toBeFalsy();
+    expect(cm.isEmpty({
+        a: function () {
+
+        }
+    })).toBeFalsy();
 });
 test('randomNumber', () => {
     const rand = cm.randomNumber(0, 10);
