@@ -298,6 +298,8 @@ test('randomNumber', () => {
         expect(item).toBeGreaterThanOrEqual(0);
         expect(item).toBeLessThanOrEqual(5);
     }
+    const randArr2: number[] = cm.randomNumber(0, 5, 0);
+    expect(randArr2).toEqual([]);
 });
 test('strFillPrefix', () => {
     expect(cm.strFillPrefix("123", "0", 6)).toBe("000123");
@@ -306,7 +308,7 @@ test('strFillPrefix', () => {
 });
 test('randomColor', () => {
     const reg = /#[0-9a-f]{6}/;
-    expect(reg.test(cm.randomColor() as string)).toBeTruthy();
+    expect(reg.test(cm.randomColor())).toBeTruthy();
     // array
     const arr = cm.randomColor(10);
     expect(arr.length === 10).toBeTruthy();

@@ -257,19 +257,28 @@ export function isEmpty(target: any): boolean {
 // 生成start到end之间的随机数 包含start与end
 // 传start不传end  end=start start=0 生成0-start之间的随机数
 // start end都不传  return Math.random()
-export function randomNumber(start?: number, end?: number, length = 1): number | number[] {
+export function randomNumber(): number
+// start = 0
+export function randomNumber(end: number): number
+export function randomNumber(start: number, end: number): number
+export function randomNumber(start: number, end: number, length: number): number[]
+export function randomNumber(start?, end?, length?) {
+    // randomNumber()
     if (!arguments.length) return Math.random();
+    // randomNumber(end)
     if (arguments.length === 1) {
         end = start;
         start = 0;
     }
-    const len = (end as number) - (start as number) + 1;
-    const rand = ~~(Math.random() * len) + (start as number);
-    if (length === 1) {
-        return rand;
+
+    // randomNumber(start, end)
+    if (length === undefined) {
+        const len = (end as number) - (start as number) + 1;
+        return ~~(Math.random() * len) + (start as number);
     } else {
-        const arr = [rand];
-        forEachByLen(length - 1, () => arr.push(randomNumber(start, end) as number));
+        // randomNumber(start, end, length)
+        const arr: number[] = [];
+        forEachByLen(length, () => arr.push(randomNumber(start, end)));
         return arr;
     }
 }
@@ -277,10 +286,12 @@ export function randomNumber(start?: number, end?: number, length = 1): number |
 /**
  * 随机颜色
  */
-export function randomColor(len = 1): string | string[] {
+export function randomColor(): string
+export function randomColor(len: number): string[]
+export function randomColor(len?) {
     const num = randomNumber(0xffffff).toString(16);
     const color = "#" + strFillPrefix(num, "0", 6);
-    if (len === 1) {
+    if (len === undefined) {
         return color;
     } else {
         const colorList: string[] = [];
