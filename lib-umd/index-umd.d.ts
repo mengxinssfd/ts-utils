@@ -24,10 +24,10 @@ declare const utils: {
     debounce(callback: (...args: any[]) => void, delay: number): (...args: any[]) => void;
     polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
     forEachByLen(len: any, callback: (index: number) => any): void;
-    deepCopy(obj: any): any;
+    deepCopy<T_7>(target: T_7): T_7;
     getNumberLenAfterDot(num: string | number): number;
     typeOf(target: any): string;
-    isObject(target: any): target is Object;
+    isObject(target: any): target is object;
     isArray(target: any): target is any[];
     isArrayLike(target: any): target is ArrayLike<any>;
     isString(target: any): target is string;

@@ -67,16 +67,13 @@ export function forEachByLen(len, callback: (index: number) => any | false) {
 }
 
 // 对象深拷贝办法
-export function deepCopy(obj: any): any {
-    let result: [] | any = Array.isArray(obj) ? [] : {};
-    for (let key in obj) {
-        // if (!obj.hasOwnProperty(key)) continue; 继承的也要复制
-        const v = obj[key];
-        if (typeof v === 'object') {
-            result[key] = deepCopy(v);   //递归复制
-        } else {
-            result[key] = v;
-        }
+export function deepCopy<T>(target: T): T {
+    if (typeof target !== "object") return target;
+    let result: any = isArray(target) ? [] : {};
+    for (let k in target) {
+        //prototype继承的不复制  es6继承的不会被拦截
+        if (!(target as any).hasOwnProperty(k)) continue;
+        result[k] = deepCopy(target[k]);   //递归复制
     }
     return result;
 }
@@ -180,7 +177,7 @@ export function typeOf(target: any): string {
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
 
-export function isObject(target: any): target is Object {
+export function isObject(target: any): target is object {
     return typeOf(target) === "object";
 }
 

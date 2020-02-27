@@ -14,12 +14,61 @@ test('forEachByLen', () => {
 test('deepCopy', () => {
     const arr = [1, 2, 3];
     const newArr = cm.deepCopy(arr);
-    expect(newArr).toEqual([1, 2, 3]);
+    // copy == arr
+    expect(newArr).toEqual(arr);
+    // copy !== arr
     expect(arr === newArr).toBeFalsy();
     const obj = {a: [2, 3], c: 1, d: {f: 123}};
     const newObj = cm.deepCopy(obj);
-    expect(newObj).toEqual({a: [2, 3], c: 1, d: {f: 123}});
-    expect(arr === newObj).toBeFalsy();
+    // copy == obj
+    expect(newObj).toEqual(obj);
+    // copy !== obj
+    expect(obj === newObj).toBeFalsy();
+    // copy.a == obj.a
+    expect(obj.a).toEqual(newObj.a);
+    // copy.a !== obj.a
+    expect(obj.a === newObj.a).toBeFalsy();
+    // 0 === 0
+    expect(cm.deepCopy(0)).toBe(0);
+
+    const arr2 = [
+        () => 100,
+        () => 200
+    ];
+    const newArr2 = cm.deepCopy(arr2);
+    // copy == arr2
+    expect(arr2).toEqual(newArr2);
+    // copy !== arr2
+    expect(newArr2 === arr2).toBeFalsy();
+    // copy[0] == arr2[0]
+    expect(newArr2[0]).toEqual(arr2[0]);
+    expect(newArr2[1]).toEqual(arr2[1]);
+    // copy[0] === arr2[0]
+    expect(newArr2[1] === arr2[1]).toBeTruthy();
+    // copy[0]() == arr2[0]()
+    expect(newArr2[1]()).toEqual(arr2[1]());
+
+    function Foo() {
+        this.name = 'foo';
+        this.sayHi = function () {
+            console.log('Say Hi');
+        };
+    }
+
+    Foo.prototype.sayGoodBy = function () {
+        console.log('Say Good By');
+    };
+    let myPro = new Foo();
+    expect(myPro.hasOwnProperty('name')).toBeTruthy();//true
+    expect(myPro.hasOwnProperty('toString')).toBeFalsy();//false
+    expect(myPro.hasOwnProperty('hasOwnProperty')).toBeFalsy();//fasle
+    expect(myPro.hasOwnProperty('sayHi')).toBeTruthy();// true
+    expect(myPro.hasOwnProperty('sayGoodBy')).toBeFalsy();//false
+    expect('sayGoodBy' in myPro).toBeTruthy();// true
+
+    // test cov if (!(target as any).hasOwnProperty(k)) continue;
+    const copyFoo = cm.deepCopy(myPro);
+    expect(copyFoo.hasOwnProperty("sayGoodBy")).toBeFalsy();
 });
 test('getDateFromStr', () => {
     const t1 = (cm.getDateFromStr("2019-12-29 10:10:10") as Date).getTime();

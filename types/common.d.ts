@@ -13,7 +13,7 @@ export declare function debounce(callback: (...args: any[]) => void, delay: numb
  */
 export declare function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
 export declare function forEachByLen(len: any, callback: (index: number) => any | false): void;
-export declare function deepCopy(obj: any): any;
+export declare function deepCopy<T>(target: T): T;
 export interface formatDateInterface {
     (format: string): string;
     seasonText: string[];
@@ -33,7 +33,7 @@ export declare const FloatCalc: {
     division(a: number, b: number): number;
 };
 export declare function typeOf(target: any): string;
-export declare function isObject(target: any): target is Object;
+export declare function isObject(target: any): target is object;
 export declare function isArray(target: any): target is Array<any>;
 export declare function isArrayLike(target: any): target is ArrayLike<any>;
 export declare function isString(target: any): target is string;
