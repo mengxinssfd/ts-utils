@@ -235,34 +235,31 @@ export function isEmpty(target) {
     }
     return false;
 }
-// 生成start到end之间的随机数 包含start与end
-// 传start不传end  end=start start=0 生成0-start之间的随机数
-// start end都不传  return Math.random()
-export function randomNumber(start, end, length = 1) {
+export function randomNumber(start, end, length) {
+    // randomNumber()
     if (!arguments.length)
         return Math.random();
+    // randomNumber(end)
     if (arguments.length === 1) {
         end = start;
         start = 0;
     }
-    const len = end - start + 1;
-    const rand = ~~(Math.random() * len) + start;
-    if (length === 1) {
-        return rand;
+    // randomNumber(start, end)
+    if (length === undefined) {
+        const len = end - start + 1;
+        return ~~(Math.random() * len) + start;
     }
     else {
-        const arr = [rand];
-        forEachByLen(length - 1, () => arr.push(randomNumber(start, end)));
+        // randomNumber(start, end, length)
+        const arr = [];
+        forEachByLen(length, () => arr.push(randomNumber(start, end)));
         return arr;
     }
 }
-/**
- * 随机颜色
- */
-export function randomColor(len = 1) {
+export function randomColor(len) {
     const num = randomNumber(0xffffff).toString(16);
-    const color = "#" + strFillPrefix(num, "0", 6);
-    if (len === 1) {
+    const color = "#" + strPadStart(num, 6, "0");
+    if (len === undefined) {
         return color;
     }
     else {
@@ -343,18 +340,33 @@ export function getFormatStr(str, ...params) {
     });
 }
 /**
- * 给长度不满足要求的字符串添加前缀
+ * 给长度不满足要求的字符串添加前缀 strFillPrefix
  * @param target
- * @param fill
  * @param len
+ * @param fill
  */
-export function strFillPrefix(target, fill, len) {
+export function strPadStart(target, len, fill) {
     if (target.length >= len)
         return target;
-    // const fillStr = Array(len - target.length).fill(fill).join("");
-    // const fillStr = createArray({len: len - target.length, fill}).join("");
-    const fillStr = Array(len - target.length + 1).join(fill); // 与上面两行一样
-    return fillStr + target;
+    const lessLen = len - target.length;
+    while (fill.length < lessLen) {
+        fill += fill;
+    }
+    fill = fill.substr(0, lessLen);
+    return fill + target;
+}
+/**
+ * 给长度不满足要求的字符串添加后缀 strFillPrefix
+ * @param target
+ * @param len
+ * @param fill
+ */
+export function strPadEnd(target, len, fill) {
+    if (target.length >= len)
+        return target;
+    let lessLen = len - target.length;
+    let end = strPadStart(target, len, fill).substr(0, lessLen);
+    return target + end;
 }
 /**
  * 每隔一段事件返回字符串中的一个单词

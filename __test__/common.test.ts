@@ -33,7 +33,7 @@ test('deepCopy', () => {
 
     const arr2 = [
         () => 100,
-        () => 200
+        () => 200,
     ];
     const newArr2 = cm.deepCopy(arr2);
     // copy == arr2
@@ -275,7 +275,7 @@ test('isEmpty', () => {
     expect(cm.isEmpty({
         a: function () {
 
-        }
+        },
     })).toBeFalsy();
 });
 test('randomNumber', () => {
@@ -301,10 +301,19 @@ test('randomNumber', () => {
     const randArr2: number[] = cm.randomNumber(0, 5, 0);
     expect(randArr2).toEqual([]);
 });
-test('strFillPrefix', () => {
-    expect(cm.strFillPrefix("123", "0", 6)).toBe("000123");
-    expect(cm.strFillPrefix("123", "0", 0)).toBe("123");
-    expect(cm.strFillPrefix("123", "0", -1)).toBe("123");
+test('strPadStart', () => {
+    expect(cm.strPadStart("123", 6, "0")).toBe("000123");
+    expect(cm.strPadStart("123", 0, "0")).toBe("123");
+    expect(cm.strPadStart("123", 4, "hello")).toBe("h123");
+    expect(cm.strPadStart("123", 20, "hello")).toBe("hellohellohellohe123");
+    expect(cm.strPadStart("123", -1, "0")).toBe("123");
+});
+test('strPadEnd', () => {
+    expect(cm.strPadEnd("123", 6, "0")).toBe("123000");
+    expect(cm.strPadEnd("123", 0, "0")).toBe("123");
+    expect(cm.strPadEnd("123", 4, "hello")).toBe("123h");
+    expect(cm.strPadEnd("123", 20, "hello")).toBe("123hellohellohellohe");
+    expect(cm.strPadEnd("123", -1, "0")).toBe("123");
 });
 test('randomColor', () => {
     const reg = /#[0-9a-f]{6}/;
@@ -395,7 +404,7 @@ test('generateFunction', () => {
     // const args = [1, 2, 3];
     // (new Function(generateFunctionCode(args.length)))(object, property, args);
     // expect(cm.strFillPrefix("123", "0", 6)).toBe("000123");
-    const value = cm.generateFunction(cm, "strFillPrefix", ["123", "0", 6]);
+    const value = cm.generateFunction(cm, "strPadStart", ["123", 6, "0"]);
     expect(value).toBe("000123");
 });
 test('FloatCalc', () => {

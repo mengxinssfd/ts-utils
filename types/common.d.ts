@@ -44,11 +44,15 @@ export declare function isUndefined(target: any): target is undefined;
 export declare function isNaN(target: any): boolean;
 export declare function isEmptyObject(target: object): boolean;
 export declare function isEmpty(target: any): boolean;
-export declare function randomNumber(start?: number, end?: number, length?: number): number | number[];
+export declare function randomNumber(): number;
+export declare function randomNumber(end: number): number;
+export declare function randomNumber(start: number, end: number): number;
+export declare function randomNumber(start: number, end: number, length: number): number[];
 /**
  * 随机颜色
  */
-export declare function randomColor(len?: number): string | string[];
+export declare function randomColor(): string;
+export declare function randomColor(len: number): string[];
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
  * @param date 格式：yyyy-MM-dd hh:mm:ss
@@ -64,12 +68,19 @@ export declare function isEqual(a: any, b: any): boolean;
 export declare function thousandFormat(num: string | number): string;
 export declare function getFormatStr(str: any, ...params: any[]): any;
 /**
- * 给长度不满足要求的字符串添加前缀
+ * 给长度不满足要求的字符串添加前缀 strFillPrefix
  * @param target
- * @param fill
  * @param len
+ * @param fill
  */
-export declare function strFillPrefix(target: string, fill: string, len: number): string;
+export declare function strPadStart(target: string, len: number, fill: string): string;
+/**
+ * 给长度不满足要求的字符串添加后缀 strFillPrefix
+ * @param target
+ * @param len
+ * @param fill
+ */
+export declare function strPadEnd(target: string, len: number, fill: string): string;
 /**
  * 每隔一段事件返回字符串中的一个单词
  * @param words

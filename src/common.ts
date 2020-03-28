@@ -290,7 +290,7 @@ export function randomColor(): string
 export function randomColor(len: number): string[]
 export function randomColor(len?) {
     const num = randomNumber(0xffffff).toString(16);
-    const color = "#" + strFillPrefix(num, "0", 6);
+    const color = "#" + strPadStart(num, 6, "0");
     if (len === undefined) {
         return color;
     } else {
@@ -373,17 +373,32 @@ export function getFormatStr(str, ...params) {
 }
 
 /**
- * 给长度不满足要求的字符串添加前缀
+ * 给长度不满足要求的字符串添加前缀 strFillPrefix
  * @param target
- * @param fill
  * @param len
+ * @param fill
  */
-export function strFillPrefix(target: string, fill: string, len: number): string {
+export function strPadStart(target: string, len: number, fill: string): string {
     if (target.length >= len) return target;
-    // const fillStr = Array(len - target.length).fill(fill).join("");
-    // const fillStr = createArray({len: len - target.length, fill}).join("");
-    const fillStr = Array(len - target.length + 1).join(fill); // 与上面两行一样
-    return fillStr + target;
+    const lessLen = len - target.length;
+    while (fill.length < lessLen) {
+        fill += fill;
+    }
+    fill = fill.substr(0, lessLen);
+    return fill + target;
+}
+
+/**
+ * 给长度不满足要求的字符串添加后缀 strFillPrefix
+ * @param target
+ * @param len
+ * @param fill
+ */
+export function strPadEnd(target: string, len: number, fill: string): string {
+    if (target.length >= len) return target;
+    let lessLen = len - target.length;
+    let end = strPadStart(target, len, fill).substr(0, lessLen);
+    return target + end;
 }
 
 /**
