@@ -71,25 +71,34 @@ test('deepCopy', () => {
     expect(copyFoo.hasOwnProperty("sayGoodBy")).toBeFalsy();
 });
 test('getDateFromStr', () => {
-    const t1 = (cm.getDateFromStr("2019-12-29 10:10:10") as Date).getTime();
-    const t2 = (cm.getDateFromStr("2019-12-20 10:10:10") as Date).getTime();
-    expect(t1).toBeGreaterThan(t2);
-    expect(cm.getDateFromStr("abcd")).toBeUndefined();
-    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29"), "yyyy")).toBe("2019");
-    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29"), "MM")).toBe("12");
-    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29"), "dd")).toBe("29");
-    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29"), "yy")).toBe("19");
-    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29 12:00:00"), "hh")).toBe("12");
-    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29 12:00:00"), "mm")).toBe("00");
-    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29 12:00:00"), "ss")).toBe("00");
-    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29 12:00:10"), "ss")).toBe("10");
-    expect(cm.formatDate.call(cm.getDateFromStr("2019-12-29 12:11:10"), "mm")).toBe("11");
+    const t1 = (cm.getDateFromStr("2020-02-02 10:10:10") as Date).getTime();
+    const t2 = (cm.getDateFromStr("2020-02-20 10:10:10") as Date).getTime();
+    expect(t2).toBeGreaterThan(t1);
+    expect(cm.getDateFromStr("abcd")).toBeNull();
+
+    function fn(date: string, format: string) {
+        return cm.formatDate.call(cm.getDateFromStr(date), format);
+    }
+
+    expect(fn("2020-02-02", "yyyy")).toBe("2020");
+    expect(fn("2020-02-02", "MM")).toBe("02");
+    expect(fn("2020-02-02", "dd")).toBe("02");
+    expect(fn("2020-02-02", "yy")).toBe("20");
+    expect(fn("2020-02-02", "hh")).toBe("00");
+    expect(fn("2020-02-02", "mm")).toBe("00");
+    expect(fn("2020-02-02", "ss")).toBe("00");
+    expect(fn("2019-03", "dd")).toBe("01");
+    expect(fn("2020-02-02 12:00:00", "hh")).toBe("12");
+    expect(fn("2020-02-02 12:00:00", "mm")).toBe("00");
+    expect(fn("2020-02-02 12:00:00", "ss")).toBe("00");
+    expect(fn("2020-02-02 12:00:10", "ss")).toBe("10");
+    expect(fn("2020-02-02 12:11:10", "mm")).toBe("11");
 });
 test('formatDate', () => {
-    const date1 = cm.getDateFromStr("2019-12-29 10:10:10");
-    expect(cm.formatDate.call(date1, "yyyy-MM-dd")).toBe("2019-12-29");
+    const date1 = cm.getDateFromStr("2020-02-02 10:10:10");
+    expect(cm.formatDate.call(date1, "yyyy-MM-dd")).toBe("2020-02-02");
     expect(cm.formatDate.call(date1, "hh:mm:ss")).toBe("10:10:10");
-    expect(cm.formatDate.call(date1, "dd-MM-yyyy")).toBe("29-12-2019");
+    expect(cm.formatDate.call(date1, "dd-MM-yyyy")).toBe("02-02-2020");
     // week start
     expect(cm.formatDate.call(new Date("2020-01-12"), "周w")).toBe("周日");
     expect(cm.formatDate.call(new Date("2020-01-12"), "w")).toBe("日");
@@ -362,14 +371,16 @@ test('thousandFormat', () => {
     expect(cm.thousandFormat(5763423)).toBe("5,763,423");
 });
 test('getChineseNumber', () => {
-    expect(cm.getChineseNumber(123)).toBe("一百二十三");
-    expect(cm.getChineseNumber(1)).toBe("一");
-    expect(cm.getChineseNumber(11)).toBe("十一");
-    expect(cm.getChineseNumber(21)).toBe("二十一");
-    expect(cm.getChineseNumber(101)).toBe("一百零一");
-    expect(cm.getChineseNumber(111)).toBe("一百一十一");
-    expect(cm.getChineseNumber(1001)).toBe("一千零一");
-    expect(cm.getChineseNumber(12345)).toBe("一万二千三百四十五");
+    expect(cm.number2Chinese(123)).toBe("一百二十三");
+    expect(cm.number2Chinese(1)).toBe("一");
+    expect(cm.number2Chinese(11)).toBe("十一");
+    expect(cm.number2Chinese(21)).toBe("二十一");
+    expect(cm.number2Chinese(101)).toBe("一百零一");
+    expect(cm.number2Chinese(111)).toBe("一百一十一");
+    expect(cm.number2Chinese(1001)).toBe("一千零一");
+    expect(cm.number2Chinese(12345)).toBe("一万二千三百四十五");
+    expect(cm.number2Chinese(23456789)).toBe("二千三百四十五万六千七百八十九");
+    expect(cm.number2Chinese(123456789)).toBe("一亿二千三百四十五万六千七百八十九");
 });
 test('getFormatStr', () => {
     expect(cm.getFormatStr("hell%s worl%s", "o", "d")).toBe("hello world");
@@ -435,4 +446,31 @@ test('polling', (done) => {
             res();
         });
     }, 10, false);
+});
+
+test("chinese2Number", () => {
+    expect(cm.chinese2Number("一")).toBe(1);
+    expect(cm.chinese2Number("十一")).toBe(11);
+    expect(cm.chinese2Number("九十一")).toBe(91);
+    expect(cm.chinese2Number("一百九十九")).toBe(199);
+    expect(cm.chinese2Number("五千一百九十九")).toBe(5199);
+    expect(cm.chinese2Number("一万零一")).toBe(10001);
+    expect(cm.chinese2Number("一万零一十")).toBe(10010);
+    expect(cm.chinese2Number("一万零一十三")).toBe(10013);
+    expect(cm.chinese2Number("一万零一十三")).toBe(10013);
+    expect(cm.chinese2Number("十万零一十三")).toBe(100013);
+    expect(cm.chinese2Number("二百一十万零一十三")).toBe(2100013);
+    expect(cm.chinese2Number("一千二百一十万零一十三")).toBe(12100013);
+    expect(cm.chinese2Number("一千二百一十万零一")).toBe(12100001);
+    expect(cm.chinese2Number("一亿零二百一十万零一十三")).toBe(102100013);
+    expect(cm.chinese2Number("一亿二千三百四十五万六千七百八十九")).toBe(123456789);
+    expect(cm.chinese2Number("十一亿零二百一十万零一十三")).toBe(1102100013);
+    const sbq = ["拾", "佰", "仟"];
+    cm.chinese2Number.units = ["", ...sbq, "萬", ...sbq, "亿"];
+    cm.chinese2Number.numbers = ["零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"];
+    // 千和百未定义
+    expect(() => {
+        cm.chinese2Number("壹亿贰仟叁佰肆拾伍萬陆千柒百捌拾玖");
+    }).toThrow();
+    expect(cm.chinese2Number("壹亿贰仟叁佰肆拾伍萬陆仟柒佰捌拾玖")).toBe(123456789);
 });

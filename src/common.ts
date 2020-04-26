@@ -69,11 +69,13 @@ export function forEachByLen(len, callback: (index: number) => any | false) {
 // 对象深拷贝办法
 export function deepCopy<T>(target: T): T {
     if (typeof target !== "object") return target;
-    let result: any = isArray(target) ? [] : {};
-    for (let k in target) {
+    const tar: any = target;
+    const result: any = isArray(target) ? [] : {};
+    // 虽然array使用for i++比for in遍历快，但是如果在数组里面有非number类型的键的话，就无法复制，所以统一用for in遍历
+    for (let k in tar) {
         //prototype继承的不复制  es6继承的不会被拦截
-        if (!(target as any).hasOwnProperty(k)) continue;
-        result[k] = deepCopy(target[k]);   //递归复制
+        if (!tar.hasOwnProperty(k)) continue;
+        result[k] = deepCopy(tar[k]);   //递归复制
     }
     return result;
 }
@@ -109,7 +111,7 @@ export const formatDate: formatDateInterface = function (format) {
                 formatDate.weekText = createArray({
                     end: 7,
                     fill(item, index) {
-                        return index === 0 ? "日" : getChineseNumber(index);
+                        return index === 0 ? "日" : number2Chinese(index);
                     },
                 });
             }
@@ -305,12 +307,13 @@ export function randomColor(len?) {
  * @param date 格式：yyyy-MM-dd hh:mm:ss
  * @returns {Date}
  */
-export function getDateFromStr(date: string): Date | void {
-    if (/[^\/^\d^:^ ^-]/.test(date)) return; // 去除不符合规范的字符串
+export function getDateFromStr(date: string): Date | null {
+    // 检测非数字、非/、非:、非-
+    if (/[^\/^\d^:^ ^-]/.test(date)) return null; // 去除不符合规范的字符串
     const arr: number[] = date.split(/[- :\/]/).map(item => Number(item));
     if (arr.length < 6) {
         for (let i = arr.length; i < 6; i++) {
-            arr[i] = i < 4 ? 1 : 0;
+            arr[i] = i < 3 ? 1 : 0; // 年月日最小为1
         }
     }
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
@@ -424,26 +427,29 @@ export function oneByOne(words: string, delay: number, callback?: (word: string,
     return cancel;
 }
 
-const numberMap: any = {0: "零", 1: "一", 2: "二", 3: "三", 4: "四", 5: "五", 6: "六", 7: "七", 8: "八", 9: "九"};
-const units: any = {0: "", 1: "十", 2: "百", 3: "千", 4: "万"};
-const unitLen: number = Object.keys(units).length;
+const numberArr: any = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
+const sbq = ["十", "百", "千"];
+const units: any = ["", ...sbq, "万", ...sbq, "亿"];
+const unitLen: number = units.length;
+number2Chinese.units = [...units];
+number2Chinese.numbers = [...numberArr];
 
 /**
  * 阿拉伯数字转为中文数字
  * @param number
  */
-export function getChineseNumber(number: number) {
+export function number2Chinese(number: number): string {
     let key = ~~number;
     let chineseNumber = "";
     let times = 0;
     // 个位数
-    if (number >= 0 && number < 10) return numberMap[number];
+    if (number >= 0 && number < 10) return number2Chinese.numbers[number];
     while (key >= 1 && times < unitLen) {
-        let unit = units[times];
+        let unit = number2Chinese.units[times];
         // 11 % 10 => 一
-        let end = numberMap[key % 10];
+        let end = number2Chinese.numbers[key % 10];
         // 101 0没有单位
-        if (end !== numberMap[0]) {
+        if (end !== number2Chinese.numbers[0]) {
             chineseNumber = unit + chineseNumber;
         }
         // 11 => 一十一 => 十一
@@ -455,6 +461,49 @@ export function getChineseNumber(number: number) {
     }
     // 一万零零一 => 一万零一 | 一万零零零 => 一万
     return chineseNumber.replace(/(零+$)|((零)\3+)/g, "$3");
+}
+
+chinese2Number.units = [...units];
+chinese2Number.numbers = [...numberArr];
+
+/**
+ * 中文转为阿拉伯数字
+ * @param chineseNumber
+ */
+export function chinese2Number(chineseNumber: string): number {
+    if (new RegExp(`([^${chinese2Number.units.join() + chinese2Number.numbers.join()}])`).test(chineseNumber)) {
+        throw new TypeError("发现不符合规则的字符(必须在units和numbers里存在的字符):" + RegExp.$1);
+    }
+
+    // 用万和亿分割
+    const arr = chineseNumber.split(new RegExp(`[${chinese2Number.units[4]}${chinese2Number.units[8]}]`, "g"));
+    const numberArr = arr.map((it, index) => {
+        let res = 0;
+        let unit = 1;
+        // 从个位数往大数累加
+        for (let i = it.length - 1; i > -1; i--) {
+            const item = it[i];
+
+            let number = chinese2Number.numbers.indexOf(item);
+            if (number > 0) {
+                res += number * unit;
+            }
+
+            let unitIndex = chinese2Number.units.indexOf(item);
+            unit = unitIndex > 0 ? 10 ** unitIndex : unit;
+        }
+
+        // 以十开头的要单独列出来 例如十一完全体是一十一
+        if (it[0] === chinese2Number.units[1]) {
+            res += 10;
+        }
+        return res;
+    });
+
+    // 把分割开的数字拼接回去
+    return numberArr.reverse().reduce((res, item, index) => {
+        return res + 10000 ** index * item;
+    }, 0);
 }
 
 // 代替扩展符"...", 实现apply的时候可以使用此方法
