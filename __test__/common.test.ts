@@ -474,3 +474,8 @@ test("chinese2Number", () => {
     }).toThrow();
     expect(cm.chinese2Number("壹亿贰仟叁佰肆拾伍萬陆仟柒佰捌拾玖")).toBe(123456789);
 });
+test("dateDiff", () => {
+    expect(cm.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"))).toBe("0年5天 0时0分0秒");
+    expect(cm.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"), "d天 H时m分s秒")).toBe("5天 0时0分0秒");
+    expect(cm.dateDiff(new Date("2020-05-06"), new Date("2020-05-01 3:20:10"), "d天 H时m分s秒")).toBe("-5天 -4时-39分-50秒");
+});

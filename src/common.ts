@@ -529,4 +529,24 @@ export function generateFunction(obj: object, property: string, args: any[]) {
 }
 
 
+export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H时m分s秒"): string {
+    const seconds = ~~((second.getTime() - first.getTime()) / 1000);
+    const Time: { [k: string]: number } = {
+        "s+": seconds % 60,
+        "m+": ~~(seconds / 60) % 60,
+        "H+": ~~(seconds / (60 * 60)) % 24,
+        "d+": (function (): number {
+            const t = ~~(seconds / (60 * 60 * 24));
+            // 如果要显示年，则把天余年，否则全部显示天
+            // 默认一年等于365天
+            return /Y+/.test(format) ? t % 365 : t;
+        })(),
+        // "M+": 0,
+        "Y+": ~~(seconds / (60 * 60 * 24 * 365)),
+    };
 
+    for (let k in Time) {
+        format = format.replace(new RegExp(k), String(Time[k]));
+    }
+    return format;
+}
