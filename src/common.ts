@@ -528,7 +528,7 @@ export function generateFunction(obj: object, property: string, args: any[]) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
 }
 
-
+// 比较两个日期相差年天时分秒  用于倒计时等
 export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H时m分s秒"): string {
     const seconds = ~~((second.getTime() - first.getTime()) / 1000);
     const Time: { [k: string]: number } = {
@@ -536,10 +536,10 @@ export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H
         "m+": ~~(seconds / 60) % 60,
         "H+": ~~(seconds / (60 * 60)) % 24,
         "d+": (function (): number {
-            const t = ~~(seconds / (60 * 60 * 24));
+            const day = ~~(seconds / (60 * 60 * 24));
             // 如果要显示年，则把天余年，否则全部显示天
             // 默认一年等于365天
-            return /Y+/.test(format) ? t % 365 : t;
+            return /Y+/.test(format) ? day % 365 : day;
         })(),
         // "M+": 0,
         "Y+": ~~(seconds / (60 * 60 * 24 * 365)),
@@ -549,4 +549,39 @@ export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H
         format = format.replace(new RegExp(k), String(Time[k]));
     }
     return format;
+}
+
+// 获取object树的最大层数 tree是object的话，tree就是层数1
+export function getTreeMaxDeep(tree: object): number {
+    function deeps(obj: object, num: number = 0): number {
+        if (typeof tree !== "object" || tree === null) return num;
+        let arr: number[] = [++num];
+        for (const k in obj) {
+            if (!obj.hasOwnProperty(k)) continue;
+            arr.push(deeps(obj[k], num));
+        }
+        return Math.max(...arr);
+    }
+
+    return deeps(tree);
+}
+
+// 获取树某层的节点数 0是tree本身
+export function getTreeNodeLen(tree: object, nodeNumber: number = 1): number {
+    let result = 0;
+    if (typeof tree !== "object" || tree === null || nodeNumber < 0) return result;
+
+    function deeps(obj: object, num: number = 0) {
+        if (nodeNumber === num++) {
+            result++;
+            return;
+        }
+        for (const k in obj) {
+            if (!obj.hasOwnProperty(k)) continue;
+            deeps(obj[k], num);
+        }
+    }
+
+    deeps(tree);
+    return result;
 }
