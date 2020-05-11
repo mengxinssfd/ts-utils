@@ -487,6 +487,7 @@ test("getTreeMaxDeep", () => {
     expect(cm.getTreeMaxDeep(obj)).toBe(4);
     expect(cm.getTreeMaxDeep([])).toBe(1);
     expect(cm.getTreeMaxDeep([1, 2, 4, 5])).toBe(2);
+    expect(cm.getTreeMaxDeep([1, 2, 4, 5, {a: 3}])).toBe(3);
 });
 test("getTreeNodeLen", () => {
     expect(cm.getTreeNodeLen({}, -1)).toBe(0);
@@ -507,3 +508,36 @@ test("getTreeNodeLen", () => {
     expect(cm.getTreeNodeLen([0, 1, [3, 4, 5]], 2)).toBe(3);
     expect(cm.getTreeNodeLen([0, 1, {a: 12, b: 1, c: 4}], 2)).toBe(3);
 });
+test("isPromiseLike", () => {
+    expect(cm.isPromiseLike({})).toBe(false);
+    expect(cm.isPromiseLike(Promise.resolve())).toBe(true);
+    expect(cm.isPromiseLike(null)).toBe(false);
+    expect(cm.isPromiseLike(null)).toBe(false);
+    expect(cm.isPromiseLike(undefined)).toBe(false);
+    expect(cm.isPromiseLike(0)).toBe(false);
+    expect(cm.isPromiseLike(-42)).toBe(false);
+    expect(cm.isPromiseLike(42)).toBe(false);
+    expect(cm.isPromiseLike('')).toBe(false);
+    expect(cm.isPromiseLike('then')).toBe(false);
+    expect(cm.isPromiseLike(false)).toBe(false);
+    expect(cm.isPromiseLike(true)).toBe(false);
+    expect(cm.isPromiseLike({})).toBe(false);
+    expect(cm.isPromiseLike({then: true})).toBe(false);
+    expect(cm.isPromiseLike([])).toBe(false);
+    expect(cm.isPromiseLike([true])).toBe(false);
+    expect(cm.isPromiseLike(() => {
+    })).toBe(false);
+
+    const promise = {
+        then: function () {
+        },
+    };
+    expect(cm.isPromiseLike(promise)).toBe(true);
+
+    const fn = () => {
+    };
+    fn.then = () => {
+    };
+    expect(cm.isPromiseLike(fn)).toBe(true);
+});
+

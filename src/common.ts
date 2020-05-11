@@ -225,6 +225,14 @@ export function isUndefined(target: any): target is undefined {
     return target === void 0;
 }
 
+// 参考is-promise
+export function isPromiseLike<T, S>(target: PromiseLike<T> | S): target is PromiseLike<T> {
+    const type = typeof target;
+    return !!target/*null也是object*/
+        && (type === "object" || type === "function")
+        && typeof (target as any).then === "function";
+}
+
 // 有native isNaN函数 但是 {} "abc"会是true
 export function isNaN(target: any): boolean {
     // return String(target) === "NaN"; // "NaN" 会被判断为true
@@ -431,14 +439,19 @@ const numberArr: any = ["零", "一", "二", "三", "四", "五", "六", "七", 
 const sbq = ["十", "百", "千"];
 const units: any = ["", ...sbq, "万", ...sbq, "亿"];
 const unitLen: number = units.length;
-number2Chinese.units = [...units];
-number2Chinese.numbers = [...numberArr];
+
+interface Number2Chinese {
+    (number: number): string
+
+    units: string[];
+    numbers: string [];
+}
 
 /**
  * 阿拉伯数字转为中文数字
  * @param number
  */
-export function number2Chinese(number: number): string {
+export const number2Chinese: Number2Chinese = function (number) {
     let key = ~~number;
     let chineseNumber = "";
     let times = 0;
@@ -461,16 +474,23 @@ export function number2Chinese(number: number): string {
     }
     // 一万零零一 => 一万零一 | 一万零零零 => 一万
     return chineseNumber.replace(/(零+$)|((零)\3+)/g, "$3");
-}
+};
+number2Chinese.units = [...units];
+number2Chinese.numbers = [...numberArr];
 
-chinese2Number.units = [...units];
-chinese2Number.numbers = [...numberArr];
+
+interface Chinese2Number {
+    (chineseNumber: string): number
+
+    units: string[];
+    numbers: string [];
+}
 
 /**
  * 中文转为阿拉伯数字
  * @param chineseNumber
  */
-export function chinese2Number(chineseNumber: string): number {
+export const chinese2Number: Chinese2Number = function (chineseNumber) {
     if (new RegExp(`([^${chinese2Number.units.join() + chinese2Number.numbers.join()}])`).test(chineseNumber)) {
         throw new TypeError("发现不符合规则的字符(必须在units和numbers里存在的字符):" + RegExp.$1);
     }
@@ -504,7 +524,9 @@ export function chinese2Number(chineseNumber: string): number {
     return numberArr.reverse().reduce((res, item, index) => {
         return res + 10000 ** index * item;
     }, 0);
-}
+};
+chinese2Number.units = [...units];
+chinese2Number.numbers = [...numberArr];
 
 // 代替扩展符"...", 实现apply的时候可以使用此方法
 export function generateFunctionCode(argsArrayLength: number) {
