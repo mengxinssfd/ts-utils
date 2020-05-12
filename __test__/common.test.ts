@@ -37,15 +37,17 @@ test('deepCopy', () => {
     ];
     const newArr2 = cm.deepCopy(arr2);
     // copy == arr2
-    expect(arr2).toEqual(newArr2);
+    expect(arr2 == newArr2).toBe(false);
     // copy !== arr2
     expect(newArr2 === arr2).toBeFalsy();
     // copy[0] == arr2[0]
-    expect(newArr2[0]).toEqual(arr2[0]);
-    expect(newArr2[1]).toEqual(arr2[1]);
+    expect(newArr2[0] == arr2[0]).toBe(false);
+    expect(newArr2[1] == arr2[1]).toEqual(false);
     // copy[0] === arr2[0]
-    expect(newArr2[1] === arr2[1]).toBeTruthy();
-    // copy[0]() == arr2[0]()
+    expect(newArr2[0] !== arr2[0]).toBeTruthy();
+    expect(newArr2[1] !== arr2[1]).toBeTruthy();
+    // copy[0]() === arr2[0]()
+    expect(newArr2[1]() === arr2[1]()).toBeTruthy();
     expect(newArr2[1]()).toEqual(arr2[1]());
 
     function Foo() {
@@ -69,6 +71,23 @@ test('deepCopy', () => {
     // test cov if (!(target as any).hasOwnProperty(k)) continue;
     const copyFoo = cm.deepCopy(myPro);
     expect(copyFoo.hasOwnProperty("sayGoodBy")).toBeFalsy();
+
+    // copy function
+    function fn(arg: number) {
+        return arg + fn.data;
+    }
+
+    fn.data = 100;
+
+    const nFn = cm.deepCopy(fn);
+
+    expect(fn(100)).toBe(200);
+    expect(fn === nFn).toBe(false);
+    expect(nFn(100)).toBe(200);
+    expect(nFn.data).toBe(100);
+    nFn.data = 200;
+    expect(nFn.data).toBe(200);
+    expect(fn.data).toBe(100);
 });
 test('getDateFromStr', () => {
     const t1 = (cm.getDateFromStr("2020-02-02 10:10:10") as Date).getTime();
@@ -150,143 +169,7 @@ test('typeOf', () => {
     expect(cm.typeOf(NaN)).toBe("number");
     expect(cm.typeOf(/abc/)).toBe("regexp");
 });
-test('isArrayLike', () => {
-    expect(cm.isArrayLike([1, 2, 3])).toBe(true);
-    expect(cm.isArrayLike([])).toBe(true);
-    expect(cm.isArrayLike({length: 1, 0: 1})).toBe(true);
-    expect(cm.isArrayLike({length: 2, 0: 1})).toBe(false);
-    expect(cm.isArrayLike("")).toBe(false);
-    expect(cm.isArrayLike(1)).toBe(false);
-    expect(cm.isArrayLike(true)).toBe(false);
-    expect(cm.isArrayLike(undefined)).toBe(false);
-    expect(cm.isArrayLike(null)).toBe(false);
-    expect(cm.isArrayLike({})).toBe(false);
-    expect(cm.isArrayLike(() => {
-    })).toBe(false);
-});
-test('isArray', () => {
-    expect(cm.isArray(0.12345667)).toBeFalsy();
-    expect(cm.isArray("")).toBeFalsy();
-    expect(cm.isArray({})).toBeFalsy();
-    expect(cm.isArray({0: 1, 1: 2, length: 2})).toBeFalsy();
-    expect(cm.isArray(() => {
-    })).toBeFalsy();
-    expect(cm.isArray(true)).toBeFalsy();
-    expect(cm.isArray(NaN)).toBeFalsy();
-    expect(cm.isArray(undefined)).toBeFalsy();
-    expect(cm.isArray(null)).toBeFalsy();
-    expect(cm.isArray([1, 2, 3])).toBeTruthy();
-    expect(cm.isArray([])).toBeTruthy();
-});
-test('isNumber', () => {
-    expect(cm.isNumber("")).toBeFalsy();
-    expect(cm.isNumber({})).toBeFalsy();
-    expect(cm.isNumber({0: 1, 1: 2, length: 2})).toBeFalsy();
-    expect(cm.isNumber(() => {
-    })).toBeFalsy();
-    expect(cm.isNumber(true)).toBeFalsy();
-    expect(cm.isNumber(undefined)).toBeFalsy();
-    expect(cm.isNumber(null)).toBeFalsy();
-    expect(cm.isNumber([1, 2, 3])).toBeFalsy();
-    expect(cm.isNumber([])).toBeFalsy();
-    expect(cm.isNumber(NaN)).toBeTruthy();
-    expect(cm.isNumber(123)).toBeTruthy();
-});
-test('isFunction', () => {
-    expect(cm.isFunction("")).toBeFalsy();
-    expect(cm.isFunction(() => {
-    })).toBeTruthy();
-});
-test('isString', () => {
-    expect(cm.isString(123123)).toBeFalsy();
-    expect(cm.isString("")).toBeTruthy();
-});
-test('isObject', () => {
-    expect(cm.isObject(123123)).toBeFalsy();
-    expect(cm.isObject(undefined)).toBeFalsy();
-    expect(cm.isObject(123123)).toBeFalsy();
-    expect(cm.isObject("")).toBeFalsy();
-    // null
-    expect(typeof null === "object").toBeTruthy();
-    expect(cm.isObject(null)).toBeFalsy();
-    // array
-    expect(typeof [] === "object").toBeTruthy();
-    expect(cm.isObject([])).toBeFalsy();
-    //
-    expect(cm.isObject({})).toBeTruthy();
-    // function
-    const f = function () {
-    };
-    expect(typeof f === "object").toBeFalsy();
-    expect(cm.isObject(f)).toBeFalsy();
-});
-test('isBoolean', () => {
-    expect(cm.isBoolean(0)).toBeFalsy();
-    expect(cm.isBoolean(123123)).toBeFalsy();
-    expect(cm.isBoolean(undefined)).toBeFalsy();
-    expect(cm.isBoolean("")).toBeFalsy();
-    expect(cm.isBoolean(null)).toBeFalsy();
-    expect(cm.isBoolean([])).toBeFalsy();
-    expect(cm.isBoolean({})).toBeFalsy();
-});
-test('isUndefined', () => {
-    expect(cm.isUndefined(0)).toBeFalsy();
-    expect(cm.isUndefined(123123)).toBeFalsy();
-    expect(cm.isUndefined("")).toBeFalsy();
-    expect(cm.isUndefined(null)).toBeFalsy();
-    expect(cm.isUndefined([])).toBeFalsy();
-    expect(cm.isUndefined(undefined)).toBeTruthy();
-    let a;
-    expect(cm.isUndefined(a)).toBeTruthy();
-});
-test('isNaN', () => {
-    expect(NaN === NaN).toBeFalsy();
-    expect(cm.isNaN(NaN)).toBeTruthy();
-    expect(cm.isNaN({a: 1})).toBeFalsy();
-    expect(cm.isNaN(1)).toBeFalsy();
-    expect(cm.isNaN(0)).toBeFalsy();
-    expect(cm.isNaN(-1)).toBeFalsy();
-    expect(cm.isNaN(false)).toBeFalsy();
-    expect(cm.isNaN(undefined)).toBeFalsy();
-    expect(cm.isNaN(null)).toBeFalsy();
-    expect(cm.isNaN("")).toBeFalsy();
-    expect(cm.isNaN({})).toBeFalsy();
-    expect(cm.isNaN({a: 1})).toBeFalsy();
-    expect(cm.isNaN([])).toBeFalsy();
-    expect(cm.isNaN([1, 2, 3])).toBeFalsy();
-    expect(cm.isNaN(["bdsdf", 12323])).toBeFalsy();
-    expect(cm.isNaN("123")).toBeFalsy();
-    expect(cm.isNaN("NaN")).toBeFalsy();
-});
-test('isEmptyObject', () => {
-    expect(cm.isEmptyObject({})).toBeTruthy();
-    expect(cm.isEmptyObject({a: 1})).toBeFalsy();
-    expect(cm.isEmptyObject({true: 1})).toBeFalsy();
-    expect(cm.isEmptyObject({false: 1})).toBeFalsy();
-    expect(cm.isEmptyObject({0: 1})).toBeFalsy();
-    expect(cm.isEmptyObject({undefined: 1})).toBeFalsy();
-    expect(cm.isEmptyObject({null: 1})).toBeFalsy();
-    expect(cm.isEmptyObject([])).toBeFalsy();
-    expect(cm.isEmptyObject(function () {
-    })).toBeFalsy();
-});
-test('isEmpty', () => {
-    expect(cm.isEmpty(NaN)).toBeTruthy();
-    expect(cm.isEmpty("")).toBeTruthy();
-    expect(cm.isEmpty({})).toBeTruthy();
-    expect(cm.isEmpty([])).toBeTruthy();
-    expect(cm.isEmpty({a: 1})).toBeFalsy();
-    expect(cm.isEmpty([1])).toBeFalsy();
-    expect(cm.isEmpty(0)).toBeFalsy();
-    expect(cm.isEmpty(function () {
 
-    })).toBeFalsy();
-    expect(cm.isEmpty({
-        a: function () {
-
-        },
-    })).toBeFalsy();
-});
 test('randomNumber', () => {
     const rand = cm.randomNumber(0, 10);
     expect(rand).toBeGreaterThanOrEqual(0);
@@ -334,37 +217,8 @@ test('randomColor', () => {
         expect(reg.test(arr[i])).toBeTruthy();
     });
 });
-test('objectIsEqual', () => {
-    expect(cm.objectIsEqual(cm, cm)).toBeTruthy();
-    expect(cm.objectIsEqual({a: 1}, {a: 1})).toBeTruthy();
-    expect(cm.objectIsEqual({a: 1}, {a: 2})).toBeFalsy();
-});
-test('isEqual', () => {
-    expect(cm.isEqual({a: 1}, {a: 1})).toBeTruthy();
-    expect(cm.isEqual({a: 1}, {a: 2})).toBeFalsy();
-    expect(cm.isEqual(1, 1)).toBeTruthy();
-    expect(cm.isEqual(1, 2)).toBeFalsy();
-    expect(cm.isEqual(1, "1")).toBeFalsy();
-    expect(cm.isEqual(0, "")).toBeFalsy();
-    expect(cm.isEqual(0, false)).toBeFalsy();
-    expect(cm.isEqual(0, null)).toBeFalsy();
-    expect(cm.isEqual(0, undefined)).toBeFalsy();
-    expect(cm.isEqual(null, undefined)).toBeFalsy();
-    expect(cm.isEqual(false, undefined)).toBeFalsy();
-    expect(cm.isEqual(false, null)).toBeFalsy();
-    expect(cm.isEqual(false, true)).toBeFalsy();
-    expect(cm.isEqual([1, 2], {0: 1, 1: 2, length: 2})).toBeFalsy();
-    expect(cm.isEqual(() => {
-    }, () => {
-    })).toBeFalsy();
-    expect(cm.isEqual(cm.polling, cm.polling)).toBeTruthy();
-    expect(cm.isEqual([1, 2], [1, 2])).toBeTruthy();
-    expect(cm.isEqual(null, null)).toBeTruthy();
-    expect(cm.isEqual(undefined, undefined)).toBeTruthy();
-    expect(cm.isEqual(false, false)).toBeTruthy();
-    expect(cm.isEqual(NaN, NaN)).toBeTruthy();
-    expect(cm.isEqual("", "")).toBeTruthy();
-});
+
+
 test('thousandFormat', () => {
     expect(cm.thousandFormat(123456789)).toBe("123,456,789");
     expect(cm.thousandFormat(123)).toBe("123");
@@ -508,36 +362,19 @@ test("getTreeNodeLen", () => {
     expect(cm.getTreeNodeLen([0, 1, [3, 4, 5]], 2)).toBe(3);
     expect(cm.getTreeNodeLen([0, 1, {a: 12, b: 1, c: 4}], 2)).toBe(3);
 });
-test("isPromiseLike", () => {
-    expect(cm.isPromiseLike({})).toBe(false);
-    expect(cm.isPromiseLike(Promise.resolve())).toBe(true);
-    expect(cm.isPromiseLike(null)).toBe(false);
-    expect(cm.isPromiseLike(null)).toBe(false);
-    expect(cm.isPromiseLike(undefined)).toBe(false);
-    expect(cm.isPromiseLike(0)).toBe(false);
-    expect(cm.isPromiseLike(-42)).toBe(false);
-    expect(cm.isPromiseLike(42)).toBe(false);
-    expect(cm.isPromiseLike('')).toBe(false);
-    expect(cm.isPromiseLike('then')).toBe(false);
-    expect(cm.isPromiseLike(false)).toBe(false);
-    expect(cm.isPromiseLike(true)).toBe(false);
-    expect(cm.isPromiseLike({})).toBe(false);
-    expect(cm.isPromiseLike({then: true})).toBe(false);
-    expect(cm.isPromiseLike([])).toBe(false);
-    expect(cm.isPromiseLike([true])).toBe(false);
-    expect(cm.isPromiseLike(() => {
-    })).toBe(false);
+test("cloneFunction", () => {
+    function test(a, b) {
+        return a + b;
+    }
 
-    const promise = {
-        then: function () {
-        },
-    };
-    expect(cm.isPromiseLike(promise)).toBe(true);
+    expect(cm.cloneFunction(test)(50, 50)).toBe(100);
 
-    const fn = () => {
-    };
-    fn.then = () => {
-    };
-    expect(cm.isPromiseLike(fn)).toBe(true);
+    const test2 = (a, b) => a + b;
+    expect(cm.cloneFunction(test2)(50, 50)).toBe(100);
+    expect((function (a, b) {
+        return a + b;
+    })(50, 50)).toBe(100);
 });
+
+
 

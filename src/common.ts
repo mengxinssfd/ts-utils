@@ -66,11 +66,26 @@ export function forEachByLen(len, callback: (index: number) => any | false) {
     }
 }
 
+// 如果要复制函数属性的话，使用deepCopy
+export function cloneFunction<T extends Function>(fn: T): T {
+    if (typeOf(fn) !== "function") return fn;
+    let newFn: any;
+    eval("newFn = " + fn.toString());
+    return newFn;
+}
+
 // 对象深拷贝办法
 export function deepCopy<T>(target: T): T {
-    if (typeof target !== "object") return target;
+    const type = typeOf(target);
+    if (["object", "array", "function"].indexOf(type) === -1) return target;
     const tar: any = target;
-    const result: any = isArray(target) ? [] : {};
+    const result: any = (
+        {
+            "array": [],
+            "function": cloneFunction(target as any),
+            "object": {},
+        }
+    )[type];
     // 虽然array使用for i++比for in遍历快，但是如果在数组里面有非number类型的键的话，就无法复制，所以统一用for in遍历
     for (let k in tar) {
         //prototype继承的不复制  es6继承的不会被拦截
@@ -179,90 +194,6 @@ export function typeOf(target: any): string {
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
 
-export function isObject(target: any): target is object {
-    return typeOf(target) === "object";
-}
-
-export function isArray(target: any): target is Array<any> {
-    return typeOf(target) === "array";
-}
-
-// 类数组对象 jq的实现方式
-export function isArrayLike(target: any): target is ArrayLike<any> {
-    // 检测target的类型
-    const type = typeOf(target);
-    if (["string", "null", "undefined", "number", "boolean"].indexOf(type) > -1) return false;
-    // 如果target非null、undefined等，有length属性，则length等于target.length
-    // 否则，length为false
-    const length = !!target && "length" in target && target.length;
-    // 如果target是function类型 或者是window对象 则返回false
-    if (type === "function" || target === window) {
-        return false;
-    }
-    // target本身是数组，则返回true
-    // target不是数组，但有length属性且为0，例如{length : 0}，则返回true
-    // target不是数组,但有length属性且为整数数值，target[length - 1]存在，则返回true
-    return type === "array" || length === 0 || isNumber(length) && length > 0 && (length - 1) in target;
-}
-
-export function isString(target: any): target is string {
-    return typeOf(target) === "string";
-}
-
-export function isNumber(target: any): target is number {
-    return typeOf(target) === "number";
-}
-
-export function isFunction(target: any): target is Function {
-    return typeOf(target) === "function";
-}
-
-export function isBoolean(target: any): target is boolean {
-    return typeOf(target) === "boolean";
-}
-
-export function isUndefined(target: any): target is undefined {
-    return target === void 0;
-}
-
-// 参考is-promise
-export function isPromiseLike<T, S>(target: PromiseLike<T> | S): target is PromiseLike<T> {
-    const type = typeof target;
-    return !!target/*null也是object*/
-        && (type === "object" || type === "function")
-        && typeof (target as any).then === "function";
-}
-
-// 有native isNaN函数 但是 {} "abc"会是true
-export function isNaN(target: any): boolean {
-    // return String(target) === "NaN"; // "NaN" 会被判断为true
-    return isNumber(target) && target !== target;
-}
-
-// 判断是否是空object
-export function isEmptyObject(target: object): boolean {
-    if (!isObject(target)) return false;
-    for (let i in target) {
-        return i === undefined;
-    }
-    return true;
-}
-
-// 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
-export function isEmpty(target: any): boolean {
-    // TO DO 可以替换array里的includes
-    if ([undefined, null, "", NaN].includes(target)) return true;
-    // if (includes([undefined, null, "", NaN], target)) return true;
-    switch (typeOf(target)) {
-        case "array":
-            return !target.length;
-        case "object":
-            // {a(){}} 使用JSON.stringify是会判断为空的
-            // return JSON.stringify(target) === "{}";
-            return isEmptyObject(target);
-    }
-    return false;
-}
 
 // 生成start到end之间的随机数 包含start与end
 // 传start不传end  end=start start=0 生成0-start之间的随机数
@@ -327,38 +258,6 @@ export function getDateFromStr(date: string): Date | null {
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 
-export function objectIsEqual(obj1: object, obj2: object): boolean {
-    if (obj1 === obj2) return true;
-    for (const key in obj1) {
-        const value1 = obj1[key];
-        const value2 = obj2[key];
-        if (!isEqual(value1, value2)) {
-            return false;
-        }
-    }
-    return true;
-}
-
-export function isEqual(a: any, b: any): boolean {
-    if (a === b) return true;
-    const aType = typeOf(a);
-    const bType = typeOf(b);
-    if (aType !== bType) return false;
-    // noinspection FallThroughInSwitchStatementJS
-    switch (aType) {
-        case "boolean":
-        case "string":
-        case "function":
-            return false;
-        case "number":
-            return isNaN(b);
-        //  只有数组或者object不相等的时候才去对比是否相等
-        case "array":
-        case "object":
-        default:
-            return objectIsEqual(a, b);
-    }
-}
 
 /**
  * 千位分隔 1,234,567,890
@@ -440,7 +339,7 @@ const sbq = ["十", "百", "千"];
 const units: any = ["", ...sbq, "万", ...sbq, "亿"];
 const unitLen: number = units.length;
 
-interface Number2Chinese {
+export interface Number2Chinese {
     (number: number): string
 
     units: string[];
@@ -479,7 +378,7 @@ number2Chinese.units = [...units];
 number2Chinese.numbers = [...numberArr];
 
 
-interface Chinese2Number {
+export interface Chinese2Number {
     (chineseNumber: string): number
 
     units: string[];

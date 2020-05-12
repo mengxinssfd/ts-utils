@@ -1,3 +1,4 @@
+export * from "./is";
 export * from "./dom";
 export * from "./common";
 export * from "./OneByOne";

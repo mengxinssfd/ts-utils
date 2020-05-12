@@ -105,3 +105,23 @@ test('find', () => {
         return v === 3 && k === 2 && arr.length === 6;
     })).toBeUndefined();
 });
+test('flat', () => {
+    expect([1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]].flat(1)).toEqual([1, 2, 3, 1, 2, 3, [1, 2, 3], 1, 2, 3, [1, 2, 3]]);
+
+    const list = [1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]];
+
+    // Array.property.flag(depth=1)
+    expect(list.flat()).toEqual(list.flat(1));
+    expect(arr.flat(list, 1)).toEqual(list.flat());
+    expect(arr.flat(list, 1)).toEqual(list.flat(1));
+    expect(arr.flat(list, 2)).toEqual(list.flat(2));
+    expect(arr.flat(list, 3)).toEqual(list.flat(3));
+
+    // flat all
+    expect(arr.flat([1, 2, 3], -1)).toEqual([1, 2, 3]);
+    expect(arr.flat([1, 2, 3, [1, 2, 3]], -1)).toEqual([1, 2, 3, 1, 2, 3]);
+    expect(arr.flat([1, 2, 3, [1, 2, 3], [1, 2, 3]], -1)).toEqual([1, 2, 3, 1, 2, 3, 1, 2, 3]);
+    expect(arr.flat([1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3]], -1)).toEqual([1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]);
+    expect(arr.flat([1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]], -1)).toEqual([1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]);
+
+});

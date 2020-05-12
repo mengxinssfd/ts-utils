@@ -1,7 +1,5 @@
-/**
- * ie9不支持的数组函数
- */
-import {isEmpty, typeOf, isNaN} from "./common";
+import {typeOf, deepCopy} from "./common";
+import {isEmpty, isNaN, isArray} from "./is";
 
 // @overload
 // ({start: 0, end: 2}) => [0, 1];
@@ -144,3 +142,18 @@ export function find<T>(
     }
 }
 
+export function flat<T>(target: readonly T[], depth: number = 1): T[] {
+    function innerFlat(innerArr: readonly any[], innerDepth: number = 0): any {
+        if (!isArray(innerArr)) return innerArr;
+        if (innerDepth++ === depth) return deepCopy(innerArr);
+
+        const result: any[] = [];
+        for (let i = 0; i < innerArr.length; i++) {
+            const newItem = innerFlat(innerArr[i], innerDepth);
+            result.push(...(isArray(newItem) ? newItem : [newItem]));
+        }
+        return result;
+    }
+
+    return innerFlat(target);
+}
