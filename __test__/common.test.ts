@@ -375,6 +375,36 @@ test("cloneFunction", () => {
         return a + b;
     })(50, 50)).toBe(100);
 });
+test("deepCopyBfs", () => {
+    const obj10086 = {a: 1, b: 2, c: 3, d: 4};
+    const nObj = cm.deepCopyBfs(obj10086);
+    expect(obj10086).toEqual(nObj);
+    expect(nObj.c).toEqual(3);
+    expect(nObj === obj10086).toBe(false);
 
+    const obj10000 = {a: 1, b: {c: "123"}};
+    const nObj2 = cm.deepCopyBfs(obj10000);
+    expect(nObj2).toEqual(obj10000);
+
+    const arr = [1, 2, 3];
+    const newArr = cm.deepCopyBfs(arr);
+    // copy == arr
+    expect(newArr).toEqual(arr);
+    // copy !== arr
+    expect(arr === newArr).toBeFalsy();
+    const obj = {a: [2, 3], c: 1, d: {f: 123}};
+    const newObj = cm.deepCopyBfs(obj);
+    // copy == obj
+    expect(newObj).toEqual(obj);
+    // copy !== obj
+    expect(obj === newObj).toBeFalsy();
+    // copy.a == obj.a
+    expect(obj.a).toEqual(newObj.a);
+    // copy.a !== obj.a
+    expect(obj.a === newObj.a).toBeFalsy();
+    // 0 === 0
+    expect(cm.deepCopyBfs(0)).toBe(0);
+
+});
 
 

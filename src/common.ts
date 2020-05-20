@@ -79,18 +79,48 @@ export function deepCopy<T>(target: T): T {
     const type = typeOf(target);
     if (["object", "array", "function"].indexOf(type) === -1) return target;
     const tar: any = target;
-    const result: any = (
-        {
-            "array": [],
-            "function": cloneFunction(target as any),
-            "object": {},
-        }
-    )[type];
+    const result: any = ({
+        "array": [],
+        "function": cloneFunction(target as any),
+        "object": {},
+    })[type];
     // 虽然array使用for i++比for in遍历快，但是如果在数组里面有非number类型的键的话，就无法复制，所以统一用for in遍历
     for (let k in tar) {
         //prototype继承的不复制  es6继承的不会被拦截
         if (!tar.hasOwnProperty(k)) continue;
         result[k] = deepCopy(tar[k]);   //递归复制
+    }
+    return result;
+}
+
+export function deepCopyBfs<T>(target: T): T {
+    if (typeof target !== "object" || !target) return target;
+    type key = string
+    type value = any;
+    type parent = any;
+    type queItem = [key, value, parent];
+    const result: any = new (target as any).constructor();
+    const queue: queItem[] = getChildren(target as any, result);
+
+    function getChildren(tar: object, parent: any): typeof queue {
+        const que: typeof queue = [];
+        for (let k in tar) {
+            if (!tar.hasOwnProperty(k)) continue;
+            que.push([k, tar[k], parent]);
+        }
+        return que;
+    }
+
+    while (queue.length) {
+        const [k, v, parent] = queue.shift()!;
+
+        if (typeof v !== "object") {
+            parent[k] = v;
+            continue;
+        }
+
+        if (parent[k] === undefined) parent[k] = new v.constructor();
+        queue.push(...getChildren(v, parent[k]));
     }
     return result;
 }
@@ -504,5 +534,25 @@ export function getTreeNodeLen(tree: object, nodeNumber: number = 1): number {
     }
 
     deeps(tree);
+    return result;
+}
+
+// 合并两个object  // TODO 未测
+export function merge<T, U>(first: T, second: U): T & U {
+    const result: any = {};
+    for (const k in first) {
+        result[k] = (<any>first)[k];
+    }
+    for (const k in second) {
+        if (!result.hasOwnProperty(k)) {
+            (<any>result)[k] = (<any>second)[k];
+        }
+    }
+    return result;
+}
+
+// 合并两个object   // TODO 未深度合并
+export function deepMerge<T, U>(a: T, b: U): T & U {
+    const result: any = {};
     return result;
 }
