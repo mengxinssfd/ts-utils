@@ -74,7 +74,7 @@ export function cloneFunction<T extends Function>(fn: T): T {
     return newFn;
 }
 
-// 对象深拷贝办法
+// 对象深拷贝办法(深度优先)
 export function deepCopy<T>(target: T): T {
     const type = typeOf(target);
     if (["object", "array", "function"].indexOf(type) === -1) return target;
@@ -93,6 +93,7 @@ export function deepCopy<T>(target: T): T {
     return result;
 }
 
+// 对象深拷贝办法(广度优先)
 export function deepCopyBfs<T>(target: T): T {
     if (typeof target !== "object" || !target) return target;
     type key = string
@@ -225,13 +226,13 @@ export function typeOf(target: any): string {
 }
 
 
-// 生成start到end之间的随机数 包含start与end
-// 传start不传end  end=start start=0 生成0-start之间的随机数
 // start end都不传  return Math.random()
 export function randomNumber(): number
-// start = 0
+// start = 0 生成0-end之间的随机数
 export function randomNumber(end: number): number
+// 生成start到end之间的随机数 包含start与end
 export function randomNumber(start: number, end: number): number
+// 生成start到end之间的随机数组 包含start与end length：数组长度
 export function randomNumber(start: number, end: number, length: number): number[]
 export function randomNumber(start?, end?, length?) {
     // randomNumber()
@@ -537,22 +538,43 @@ export function getTreeNodeLen(tree: object, nodeNumber: number = 1): number {
     return result;
 }
 
-// 合并两个object  // TODO 未测
-export function merge<T, U>(first: T, second: U): T & U {
+// 合并两个object
+export function merge<T extends object, U extends object>(first: T, second: U): T & U {
     const result: any = {};
-    for (const k in first) {
-        result[k] = (<any>first)[k];
-    }
-    for (const k in second) {
-        if (!result.hasOwnProperty(k)) {
-            (<any>result)[k] = (<any>second)[k];
+
+    function assign(receive: object, obj: object) {
+        for (const k in obj) {
+            if (obj.hasOwnProperty(k)) {
+                receive[k] = obj[k];
+            }
         }
     }
+
+    assign(result, first);
+    assign(result, second);
     return result;
 }
 
-// 合并两个object   // TODO 未深度合并
-export function deepMerge<T, U>(a: T, b: U): T & U {
+// 合并两个object
+export function deepMerge<T extends object, U extends object>(first: T, second: U): T & U {
+    function assign(receive: object, obj: any) {
+        for (const k in obj) {
+            if (!obj.hasOwnProperty(k)) continue;
+            const v = obj[k];
+            if (v && typeof v === "object") {
+                receive[k] = new v.constructor();
+                assign(receive[k], v);
+            } else
+                receive[k] = v;
+        }
+    }
+
     const result: any = {};
+    assign(result, first);
+    assign(result, second);
     return result;
+}
+
+export function sleep(delay: number): Promise<void> {
+    return new Promise(res => setTimeout(res, delay));
 }

@@ -335,6 +335,7 @@ test("dateDiff", () => {
 });
 test("getTreeMaxDeep", () => {
     expect(cm.getTreeMaxDeep({})).toBe(1);
+    expect(cm.getTreeMaxDeep({a: 1})).toBe(2);
     expect(cm.getTreeMaxDeep(null as any)).toBe(0);
     expect(cm.getTreeMaxDeep({a: {b: 1}})).toBe(3);
     const obj: any = {a: {a2: 1}, b: 1, c: {c2: {c3: 123, c32: {}}}};
@@ -342,6 +343,15 @@ test("getTreeMaxDeep", () => {
     expect(cm.getTreeMaxDeep([])).toBe(1);
     expect(cm.getTreeMaxDeep([1, 2, 4, 5])).toBe(2);
     expect(cm.getTreeMaxDeep([1, 2, 4, 5, {a: 3}])).toBe(3);
+
+    function Fn() {
+        this.test = {a: 1, b: 2};
+    }
+
+    Fn.prototype.c = {a: {b: 2, c: {d: 123}}};
+
+    const fn = new Fn();
+    expect(cm.getTreeMaxDeep(fn)).toBe(3);
 });
 test("getTreeNodeLen", () => {
     expect(cm.getTreeNodeLen({}, -1)).toBe(0);
@@ -361,6 +371,15 @@ test("getTreeNodeLen", () => {
     }, 3)).toBe(2);
     expect(cm.getTreeNodeLen([0, 1, [3, 4, 5]], 2)).toBe(3);
     expect(cm.getTreeNodeLen([0, 1, {a: 12, b: 1, c: 4}], 2)).toBe(3);
+
+    function Fn() {
+        this.test = {a: 1, b: 2};
+    }
+
+    Fn.prototype.c = {a: {b: 2, c: {d: 123}}};
+
+    const fn = new Fn();
+    expect(cm.getTreeNodeLen(fn, 2)).toBe(2);
 });
 test("cloneFunction", () => {
     function test(a, b) {
@@ -405,6 +424,53 @@ test("deepCopyBfs", () => {
     // 0 === 0
     expect(cm.deepCopyBfs(0)).toBe(0);
 
+});
+test("merge", () => {
+    const a = {one: 1, two: 2, three: 3};
+    const b = {one: 11, four: 4, five: 5};
+    expect(cm.merge(a, b)).toEqual(Object.assign({}, a, b));
+
+    const c = {...a, test: {a: 1, b: 2, c: 3}};
+    expect(cm.merge(c, b)).toEqual(Object.assign({}, c, b));
+    expect(cm.merge(c, b).test === c.test && c.test === Object.assign({}, c, b).test).toEqual(true);
+
+    function Fn() {
+        this.a = 100;
+    }
+
+    Fn.prototype.b = 200;
+    const d = new Fn();
+    expect(cm.merge(a, d)).toEqual(Object.assign({}, a, d));
+    expect(cm.merge(a, d).b).toEqual(undefined);
+});
+test("deepMerge", () => {
+    const a = {one: 1, two: 2, three: 3};
+    const b = {one: 11, four: 4, five: 5};
+    expect(cm.deepMerge(a, b)).toEqual(Object.assign({}, a, b));
+
+    const c = {...a, test: {a: 1, b: 2, c: 3}};
+    expect(cm.deepMerge(c, b)).toEqual(Object.assign({}, c, b));
+    expect(cm.deepMerge(c, b).test.a === 1).toEqual(true);
+    expect(cm.deepMerge(c, b).test !== c.test && c.test === Object.assign({}, c, b).test).toEqual(true);
+
+
+    function Fn() {
+        this.a = 100;
+    }
+
+    Fn.prototype.b = 200;
+    const d = new Fn();
+    expect(cm.deepMerge(a, d)).toEqual(Object.assign({}, a, d));
+    expect(cm.deepMerge(a, d).b).toEqual(undefined);
+
+
+    expect(cm.deepMerge(a, {a: [{b: 123}]})).toEqual(Object.assign({}, a, {a: [{b: 123}]}));
+});
+
+test("sleep", async () => {
+    const date = Date.now();
+    await cm.sleep(100);
+    expect(Date.now() - date).toBeGreaterThan(80);
 });
 
 
