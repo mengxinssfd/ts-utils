@@ -11,84 +11,7 @@ test('forEachByLen', () => {
         if (index === 1) return false;
     });
 });
-test('deepCopy', () => {
-    const arr = [1, 2, 3];
-    const newArr = cm.deepCopy(arr);
-    // copy == arr
-    expect(newArr).toEqual(arr);
-    // copy !== arr
-    expect(arr === newArr).toBeFalsy();
-    const obj = {a: [2, 3], c: 1, d: {f: 123}};
-    const newObj = cm.deepCopy(obj);
-    // copy == obj
-    expect(newObj).toEqual(obj);
-    // copy !== obj
-    expect(obj === newObj).toBeFalsy();
-    // copy.a == obj.a
-    expect(obj.a).toEqual(newObj.a);
-    // copy.a !== obj.a
-    expect(obj.a === newObj.a).toBeFalsy();
-    // 0 === 0
-    expect(cm.deepCopy(0)).toBe(0);
 
-    const arr2 = [
-        () => 100,
-        () => 200,
-    ];
-    const newArr2 = cm.deepCopy(arr2);
-    // copy == arr2
-    expect(arr2 == newArr2).toBe(false);
-    // copy !== arr2
-    expect(newArr2 === arr2).toBeFalsy();
-    // copy[0] == arr2[0]
-    expect(newArr2[0] == arr2[0]).toBe(false);
-    expect(newArr2[1] == arr2[1]).toEqual(false);
-    // copy[0] === arr2[0]
-    expect(newArr2[0] !== arr2[0]).toBeTruthy();
-    expect(newArr2[1] !== arr2[1]).toBeTruthy();
-    // copy[0]() === arr2[0]()
-    expect(newArr2[1]() === arr2[1]()).toBeTruthy();
-    expect(newArr2[1]()).toEqual(arr2[1]());
-
-    function Foo() {
-        this.name = 'foo';
-        this.sayHi = function () {
-            console.log('Say Hi');
-        };
-    }
-
-    Foo.prototype.sayGoodBy = function () {
-        console.log('Say Good By');
-    };
-    let myPro = new Foo();
-    expect(myPro.hasOwnProperty('name')).toBeTruthy();//true
-    expect(myPro.hasOwnProperty('toString')).toBeFalsy();//false
-    expect(myPro.hasOwnProperty('hasOwnProperty')).toBeFalsy();//fasle
-    expect(myPro.hasOwnProperty('sayHi')).toBeTruthy();// true
-    expect(myPro.hasOwnProperty('sayGoodBy')).toBeFalsy();//false
-    expect('sayGoodBy' in myPro).toBeTruthy();// true
-
-    // test cov if (!(target as any).hasOwnProperty(k)) continue;
-    const copyFoo = cm.deepCopy(myPro);
-    expect(copyFoo.hasOwnProperty("sayGoodBy")).toBeFalsy();
-
-    // copy function
-    function fn(arg: number) {
-        return arg + fn.data;
-    }
-
-    fn.data = 100;
-
-    const nFn = cm.deepCopy(fn);
-
-    expect(fn(100)).toBe(200);
-    expect(fn === nFn).toBe(false);
-    expect(nFn(100)).toBe(200);
-    expect(nFn.data).toBe(100);
-    nFn.data = 200;
-    expect(nFn.data).toBe(200);
-    expect(fn.data).toBe(100);
-});
 test('getDateFromStr', () => {
     const t1 = (cm.getDateFromStr("2020-02-02 10:10:10") as Date).getTime();
     const t2 = (cm.getDateFromStr("2020-02-20 10:10:10") as Date).getTime();
@@ -148,12 +71,7 @@ test('formatDate', () => {
     const date2 = cm.getDateFromStr("2019-12-1 10:10:10");
     expect(cm.formatDate.call(date2, "d-MM-yy")).toBe("1-12-19");
 });
-test('getNumberLenAfterDot', () => {
-    expect(cm.getNumberLenAfterDot(0.12345667)).toBe(8);
-    expect(cm.getNumberLenAfterDot("0.123456789")).toBe(9);
-    expect(cm.getNumberLenAfterDot(12345)).toBe(0);
-    expect(cm.getNumberLenAfterDot("abc")).toBe(0);
-});
+
 test('typeOf', () => {
     // 六大基本类型 string boolean number object null undefined
     expect(cm.typeOf("")).toBe("string");
@@ -272,21 +190,6 @@ test('generateFunction', () => {
     const value = cm.generateFunction(cm, "strPadStart", ["123", 6, "0"]);
     expect(value).toBe("000123");
 });
-test('FloatCalc', () => {
-    const calc = cm.FloatCalc;
-    // 0.1 + 0.2 = 0.30000000000000004
-    expect(0.1 + 0.2).not.toBe(0.3);
-    expect(calc.add(0.1, 0.2)).toBe(0.3);
-    // 0.3 - 0.1 = 0.19999999999999998
-    expect(0.3 - 0.1).not.toBe(0.2);
-    expect(calc.minus(0.3, 0.1)).toBe(0.2);
-    // 0.2 * 0.1 = 0.020000000000000004
-    expect(0.2 * 0.1).not.toBe(0.02);
-    expect(calc.mul(0.2, 0.1)).toBe(0.02);
-    // 0.3 / 0.1 = 2.9999999999999996
-    expect(0.3 / 0.1).not.toBe(3);
-    expect(calc.division(0.3, 0.1)).toBe(3);
-});
 test('polling', (done) => {
     let t = 0;
     const cancel = cm.polling((times) => {
@@ -381,50 +284,7 @@ test("getTreeNodeLen", () => {
     const fn = new Fn();
     expect(cm.getTreeNodeLen(fn, 2)).toBe(2);
 });
-test("cloneFunction", () => {
-    function test(a, b) {
-        return a + b;
-    }
 
-    expect(cm.cloneFunction(test)(50, 50)).toBe(100);
-
-    const test2 = (a, b) => a + b;
-    expect(cm.cloneFunction(test2)(50, 50)).toBe(100);
-    expect((function (a, b) {
-        return a + b;
-    })(50, 50)).toBe(100);
-});
-test("deepCopyBfs", () => {
-    const obj10086 = {a: 1, b: 2, c: 3, d: 4};
-    const nObj = cm.deepCopyBfs(obj10086);
-    expect(obj10086).toEqual(nObj);
-    expect(nObj.c).toEqual(3);
-    expect(nObj === obj10086).toBe(false);
-
-    const obj10000 = {a: 1, b: {c: "123"}};
-    const nObj2 = cm.deepCopyBfs(obj10000);
-    expect(nObj2).toEqual(obj10000);
-
-    const arr = [1, 2, 3];
-    const newArr = cm.deepCopyBfs(arr);
-    // copy == arr
-    expect(newArr).toEqual(arr);
-    // copy !== arr
-    expect(arr === newArr).toBeFalsy();
-    const obj = {a: [2, 3], c: 1, d: {f: 123}};
-    const newObj = cm.deepCopyBfs(obj);
-    // copy == obj
-    expect(newObj).toEqual(obj);
-    // copy !== obj
-    expect(obj === newObj).toBeFalsy();
-    // copy.a == obj.a
-    expect(obj.a).toEqual(newObj.a);
-    // copy.a !== obj.a
-    expect(obj.a === newObj.a).toBeFalsy();
-    // 0 === 0
-    expect(cm.deepCopyBfs(0)).toBe(0);
-
-});
 test("merge", () => {
     const a = {one: 1, two: 2, three: 3};
     const b = {one: 11, four: 4, five: 5};

@@ -66,65 +66,6 @@ export function forEachByLen(len, callback: (index: number) => any | false) {
     }
 }
 
-// 如果要复制函数属性的话，使用deepCopy
-export function cloneFunction<T extends Function>(fn: T): T {
-    if (typeOf(fn) !== "function") return fn;
-    let newFn: any;
-    eval("newFn = " + fn.toString());
-    return newFn;
-}
-
-// 对象深拷贝办法(深度优先)
-export function deepCopy<T>(target: T): T {
-    const type = typeOf(target);
-    if (["object", "array", "function"].indexOf(type) === -1) return target;
-    const tar: any = target;
-    const result: any = ({
-        "array": [],
-        "function": cloneFunction(target as any),
-        "object": {},
-    })[type];
-    // 虽然array使用for i++比for in遍历快，但是如果在数组里面有非number类型的键的话，就无法复制，所以统一用for in遍历
-    for (let k in tar) {
-        //prototype继承的不复制  es6继承的不会被拦截
-        if (!tar.hasOwnProperty(k)) continue;
-        result[k] = deepCopy(tar[k]);   //递归复制
-    }
-    return result;
-}
-
-// 对象深拷贝办法(广度优先)
-export function deepCopyBfs<T>(target: T): T {
-    if (typeof target !== "object" || !target) return target;
-    type key = string
-    type value = any;
-    type parent = any;
-    type queItem = [key, value, parent];
-    const result: any = new (target as any).constructor();
-    const queue: queItem[] = getChildren(target as any, result);
-
-    function getChildren(tar: object, parent: any): typeof queue {
-        const que: typeof queue = [];
-        for (let k in tar) {
-            if (!tar.hasOwnProperty(k)) continue;
-            que.push([k, tar[k], parent]);
-        }
-        return que;
-    }
-
-    while (queue.length) {
-        const [k, v, parent] = queue.shift()!;
-
-        if (typeof v !== "object") {
-            parent[k] = v;
-            continue;
-        }
-
-        if (parent[k] === undefined) parent[k] = new v.constructor();
-        queue.push(...getChildren(v, parent[k]));
-    }
-    return result;
-}
 
 export interface formatDateInterface {
     (format: string): string;
@@ -180,43 +121,6 @@ export const formatDate: formatDateInterface = function (format) {
 formatDate.weekText = [];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
 
-// 获取小数点后面数字的长度
-export function getNumberLenAfterDot(num: number | string): number {
-    num = Number(num);
-    if (isNaN(num)) return 0;
-    let item = String(num).split(".")[1];
-    return item ? item.length : 0;
-}
-
-function getPow(a: number, b: number): number {
-    let aLen = getNumberLenAfterDot(a);
-    let bLen = getNumberLenAfterDot(b);
-    return Math.pow(10, Math.max(aLen, bLen));
-}
-
-// 小数运算 小数位不能太长，整数位不能太大
-export const FloatCalc = {
-    // 加
-    add(a: number, b: number): number {
-        let pow = getPow(a, b);
-        return (a * pow + b * pow) / pow;
-    },
-    // 减
-    minus(a: number, b: number): number {
-        let pow = getPow(a, b);
-        return (a * pow - b * pow) / pow;
-    },
-    // 乘
-    mul(a: number, b: number): number {
-        let pow = getPow(a, b);
-        return pow * a * (b * pow) / (pow * pow);
-    },
-    // 除
-    division(a: number, b: number): number {
-        let pow = getPow(a, b);
-        return a * pow / (b * pow);
-    },
-};
 
 // 获取数据类型
 export function typeOf(target: any): string {

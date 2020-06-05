@@ -1,4 +1,5 @@
-import {typeOf, deepCopy} from "./common";
+import {typeOf} from "./common";
+import {deepClone} from "./clone";
 import {isEmpty, isNaN, isArray} from "./is";
 
 // @overload
@@ -145,7 +146,7 @@ export function find<T>(
 export function flat<T>(target: readonly T[], depth: number = 1): T[] {
     function innerFlat(innerArr: readonly any[], innerDepth: number = 0): any {
         if (!isArray(innerArr)) return innerArr;
-        if (innerDepth++ === depth) return deepCopy(innerArr);
+        if (innerDepth++ === depth) return deepClone(innerArr);
 
         const result: any[] = [];
         for (let i = 0; i < innerArr.length; i++) {

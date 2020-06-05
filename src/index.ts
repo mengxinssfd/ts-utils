@@ -5,3 +5,5 @@ export * from "./OneByOne";
 export * from "./urlParse";
 export * from "./array";
 export * from "./coordinate";
+export * from "./numberCalc";
+export * from "./clone";
