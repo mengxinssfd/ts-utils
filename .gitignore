@@ -1,7 +1,6 @@
 .DS_Store
 node_modules
 /dist
-/coverage
 /.svn
 # local env files
 .env.local
