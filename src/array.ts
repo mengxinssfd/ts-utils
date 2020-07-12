@@ -158,3 +158,58 @@ export function flat<T>(target: readonly T[], depth: number = 1): T[] {
 
     return innerFlat(target);
 }
+
+/**
+ * 二分查找item
+ * @param arr 要查找的数组
+ * @param handler 判断条件=>item-target
+ * @param pcz 不用传
+ */
+export function binaryFind<T>(arr: T[], handler: (item: T, index: number, arr: T[]) => number, pcz: number = 0): T | undefined {
+    if (arr.length === 0) return undefined;
+    let result: T | undefined;
+    let middleIndex = Math.floor(arr.length / 2);
+    const item = arr[middleIndex];
+    const value = handler(item, middleIndex + pcz, arr);
+    if (value === 0) {
+        return item;
+    } else {
+        if (arr.length === 1) {
+            return undefined;
+        }
+        if (value < 0) {
+            middleIndex++;
+            result = binaryFind(arr.slice(middleIndex), handler, pcz + middleIndex);
+        } else {
+            result = binaryFind(arr.slice(0, middleIndex), handler, pcz);
+        }
+    }
+    return result;
+}
+
+
+/**
+ * 二分查找item
+ * @param arr 要查找的数组
+ * @param handler 判断条件=>item-target
+ */
+export function binaryFindIndex<T>(arr: T[], handler: (item: T, index: number) => number): number {
+    if (arr.length === 0) return -1;
+    let start = 0;
+    let end = arr.length;
+    let middleIndex = Math.floor((end - start) / 2);
+    let value: number;
+
+    while ((value = handler(arr[middleIndex], middleIndex)) !== 0 && end >= start) {
+        if (value < 0) {
+            start = middleIndex + 1;
+        } else {
+            end = middleIndex - 1;
+        }
+        middleIndex = Math.floor((end - start) / 2) + start;
+    }
+
+    return end >= start ? middleIndex : -1;
+}
+
+//TODO 上面两个未添加测试用例

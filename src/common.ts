@@ -59,7 +59,7 @@ export function polling(callback: (times: number) => void | Promise<any>, interv
 }
 
 // 代替for循环
-export function forEachByLen(len, callback: (index: number) => any | false) {
+export function forEachByLen(len: number, callback: (index: number) => any | false) {
     for (let i = 0; i < len; i++) {
         if (callback(i) !== false) continue;
         break;
