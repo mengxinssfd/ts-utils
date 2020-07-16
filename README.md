@@ -1,5 +1,5 @@
-#typescript工具函数
-##使用方法
+# typescript工具函数
+## 使用方法
    import导入
 ```javascript
 import {debounce} from "@mxssfd/ts-utils";
