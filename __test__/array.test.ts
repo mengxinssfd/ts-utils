@@ -125,3 +125,97 @@ test('flat', () => {
     expect(arr.flat([1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]], -1)).toEqual([1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]);
 
 });
+
+
+test("binaryFind", () => {
+    const list: { id: number }[] = [...Array(100).keys()].map(i => ({id: i * 2}));
+
+    function find(target: number): { times: number, value: ReturnType<typeof arr.binaryFind> } {
+        let times = 0;
+        const value = arr.binaryFind(list, function (item, index) {
+            times++;
+            // console.log(index);
+            // 判断index是否正确
+            expect(list[index]).toBe(item);
+            return target - item.id;
+        });
+        return {times, value};
+    }
+
+    let res = find(58);
+    expect(res.times).toBe(5);
+    expect(res.value).toEqual({id: 58});
+
+    console.log("----min-----");
+    // 判断边缘 min
+    const first = list[0];
+    res = find(first.id);
+    expect(res.times).toBe(7);
+    expect(res.value).toEqual(first);
+
+    console.log("----max-----");
+    // 判断边缘 max
+    const maxIndex = list.length - 1;
+    const last = list[maxIndex];
+    res = find(last.id);
+    expect(res.times).toBe(6);
+    expect(res.value).toEqual(last);
+
+    // cover
+    expect(arr.binaryFind([1], i => i)).toBeUndefined();
+    expect(find(55).value).toBeUndefined();
+    expect(find(400).value).toBeUndefined();
+    expect(arr.binaryFind([], i => i)).toBeUndefined();
+});
+test("binaryFindIndex", () => {
+    console.log("-----binaryFindIndex------");
+
+    const list: { id: number }[] = [...Array(100).keys()].map(i => ({id: i * 2}));
+
+    function find(target: number): { times: number, index: ReturnType<typeof arr.binaryFindIndex> } {
+        // 查找次数
+        let times = 0;
+        const index = arr.binaryFindIndex(list, function (item, index, start, end) {
+            times++;
+            // console.log(index);
+            // 判断index是否正确
+            expect(list[index]).toBe(item);
+            // 0 <= (start) < end <= list.length
+            expect(start).toBeGreaterThanOrEqual(0);
+            expect(start).toBeLessThan(end);
+            expect(start).toBeLessThan(list.length);
+            expect(end).toBeLessThanOrEqual(list.length);
+
+            return target - item.id;
+        });
+        return {times, index};
+    }
+
+    let res = find(58);
+    expect(res.times).toBe(5);
+    expect(res.index).toBe(29);
+
+    console.log("--------min-------");
+    // 判断边缘 min
+    const minIndex = 0;
+    const first = list[minIndex];
+    res = find(first.id);
+    expect(res.times).toBe(7);
+    expect(res.index).toBe(minIndex);
+
+    console.log("----max-----");
+    // 判断边缘 max
+    const maxIndex = list.length - 1;
+    const last = list[maxIndex];
+    res = find(last.id);
+    expect(res.times).toBe(6);
+    expect(res.index).toBe(maxIndex);
+
+    // cover
+    expect(arr.binaryFindIndex([1], (item, index, start, end) => {
+        // console.log(index, start, end);
+        return 0 - item;
+    })).toBe(-1);
+    expect(arr.binaryFindIndex([], i => i)).toBe(-1);
+    expect(arr.binaryFindIndex(list, i => 55 - i.id)).toBe(-1);
+});

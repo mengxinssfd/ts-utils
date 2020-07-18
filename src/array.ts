@@ -162,7 +162,7 @@ export function flat<T>(target: readonly T[], depth: number = 1): T[] {
 /**
  * 二分查找item
  * @param arr 要查找的数组
- * @param handler 判断条件=>item-target
+ * @param handler 判断条件 item => target - item 返回值为0时为要找的值，小于0则往前找，大于0往后找
  * @param pcz 不用传
  */
 export function binaryFind<T>(arr: T[], handler: (item: T, index: number, arr: T[]) => number, pcz: number = 0): T | undefined {
@@ -170,6 +170,7 @@ export function binaryFind<T>(arr: T[], handler: (item: T, index: number, arr: T
     let result: T | undefined;
     let middleIndex = Math.floor(arr.length / 2);
     const item = arr[middleIndex];
+    // 当前index = middleIndex + pcz
     const value = handler(item, middleIndex + pcz, arr);
     if (value === 0) {
         return item;
@@ -177,7 +178,8 @@ export function binaryFind<T>(arr: T[], handler: (item: T, index: number, arr: T
         if (arr.length === 1) {
             return undefined;
         }
-        if (value < 0) {
+        // 如果target大于当前item值，则获取middle右边，否则相反
+        if (value > 0) {
             middleIndex++;
             result = binaryFind(arr.slice(middleIndex), handler, pcz + middleIndex);
         } else {
@@ -189,27 +191,27 @@ export function binaryFind<T>(arr: T[], handler: (item: T, index: number, arr: T
 
 
 /**
- * 二分查找item
+ * 二分查找item index
  * @param arr 要查找的数组
- * @param handler 判断条件=>item-target
+ * @param handler 判断条件 item => target - item 返回值为0时为要找的值，小于0则往前找，大于0往后找
  */
-export function binaryFindIndex<T>(arr: T[], handler: (item: T, index: number) => number): number {
+export function binaryFindIndex<T>(arr: T[], handler: (item: T, index: number, start: number, end: number) => number): number {
     if (arr.length === 0) return -1;
     let start = 0;
     let end = arr.length;
-    let middleIndex = Math.floor((end - start) / 2);
-    let value: number;
 
-    while ((value = handler(arr[middleIndex], middleIndex)) !== 0 && end >= start) {
-        if (value < 0) {
+    do {
+        const middleIndex = Math.floor((end - start) / 2) + start;
+        const value: number = handler(arr[middleIndex], middleIndex, start, end);
+
+        if (value === 0) {
+            return middleIndex;
+        } else if (value > 0) {
             start = middleIndex + 1;
         } else {
-            end = middleIndex - 1;
+            end = middleIndex;
         }
-        middleIndex = Math.floor((end - start) / 2) + start;
-    }
+    } while (end > start);
 
-    return end >= start ? middleIndex : -1;
+    return -1;
 }
-
-//TODO 上面两个未添加测试用例

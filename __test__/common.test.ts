@@ -333,4 +333,21 @@ test("sleep", async () => {
     expect(Date.now() - date).toBeGreaterThan(80);
 });
 
+test("createUUID", () => {
+    const uuid = cm.createUUID(10);
 
+    // 判断长度是否正确
+    expect(uuid.length === 10).toBeTruthy();
+
+    const hexDigits = "0123456789abcdef";
+    // 判断每个字符是否在范围内
+    for (let i = 0; i < uuid.length; i++) {
+        expect(hexDigits.indexOf(uuid[i]) > -1).toBeTruthy();
+    }
+
+    // 判断100次循环中是否有相同的
+    for (let i = 0; i < 100; i++) {
+        const uid = cm.createUUID(10);
+        expect(uid !== uuid).toBeTruthy();
+    }
+});
