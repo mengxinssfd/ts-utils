@@ -385,6 +385,7 @@ export function generateFunction(obj: object, property: string, args: any[]) {
 }
 
 // 比较两个日期相差年天时分秒  用于倒计时等
+/*
 export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H时m分s秒"): string {
     const seconds = ~~((second.getTime() - first.getTime()) / 1000);
     const Time: { [k: string]: number } = {
@@ -405,6 +406,43 @@ export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H
         format = format.replace(new RegExp(k), String(Time[k]));
     }
     return format;
+}
+*/
+
+// 比较两个日期相差年天时分秒  用于倒计时等
+export function dateDiff(start: Date, end: Date, format = "y年d天 hh时mm分ss秒"): string {
+    let result = format;
+    if (start.getTime() > end.getTime()) {
+        [start, end] = [end, start];
+    }
+    const seconds = ~~((end.getTime() - start.getTime()) / 1000);
+    const obj: { [k: string]: number } = {
+        "s+": seconds % 60,
+        "m+": ~~(seconds / 60) % 60,
+        "h+": ~~(seconds / (60 * 60)) % 24,
+        "d+": (function (): number {
+            const day = ~~(seconds / (60 * 60 * 24));
+            // 如果要显示年，则把天余年，否则全部显示天
+            // 默认一年等于365天
+            return /y+/.test(result) ? (day % 365) : day;
+        })(),
+        // "M+": 0,
+        "y+": ~~(seconds / (60 * 60 * 24 * 365)),
+    };
+
+    for (let k in obj) {
+        const reg = new RegExp("(" + k + ")");
+        if (reg.test(result)) {
+            // 奇怪的bug 本地调试的时候RegExp.$1不准确,"s+"的时候$1是空字符串; 非调试的时候又没问题
+            const s1 = RegExp.$1;
+            const v = obj[k];
+            let value = strPadStart(String(v), s1.length, "0");
+            // substring(start,end) start小于0的时候为0  substr(from,len)from小于0的时候为字符串的长度+from
+            value = value.substring(value.length - s1.length); //手动切割00:00 m:s "00".length - "s".length，因为strPadStart当字符串长度大于length的话不会切割
+            result = result.replace(s1, value);
+        }
+    }
+    return result;
 }
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1

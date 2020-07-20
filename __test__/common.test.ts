@@ -117,6 +117,7 @@ test('strPadStart', () => {
     expect(cm.strPadStart("123", 4, "hello")).toBe("h123");
     expect(cm.strPadStart("123", 20, "hello")).toBe("hellohellohellohe123");
     expect(cm.strPadStart("123", -1, "0")).toBe("123");
+    expect(cm.strPadStart("0", 2, "0")).toBe("00");
 });
 test('strPadEnd', () => {
     expect(cm.strPadEnd("123", 6, "0")).toBe("123000");
@@ -232,9 +233,13 @@ test("chinese2Number", () => {
     expect(cm.chinese2Number("壹亿贰仟叁佰肆拾伍萬陆仟柒佰捌拾玖")).toBe(123456789);
 });
 test("dateDiff", () => {
-    expect(cm.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"))).toBe("0年5天 0时0分0秒");
-    expect(cm.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"), "d天 H时m分s秒")).toBe("5天 0时0分0秒");
-    expect(cm.dateDiff(new Date("2020-05-06"), new Date("2020-05-01 3:20:10"), "d天 H时m分s秒")).toBe("-5天 -4时-39分-50秒");
+    const v = cm.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"));
+    expect(v).toBe("0年5天 00时00分00秒");
+    expect(cm.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"), "dd天 hh时mm分ss秒")).toBe("05天 00时00分00秒");
+    expect(cm.dateDiff(new Date("2020-05-06"), new Date("2020-05-01 3:20:10"), "d天 hh时mm分ss秒")).toBe("5天 04时39分50秒");
+
+    // expect(cm.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"), "d天 H时m分s秒")).toBe("5天 0时0分0秒");
+    // expect(cm.dateDiff(new Date("2020-05-06"), new Date("2020-05-01 3:20:10"), "d天 H时m分s秒")).toBe("-5天 -4时-39分-50秒");
 });
 test("getTreeMaxDeep", () => {
     expect(cm.getTreeMaxDeep({})).toBe(1);
