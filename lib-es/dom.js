@@ -1,5 +1,6 @@
 // 所有主要浏览器都支持 createElement() 方法
-import { isFunction, isString, typeOf } from "./common";
+import { typeOf } from "./common";
+import { isFunction, isString } from "./is";
 let elementStyle = document.createElement('div').style;
 let vendor = (() => {
     let transformName = {

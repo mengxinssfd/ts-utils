@@ -12,8 +12,7 @@ export declare function debounce(callback: (...args: any[]) => void, delay: numb
  * @param immediate 是否马上执行第一次
  */
 export declare function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
-export declare function forEachByLen(len: any, callback: (index: number) => any | false): void;
-export declare function deepCopy<T>(target: T): T;
+export declare function forEachByLen(len: number, callback: (index: number) => any | false): void;
 export interface formatDateInterface {
     (format: string): string;
     seasonText: string[];
@@ -25,25 +24,7 @@ export interface formatDateInterface {
  * @returns String
  */
 export declare const formatDate: formatDateInterface;
-export declare function getNumberLenAfterDot(num: number | string): number;
-export declare const FloatCalc: {
-    add(a: number, b: number): number;
-    minus(a: number, b: number): number;
-    mul(a: number, b: number): number;
-    division(a: number, b: number): number;
-};
 export declare function typeOf(target: any): string;
-export declare function isObject(target: any): target is object;
-export declare function isArray(target: any): target is Array<any>;
-export declare function isArrayLike(target: any): target is ArrayLike<any>;
-export declare function isString(target: any): target is string;
-export declare function isNumber(target: any): target is number;
-export declare function isFunction(target: any): target is Function;
-export declare function isBoolean(target: any): target is boolean;
-export declare function isUndefined(target: any): target is undefined;
-export declare function isNaN(target: any): boolean;
-export declare function isEmptyObject(target: object): boolean;
-export declare function isEmpty(target: any): boolean;
 export declare function randomNumber(): number;
 export declare function randomNumber(end: number): number;
 export declare function randomNumber(start: number, end: number): number;
@@ -58,9 +39,7 @@ export declare function randomColor(len: number): string[];
  * @param date 格式：yyyy-MM-dd hh:mm:ss
  * @returns {Date}
  */
-export declare function getDateFromStr(date: string): Date | void;
-export declare function objectIsEqual(obj1: object, obj2: object): boolean;
-export declare function isEqual(a: any, b: any): boolean;
+export declare function getDateFromStr(date: string): Date | null;
 /**
  * 千位分隔 1,234,567,890
  * @param num
@@ -88,10 +67,37 @@ export declare function strPadEnd(target: string, len: number, fill: string): st
  * @param callback
  */
 export declare function oneByOne(words: string, delay: number, callback?: (word: string, index: number, words: string) => false | void): () => void;
+export interface Number2Chinese {
+    (number: number): string;
+    units: string[];
+    numbers: string[];
+}
 /**
  * 阿拉伯数字转为中文数字
  * @param number
  */
-export declare function getChineseNumber(number: number): any;
+export declare const number2Chinese: Number2Chinese;
+export interface Chinese2Number {
+    (chineseNumber: string): number;
+    units: string[];
+    numbers: string[];
+}
+/**
+ * 中文转为阿拉伯数字
+ * @param chineseNumber
+ */
+export declare const chinese2Number: Chinese2Number;
 export declare function generateFunctionCode(argsArrayLength: number): string;
 export declare function generateFunction(obj: object, property: string, args: any[]): any;
+export declare function dateDiff(start: Date, end: Date, format?: string): string;
+export declare function getTreeMaxDeep(tree: object): number;
+export declare function getTreeNodeLen(tree: object, nodeNumber?: number): number;
+export declare function merge<T extends object, U extends object>(first: T, second: U): T & U;
+export declare function deepMerge<T extends object, U extends object>(first: T, second: U): T & U;
+export declare function sleep(delay: number): Promise<void>;
+/**
+ * 生成不重复的字符串
+ * @param length
+ * @returns {string}
+ */
+export declare function createUUID(length: number): string;

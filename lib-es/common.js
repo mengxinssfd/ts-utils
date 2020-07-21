@@ -64,19 +64,6 @@ export function forEachByLen(len, callback) {
         break;
     }
 }
-// 对象深拷贝办法
-export function deepCopy(target) {
-    if (typeof target !== "object")
-        return target;
-    let result = isArray(target) ? [] : {};
-    for (let k in target) {
-        //prototype继承的不复制  es6继承的不会被拦截
-        if (!target.hasOwnProperty(k))
-            continue;
-        result[k] = deepCopy(target[k]); //递归复制
-    }
-    return result;
-}
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
  * @param format
@@ -101,7 +88,7 @@ export const formatDate = function (format) {
                 formatDate.weekText = createArray({
                     end: 7,
                     fill(item, index) {
-                        return index === 0 ? "日" : getChineseNumber(index);
+                        return index === 0 ? "日" : number2Chinese(index);
                     },
                 });
             }
@@ -123,117 +110,12 @@ export const formatDate = function (format) {
 };
 formatDate.weekText = [];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
-// 获取小数点后面数字的长度
-export function getNumberLenAfterDot(num) {
-    num = Number(num);
-    if (isNaN(num))
-        return 0;
-    let item = String(num).split(".")[1];
-    return item ? item.length : 0;
-}
-function getPow(a, b) {
-    let aLen = getNumberLenAfterDot(a);
-    let bLen = getNumberLenAfterDot(b);
-    return Math.pow(10, Math.max(aLen, bLen));
-}
-// 小数运算 小数位不能太长，整数位不能太大
-export const FloatCalc = {
-    // 加
-    add(a, b) {
-        let pow = getPow(a, b);
-        return (a * pow + b * pow) / pow;
-    },
-    // 减
-    minus(a, b) {
-        let pow = getPow(a, b);
-        return (a * pow - b * pow) / pow;
-    },
-    // 乘
-    mul(a, b) {
-        let pow = getPow(a, b);
-        return pow * a * (b * pow) / (pow * pow);
-    },
-    // 除
-    division(a, b) {
-        let pow = getPow(a, b);
-        return a * pow / (b * pow);
-    },
-};
 // 获取数据类型
 export function typeOf(target) {
     const tp = typeof target;
     if (tp !== 'object')
         return tp;
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
-}
-export function isObject(target) {
-    return typeOf(target) === "object";
-}
-export function isArray(target) {
-    return typeOf(target) === "array";
-}
-// 类数组对象 jq的实现方式
-export function isArrayLike(target) {
-    // 检测target的类型
-    const type = typeOf(target);
-    if (["string", "null", "undefined", "number", "boolean"].indexOf(type) > -1)
-        return false;
-    // 如果target非null、undefined等，有length属性，则length等于target.length
-    // 否则，length为false
-    const length = !!target && "length" in target && target.length;
-    // 如果target是function类型 或者是window对象 则返回false
-    if (type === "function" || target === window) {
-        return false;
-    }
-    // target本身是数组，则返回true
-    // target不是数组，但有length属性且为0，例如{length : 0}，则返回true
-    // target不是数组,但有length属性且为整数数值，target[length - 1]存在，则返回true
-    return type === "array" || length === 0 || isNumber(length) && length > 0 && (length - 1) in target;
-}
-export function isString(target) {
-    return typeOf(target) === "string";
-}
-export function isNumber(target) {
-    return typeOf(target) === "number";
-}
-export function isFunction(target) {
-    return typeOf(target) === "function";
-}
-export function isBoolean(target) {
-    return typeOf(target) === "boolean";
-}
-export function isUndefined(target) {
-    return target === void 0;
-}
-// 有native isNaN函数 但是 {} "abc"会是true
-export function isNaN(target) {
-    // return String(target) === "NaN"; // "NaN" 会被判断为true
-    return isNumber(target) && target !== target;
-}
-// 判断是否是空object
-export function isEmptyObject(target) {
-    if (!isObject(target))
-        return false;
-    for (let i in target) {
-        return i === undefined;
-    }
-    return true;
-}
-// 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
-export function isEmpty(target) {
-    // TO DO 可以替换array里的includes
-    if ([undefined, null, "", NaN].includes(target))
-        return true;
-    // if (includes([undefined, null, "", NaN], target)) return true;
-    switch (typeOf(target)) {
-        case "array":
-            return !target.length;
-        case "object":
-            // {a(){}} 使用JSON.stringify是会判断为空的
-            // return JSON.stringify(target) === "{}";
-            return isEmptyObject(target);
-    }
-    return false;
 }
 export function randomNumber(start, end, length) {
     // randomNumber()
@@ -274,49 +156,16 @@ export function randomColor(len) {
  * @returns {Date}
  */
 export function getDateFromStr(date) {
+    // 检测非数字、非/、非:、非-
     if (/[^\/^\d^:^ ^-]/.test(date))
-        return; // 去除不符合规范的字符串
+        return null; // 去除不符合规范的字符串
     const arr = date.split(/[- :\/]/).map(item => Number(item));
     if (arr.length < 6) {
         for (let i = arr.length; i < 6; i++) {
-            arr[i] = i < 4 ? 1 : 0;
+            arr[i] = i < 3 ? 1 : 0; // 年月日最小为1
         }
     }
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
-}
-export function objectIsEqual(obj1, obj2) {
-    if (obj1 === obj2)
-        return true;
-    for (const key in obj1) {
-        const value1 = obj1[key];
-        const value2 = obj2[key];
-        if (!isEqual(value1, value2)) {
-            return false;
-        }
-    }
-    return true;
-}
-export function isEqual(a, b) {
-    if (a === b)
-        return true;
-    const aType = typeOf(a);
-    const bType = typeOf(b);
-    if (aType !== bType)
-        return false;
-    // noinspection FallThroughInSwitchStatementJS
-    switch (aType) {
-        case "boolean":
-        case "string":
-        case "function":
-            return false;
-        case "number":
-            return isNaN(b);
-        //  只有数组或者object不相等的时候才去对比是否相等
-        case "array":
-        case "object":
-        default:
-            return objectIsEqual(a, b);
-    }
 }
 /**
  * 千位分隔 1,234,567,890
@@ -392,26 +241,27 @@ export function oneByOne(words, delay, callback) {
     }, delay);
     return cancel;
 }
-const numberMap = { 0: "零", 1: "一", 2: "二", 3: "三", 4: "四", 5: "五", 6: "六", 7: "七", 8: "八", 9: "九" };
-const units = { 0: "", 1: "十", 2: "百", 3: "千", 4: "万" };
-const unitLen = Object.keys(units).length;
+const numberArr = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
+const sbq = ["十", "百", "千"];
+const units = ["", ...sbq, "万", ...sbq, "亿"];
+const unitLen = units.length;
 /**
  * 阿拉伯数字转为中文数字
  * @param number
  */
-export function getChineseNumber(number) {
+export const number2Chinese = function (number) {
     let key = ~~number;
     let chineseNumber = "";
     let times = 0;
     // 个位数
     if (number >= 0 && number < 10)
-        return numberMap[number];
+        return number2Chinese.numbers[number];
     while (key >= 1 && times < unitLen) {
-        let unit = units[times];
+        let unit = number2Chinese.units[times];
         // 11 % 10 => 一
-        let end = numberMap[key % 10];
+        let end = number2Chinese.numbers[key % 10];
         // 101 0没有单位
-        if (end !== numberMap[0]) {
+        if (end !== number2Chinese.numbers[0]) {
             chineseNumber = unit + chineseNumber;
         }
         // 11 => 一十一 => 十一
@@ -423,7 +273,45 @@ export function getChineseNumber(number) {
     }
     // 一万零零一 => 一万零一 | 一万零零零 => 一万
     return chineseNumber.replace(/(零+$)|((零)\3+)/g, "$3");
-}
+};
+number2Chinese.units = [...units];
+number2Chinese.numbers = [...numberArr];
+/**
+ * 中文转为阿拉伯数字
+ * @param chineseNumber
+ */
+export const chinese2Number = function (chineseNumber) {
+    if (new RegExp(`([^${chinese2Number.units.join() + chinese2Number.numbers.join()}])`).test(chineseNumber)) {
+        throw new TypeError("发现不符合规则的字符(必须在units和numbers里存在的字符):" + RegExp.$1);
+    }
+    // 用万和亿分割
+    const arr = chineseNumber.split(new RegExp(`[${chinese2Number.units[4]}${chinese2Number.units[8]}]`, "g"));
+    const numberArr = arr.map((it, index) => {
+        let res = 0;
+        let unit = 1;
+        // 从个位数往大数累加
+        for (let i = it.length - 1; i > -1; i--) {
+            const item = it[i];
+            let number = chinese2Number.numbers.indexOf(item);
+            if (number > 0) {
+                res += number * unit;
+            }
+            let unitIndex = chinese2Number.units.indexOf(item);
+            unit = unitIndex > 0 ? 10 ** unitIndex : unit;
+        }
+        // 以十开头的要单独列出来 例如十一完全体是一十一
+        if (it[0] === chinese2Number.units[1]) {
+            res += 10;
+        }
+        return res;
+    });
+    // 把分割开的数字拼接回去
+    return numberArr.reverse().reduce((res, item, index) => {
+        return res + 10000 ** index * item;
+    }, 0);
+};
+chinese2Number.units = [...units];
+chinese2Number.numbers = [...numberArr];
 // 代替扩展符"...", 实现apply的时候可以使用此方法
 export function generateFunctionCode(argsArrayLength) {
     let code = 'return arguments[0][arguments[1]](';
@@ -443,4 +331,148 @@ export function generateFunctionCode(argsArrayLength) {
 // (new Function(generateFunctionCode(args.length)))(object, property, args);
 export function generateFunction(obj, property, args) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
+}
+// 比较两个日期相差年天时分秒  用于倒计时等
+/*
+export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H时m分s秒"): string {
+    const seconds = ~~((second.getTime() - first.getTime()) / 1000);
+    const Time: { [k: string]: number } = {
+        "s+": seconds % 60,
+        "m+": ~~(seconds / 60) % 60,
+        "H+": ~~(seconds / (60 * 60)) % 24,
+        "d+": (function (): number {
+            const day = ~~(seconds / (60 * 60 * 24));
+            // 如果要显示年，则把天余年，否则全部显示天
+            // 默认一年等于365天
+            return /Y+/.test(format) ? day % 365 : day;
+        })(),
+        // "M+": 0,
+        "Y+": ~~(seconds / (60 * 60 * 24 * 365)),
+    };
+
+    for (let k in Time) {
+        format = format.replace(new RegExp(k), String(Time[k]));
+    }
+    return format;
+}
+*/
+// 比较两个日期相差年天时分秒  用于倒计时等
+export function dateDiff(start, end, format = "y年d天 hh时mm分ss秒") {
+    let result = format;
+    if (start.getTime() > end.getTime()) {
+        [start, end] = [end, start];
+    }
+    const seconds = ~~((end.getTime() - start.getTime()) / 1000);
+    const obj = {
+        "s+": seconds % 60,
+        "m+": ~~(seconds / 60) % 60,
+        "h+": ~~(seconds / (60 * 60)) % 24,
+        "d+": (function () {
+            const day = ~~(seconds / (60 * 60 * 24));
+            // 如果要显示年，则把天余年，否则全部显示天
+            // 默认一年等于365天
+            return /y+/.test(result) ? (day % 365) : day;
+        })(),
+        // "M+": 0,
+        "y+": ~~(seconds / (60 * 60 * 24 * 365)),
+    };
+    for (let k in obj) {
+        const reg = new RegExp("(" + k + ")");
+        if (reg.test(result)) {
+            // 奇怪的bug 本地调试的时候RegExp.$1不准确,"s+"的时候$1是空字符串; 非调试的时候又没问题
+            const s1 = RegExp.$1;
+            const v = obj[k];
+            let value = strPadStart(String(v), s1.length, "0");
+            // substring(start,end) start小于0的时候为0  substr(from,len)from小于0的时候为字符串的长度+from
+            value = value.substring(value.length - s1.length); //手动切割00:00 m:s "00".length - "s".length，因为strPadStart当字符串长度大于length的话不会切割
+            result = result.replace(s1, value);
+        }
+    }
+    return result;
+}
+// 获取object树的最大层数 tree是object的话，tree就是层数1
+export function getTreeMaxDeep(tree) {
+    function deeps(obj, num = 0) {
+        if (typeof tree !== "object" || tree === null)
+            return num;
+        let arr = [++num];
+        for (const k in obj) {
+            if (!obj.hasOwnProperty(k))
+                continue;
+            arr.push(deeps(obj[k], num));
+        }
+        return Math.max(...arr);
+    }
+    return deeps(tree);
+}
+// 获取树某层的节点数 0是tree本身
+export function getTreeNodeLen(tree, nodeNumber = 1) {
+    let result = 0;
+    if (typeof tree !== "object" || tree === null || nodeNumber < 0)
+        return result;
+    function deeps(obj, num = 0) {
+        if (nodeNumber === num++) {
+            result++;
+            return;
+        }
+        for (const k in obj) {
+            if (!obj.hasOwnProperty(k))
+                continue;
+            deeps(obj[k], num);
+        }
+    }
+    deeps(tree);
+    return result;
+}
+// 合并两个object
+export function merge(first, second) {
+    const result = {};
+    function assign(receive, obj) {
+        for (const k in obj) {
+            if (obj.hasOwnProperty(k)) {
+                receive[k] = obj[k];
+            }
+        }
+    }
+    assign(result, first);
+    assign(result, second);
+    return result;
+}
+// 合并两个object
+export function deepMerge(first, second) {
+    function assign(receive, obj) {
+        for (const k in obj) {
+            if (!obj.hasOwnProperty(k))
+                continue;
+            const v = obj[k];
+            if (v && typeof v === "object") {
+                receive[k] = new v.constructor();
+                assign(receive[k], v);
+            }
+            else
+                receive[k] = v;
+        }
+    }
+    const result = {};
+    assign(result, first);
+    assign(result, second);
+    return result;
+}
+export function sleep(delay) {
+    return new Promise(res => setTimeout(res, delay));
+}
+/**
+ * 生成不重复的字符串
+ * @param length
+ * @returns {string}
+ */
+export function createUUID(length) {
+    const uuidArr = [];
+    const hexDigits = "0123456789abcdef";
+    for (let i = 0; i < length; i++) {
+        uuidArr[i] = hexDigits.substr(Math.random() * 0x10, 1);
+    }
+    // uuidArr[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+    // uuidArr[19] = hexDigits.substr(((uuidArr[19] as any) & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+    return uuidArr.join("");
 }

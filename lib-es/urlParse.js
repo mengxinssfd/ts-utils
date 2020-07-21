@@ -1,4 +1,4 @@
-import { isArray } from "./common";
+import { isArray } from "./is";
 /**
  * 解析url
  * @Author: dyh
