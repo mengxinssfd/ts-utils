@@ -1,4 +1,5 @@
 import {createArray} from "./array";
+import {isArray, isString} from "./is";
 
 /**
  * 防抖函数
@@ -537,4 +538,61 @@ export function createUUID(length: number): string {
     // uuidArr[19] = hexDigits.substr(((uuidArr[19] as any) & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
 
     return uuidArr.join("");
+}
+
+/**
+ * 格式化json
+ * @param json
+ * @param indent tab空格占位
+ */
+export function formatJSON(json: object | string, indent = 2): string {
+    if (typeof json === "string") {
+        try {
+            json = JSON.parse(json);
+        } catch (e) {
+            throw new TypeError("JSON格式不正确");
+        }
+
+    }
+
+    function foreach(js: any, floor = 0): string {
+        switch (typeof js) {
+            case "object":
+                const isArr = isArray(js);
+
+                let space = " ".repeat(indent * floor);
+                const start = isArr ? "[\r\n" : "{\r\n";
+                const end = "\r\n" + space + (isArr ? "]" : "}");
+                let times = 0;
+
+                let result = start;
+                for (const key in js) {
+                    if (!js.hasOwnProperty(key)) continue;
+                    const value = js[key];
+
+                    // 如果改行不是第一行，则给上一行的末尾添加逗号，并且换行
+                    if (times) result += ",\r\n";
+
+                    // 拼接空格
+                    const childSpace = " ".repeat(indent * floor + indent);
+                    const child = foreach(value, floor + 1);
+
+                    if (isArr) {
+                        result += `${childSpace}${child}`;
+                    } else {
+                        result += `${childSpace}"${key}":${child}`;
+                    }
+
+                    times++;
+                }
+                return result + end;
+            case "function":
+                // 函数的}位置有点对不上
+                return `"${js.toString()}"`;
+            default:
+                return isString(js) ? ('"' + js + '"') : js;
+        }
+    }
+
+    return foreach(json);
 }

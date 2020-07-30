@@ -356,3 +356,16 @@ test("createUUID", () => {
         expect(uid !== uuid).toBeTruthy();
     }
 });
+
+test("formatJSON", () => {
+    const formatJSON = cm.formatJSON;
+    const str = {a: 1, b: 2};
+    expect(formatJSON(str, 4)).toBe(`{\r\n    "a":1,\r\n    "b":2\r\n}`);
+    const rs = formatJSON({
+        ...str,
+        fn: function () {
+        },
+    }, 4);
+    expect(rs).toBe(`{\r\n    "a":1,\r\n    "b":2,\r\n    "fn":"function () {\r\n}"\n\n}`);
+});
+
