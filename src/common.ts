@@ -22,6 +22,21 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
 }
 
 /**
+ * 防抖装饰器
+ * @param delay
+ * @constructor
+ */
+export function Debounce(delay: number) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        // 在babel的网站编译的是target包含key，descriptor
+        if (target.descriptor) {
+            descriptor = target.descriptor;
+        }
+        descriptor.value = debounce(descriptor.value, delay);
+    };
+}
+
+/**
  * 轮询函数
  * @param callback
  * @param interval  间隔
