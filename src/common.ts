@@ -22,21 +22,6 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
 }
 
 /**
- * 防抖装饰器
- * @param delay
- * @constructor
- */
-export function Debounce(delay: number) {
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        // 在babel的网站编译的是target包含key，descriptor
-        if (target.descriptor) {
-            descriptor = target.descriptor;
-        }
-        descriptor.value = debounce(descriptor.value, delay);
-    };
-}
-
-/**
  * 轮询函数
  * @param callback
  * @param interval  间隔
@@ -75,7 +60,7 @@ export function polling(callback: (times: number) => void | Promise<any>, interv
 }
 
 // 代替for循环
-export function forEachByLen(len: number, callback: (index: number) => any | false) {
+export function forEachByLen(len: number, callback: (index: number) => (any | false)) {
     for (let i = 0; i < len; i++) {
         if (callback(i) !== false) continue;
         break;
@@ -610,4 +595,10 @@ export function formatJSON(json: object | string, indent = 2): string {
     }
 
     return foreach(json);
+}
+
+export function number2Date(time: number, format: string): string {
+    let result = "";
+
+    return result;
 }
