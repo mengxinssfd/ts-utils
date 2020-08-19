@@ -15,7 +15,7 @@ export function Debounce(delay: number) {
     };
 }
 
-// 比setInterval好的地方在于使用promise判断一回执行完毕情况 // TODO 无法从origin函数外中断polling
+// 比setInterval好的地方在于使用promise判断一回执行完毕情况 // TODO 无法从origin函数外中断polling 如果同一个polling执行多次的话 无法中断前一个
 export function Polling(interval: number, immediate = true) {
     enum state {running, stopped}
 

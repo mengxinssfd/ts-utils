@@ -21,6 +21,23 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
     };
 }
 
+// fixme 每次都rej的话其实callback promise还是会执行，只是产生的结果不会有影响
+export function debouncePromise<T>(callback: (...args: any[]) => Promise<T>) {
+    let rejectFn;
+    return function (...args: any[]): Promise<T> {
+        rejectFn && rejectFn();
+        return new Promise(async (res, rej) => {
+            rejectFn = rej;
+            try {
+                const result = await callback.apply(this, args);
+                res(result);
+            } catch (e) {
+                rej(e);
+            }
+        });
+    };
+}
+
 /**
  * 轮询函数
  * @param callback
