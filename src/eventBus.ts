@@ -2,7 +2,7 @@ type Callback = (...args: any[]) => void
 
 export class EventBus {
     private static instance?: EventBus;
-    events: { [key: string]: Array<Callback> } = {};
+    private events: { [key: string]: Array<Callback> } = {};
 
     constructor() {
     }
