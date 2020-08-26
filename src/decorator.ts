@@ -69,3 +69,23 @@ export function Polling(interval: number, immediate = true) {
     };
 
 }
+
+export function Singleton<T extends { new(...args: any[]): {} }>(constructor: T): any {
+    class newClass extends constructor {
+        private static instance?: newClass;
+
+        private constructor(...args: any[]) {
+            super(...args);
+        }
+
+        public static get Ins(): newClass {
+            if (!newClass.instance) {
+                newClass.instance = new newClass();
+            }
+            return newClass.instance;
+        }
+
+    }
+
+    return newClass;
+}
