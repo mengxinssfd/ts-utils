@@ -616,37 +616,38 @@ export function formatJSON(json: object | string, indent = 2): string {
 
 // TODO 暂时无法手动设置值 未添加测试用例
 export function createEnum<T extends string>(items: T[]): { [k in T]: number } & { [k: number]: T } {
-    const result: any = {}
+    const result: any = {};
     items.forEach((item, index) => {
-        result[item] = index
-        result[index] = item
-    })
-    Object.freeze(result)
-    return result
+        result[item] = index;
+        result[index] = item;
+    });
+    Object.freeze(result); // freeze值不可变
+    // Object.seal(result); // seal值可以变
+    return result;
 }
 
 // TODO 未添加测试用例
 export function number2Date(millisecond: number, format = 'd天hh时mm分ss秒') {
-    let result = format
-    const seconds = millisecond / 1000
+    let result = format;
+    const seconds = millisecond / 1000;
     const obj: { [k: string]: number } = {
         's+': seconds % 60,
         'm+': ~~(seconds / 60) % 60,
-        'h+': ~~(seconds / (60 * 60)) % 24
+        'h+': ~~(seconds / (60 * 60)) % 24,
         // 'd+': ~~(seconds / (60 * 60 * 24))
-    }
+    };
     // 有多少天就显示多少天,但不会补0
-    const days = ~~(seconds / (60 * 60 * 24))
-    result = result.replace(/d+/, String(days))
+    const days = ~~(seconds / (60 * 60 * 24));
+    result = result.replace(/d+/, String(days));
     for (const k in obj) {
-        const reg = new RegExp('(' + k + ')')
+        const reg = new RegExp('(' + k + ')');
         if (reg.test(result)) {
-            const s1 = RegExp.$1
-            const v = obj[k]
-            let value = String(v).padStart(s1.length, '0')
-            value = value.substring(value.length - s1.length)
-            result = result.replace(s1, value)
+            const s1 = RegExp.$1;
+            const v = obj[k];
+            let value = String(v).padStart(s1.length, '0');
+            value = value.substring(value.length - s1.length);
+            result = result.replace(s1, value);
         }
     }
-    return result
+    return result;
 }
