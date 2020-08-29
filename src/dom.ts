@@ -349,3 +349,29 @@ export function onElResize(el: HTMLElement, handler: () => void) {
     expand.addEventListener('scroll', onScroll);
     shrink.addEventListener('scroll', onScroll);
 }
+
+function getWH(el: HTMLElement | typeof window): { w: number, h: number } {
+    const wh = {w: 0, h: 0}
+    if (el === window) {
+        wh.w = window.innerWidth;
+        wh.h = window.innerHeight;
+    } else {
+        el = el as HTMLElement;
+        wh.w = el.offsetWidth;
+        wh.h = el.offsetHeight;
+    }
+    return wh;
+}
+
+// TODO 未完待续 参考：emergency
+export function isVisible(target: HTMLElement, container: HTMLElement | typeof window = window): boolean {
+   /* if (container !== window && !isVisible(container as HTMLElement, window)) {
+        return false
+    }*/
+    const wh = getWH(container)
+    const targetWh = getWH(target)
+
+    const scrollTop = (container as HTMLElement).scrollTop
+    const top = target.offsetTop - scrollTop;
+    return top >= -targetWh.h && top <= wh.h;
+}
