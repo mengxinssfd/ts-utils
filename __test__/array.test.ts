@@ -219,3 +219,12 @@ test("binaryFindIndex", () => {
     expect(arr.binaryFindIndex([], i => i)).toBe(-1);
     expect(arr.binaryFindIndex(list, i => 55 - i.id)).toBe(-1);
 });
+test("insertToArray", () => {
+    const arr1 = [1, 2, 3, 4];
+    const arr2 = arr.insertToArray(5, 1, arr1);
+    expect(arr2).toEqual([1, 5, 2, 3, 4]);
+    const arr3 = arr.insertToArray(5, 0, arr1);
+    expect(arr3).toEqual([5, 1, 2, 3, 4]);
+    const arr4 = arr.insertToArray(5, 100, arr1);
+    expect(arr4).toEqual([1, 2, 3, 4, 5]);
+});

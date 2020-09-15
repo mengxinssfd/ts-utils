@@ -215,3 +215,19 @@ export function binaryFindIndex<T>(arr: T[], handler: (item: T, index: number, s
 
     return -1;
 }
+
+/**
+ * item插入到数组，返回一个新数组
+ * @param insert {any} 插入的item
+ * @param to {number} index 要插入的位置
+ * @param array {Array} 要插入item的数组
+ * @returns Array
+ */
+export function insertToArray<T>(insert: T, to: number, array: T[]): T[] {
+    const newArray = array.slice();
+    const end = newArray.splice(to);
+    end.unshift(insert);
+    Array.prototype.push.apply(newArray, end);
+    // newArray.push(...end);
+    return newArray;
+}
