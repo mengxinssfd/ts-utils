@@ -21,6 +21,29 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
     };
 }
 
+/**
+ * 可取消防抖函数
+ * @param callback 回调
+ * @param delay 延时
+ * @returns {Function}
+ */
+export function debounceCancelable(callback: (...args: any[]) => void, delay: number) {
+    let timer: any = null;
+    function cancel() {
+        if (!timer) return
+        clearTimeout(timer);
+        timer = null;
+    }
+    return function (...args: any[]) {
+        cancel()
+        timer = setTimeout(() => {
+            timer = null;
+            callback.apply(this, args);
+        }, delay);
+        return cancel
+    };
+}
+
 // fixme 每次都rej的话其实callback promise还是会执行，只是产生的结果不会有影响
 export function debouncePromise<T>(callback: (...args: any[]) => Promise<T>) {
     let rejectFn;
@@ -211,6 +234,7 @@ export function getDateFromStr(date: string): Date | null {
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 
+export const str2Date = getDateFromStr;
 
 /**
  * 千位分隔 1,234,567,890
