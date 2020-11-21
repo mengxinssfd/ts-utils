@@ -13,24 +13,24 @@ export class Download {
                 };
                 reader.readAsText(blob, "utf-8");
             } else {
-                this.download(filename, res);
+                Download.download(filename, window.URL.createObjectURL(new Blob([res.data])));
             }
         }
     }
+
     // 下载简单实现
-    download(filename: string, res: any) {
-        let url = window.URL.createObjectURL(new Blob([res.data]));
+    static download(filename: string, objectURL: ReturnType<typeof window.URL.createObjectURL>) {
         let domA = document.createElement("a");
         if ("download" in domA) {
-            domA.href = url;
+            domA.href = objectURL;
             domA.setAttribute("download", filename); // 自定义下载文件名（如exemple.txt）
             document.body.appendChild(domA); // 火狐浏览器必须把domA放到body下才能点击
             domA.click();
             document.body.removeChild(domA);
             // domA = null;
         } else {
-            navigator.msSaveBlob(url, filename);
+            navigator.msSaveBlob(objectURL, filename);
         }
-
+        window.URL.revokeObjectURL(objectURL);
     }
 }
