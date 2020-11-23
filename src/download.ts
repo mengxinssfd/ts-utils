@@ -1,6 +1,15 @@
 export class Download {
-
-    constructor({res, filename, onGetJSON}: { res: { status: number, data: any }, filename: string, onGetJSON?: (json: {}) => void }) {
+    constructor(
+        {
+            res,
+            filename,
+            onGetJSON
+        }: {
+            res: { status: number, data: any },
+            filename: string,
+            onGetJSON?: (json: {}) => void
+        }
+    ) {
         if (res.status === 200) {
             // Log(res);
             const blob = res.data;
@@ -13,24 +22,25 @@ export class Download {
                 };
                 reader.readAsText(blob, "utf-8");
             } else {
-                this.download(filename, res);
+                this.download(filename, res.data);
             }
         }
     }
-    // 下载简单实现
-    download(filename: string, res: any) {
-        let url = window.URL.createObjectURL(new Blob([res.data]));
-        let domA = document.createElement("a");
+
+    private download(filename: string, data: any) {
+        const blob = new Blob([data]);
+        const domA = document.createElement("a");
         if ("download" in domA) {
-            domA.href = url;
+            const objectURL = window.URL.createObjectURL(blob);
+            domA.href = objectURL;
             domA.setAttribute("download", filename); // 自定义下载文件名（如exemple.txt）
             document.body.appendChild(domA); // 火狐浏览器必须把domA放到body下才能点击
             domA.click();
             document.body.removeChild(domA);
             // domA = null;
+            window.URL.revokeObjectURL(objectURL);
         } else {
-            navigator.msSaveBlob(url, filename);
+            navigator.msSaveBlob(blob, filename);
         }
-
     }
 }
