@@ -384,3 +384,10 @@ export function isScrollEnd(el: HTMLElement, direct: 'vertical' | 'horizontal' =
         return el.scrollLeft >= el.scrollWidth - el.clientWidth - offset
     }
 }
+export function isScrollStart(el: HTMLElement, direct: 'vertical' | 'horizontal' = 'vertical', offset = 10) {
+    if (direct === 'vertical') {
+        return el.scrollTop >= offset
+    } else {
+        return el.scrollLeft >= offset
+    }
+}
