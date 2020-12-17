@@ -416,7 +416,7 @@ export function mergeImg(posterSrc, qrCode, imageHeight) {
         canvas.width = imgData.width;
         canvas.height = imgData.height;
         parent.appendChild(canvas);
-        const ctx = canvas.getContext("2d") as  CanvasRenderingContext2D;
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
         const poster_image = new Image();
         poster_image.setAttribute("crossOrigin", "anonymous");
         poster_image.src = posterSrc;
@@ -443,3 +443,41 @@ export function mergeImg(posterSrc, qrCode, imageHeight) {
         };
     });
 }
+
+/**
+ * 手动添加img标签下载图片
+ * @param url {string}
+ * @returns {Promise}
+ */
+export function loadImg(url) {
+    return new Promise(function (resolve, reject) {
+        const img = new Image();
+        const parent = document.body;
+        img.style.display = "none";
+        img.onload = function (ev) {
+            parent.removeChild(img);
+            resolve();
+        };
+        img.onabort = img.onerror = function (ev) {
+            parent.removeChild(img);
+            reject(ev);
+        };
+        img.src = url;
+        parent.append(img);
+    });
+}
+
+export function getLoadedImg(url) {
+    return new Promise(function (resolve, reject) {
+        const img = new Image();
+        img.onload = function (ev) {
+            resolve(img);
+        };
+        img.onabort = img.onerror = function (ev) {
+            reject(ev);
+        };
+        img.src = url;
+    });
+}
+
+
