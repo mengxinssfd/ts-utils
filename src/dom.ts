@@ -351,7 +351,7 @@ export function onElResize(el: HTMLElement, handler: () => void) {
 }
 
 function getWH(el: HTMLElement | typeof window): { w: number, h: number } {
-    const wh = {w: 0, h: 0}
+    const wh = {w: 0, h: 0};
     if (el === window) {
         wh.w = window.innerWidth;
         wh.h = window.innerHeight;
@@ -368,10 +368,10 @@ export function isVisible(target: HTMLElement, container: HTMLElement | typeof w
     /* if (container !== window && !isVisible(container as HTMLElement, window)) {
          return false
      }*/
-    const wh = getWH(container)
-    const targetWh = getWH(target)
+    const wh = getWH(container);
+    const targetWh = getWH(target);
 
-    const scrollTop = (container as HTMLElement).scrollTop
+    const scrollTop = (container as HTMLElement).scrollTop;
     const top = target.offsetTop - scrollTop;
     return top >= -targetWh.h && top <= wh.h;
 }
@@ -379,17 +379,17 @@ export function isVisible(target: HTMLElement, container: HTMLElement | typeof w
 
 export function isScrollEnd(el: HTMLElement, direct: 'vertical' | 'horizontal' = 'vertical', offset = 10) {
     if (direct === 'vertical') {
-        return el.scrollTop >= el.scrollHeight - el.clientHeight - offset
+        return el.scrollTop >= el.scrollHeight - el.clientHeight - offset;
     } else {
-        return el.scrollLeft >= el.scrollWidth - el.clientWidth - offset
+        return el.scrollLeft >= el.scrollWidth - el.clientWidth - offset;
     }
 }
 
 export function isScrollStart(el: HTMLElement, direct: 'vertical' | 'horizontal' = 'vertical', offset = 10) {
     if (direct === 'vertical') {
-        return el.scrollTop >= offset
+        return el.scrollTop >= offset;
     } else {
-        return el.scrollLeft >= offset
+        return el.scrollLeft >= offset;
     }
 }
 
@@ -402,7 +402,7 @@ export function isScrollStart(el: HTMLElement, direct: 'vertical' | 'horizontal'
 export function mergeImg(posterSrc, qrCode, imageHeight) {
     const imgData = {
         width: 750,
-        height: 1334
+        height: 1334,
     };
     return new Promise(function (resolve, reject) {
         const parent = document.body;
@@ -411,7 +411,7 @@ export function mergeImg(posterSrc, qrCode, imageHeight) {
             height: imgData.height + "px",
             width: imgData.width + "px",
             position: "fixed",
-            left: "-10000px"
+            left: "-10000px",
         });
         canvas.width = imgData.width;
         canvas.height = imgData.height;
@@ -480,4 +480,90 @@ export function getLoadedImg(url) {
     });
 }
 
+export function isSelectElement(el: HTMLElement): el is HTMLSelectElement {
+    return el.nodeName === "SELECT";
+}
 
+export function isInputElement(el: HTMLElement): el is HTMLInputElement {
+    return el.nodeName === "INPUT";
+}
+
+export function isTextAreaElement(el: HTMLElement): el is HTMLTextAreaElement {
+    return el.nodeName === "TEXTAREA";
+}
+
+
+/**
+ * @param element
+ * @return string
+ */
+function select(element: HTMLElement) {
+    let selectedText;
+    if (isSelectElement(element)) {
+        element.focus();
+        selectedText = element.value;
+    } else if (isInputElement(element) || isTextAreaElement(element)) {
+        const isReadOnly = element.hasAttribute("readonly");
+        if (!isReadOnly) {
+            element.setAttribute("readonly", "");
+        }
+        element.select();
+        element.setSelectionRange(0, element.value.length);
+        if (!isReadOnly) {
+            element.removeAttribute("readonly");
+        }
+        selectedText = element.value;
+    } else {
+        if (element.hasAttribute("contenteditable")) {
+            element.focus();
+        }
+        const selection = window.getSelection() as Selection;
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        selectedText = selection.toString();
+    }
+    return selectedText;
+}
+
+/**
+ * 复制文字或html
+ * @param target {HTMLElement | string}
+ * @return {Promise}
+ */
+export function copy(target: HTMLElement | string) {
+    let el: HTMLElement;
+    const isText = typeof target === "string";
+    if (isText) {
+        const text = target as string;
+        el = document.createElement("div");
+        el.innerText = text;
+        el.style.position = "fixed";
+        el.style.left = "-100000px";
+        document.body.appendChild(el);
+    } else {
+        el = target as HTMLElement;
+    }
+    const p = new Promise(function (resolve, reject) {
+        select(el);
+        let succeeded;
+        try {
+            succeeded = document.execCommand("copy");
+        } catch (err) {
+            succeeded = false;
+        }
+        if (succeeded) {
+            resolve();
+            return;
+        }
+        reject();
+    });
+    p.finally(function () {
+        (window.getSelection() as Selection).removeAllRanges();
+        if (isText) {
+            document.body.removeChild(el);
+        }
+    });
+    return p;
+}
