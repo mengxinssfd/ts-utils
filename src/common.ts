@@ -695,7 +695,7 @@ export function pick<T extends object, K extends keyof T>(
     }, {} as any);
 }
 
-
+// 新属性名作为键名的好处是可以多个属性对应一个值
 export function pickRename<T extends object, K extends keyof T, O extends { [k: string]: K }>(
     fromObj: T,
     renameObj: O,
