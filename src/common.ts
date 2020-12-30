@@ -29,11 +29,13 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
  */
 export function debounceCancelable(callback: (...args: any[]) => void, delay: number) {
     let timer: any = null;
+
     function cancel() {
         if (!timer) return
         clearTimeout(timer);
         timer = null;
     }
+
     return function (...args: any[]) {
         cancel()
         timer = setTimeout(() => {
@@ -675,3 +677,20 @@ export function number2Date(millisecond: number, format = 'd天hh时mm分ss秒')
     }
     return result;
 }
+
+export function pick<T extends object, K extends keyof T>(fromObj: T, pickKeys: K[]): { [key in K]: T[key] } {
+    return pickKeys.reduce((res, key) => {
+        if (fromObj.hasOwnProperty(key)) res[key] = fromObj[key];
+        return res;
+    }, {} as any);
+}
+
+// pick({a: 1, b: 2, c: 3}, ["c"])
+export function pickAndRename<T extends object,
+    K extends keyof T,
+    O extends { [key in K]?: string }>(fromObj: T, renameObj: O): any {
+    // TODO 未完成
+    return {} as any;
+}
+
+pickAndRename({a: 123, b: "12312", c: [123]}, {"a": "d"}) // {c:123}
