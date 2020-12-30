@@ -31,18 +31,18 @@ export function debounceCancelable(callback: (...args: any[]) => void, delay: nu
     let timer: any = null;
 
     function cancel() {
-        if (!timer) return
+        if (!timer) return;
         clearTimeout(timer);
         timer = null;
     }
 
     return function (...args: any[]) {
-        cancel()
+        cancel();
         timer = setTimeout(() => {
             timer = null;
             callback.apply(this, args);
         }, delay);
-        return cancel
+        return cancel;
     };
 }
 
@@ -678,19 +678,36 @@ export function number2Date(millisecond: number, format = 'd天hh时mm分ss秒')
     return result;
 }
 
-export function pick<T extends object, K extends keyof T>(fromObj: T, pickKeys: K[]): { [key in K]: T[key] } {
+/**
+ * @param fromObj
+ * @param pickKeys
+ * @param cb
+ */
+export function pick<T extends object, K extends keyof T>(
+    fromObj: T,
+    pickKeys: K[],
+    cb?: (value: T[K], key: K, fromObj: T) => T[K],
+): { [key in K]: T[key] } {
+    const callback = cb || ((v, k, obj) => v);
     return pickKeys.reduce((res, key) => {
-        if (fromObj.hasOwnProperty(key)) res[key] = fromObj[key];
+        if (fromObj.hasOwnProperty(key)) res[key] = callback(fromObj[key], key, fromObj);
         return res;
     }, {} as any);
 }
 
-// pick({a: 1, b: 2, c: 3}, ["c"])
-export function pickAndRename<T extends object,
-    K extends keyof T,
-    O extends { [key in K]?: string }>(fromObj: T, renameObj: O): any {
-    // TODO 未完成
-    return {} as any;
-}
 
-pickAndRename({a: 123, b: "12312", c: [123]}, {"a": "d"}) // {c:123}
+export function pickRename<T extends object, K extends keyof T, O extends { [k: string]: K }>(
+    fromObj: T,
+    renameObj: O,
+    cb?: (value: T[O[keyof O]], key: O[keyof O], fromObj: T) => T[O[keyof O]],
+): { [k in keyof O]: T[O[k]] } {
+    const callback = cb || ((v, k, obj) => v);
+    const keys = Object.keys(renameObj) as (keyof O)[];
+    return keys.reduce((result, rKey) => {
+        const key = renameObj[rKey];
+        if (fromObj.hasOwnProperty(key)) {
+            result[rKey] = callback(fromObj[key], key, fromObj);
+        }
+        return result;
+    }, {} as any);
+}

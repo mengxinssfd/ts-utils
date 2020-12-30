@@ -369,4 +369,46 @@ test("formatJSON", () => {
       }, 4);*/
     // expect(rs).toBe(`{\r\n    "a":1,\r\n    "b":2,\r\n    "fn":"function () {\r\n        }"\r\n}`);
 });
+test("pick", () => {
+    const fn = cm.pick;
+    const obj = {a: 1, b: "2", c: ["12313", 111], d: false, e: {a: 1}, f: undefined};
+    expect(fn(obj, [])).toEqual({});
+    expect(fn(obj, ["a"])).toEqual({a: 1});
+    expect(fn(obj, ["b"])).toEqual({b: obj.b});
+    expect(fn(obj, ["c"])).toEqual({c: obj.c});
+    expect(fn(obj, ["d"])).toEqual({d: obj.d});
+    expect(fn(obj, ["e"])).toEqual({e: obj.e});
+    expect(fn(obj, ["f"])).toEqual({f: obj.f});
+    expect(fn(obj, ["a", "f"])).toEqual({a: obj.a, f: obj.f});
+    expect(fn(obj, ["a", "f", "c"])).toEqual({a: obj.a, f: obj.f, c: obj.c});
+
+    expect(fn(obj, ["a"], (v) => v + 1000)).toEqual({a: 1001});
+    expect(fn(obj, ["a", "b"], (v, k) => {
+        if (k === "a") {
+            return 2;
+        }
+        return "test";
+    })).toEqual({a: 2, b: "test"});
+});
+test("pickRename", () => {
+    const fn = cm.pickRename;
+    const obj = {a: 1, b: "2", c: ["12313", 111], d: false, e: {a: 1}, f: undefined};
+    expect(fn(obj, {})).toEqual({});
+    expect(fn(obj, {"A": "a"})).toEqual({A: 1});
+    expect(fn(obj, {"B": "b"})).toEqual({B: obj.b});
+    expect(fn(obj, {"C": "c"})).toEqual({C: obj.c});
+    expect(fn(obj, {"D": "d"})).toEqual({D: obj.d});
+    expect(fn(obj, {"E": "e"})).toEqual({E: obj.e});
+    expect(fn(obj, {"E": "f"})).toEqual({F: obj.f});
+    expect(fn(obj, {"A": "a", "F": "f"})).toEqual({A: obj.a, F: obj.f});
+    expect(fn(obj, {"a": "a", "f": "b", "c": "d"})).toEqual({a: obj.a, f: obj.b, c: obj.d});
+
+    expect(fn(obj, {"A": "a"}, (v) => (v + 1000))).toEqual({A: 1001});
+    expect(fn(obj, {"A": "a", "B": "b"}, (v, k) => {
+        if (k === "a") {
+            return 2;
+        }
+        return "test";
+    })).toEqual({A: 2, B: "test"});
+});
 
