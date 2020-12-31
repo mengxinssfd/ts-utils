@@ -207,3 +207,14 @@ test('objectIsEqual', () => {
     expect(is.objectIsEqual({a: 1}, {a: 1})).toBeTruthy();
     expect(is.objectIsEqual({a: 1}, {a: 2})).toBeFalsy();
 });
+test('isSameType', () => {
+    const fn = is.isSameType;
+    expect(fn(cm, cm)).toBeTruthy();
+    expect(fn(1, 2)).toBeTruthy();
+    expect(fn("", new String(123))).toBeTruthy();
+    expect(fn(1, NaN)).toBeTruthy();
+    expect(fn(1, "")).toBeFalsy();
+    expect(fn({}, [])).toBeFalsy();
+    expect(fn({}, () => 0)).toBeFalsy();
+    expect(fn({}, null)).toBeFalsy();
+});

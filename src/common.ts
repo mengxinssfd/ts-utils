@@ -760,6 +760,7 @@ export function pick(originObj, picks, cb) {
     // }, {} as any);
     // ------- 第二种写法 -------
     // 更简洁 减少判断次数
+    // TODO 需要判断返回值类型是否改变了  改变则抛出异常
     return isObj ? pickRename(originObj, picks, cb) : pickByKeys(originObj, picks, cb);
 }
 

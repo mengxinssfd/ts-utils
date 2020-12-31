@@ -389,8 +389,8 @@ const testPickByKeys = (fn: typeof cm.pickByKeys) => {
             }
             return "test";
         })).toEqual({a: 2, b: "test"});
-    }
-}
+    };
+};
 test("pickByKeys", () => {
     const fn = cm.pickByKeys;
     testPickByKeys(fn)();
@@ -415,8 +415,8 @@ const testPickRename = (fn: typeof cm.pickRename) => {
             }
             return "test";
         })).toEqual({A: 2, B: "test"});
-    }
-}
+    };
+};
 test("pickRename", () => {
     const fn = cm.pickRename;
     testPickRename(fn)();
@@ -442,5 +442,9 @@ test("pick", () => {
         }
         return "test";
     })).toEqual({A: 2, B: "test"});
+    const nObj = fn(obj, {"A": "a", "B": "a"}, (v, k) => {
+        return 2;
+    });
+    expect(nObj).toEqual({A: 2, B: 2});
 });
 

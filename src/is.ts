@@ -130,3 +130,7 @@ export function objectIsEqual(obj1: object, obj2: object): boolean {
     }
     return true;
 }
+
+export function isSameType(a: any, b: any): boolean {
+    return typeOf(a) === typeOf(b);
+}
