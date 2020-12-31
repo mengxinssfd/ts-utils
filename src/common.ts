@@ -1,5 +1,5 @@
 import {createArray} from "./array";
-import {isArray, isString} from "./is";
+import {isArray, isString, isObject} from "./is";
 
 /**
  * 防抖函数
@@ -679,35 +679,87 @@ export function number2Date(millisecond: number, format = 'd天hh时mm分ss秒')
 }
 
 /**
- * @param fromObj
+ * @param originObj
  * @param pickKeys
  * @param cb
  */
-export function pick<T extends object, K extends keyof T>(
-    fromObj: T,
+export function pickByKeys<T extends object, K extends keyof T>(
+    originObj: T,
     pickKeys: K[],
-    cb?: (value: T[K], key: K, fromObj: T) => T[K],
+    cb?: (value: T[K], key: K, originObj: T) => T[K],
 ): { [key in K]: T[key] } {
-    const callback = cb || ((v, k, obj) => v);
+    const callback = cb || (v => v);
     return pickKeys.reduce((res, key) => {
-        if (fromObj.hasOwnProperty(key)) res[key] = callback(fromObj[key], key, fromObj);
+        if (originObj.hasOwnProperty(key)) res[key] = callback(originObj[key], key, originObj);
         return res;
     }, {} as any);
 }
 
+// TODO 不完美的地方：k === "a"时应该限定返回值类型为number
+pickByKeys({a: 123, b: "111", c: false}, ["a", "b"], (v, k, o) => {
+    if(k === "a"){
+        return "123123"
+    }
+    return v;
+});
+
 // 新属性名作为键名的好处是可以多个属性对应一个值
 export function pickRename<T extends object, K extends keyof T, O extends { [k: string]: K }>(
-    fromObj: T,
-    renameObj: O,
-    cb?: (value: T[O[keyof O]], key: O[keyof O], fromObj: T) => T[O[keyof O]],
+    originObj: T,
+    renamePickObj: O,
+    cb?: (value: T[O[keyof O]], key: O[keyof O], originObj: T) => T[O[keyof O]],
 ): { [k in keyof O]: T[O[k]] } {
-    const callback = cb || ((v, k, obj) => v);
-    const keys = Object.keys(renameObj) as (keyof O)[];
-    return keys.reduce((result, rKey) => {
-        const key = renameObj[rKey];
-        if (fromObj.hasOwnProperty(key)) {
-            result[rKey] = callback(fromObj[key], key, fromObj);
+    const callback = cb || (v => v);
+    const renames = Object.keys(renamePickObj) as (keyof O)[];
+    return renames.reduce((result, rename) => {
+        const pick = renamePickObj[rename];
+        if (originObj.hasOwnProperty(pick)) {
+            result[rename] = callback(originObj[pick], pick, originObj);
         }
         return result;
     }, {} as any);
 }
+
+/**
+ * 功能与pickByKeys函数一致
+ * @param originObj
+ * @param pickKeys
+ * @param cb
+ */
+export function pick<T extends object, K extends keyof T>(
+    originObj: T,
+    pickKeys: K[],
+    cb?: (value: T[K], key: K, fromObj: T) => T[K],
+): { [key in K]: T[key] }
+/**
+ * 功能与pickRename函数一致
+ * @param originObj
+ * @param renamePickObj
+ * @param cb
+ */
+export function pick<T extends object, K extends keyof T, O extends { [k: string]: K }>(
+    originObj: T,
+    renamePickObj: O,
+    cb?: (value: T[O[keyof O]], key: O[keyof O], fromObj: T) => T[O[keyof O]],
+): { [k in keyof O]: T[O[k]] }
+/**
+ * 合并pickByKeys与pickRename两者的功能
+ */
+export function pick(originObj, picks, cb) {
+    const isObj = isObject(picks);
+    // ------- 第一种写法 -------
+    // const callback = cb || (v => v);
+    // const pickKeys = isObj ? Object.keys(picks) : picks;
+    // const getOriginObjKey = isObj ? k => picks[k] : k => k;
+    // return pickKeys.reduce((res, k) => {
+    //     const originObjKey = getOriginObjKey(k);
+    //     if (originObj.hasOwnProperty(originObjKey)) {
+    //         res[k] = callback(originObj[originObjKey], originObjKey, originObj);
+    //     }
+    //     return res;
+    // }, {} as any);
+    // ------- 第二种写法 -------
+    // 更简洁 减少判断次数
+    return isObj ? pickRename(originObj, picks, cb) : pickByKeys(originObj, picks, cb);
+}
+
