@@ -1,5 +1,5 @@
 // 所有主要浏览器都支持 createElement() 方法
-import {typeOf} from "./common";
+import {pickByKeys, typeOf} from "./common";
 import {isFunction, isString} from "./is";
 
 let elementStyle = document.createElement('div').style;
@@ -566,4 +566,29 @@ export function copy(target: HTMLElement | string) {
         }
     });
     return p;
+}
+
+
+export function noScroll(scrollContainer: Window | HTMLElement | string) {
+    let target: HTMLElement = scrollContainer as HTMLElement;
+    if (isString(scrollContainer)) {
+        target = document.querySelector(scrollContainer) as HTMLElement;
+        if (!target) throw new TypeError();
+    } else if (scrollContainer === window) {
+        if (document.documentElement.scrollTop) {
+            target = document.documentElement;
+        } else {
+            target = document.body;
+        }
+    }
+
+    const last = pickByKeys(target.style, ["marginTop", "overflow"]);
+    const scrollTop = target.scrollTop;
+    target.scrollTop = 0;
+    target.style.overflow = "hidden";
+    target.style.marginTop = -scrollTop + "px";
+    return function () {
+        target.scrollTop = scrollTop;
+        Object.assign(target.style, last);
+    }
 }

@@ -696,12 +696,12 @@ export function pickByKeys<T extends object, K extends keyof T>(
 }
 
 // TODO 不完美的地方：k === "a"时应该限定返回值类型为number
-pickByKeys({a: 123, b: "111", c: false}, ["a", "b"], (v, k, o) => {
+/*pickByKeys({a: 123, b: "111", c: false}, ["a", "b"], (v, k, o) => {
     if(k === "a"){
         return "123123"
     }
     return v;
-});
+});*/
 
 // 新属性名作为键名的好处是可以多个属性对应一个值
 export function pickRename<T extends object, K extends keyof T, O extends { [k: string]: K }>(
