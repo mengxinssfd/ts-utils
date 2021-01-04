@@ -726,9 +726,9 @@ export function pickRename<T extends object, K extends keyof T, O extends { [k: 
  * @param pickKeys
  * @param cb
  */
-export function pick<T extends object, K extends keyof T>(
+export function pick<T extends object, K extends keyof T, KS extends K[]>(
     originObj: T,
-    pickKeys: K[],
+    pickKeys: KS,
     cb?: (value: T[K], key: K, fromObj: T) => T[K],
 ): { [key in K]: T[key] }
 /**
@@ -764,3 +764,4 @@ export function pick(originObj, picks, cb) {
     return isObj ? pickRename(originObj, picks, cb) : pickByKeys(originObj, picks, cb);
 }
 
+// pick({a: 132, b: "123123"}, ["a", "b"]);
