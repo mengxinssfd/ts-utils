@@ -165,7 +165,7 @@ export function flat<T>(target: readonly T[], depth: number = 1): T[] {
  * @param handler 判断条件 item => target - item 返回值为0时为要找的值，小于0则往前找，大于0往后找
  * @param pcz 不用传
  */
-export function binaryFind<T>(arr: T[], handler: (item: T, index: number, arr: T[]) => number, pcz: number = 0): T | undefined {
+export function binaryFind2<T>(arr: T[], handler: (item: T, index: number, arr: T[]) => number, pcz: number = 0): T | undefined {
     if (arr.length === 0) return undefined;
     let result: T | undefined;
     let middleIndex = Math.floor(arr.length / 2);
@@ -181,14 +181,31 @@ export function binaryFind<T>(arr: T[], handler: (item: T, index: number, arr: T
         // 如果target大于当前item值，则获取middle右边，否则相反
         if (value > 0) {
             middleIndex++;
-            result = binaryFind(arr.slice(middleIndex), handler, pcz + middleIndex);
+            result = binaryFind2(arr.slice(middleIndex), handler, pcz + middleIndex);
         } else {
-            result = binaryFind(arr.slice(0, middleIndex), handler, pcz);
+            result = binaryFind2(arr.slice(0, middleIndex), handler, pcz);
         }
     }
     return result;
 }
 
+export function binaryFind<T>(arr: T[], handler: (item: T, index: number, arr: T[]) => number): T | undefined {
+    let start = 0;
+    let end = arr.length;
+    while (start < end) {
+        const mid = ~~((end + start) / 2);
+        const item = arr[mid];
+        const v = handler(item, mid, arr);
+        if (v === 0) {
+            return item;
+        } else if (v > 0) {
+            start = mid + 1;
+        } else {
+            end = mid;
+        }
+    }
+    return undefined;
+}
 
 /**
  * 二分查找item index
