@@ -446,39 +446,21 @@ export function mergeImg(posterSrc, qrCode, imageHeight) {
 
 /**
  * 手动添加img标签下载图片
- * @param url {string}
- * @returns {Promise}
+ * @param url
  */
-export function loadImg(url) {
-    return new Promise(function (resolve, reject) {
+export function loadImg(url: string): Promise<HTMLImageElement> {
+    return new Promise<HTMLImageElement>(function (resolve, reject) {
         const img = new Image();
-        const parent = document.body;
-        img.style.display = "none";
-        img.onload = function (ev) {
-            parent.removeChild(img);
-            resolve();
+        img.onload = () => {
+            resolve(img);
         };
-        img.onabort = img.onerror = function (ev) {
-            parent.removeChild(img);
+        img.onabort = img.onerror = (ev) => {
             reject(ev);
         };
         img.src = url;
-        parent.append(img);
     });
 }
 
-export function getLoadedImg(url) {
-    return new Promise(function (resolve, reject) {
-        const img = new Image();
-        img.onload = function (ev) {
-            resolve(img);
-        };
-        img.onabort = img.onerror = function (ev) {
-            reject(ev);
-        };
-        img.src = url;
-    });
-}
 
 export function isSelectElement(el: HTMLElement): el is HTMLSelectElement {
     return el.nodeName === "SELECT";
