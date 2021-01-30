@@ -765,3 +765,15 @@ export function pick(originObj, picks, cb) {
 }
 
 // pick({a: 132, b: "123123"}, ["a", "b"]);
+
+/**
+ * object key-value翻转
+ * @param obj
+ */
+export function getReverseObj(obj: object): any {
+    return Object.keys(obj).reduce((res, key) => {
+        const v = obj[key];
+        res[v] = key;
+        return res;
+    }, {});
+}
