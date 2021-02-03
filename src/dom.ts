@@ -72,6 +72,21 @@ export function prefixStyle(style: string): string | false {
 }
 
 /**
+ * 判断是否支持css
+ * @param key
+ * @param value
+ * @returns {boolean}
+ */
+export function cssSupport(key, value) {
+    if (key in elementStyle) {
+        elementStyle[key] = value;
+        return elementStyle[key] === value;
+    } else {
+        return false;
+    }
+}
+
+/**
  * 事件代理
  * @param containerEl
  * @param eventType
@@ -514,7 +529,7 @@ function select(element: HTMLElement) {
  * @param target {HTMLElement | string}
  * @return {Promise}
  */
-export function copy(target: HTMLElement | string) {
+export function copy(target: HTMLElement | string): Promise<void> {
     let el: HTMLElement;
     const isText = typeof target === "string";
     if (isText) {
@@ -527,19 +542,21 @@ export function copy(target: HTMLElement | string) {
     } else {
         el = target as HTMLElement;
     }
-    const p = new Promise(function (resolve, reject) {
+    const p = new Promise<void>(function (resolve, reject) {
         select(el);
         let succeeded;
+        let error: any;
         try {
             succeeded = document.execCommand("copy");
         } catch (err) {
             succeeded = false;
+            error = err
         }
         if (succeeded) {
             resolve();
             return;
         }
-        reject();
+        reject(error);
     });
     p.finally(function () {
         (window.getSelection() as Selection).removeAllRanges();
