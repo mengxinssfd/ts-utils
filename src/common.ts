@@ -7,7 +7,7 @@ import {isArray, isString, isObject} from "./is";
  * @param delay 延时
  * @returns {Function}
  */
-export function debounce(callback: (...args: any[]) => void, delay: number) {
+export function debounce<CB extends (...args: any[]) => void>(callback: CB, delay: number): CB {
     let timer: any = null;
     return function (...args: any[]) {
         if (timer) {
@@ -18,7 +18,28 @@ export function debounce(callback: (...args: any[]) => void, delay: number) {
             timer = null;
             callback.apply(this, args);
         }, delay);
-    };
+    } as CB;
+}
+
+export function debouncePromise2<T, CB extends (...args: any[]) => Promise<T>>(callback: CB, delay: number): CB {
+    let timer: any = null;
+    let rej;
+
+    return function (...args: any[]) {
+        return new Promise<T>((resolve, reject) => {
+            if (timer) {
+                clearTimeout(timer);
+                timer = null;
+                rej();
+            }
+            rej = reject;
+            timer = setTimeout(async () => {
+                timer = null;
+                const result = await callback.apply(this, args);
+                resolve(result);
+            }, delay);
+        });
+    } as CB;
 }
 
 /**
@@ -650,6 +671,18 @@ export function createEnum<T extends string>(items: T[]): { [k in T]: number } &
     Object.freeze(result); // freeze值不可变
     // Object.seal(result); // seal值可以变
     return result;
+}
+
+export function createEnumByObj<T extends object, K extends keyof T, O extends { [k: string]: K }>(obj: T): T & { [k: string]: K } {
+    const res: any = {};
+    for (let k in obj) {
+        if (res.hasOwnProperty(k)) throw new Error("key multiple");
+        res[res[k] = obj[k]] = k;
+    }
+
+    Object.freeze(res); // freeze值不可变
+    // Object.seal(result); // seal值可以变
+    return res;
 }
 
 // TODO 未添加测试用例
