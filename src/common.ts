@@ -753,6 +753,20 @@ export function pickRename<T extends object, K extends keyof T, O extends { [k: 
     }, {} as any);
 }
 
+export function pickRename2<T extends object,
+    K extends keyof T,
+    O extends { [k: string]: K | ((t: T) => T[K]) }>(
+    originObj: T,
+    renamePickObj: O
+): { [k in keyof O]: O[k] extends K ? T[O[k]] : T[K] } {
+    return {} as any
+}
+
+pickRename2({a: 123, b: "222"}, {
+    c: 'a',
+    d: (obj) => obj.a
+})
+
 /**
  * 功能与pickByKeys函数一致
  * @param originObj
