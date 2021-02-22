@@ -102,7 +102,7 @@ export function getRotatePoint(center: Point, radius: number, rotate: number): P
     // let x = center[0] + radius * Math.sin(angle);
     // let y = center[1] - radius * Math.cos(angle);
     let x = NumberCalc.init(radius)["*"](Math.sin(angle))["+"](center[0]).curVal;
-    let y = NumberCalc.init(radius)["*"](Math.cos(angle)).by(center[0], "-").curVal;
+    let y = NumberCalc.init(radius)["*"](Math.cos(angle)).by(center[1], "-").curVal;
     return [x, y];
 }
 
