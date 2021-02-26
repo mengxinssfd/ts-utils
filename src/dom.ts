@@ -414,7 +414,7 @@ export function isScrollStart(el: HTMLElement, direct: 'vertical' | 'horizontal'
  * @param {String|HTMLElement} qrCode       二维码
  * @param {number} imageHeight  图片高度（传：1000(750 * 1000) 或 1334(750 * 1334)）
  */
-export function mergeImg(posterSrc, qrCode, imageHeight) {
+export function mergeImg(posterSrc: string, qrCode: string | HTMLElement, imageHeight: number) {
     const imgData = {
         width: 750,
         height: 1334,
@@ -466,6 +466,7 @@ export function mergeImg(posterSrc, qrCode, imageHeight) {
 export function loadImg(url: string): Promise<HTMLImageElement> {
     return new Promise<HTMLImageElement>(function (resolve, reject) {
         const img = new Image();
+        img.setAttribute("crossOrigin", "anonymous");
         img.onload = () => {
             resolve(img);
         };

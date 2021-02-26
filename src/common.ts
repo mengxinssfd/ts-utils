@@ -716,11 +716,11 @@ export function number2Date(millisecond: number, format = 'd天hh时mm分ss秒')
  * @param pickKeys
  * @param cb
  */
-export function pickByKeys<T extends object, K extends keyof T>(
+export function pickByKeys<T extends object, K extends keyof T,O extends Pick<T,K> >(
     originObj: T,
     pickKeys: K[],
-    cb?: (value: T[K], key: K, originObj: T) => T[K],
-): { [key in K]: T[key] } {
+    cb?: (value: T[K], key: K, originObj: T) => Pick<T, K>[K],
+): Pick<T, K> {
     const callback = cb || (v => v);
     return pickKeys.reduce((res, key) => {
         if (originObj.hasOwnProperty(key)) res[key] = callback(originObj[key], key, originObj);
@@ -752,7 +752,6 @@ export function pickRename<T extends object, K extends keyof T, O extends { [k: 
         return result;
     }, {} as any);
 }
-
 export function pickRename2<T extends object,
     K extends keyof T,
     O extends { [k: string]: K | ((t: T) => T[K]) }>(
