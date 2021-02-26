@@ -70,6 +70,7 @@ export function Polling(interval: number, immediate = true) {
 
 }
 
+/*
 export function Singleton<T extends { new(...args: any[]): {} }>(constructor: T): any {
     class newClass extends constructor {
         private static instance?: newClass;
@@ -89,3 +90,4 @@ export function Singleton<T extends { new(...args: any[]): {} }>(constructor: T)
 
     return newClass;
 }
+*/

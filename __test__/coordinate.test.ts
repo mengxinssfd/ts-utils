@@ -30,3 +30,12 @@ test("getRotatePoint", () => {
     expect(cd.getRotatePoint(center, Math.sqrt(2), 135)).toEqual([1, 1]);
 });
 
+test("getBorderWidthByCos", () => {
+    expect(cd.getBorderWidthByCos(3,4,90)).toEqual(5);
+    expect(cd.getBorderWidthByCos(1,1,90).toFixed(2)).toEqual(Math.sqrt(2).toFixed(2));
+});
+test("getBorderWidthByCos", () => {
+    expect(cd.getBorderWidthBySin(1,45,90).toFixed(2)).toEqual(Math.sqrt(2).toFixed(2));
+    expect(cd.getBorderWidthBySin(1,45,45)).toEqual(1);
+});
+

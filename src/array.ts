@@ -1,6 +1,6 @@
 import {typeOf} from "./common";
 import {deepClone} from "./clone";
-import {isEmpty, isNaN, isArray} from "./is";
+import {isEmpty, isNaN, isArray} from "./type";
 
 // @overload
 // ({start: 0, end: 2}) => [0, 1];

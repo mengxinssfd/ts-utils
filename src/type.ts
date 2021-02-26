@@ -53,7 +53,7 @@ export function isUndefined(target: any): target is undefined {
  * @param target
  * @param types
  */
-export function is(target: any, types: string[] | string): boolean {
+export function type(target: any, types: string[] | string): boolean {
     if (!isArray(types)) return typeOf(target) === types;
     return types.indexOf(typeOf(target)) > -1;
 }
@@ -133,4 +133,15 @@ export function objectIsEqual(obj1: object, obj2: object): boolean {
 
 export function isSameType(a: any, b: any): boolean {
     return typeOf(a) === typeOf(b);
+}
+
+export function isIterable(target: any): target is Iterable<any> {
+    try {
+        for (const {} of target) {
+            break;
+        }
+        return true;
+    } catch (e) {
+        return false;
+    }
 }

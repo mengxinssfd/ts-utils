@@ -107,6 +107,7 @@ export function getRotatePoint(center: Point, radius: number, rotate: number): P
 }
 
 /**
+ * fixme 无法单元测试
  * 生成二阶贝塞尔曲线路径点
  * @param {number} t 当前百分比
  * @param {Array} startPos 起点坐标

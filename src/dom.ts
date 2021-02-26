@@ -1,6 +1,6 @@
 // 所有主要浏览器都支持 createElement() 方法
 import {pickByKeys, typeOf} from "./common";
-import {isFunction, isString} from "./is";
+import {isFunction, isString} from "./type";
 
 let elementStyle = document.createElement('div').style;
 let vendor = ((): string | false => {

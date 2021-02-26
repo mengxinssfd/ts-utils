@@ -12,66 +12,6 @@ test('forEachByLen', () => {
     });
 });
 
-test('getDateFromStr', () => {
-    const t1 = (cm.getDateFromStr("2020-02-02 10:10:10") as Date).getTime();
-    const t2 = (cm.getDateFromStr("2020-02-20 10:10:10") as Date).getTime();
-    expect(t2).toBeGreaterThan(t1);
-    expect(cm.getDateFromStr("abcd")).toBeNull();
-
-    function fn(date: string, format: string) {
-        return cm.formatDate.call(cm.getDateFromStr(date), format);
-    }
-
-    expect(fn("2020-02-02", "yyyy")).toBe("2020");
-    expect(fn("2020-02-02", "MM")).toBe("02");
-    expect(fn("2020-02-02", "dd")).toBe("02");
-    expect(fn("2020-02-02", "yy")).toBe("20");
-    expect(fn("2020-02-02", "hh")).toBe("00");
-    expect(fn("2020-02-02", "mm")).toBe("00");
-    expect(fn("2020-02-02", "ss")).toBe("00");
-    expect(fn("2019-03", "dd")).toBe("01");
-    expect(fn("2020-02-02 12:00:00", "hh")).toBe("12");
-    expect(fn("2020-02-02 12:00:00", "mm")).toBe("00");
-    expect(fn("2020-02-02 12:00:00", "ss")).toBe("00");
-    expect(fn("2020-02-02 12:00:10", "ss")).toBe("10");
-    expect(fn("2020-02-02 12:11:10", "mm")).toBe("11");
-});
-test('formatDate', () => {
-    const date1 = cm.getDateFromStr("2020-02-02 10:10:10");
-    expect(cm.formatDate.call(date1, "yyyy-MM-dd")).toBe("2020-02-02");
-    expect(cm.formatDate.call(date1, "hh:mm:ss")).toBe("10:10:10");
-    expect(cm.formatDate.call(date1, "dd-MM-yyyy")).toBe("02-02-2020");
-    // week start
-    expect(cm.formatDate.call(new Date("2020-01-12"), "周w")).toBe("周日");
-    expect(cm.formatDate.call(new Date("2020-01-12"), "w")).toBe("日");
-    expect(cm.formatDate.call(new Date("2020-01-13"), "w")).toBe("一");
-    expect(cm.formatDate.call(new Date("2020-01-14"), "w")).toBe("二");
-    expect(cm.formatDate.call(new Date("2020-01-15"), "w")).toBe("三");
-    expect(cm.formatDate.call(new Date("2020-01-16"), "w")).toBe("四");
-    expect(cm.formatDate.call(new Date("2020-01-17"), "w")).toBe("五");
-    expect(cm.formatDate.call(new Date("2020-01-18"), "w")).toBe("六");
-    // week end
-    // season start
-    expect(cm.formatDate.call(new Date("2020-01-12"), "q")).toBe("春");
-    expect(cm.formatDate.call(new Date("2020-02-12"), "q")).toBe("春");
-    expect(cm.formatDate.call(new Date("2020-03-13"), "q")).toBe("春");
-    expect(cm.formatDate.call(new Date("2020-04-14"), "q")).toBe("夏");
-    expect(cm.formatDate.call(new Date("2020-05-15"), "q")).toBe("夏");
-    expect(cm.formatDate.call(new Date("2020-06-16"), "q")).toBe("夏");
-    expect(cm.formatDate.call(new Date("2020-07-17"), "q")).toBe("秋");
-    expect(cm.formatDate.call(new Date("2020-08-18"), "q")).toBe("秋");
-    expect(cm.formatDate.call(new Date("2020-09-18"), "q")).toBe("秋");
-    expect(cm.formatDate.call(new Date("2020-10-18"), "q")).toBe("冬");
-    expect(cm.formatDate.call(new Date("2020-11-18"), "q")).toBe("冬");
-    expect(cm.formatDate.call(new Date("2020-12-18"), "q")).toBe("冬");
-
-    cm.formatDate.seasonText = ["spring"];
-    expect(cm.formatDate.call(new Date("2020-01-12"), "q")).toBe("spring");
-    // season end
-    const date2 = cm.getDateFromStr("2019-12-1 10:10:10");
-    expect(cm.formatDate.call(date2, "d-MM-yy")).toBe("1-12-19");
-});
-
 test('typeOf', () => {
     // 六大基本类型 string boolean number object null undefined
     expect(cm.typeOf("")).toBe("string");
@@ -232,15 +172,6 @@ test("chinese2Number", () => {
         cm.chinese2Number("壹亿贰仟叁佰肆拾伍萬陆千柒百捌拾玖");
     }).toThrow();
     expect(cm.chinese2Number("壹亿贰仟叁佰肆拾伍萬陆仟柒佰捌拾玖")).toBe(123456789);
-});
-test("dateDiff", () => {
-    const v = cm.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"));
-    expect(v).toBe("0年5天 00时00分00秒");
-    expect(cm.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"), "dd天 hh时mm分ss秒")).toBe("05天 00时00分00秒");
-    expect(cm.dateDiff(new Date("2020-05-06"), new Date("2020-05-01 3:20:10"), "d天 hh时mm分ss秒")).toBe("5天 04时39分50秒");
-
-    // expect(cm.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"), "d天 H时m分s秒")).toBe("5天 0时0分0秒");
-    // expect(cm.dateDiff(new Date("2020-05-06"), new Date("2020-05-01 3:20:10"), "d天 H时m分s秒")).toBe("-5天 -4时-39分-50秒");
 });
 test("getTreeMaxDeep", () => {
     expect(cm.getTreeMaxDeep({})).toBe(1);
@@ -446,5 +377,124 @@ test("pick", () => {
         return 2;
     });
     expect(nObj).toEqual({A: 2, B: 2});
+});
+
+test("promiseAny", async () => {
+    expect.assertions(12);
+    const fn = cm.promiseAny;
+    const isNotIterable = "TypeError: list is not iterable";
+    await expect(fn(undefined as any)).rejects.toEqual(isNotIterable);
+    await expect(fn(null as any)).rejects.toEqual(isNotIterable);
+    await expect(fn(NaN as any)).rejects.toEqual(isNotIterable);
+    await expect(fn(0 as any)).rejects.toEqual(isNotIterable);
+    await expect(fn(true as any)).rejects.toEqual(isNotIterable);
+    await expect(fn({} as any)).rejects.toEqual(isNotIterable);
+
+
+    const allReject = "AggregateError: All promises were rejected";
+    await expect(fn([])).rejects.toEqual(allReject);
+    await expect(fn([Promise.reject(0), Promise.reject(1)])).rejects.toEqual(allReject);
+    await expect(fn([0 as any, Promise.resolve(1)])).resolves.toEqual(0);
+    await expect(fn([Promise.resolve(1), 0 as any])).resolves.toEqual(0);
+    await expect(fn([Promise.resolve(0), Promise.resolve(1)])).resolves.toEqual(0);
+    await expect(fn([Promise.reject(0), Promise.reject(1), Promise.resolve(2)])).resolves.toEqual(2);
+});
+
+test("debounceAsync", async () => {
+    expect.assertions(2);
+    const fn = cm.debounceAsync;
+    let times = 0;
+    const cb = () => {
+        return new Promise(resolve => {
+            resolve(times++);
+        });
+    };
+
+
+    const dbFn = fn(cb, 100);
+    await cm.promiseAny([dbFn(), dbFn(), dbFn(), dbFn()]);
+
+    expect(times).toEqual(1);
+
+    dbFn();
+    await cm.sleep(150);
+    dbFn();
+    await cm.sleep(150);
+    expect(times).toEqual(3);
+});
+test("debounceByPromise", async () => {
+    expect.assertions(2);
+    const fn = cm.debounceByPromise;
+    let times = 0;
+    const cb = (time = 50) => {
+        const p = new Promise(resolve => {
+            setTimeout(() => {
+
+                resolve(time);
+            }, time);
+        });
+        p.then(() => {
+            times++;
+        });
+        return p;
+    };
+
+
+    const dbFn = fn(cb);
+
+    await expect(cm.promiseAny([dbFn(40), dbFn(20), dbFn(60), dbFn(30)])).resolves.toEqual(30);
+
+    dbFn(100);
+    await cm.sleep(150);
+    dbFn();
+    await cm.sleep(150);
+    // fixme 执行了6次， debounceByPromise无法阻止cb被调用 不推荐使用
+    expect(times).toEqual(6);
+});
+test("debounceCancelable", async () => {
+    expect.assertions(2);
+    const fn = cm.debounceCancelable;
+    let times = 0;
+    const cb = () => {
+        times++;
+    };
+
+
+    const dbFn = fn(cb, 20);
+
+    let cancelFn = dbFn();
+    cancelFn();
+
+    await cm.sleep(30);
+
+    expect(times).toEqual(0);
+
+    dbFn();
+    await cm.sleep(150);
+    expect(times).toEqual(1);
+});
+test("getReverseObj", async () => {
+    const fn = cm.getReverseObj;
+
+    const obj = {a: "aa", b: "bb"};
+    expect(fn(obj)).toEqual({aa: "a", bb: "b"});
+});
+test("createEnumByObj", async () => {
+    const fn = cm.createEnumByObj;
+
+    const obj = {a: "aa", b: "bb"};
+    expect(fn(obj)).toEqual({a: "aa", b: "bb", aa: "a", bb: "b"});
+    expect(fn({a: 1, b: 2})).toEqual({a: 1, b: 2, 1: "a", 2: "b"});
+});
+test("createEnum", async () => {
+    const fn = cm.createEnum;
+
+    enum e {
+        a,
+        b,
+        c
+    }
+
+    expect(fn(["a", "b", "c"])).toEqual(e);
 });
 

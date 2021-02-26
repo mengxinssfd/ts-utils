@@ -1,5 +1,4 @@
-import {createArray} from "./array";
-import {isArray, isString, isObject} from "./is";
+import {isArray, isString, isObject, isPromiseLike} from "./type";
 
 /**
  * 防抖函数
@@ -21,16 +20,21 @@ export function debounce<CB extends (...args: any[]) => void>(callback: CB, dela
     } as CB;
 }
 
-export function debouncePromise2<T, CB extends (...args: any[]) => Promise<T>>(callback: CB, delay: number): CB {
+/**
+ * 如果callback执行了的话，那么不论是否resolved都不会再被reject
+ * @param callback
+ * @param delay
+ */
+export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(callback: CB, delay: number): CB {
     let timer: any = null;
     let rej;
 
     return function (...args: any[]) {
         return new Promise<T>((resolve, reject) => {
-            if (timer) {
+            if (timer !== null) {
                 clearTimeout(timer);
                 timer = null;
-                rej();
+                rej("debounceAsync reject");
             }
             rej = reject;
             timer = setTimeout(async () => {
@@ -67,21 +71,21 @@ export function debounceCancelable(callback: (...args: any[]) => void, delay: nu
     };
 }
 
-// fixme 每次都rej的话其实callback promise还是会执行，只是产生的结果不会有影响
-export function debouncePromise<T>(callback: (...args: any[]) => Promise<T>) {
+/**
+ * 前一个promise未完成即reject，最后一个或者中断前调用的才会执行
+ * 无法阻止cb被调用 不推荐使用
+ * @param callback
+ */
+export function debounceByPromise<T, CB extends (...args: any[]) => Promise<T>>(callback: CB): CB {
     let rejectFn;
     return function (...args: any[]): Promise<T> {
         rejectFn && rejectFn();
         return new Promise(async (res, rej) => {
             rejectFn = rej;
-            try {
-                const result = await callback.apply(this, args);
-                res(result);
-            } catch (e) {
-                rej(e);
-            }
+            const result = await callback.apply(this, args);
+            res(result);
         });
-    };
+    } as CB;
 }
 
 /**
@@ -129,61 +133,6 @@ export function forEachByLen(len: number, callback: (index: number) => (any | fa
         break;
     }
 }
-
-
-export interface formatDateInterface {
-    (format: string): string;
-
-    seasonText: string[];
-    weekText: string[];
-}
-
-/**
- * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
- * @param format
- * @returns String
- */
-export const formatDate: formatDateInterface = function (format) {
-    let o: any = {
-        "M+": this.getMonth() + 1,                    //月份
-        "d+": this.getDate(),                         //日
-        "h+": this.getHours(),                        //小时
-        "m+": this.getMinutes(),                      //分
-        "s+": this.getSeconds(),                      //秒
-        "q": (function (__this) {          //季度
-            const q = Math.floor((__this.getMonth() + 3) / 3) - 1;
-            return formatDate.seasonText[q];
-        })(this),
-        "S+": this.getMilliseconds(),                   //毫秒
-        "w": (function (__this) {        //周
-            const d = __this.getDay();
-            // 星期
-            if (!formatDate.weekText || !formatDate.weekText.length) {
-                formatDate.weekText = createArray({
-                    end: 7,
-                    fill(item, index) {
-                        return index === 0 ? "日" : number2Chinese(index);
-                    },
-                });
-            }
-            return formatDate.weekText[d];
-        })(this),
-    };
-    if (/(y+)/.test(format)) {
-        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    }
-    for (let k in o) {
-        if (new RegExp("(" + k + ")").test(format)) {
-            const s1 = RegExp.$1;
-            const v = o[k];
-            const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
-            format = format.replace(s1, value);
-        }
-    }
-    return format;
-};
-formatDate.weekText = [];
-formatDate.seasonText = ["春", "夏", "秋", "冬"];
 
 
 // 获取数据类型
@@ -240,24 +189,6 @@ export function randomColor(len?) {
     }
 }
 
-/**
- * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
- * @param date 格式：yyyy-MM-dd hh:mm:ss
- * @returns {Date}
- */
-export function getDateFromStr(date: string): Date | null {
-    // 检测非数字、非/、非:、非-
-    if (/[^\/^\d^:^ ^-]/.test(date)) return null; // 去除不符合规范的字符串
-    const arr: number[] = date.split(/[- :\/]/).map(item => Number(item));
-    if (arr.length < 6) {
-        for (let i = arr.length; i < 6; i++) {
-            arr[i] = i < 3 ? 1 : 0; // 年月日最小为1
-        }
-    }
-    return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
-}
-
-export const str2Date = getDateFromStr;
 
 /**
  * 千位分隔 1,234,567,890
@@ -449,66 +380,6 @@ export function generateFunction(obj: object, property: string, args: any[]) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
 }
 
-// 比较两个日期相差年天时分秒  用于倒计时等
-/*
-export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H时m分s秒"): string {
-    const seconds = ~~((second.getTime() - first.getTime()) / 1000);
-    const Time: { [k: string]: number } = {
-        "s+": seconds % 60,
-        "m+": ~~(seconds / 60) % 60,
-        "H+": ~~(seconds / (60 * 60)) % 24,
-        "d+": (function (): number {
-            const day = ~~(seconds / (60 * 60 * 24));
-            // 如果要显示年，则把天余年，否则全部显示天
-            // 默认一年等于365天
-            return /Y+/.test(format) ? day % 365 : day;
-        })(),
-        // "M+": 0,
-        "Y+": ~~(seconds / (60 * 60 * 24 * 365)),
-    };
-
-    for (let k in Time) {
-        format = format.replace(new RegExp(k), String(Time[k]));
-    }
-    return format;
-}
-*/
-
-// 比较两个日期相差年天时分秒  用于倒计时等
-export function dateDiff(start: Date, end: Date, format = "y年d天 hh时mm分ss秒"): string {
-    let result = format;
-    if (start.getTime() > end.getTime()) {
-        [start, end] = [end, start];
-    }
-    const seconds = ~~((end.getTime() - start.getTime()) / 1000);
-    const obj: { [k: string]: number } = {
-        "s+": seconds % 60,
-        "m+": ~~(seconds / 60) % 60,
-        "h+": ~~(seconds / (60 * 60)) % 24,
-        "d+": (function (): number {
-            const day = ~~(seconds / (60 * 60 * 24));
-            // 如果要显示年，则把天余年，否则全部显示天
-            // 默认一年等于365天
-            return /y+/.test(result) ? (day % 365) : day;
-        })(),
-        // "M+": 0,
-        "y+": ~~(seconds / (60 * 60 * 24 * 365)),
-    };
-
-    for (let k in obj) {
-        const reg = new RegExp("(" + k + ")");
-        if (reg.test(result)) {
-            // 奇怪的bug 本地调试的时候RegExp.$1不准确,"s+"的时候$1是空字符串; 非调试的时候又没问题
-            const s1 = RegExp.$1;
-            const v = obj[k];
-            let value = strPadStart(String(v), s1.length, "0");
-            // substring(start,end) start小于0的时候为0  substr(from,len)from小于0的时候为字符串的长度+from
-            value = value.substring(value.length - s1.length); //手动切割00:00 m:s "00".length - "s".length，因为strPadStart当字符串长度大于length的话不会切割
-            result = result.replace(s1, value);
-        }
-    }
-    return result;
-}
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree: object): number {
@@ -614,7 +485,7 @@ export function formatJSON(json: object | string, indent = 2): string {
         try {
             json = JSON.parse(json);
         } catch (e) {
-            throw new TypeError("JSON格式不正确");
+            throw new TypeError();
         }
 
     }
@@ -674,49 +545,25 @@ export function createEnum<T extends string>(items: T[]): { [k in T]: number } &
 }
 
 export function createEnumByObj<T extends object, K extends keyof T, O extends { [k: string]: K }>(obj: T): T & { [k: string]: K } {
-    const res: any = {};
-    for (let k in obj) {
-        if (res.hasOwnProperty(k)) throw new Error("key multiple");
-        res[res[k] = obj[k]] = k;
-    }
+    /* const res: any = {};
+     for (let k in obj) {
+         if (res.hasOwnProperty(k)) throw new Error("key multiple");
+         res[res[k] = obj[k]] = k;
+     }
 
-    Object.freeze(res); // freeze值不可变
-    // Object.seal(result); // seal值可以变
-    return res;
+     Object.freeze(res); // freeze值不可变
+     // Object.seal(result); // seal值可以变
+     return res;*/
+    return Object.assign({}, obj, getReverseObj(obj as any)) as any;
 }
 
-// TODO 未添加测试用例
-export function number2Date(millisecond: number, format = 'd天hh时mm分ss秒') {
-    let result = format;
-    const seconds = millisecond / 1000;
-    const obj: { [k: string]: number } = {
-        's+': seconds % 60,
-        'm+': ~~(seconds / 60) % 60,
-        'h+': ~~(seconds / (60 * 60)) % 24,
-        // 'd+': ~~(seconds / (60 * 60 * 24))
-    };
-    // 有多少天就显示多少天,但不会补0
-    const days = ~~(seconds / (60 * 60 * 24));
-    result = result.replace(/d+/, String(days));
-    for (const k in obj) {
-        const reg = new RegExp('(' + k + ')');
-        if (reg.test(result)) {
-            const s1 = RegExp.$1;
-            const v = obj[k];
-            let value = String(v).padStart(s1.length, '0');
-            value = value.substring(value.length - s1.length);
-            result = result.replace(s1, value);
-        }
-    }
-    return result;
-}
 
 /**
  * @param originObj
  * @param pickKeys
  * @param cb
  */
-export function pickByKeys<T extends object, K extends keyof T,O extends Pick<T,K> >(
+export function pickByKeys<T extends object, K extends keyof T, O extends Pick<T, K>>(
     originObj: T,
     pickKeys: K[],
     cb?: (value: T[K], key: K, originObj: T) => Pick<T, K>[K],
@@ -752,19 +599,22 @@ export function pickRename<T extends object, K extends keyof T, O extends { [k: 
         return result;
     }, {} as any);
 }
+
+/*
 export function pickRename2<T extends object,
     K extends keyof T,
     O extends { [k: string]: K | ((t: T) => T[K]) }>(
     originObj: T,
-    renamePickObj: O
+    renamePickObj: O,
 ): { [k in keyof O]: O[k] extends K ? T[O[k]] : T[K] } {
-    return {} as any
+    return {} as any;
 }
 
 pickRename2({a: 123, b: "222"}, {
     c: 'a',
-    d: (obj) => obj.a
-})
+    d: (obj) => obj.a,
+});
+*/
 
 /**
  * 功能与pickByKeys函数一致
@@ -816,10 +666,34 @@ export function pick(originObj, picks, cb) {
  * object key-value翻转
  * @param obj
  */
-export function getReverseObj(obj: object): any {
+export function getReverseObj(obj: { [k: string]: string }): { [k: string]: string } {
     return Object.keys(obj).reduce((res, key) => {
         const v = obj[key];
         res[v] = key;
         return res;
     }, {});
+}
+
+export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
+    return new Promise<T>(((resolve, reject) => {
+        let rejectTimes = 0;
+        try {
+            for (const p of list) {
+                if (isPromiseLike(p)) {
+                    p.then(res => resolve(res), () => {
+                        rejectTimes++;
+                        if (rejectTimes === list.length) {
+                            reject("AggregateError: All promises were rejected");
+                        }
+                    });
+                } else {
+                    resolve(p);
+                }
+            }
+            !list.length && reject("AggregateError: All promises were rejected");
+        } catch (e) {
+            reject(e.toString());
+        }
+
+    }));
 }

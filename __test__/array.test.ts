@@ -167,6 +167,46 @@ test("binaryFind", () => {
     expect(find(400).value).toBeUndefined();
     expect(arr.binaryFind([], i => i)).toBeUndefined();
 });
+test("binaryFind2", () => {
+    const list: { id: number }[] = [...Array(100).keys()].map(i => ({id: i * 2}));
+
+    function find(target: number): { times: number, value: ReturnType<typeof arr.binaryFind2> } {
+        let times = 0;
+        const value = arr.binaryFind2(list, function (item, index) {
+            times++;
+            // console.log(index);
+            // 判断index是否正确
+            expect(list[index]).toBe(item);
+            return target - item.id;
+        });
+        return {times, value};
+    }
+
+    let res = find(58);
+    expect(res.times).toBe(5);
+    expect(res.value).toEqual({id: 58});
+
+    console.log("----min-----");
+    // 判断边缘 min
+    const first = list[0];
+    res = find(first.id);
+    expect(res.times).toBe(7);
+    expect(res.value).toEqual(first);
+
+    console.log("----max-----");
+    // 判断边缘 max
+    const maxIndex = list.length - 1;
+    const last = list[maxIndex];
+    res = find(last.id);
+    expect(res.times).toBe(6);
+    expect(res.value).toEqual(last);
+
+    // cover
+    expect(arr.binaryFind2([1], i => i)).toBeUndefined();
+    expect(find(55).value).toBeUndefined();
+    expect(find(400).value).toBeUndefined();
+    expect(arr.binaryFind2([], i => i)).toBeUndefined();
+});
 test("binaryFindIndex", () => {
     console.log("-----binaryFindIndex------");
 
