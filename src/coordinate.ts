@@ -102,7 +102,7 @@ export function getRotatePoint(center: Point, radius: number, rotate: number): P
     // let x = center[0] + radius * Math.sin(angle);
     // let y = center[1] - radius * Math.cos(angle);
     let x = NumberCalc.init(radius)["*"](Math.sin(angle))["+"](center[0]).curVal;
-    let y = NumberCalc.init(radius)["*"](Math.cos(angle)).by(center[0], "-").curVal;
+    let y = NumberCalc.init(radius)["*"](Math.cos(angle)).by(center[1], "-").curVal;
     return [x, y];
 }
 
@@ -122,4 +122,33 @@ export function twoBezier(t: number, startPos: Point, endPos: Point, controlPoin
     // x = Math.floor(x);
     // y = Math.floor(y);
     return [x, y];
+}
+
+
+/**
+ * 根据余弦定理(c^2 = a^2 + b^2 - 2 * a * b * cosA)获取任意边长
+ * @param a
+ * @param b
+ * @param angle 要获取的边长对应的角度
+ */
+export function getBorderWidthByCos(a: number, b: number, angle: number) {
+    // 角度化弧度
+    const C = angle * Math.PI / 180;
+    const c2 = a ** 2 + b ** 2 - 2 * a * b * Math.cos(C);
+    return Math.sqrt(c2);
+}
+
+/**
+ * 根据正弦定理(a/sinA = b/sinB = c/sinC)获取对应边长
+ * @param a
+ * @param angleA
+ * @param angleB 要获取的边长对应的角度
+ */
+export function getBorderWidthBySin(a: number, angleA: number, angleB: number) {
+    // 角度化弧度
+    const rad = Math.PI / 180;
+    const radA = rad * angleA;
+    const radB = rad * angleB;
+    const resA = a / Math.sin(radA);
+    return resA * Math.sin(radB);
 }
