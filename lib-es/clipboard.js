@@ -78,9 +78,9 @@ export function copy2Clipboard(target) {
     });
     return p;
 }
+const cb = window.navigator.clipboard;
 export function supportClipboardWrite() {
-    // @ts-ignore
-    return Boolean(navigator.clipboard?.write);
+    return Boolean(cb?.write);
 }
 /**
  * 写进剪贴板
@@ -91,11 +91,9 @@ export async function write2Clipboard(contentList) {
         throw new Error("unsupported navigator.clipboard.write");
     const clipboardItems = contentList.map(item => {
         const blob = item instanceof Blob ? item : new Blob([item], { type: 'text/plain' });
-        // @ts-ignore
         return new ClipboardItem({
             [blob.type]: blob,
         });
     });
-    // @ts-ignore
-    await navigator.clipboard.write(clipboardItems);
+    await cb.write(clipboardItems);
 }

@@ -77,24 +77,25 @@ export function copy2Clipboard(target: HTMLElement | string): Promise<void> {
     return p;
 }
 
+const cb = window.navigator.clipboard;
+
 export function supportClipboardWrite() {
-    // @ts-ignore
-    return Boolean(navigator.clipboard?.write);
+    return Boolean((cb as any)?.write);
 }
+
+declare const ClipboardItem: any;
 
 /**
  * 写进剪贴板
  * @param contentList
  */
 export async function write2Clipboard(contentList: Array<string | Blob>) {
-    if(!supportClipboardWrite()) throw new Error("unsupported navigator.clipboard.write")
+    if (!supportClipboardWrite()) throw new Error("unsupported navigator.clipboard.write");
     const clipboardItems = contentList.map(item => {
         const blob = item instanceof Blob ? item : new Blob([item], {type: 'text/plain'});
-        // @ts-ignore
         return new ClipboardItem({
             [blob.type]: blob,
         });
     });
-    // @ts-ignore
-    await navigator.clipboard.write(clipboardItems);
+    await (cb as any).write(clipboardItems);
 }
