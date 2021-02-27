@@ -7,5 +7,5 @@ export declare class Download {
         filename: string;
         onGetJSON?: (json: {}) => void;
     });
-    download(filename: string, res: any): void;
+    static download(filename: string, objectURL: ReturnType<typeof window.URL.createObjectURL>): void;
 }

@@ -1,4 +1,4 @@
-import { createArray } from "./array";
+import { isArray, isString, isObject, isPromiseLike } from "./type";
 /**
  * 防抖函数
  * @param callback 回调
@@ -16,6 +16,69 @@ export function debounce(callback, delay) {
             timer = null;
             callback.apply(this, args);
         }, delay);
+    };
+}
+/**
+ * 如果callback执行了的话，那么不论是否resolved都不会再被reject
+ * @param callback
+ * @param delay
+ */
+export function debounceAsync(callback, delay) {
+    let timer = null;
+    let rej;
+    return function (...args) {
+        return new Promise((resolve, reject) => {
+            if (timer !== null) {
+                clearTimeout(timer);
+                timer = null;
+                rej("debounceAsync reject");
+            }
+            rej = reject;
+            timer = setTimeout(async () => {
+                timer = null;
+                const result = await callback.apply(this, args);
+                resolve(result);
+            }, delay);
+        });
+    };
+}
+/**
+ * 可取消防抖函数
+ * @param callback 回调
+ * @param delay 延时
+ * @returns {Function}
+ */
+export function debounceCancelable(callback, delay) {
+    let timer = null;
+    function cancel() {
+        if (!timer)
+            return;
+        clearTimeout(timer);
+        timer = null;
+    }
+    return function (...args) {
+        cancel();
+        timer = setTimeout(() => {
+            timer = null;
+            callback.apply(this, args);
+        }, delay);
+        return cancel;
+    };
+}
+/**
+ * 前一个promise未完成即reject，最后一个或者中断前调用的才会执行
+ * 无法阻止cb被调用 不推荐使用
+ * @param callback
+ */
+export function debounceByPromise(callback) {
+    let rejectFn;
+    return function (...args) {
+        rejectFn && rejectFn();
+        return new Promise(async (res, rej) => {
+            rejectFn = rej;
+            const result = await callback.apply(this, args);
+            res(result);
+        });
     };
 }
 /**
@@ -64,52 +127,6 @@ export function forEachByLen(len, callback) {
         break;
     }
 }
-/**
- * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
- * @param format
- * @returns String
- */
-export const formatDate = function (format) {
-    let o = {
-        "M+": this.getMonth() + 1,
-        "d+": this.getDate(),
-        "h+": this.getHours(),
-        "m+": this.getMinutes(),
-        "s+": this.getSeconds(),
-        "q": (function (__this) {
-            const q = Math.floor((__this.getMonth() + 3) / 3) - 1;
-            return formatDate.seasonText[q];
-        })(this),
-        "S+": this.getMilliseconds(),
-        "w": (function (__this) {
-            const d = __this.getDay();
-            // 星期
-            if (!formatDate.weekText || !formatDate.weekText.length) {
-                formatDate.weekText = createArray({
-                    end: 7,
-                    fill(item, index) {
-                        return index === 0 ? "日" : number2Chinese(index);
-                    },
-                });
-            }
-            return formatDate.weekText[d];
-        })(this),
-    };
-    if (/(y+)/.test(format)) {
-        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    }
-    for (let k in o) {
-        if (new RegExp("(" + k + ")").test(format)) {
-            const s1 = RegExp.$1;
-            const v = o[k];
-            const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
-            format = format.replace(s1, value);
-        }
-    }
-    return format;
-};
-formatDate.weekText = [];
-formatDate.seasonText = ["春", "夏", "秋", "冬"];
 // 获取数据类型
 export function typeOf(target) {
     const tp = typeof target;
@@ -149,23 +166,6 @@ export function randomColor(len) {
         forEachByLen(len, () => colorList.push(randomColor()));
         return colorList;
     }
-}
-/**
- * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
- * @param date 格式：yyyy-MM-dd hh:mm:ss
- * @returns {Date}
- */
-export function getDateFromStr(date) {
-    // 检测非数字、非/、非:、非-
-    if (/[^\/^\d^:^ ^-]/.test(date))
-        return null; // 去除不符合规范的字符串
-    const arr = date.split(/[- :\/]/).map(item => Number(item));
-    if (arr.length < 6) {
-        for (let i = arr.length; i < 6; i++) {
-            arr[i] = i < 3 ? 1 : 0; // 年月日最小为1
-        }
-    }
-    return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 /**
  * 千位分隔 1,234,567,890
@@ -332,64 +332,6 @@ export function generateFunctionCode(argsArrayLength) {
 export function generateFunction(obj, property, args) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
 }
-// 比较两个日期相差年天时分秒  用于倒计时等
-/*
-export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H时m分s秒"): string {
-    const seconds = ~~((second.getTime() - first.getTime()) / 1000);
-    const Time: { [k: string]: number } = {
-        "s+": seconds % 60,
-        "m+": ~~(seconds / 60) % 60,
-        "H+": ~~(seconds / (60 * 60)) % 24,
-        "d+": (function (): number {
-            const day = ~~(seconds / (60 * 60 * 24));
-            // 如果要显示年，则把天余年，否则全部显示天
-            // 默认一年等于365天
-            return /Y+/.test(format) ? day % 365 : day;
-        })(),
-        // "M+": 0,
-        "Y+": ~~(seconds / (60 * 60 * 24 * 365)),
-    };
-
-    for (let k in Time) {
-        format = format.replace(new RegExp(k), String(Time[k]));
-    }
-    return format;
-}
-*/
-// 比较两个日期相差年天时分秒  用于倒计时等
-export function dateDiff(start, end, format = "y年d天 hh时mm分ss秒") {
-    let result = format;
-    if (start.getTime() > end.getTime()) {
-        [start, end] = [end, start];
-    }
-    const seconds = ~~((end.getTime() - start.getTime()) / 1000);
-    const obj = {
-        "s+": seconds % 60,
-        "m+": ~~(seconds / 60) % 60,
-        "h+": ~~(seconds / (60 * 60)) % 24,
-        "d+": (function () {
-            const day = ~~(seconds / (60 * 60 * 24));
-            // 如果要显示年，则把天余年，否则全部显示天
-            // 默认一年等于365天
-            return /y+/.test(result) ? (day % 365) : day;
-        })(),
-        // "M+": 0,
-        "y+": ~~(seconds / (60 * 60 * 24 * 365)),
-    };
-    for (let k in obj) {
-        const reg = new RegExp("(" + k + ")");
-        if (reg.test(result)) {
-            // 奇怪的bug 本地调试的时候RegExp.$1不准确,"s+"的时候$1是空字符串; 非调试的时候又没问题
-            const s1 = RegExp.$1;
-            const v = obj[k];
-            let value = strPadStart(String(v), s1.length, "0");
-            // substring(start,end) start小于0的时候为0  substr(from,len)from小于0的时候为字符串的长度+from
-            value = value.substring(value.length - s1.length); //手动切割00:00 m:s "00".length - "s".length，因为strPadStart当字符串长度大于length的话不会切割
-            result = result.replace(s1, value);
-        }
-    }
-    return result;
-}
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree) {
     function deeps(obj, num = 0) {
@@ -475,4 +417,167 @@ export function createUUID(length) {
     // uuidArr[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
     // uuidArr[19] = hexDigits.substr(((uuidArr[19] as any) & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
     return uuidArr.join("");
+}
+/**
+ * 格式化json
+ * @param json
+ * @param indent tab空格占位
+ */
+export function formatJSON(json, indent = 2) {
+    if (typeof json === "string") {
+        try {
+            json = JSON.parse(json);
+        }
+        catch (e) {
+            throw new TypeError();
+        }
+    }
+    function foreach(js, floor = 0) {
+        switch (typeof js) {
+            case "object":
+                const isArr = isArray(js);
+                let space = " ".repeat(indent * floor);
+                const start = isArr ? "[\r\n" : "{\r\n";
+                const end = "\r\n" + space + (isArr ? "]" : "}");
+                let times = 0;
+                let result = start;
+                for (const key in js) {
+                    if (!js.hasOwnProperty(key))
+                        continue;
+                    const value = js[key];
+                    // 如果改行不是第一行，则给上一行的末尾添加逗号，并且换行
+                    if (times)
+                        result += ",\r\n";
+                    // 拼接空格
+                    const childSpace = " ".repeat(indent * floor + indent);
+                    const child = foreach(value, floor + 1);
+                    if (isArr) {
+                        result += `${childSpace}${child}`;
+                    }
+                    else {
+                        result += `${childSpace}"${key}":${child}`;
+                    }
+                    times++;
+                }
+                return result + end;
+            case "function":
+                // 函数的}位置有点对不上
+                return `"${js.toString()}"`;
+            default:
+                return isString(js) ? ('"' + js + '"') : js;
+        }
+    }
+    return foreach(json);
+}
+// TODO 暂时无法手动设置值 未添加测试用例
+export function createEnum(items) {
+    const result = {};
+    items.forEach((item, index) => {
+        result[item] = index;
+        result[index] = item;
+    });
+    Object.freeze(result); // freeze值不可变
+    // Object.seal(result); // seal值可以变
+    return result;
+}
+export function createEnumByObj(obj) {
+    /* const res: any = {};
+     for (let k in obj) {
+         if (res.hasOwnProperty(k)) throw new Error("key multiple");
+         res[res[k] = obj[k]] = k;
+     }
+
+     Object.freeze(res); // freeze值不可变
+     // Object.seal(result); // seal值可以变
+     return res;*/
+    return Object.assign({}, obj, getReverseObj(obj));
+}
+/**
+ * @param originObj
+ * @param pickKeys
+ * @param cb
+ */
+export function pickByKeys(originObj, pickKeys, cb) {
+    const callback = cb || (v => v);
+    return pickKeys.reduce((res, key) => {
+        if (originObj.hasOwnProperty(key))
+            res[key] = callback(originObj[key], key, originObj);
+        return res;
+    }, {});
+}
+// TODO 不完美的地方：k === "a"时应该限定返回值类型为number
+/*pickByKeys({a: 123, b: "111", c: false}, ["a", "b"], (v, k, o) => {
+    if(k === "a"){
+        return "123123"
+    }
+    return v;
+});*/
+// 新属性名作为键名的好处是可以多个属性对应一个值
+export function pickRename(originObj, renamePickObj, cb) {
+    const callback = cb || (v => v);
+    const renames = Object.keys(renamePickObj);
+    return renames.reduce((result, rename) => {
+        const pick = renamePickObj[rename];
+        if (originObj.hasOwnProperty(pick)) {
+            result[rename] = callback(originObj[pick], pick, originObj);
+        }
+        return result;
+    }, {});
+}
+/**
+ * 合并pickByKeys与pickRename两者的功能
+ */
+export function pick(originObj, picks, cb) {
+    const isObj = isObject(picks);
+    // ------- 第一种写法 -------
+    // const callback = cb || (v => v);
+    // const pickKeys = isObj ? Object.keys(picks) : picks;
+    // const getOriginObjKey = isObj ? k => picks[k] : k => k;
+    // return pickKeys.reduce((res, k) => {
+    //     const originObjKey = getOriginObjKey(k);
+    //     if (originObj.hasOwnProperty(originObjKey)) {
+    //         res[k] = callback(originObj[originObjKey], originObjKey, originObj);
+    //     }
+    //     return res;
+    // }, {} as any);
+    // ------- 第二种写法 -------
+    // 更简洁 减少判断次数
+    // TODO 需要判断返回值类型是否改变了  改变则抛出异常
+    return isObj ? pickRename(originObj, picks, cb) : pickByKeys(originObj, picks, cb);
+}
+// pick({a: 132, b: "123123"}, ["a", "b"]);
+/**
+ * object key-value翻转
+ * @param obj
+ */
+export function getReverseObj(obj) {
+    return Object.keys(obj).reduce((res, key) => {
+        const v = obj[key];
+        res[v] = key;
+        return res;
+    }, {});
+}
+export function promiseAny(list) {
+    return new Promise(((resolve, reject) => {
+        let rejectTimes = 0;
+        try {
+            for (const p of list) {
+                if (isPromiseLike(p)) {
+                    p.then(res => resolve(res), () => {
+                        rejectTimes++;
+                        if (rejectTimes === list.length) {
+                            reject("AggregateError: All promises were rejected");
+                        }
+                    });
+                }
+                else {
+                    resolve(p);
+                }
+            }
+            !list.length && reject("AggregateError: All promises were rejected");
+        }
+        catch (e) {
+            reject(e.toString());
+        }
+    }));
 }

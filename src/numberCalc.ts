@@ -27,7 +27,7 @@ function getPow(a: number, b: number): number {
 
 // 链式计算
 export class NumberCalc {
-    private value: number;
+    private value!: number;
 
     constructor(private readonly initNumber: number) {
         this.setValue(initNumber);

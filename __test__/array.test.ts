@@ -42,7 +42,7 @@ test('includes', () => {
     expect(arr.includes(list, {})).toBeFalsy();
     expect(arr.includes(list, (item) => !item)).toBe(true);
     expect(arr.includes(list, (item) => item === undefined)).toBe(true);
-    expect(arr.includes.call(list, undefined, NaN)).toBe(true);
+    expect(arr.includes.call(list, undefined as any, NaN)).toBe(true);
 });
 test('createArray', () => {
     expect(arr.createArray({start: 0, end: 2})).toEqual([0, 1]);
@@ -74,7 +74,7 @@ test('filter', () => {
     }, [1, 2, 3, 4, 5, 6, 7, 8])).toEqual([4, 5, 6]);
     // call
     expect(arr.filter.call([1, 2, 3, 4, 5, 6, 7, 8], (v, k, arr) => {
-        return v < 7 && k > 2 && arr.length === 8;
+        return (v as number) < 7 && k > 2 && arr.length === 8;
     })).toEqual([4, 5, 6]);
 });
 test('keys', () => {

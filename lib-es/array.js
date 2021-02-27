@@ -1,8 +1,20 @@
 import { typeOf } from "./common";
 import { deepClone } from "./clone";
-import { isEmpty, isNaN, isArray } from "./is";
+import { isEmpty, isNaN, isArray } from "./type";
 /**
- * 创建一个包含开始数字和结束数字的数组 包左不包右: start <= item < (end || start + len)
+ * @description len与end两个都有值时，以小的为准
+ * @example
+ * // returns [0, 1]
+ * createArray({end: 2});
+ * @example
+ * // returns [0, 1]
+ * createArray({start: 0, end: 2});
+ * @example
+ * // [1, 1]
+ * createArray({start:0, end:2, len:2, fill:1});
+ * @example
+ * // returns [1, 2]
+ * createArray(start: 0, len: 2, fill: item => item+1);
  */
 export function createArray({ start = 0, end, len, fill }) {
     let e = start;
@@ -140,7 +152,7 @@ export function flat(target, depth = 1) {
  * @param handler 判断条件 item => target - item 返回值为0时为要找的值，小于0则往前找，大于0往后找
  * @param pcz 不用传
  */
-export function binaryFind(arr, handler, pcz = 0) {
+export function binaryFind2(arr, handler, pcz = 0) {
     if (arr.length === 0)
         return undefined;
     let result;
@@ -158,13 +170,32 @@ export function binaryFind(arr, handler, pcz = 0) {
         // 如果target大于当前item值，则获取middle右边，否则相反
         if (value > 0) {
             middleIndex++;
-            result = binaryFind(arr.slice(middleIndex), handler, pcz + middleIndex);
+            result = binaryFind2(arr.slice(middleIndex), handler, pcz + middleIndex);
         }
         else {
-            result = binaryFind(arr.slice(0, middleIndex), handler, pcz);
+            result = binaryFind2(arr.slice(0, middleIndex), handler, pcz);
         }
     }
     return result;
+}
+export function binaryFind(arr, handler) {
+    let start = 0;
+    let end = arr.length;
+    while (start < end) {
+        const mid = ~~((end + start) / 2);
+        const item = arr[mid];
+        const v = handler(item, mid, arr);
+        if (v === 0) {
+            return item;
+        }
+        else if (v > 0) {
+            start = mid + 1;
+        }
+        else {
+            end = mid;
+        }
+    }
+    return undefined;
 }
 /**
  * 二分查找item index
@@ -190,4 +221,19 @@ export function binaryFindIndex(arr, handler) {
         }
     } while (end > start);
     return -1;
+}
+/**
+ * item插入到数组，返回一个新数组
+ * @param insert {any} 插入的item
+ * @param to {number} index 要插入的位置
+ * @param array {Array} 要插入item的数组
+ * @returns Array
+ */
+export function insertToArray(insert, to, array) {
+    const newArray = array.slice();
+    const end = newArray.splice(to);
+    end.unshift(insert);
+    Array.prototype.push.apply(newArray, end);
+    // newArray.push(...end);
+    return newArray;
 }

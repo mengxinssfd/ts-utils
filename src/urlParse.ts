@@ -7,14 +7,14 @@ import {typeOf} from "./common";
  * @Description:
  */
 export class UrlParse {
-    schema: string;
-    port: number | string;
-    host: string;
-    path: string;
-    href: string;
-    hash: string;
-    query: any;
-    queryStr: string;
+    schema: string = "";
+    port: number | string = "";
+    host: string = "";
+    path: string = "";
+    href: string = "";
+    hash: string = "";
+    query: any = "";
+    queryStr: string = "";
 
     constructor(url?: string) {
         if (!url) return;

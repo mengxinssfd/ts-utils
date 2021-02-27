@@ -12,13 +12,13 @@ export declare class NumberCalc {
     private calcArr;
     private calc;
     ["+"](num: number[] | number, ...others: number[]): NumberCalc;
-    plus: (num: number | number[], ...others: number[]) => NumberCalc;
+    plus: (num: number[] | number, ...others: number[]) => NumberCalc;
     ["-"](num: number[] | number, ...others: number[]): NumberCalc;
-    minus: (num: number | number[], ...others: number[]) => NumberCalc;
+    minus: (num: number[] | number, ...others: number[]) => NumberCalc;
     ["*"](num: number[] | number, ...others: number[]): NumberCalc;
-    times: (num: number | number[], ...others: number[]) => NumberCalc;
+    times: (num: number[] | number, ...others: number[]) => NumberCalc;
     ["/"](num: number[] | number, ...others: number[]): NumberCalc;
-    divide: (num: number | number[], ...others: number[]) => NumberCalc;
+    divide: (num: number[] | number, ...others: number[]) => NumberCalc;
     by(num: number, calcLabel: "+" | "-" | "*" | "/"): this;
     private setValue;
     get curVal(): number;

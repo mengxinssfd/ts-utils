@@ -163,15 +163,18 @@ export function onceEvent(
 }
 
 type xy = { x: number, y: number }
+type OnDown = (e: MouseEvent | TouchEvent, currentXY: xy) => any
+type OnMove = (e: MouseEvent | TouchEvent, currentXY: xy, lastXY: xy, downXY: xy) => any
+type OnUp = (e: MouseEvent | TouchEvent, currentXY: xy, downXY: xy) => any
 
 /**
  * 拖动事件 返回取消事件
  */
 export function addDragEventListener({el, onDown, onMove, onUp, capture = {down: false, up: true, move: false}}: {
     el?: string | HTMLElement,
-    onDown?: (e: MouseEvent | TouchEvent, currentXY: xy) => any,
-    onMove?: (e: MouseEvent | TouchEvent, currentXY: xy, lastXY: xy, downXY: xy) => any,
-    onUp?: (e: MouseEvent | TouchEvent, currentXY: xy, downXY: xy) => any,
+    onDown?: OnDown,
+    onMove?: OnMove,
+    onUp?: OnUp,
     capture?: {
         down?: boolean,
         up?: boolean,
@@ -211,23 +214,23 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
         return xY;
     }
 
-    let getXY: (e: MouseEvent | TouchEvent) => xy;
+    let getXY: typeof getXYWithMouse | typeof getXYWithTouch;
 
     // touch与mouse通用按下事件处理
-    function down(event: MouseEvent, mouseOrTouch: "mouse" | "touch") {
+    function down(event: MouseEvent | TouchEvent, mouseOrTouch: "mouse" | "touch") {
         getXY = mouseOrTouch === "mouse" ? getXYWithMouse : getXYWithTouch;
-        downXY = getXY(event);
+        downXY = getXY(event as any);
         lastXY = downXY;
         let backVal: any = void 0;
         if (onDown && isFunction(onDown)) {
-            backVal = onDown.call(this, event, downXY, downXY);
+            backVal = onDown.call(this, event, downXY);
         }
         return backVal;
     }
 
     // touch与mouse通用移动事件处理
     function move(e: MouseEvent | TouchEvent) {
-        const moveXY = getXY(e);
+        const moveXY = getXY(e as any);
         let backVal: any = void 0;
         if (onMove && isFunction(onMove)) {
             backVal = onMove.call(this, e, moveXY, lastXY, downXY);
@@ -239,7 +242,7 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
     // touch与mouse通用移开事件处理
     function up(e: MouseEvent | TouchEvent) {
         // console.log("up", e);
-        const upXY = getXY(e);
+        const upXY = getXY(e as any);
         let backVal: any = void 0;
         lastXY = upXY;
         if (onUp && isFunction(onUp)) {
@@ -247,22 +250,6 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
         }
         removeMoveAndUpEventListener();
         return backVal;
-    }
-
-    // 移除touch与mouse 的move与up事件
-    function removeMoveAndUpEventListener() {
-        window.removeEventListener("mousemove", move, capture.move);
-        window.removeEventListener("mouseup", up, capture.up);
-        window.removeEventListener("touchmove", move, capture.move);
-        window.removeEventListener("touchend", up, capture.up);
-        window.removeEventListener("touchcancel", up, capture.up);
-    }
-
-    // 移除全部事件
-    function removeAllEventListener() {
-        dom.removeEventListener("mousedown", mousedown, capture.down);
-        dom.removeEventListener("touchstart", touchStart, capture.down);
-        removeMoveAndUpEventListener();
     }
 
     function mousedown(event: MouseEvent) {
@@ -280,8 +267,24 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
         return backVal;
     }
 
-    dom.addEventListener("mousedown", mousedown, capture.down);
-    dom.addEventListener("touchstart", touchStart, capture.down);
+    // 移除touch与mouse 的move与up事件
+    function removeMoveAndUpEventListener() {
+        window.removeEventListener("mousemove", move, capture.move);
+        window.removeEventListener("mouseup", up, capture.up);
+        window.removeEventListener("touchmove", move, capture.move);
+        window.removeEventListener("touchend", up, capture.up);
+        window.removeEventListener("touchcancel", up, capture.up);
+    }
+
+    // 移除全部事件
+    function removeAllEventListener() {
+        dom.removeEventListener("mousedown", mousedown as any, capture.down);
+        dom.removeEventListener("touchstart", touchStart as any, capture.down);
+        removeMoveAndUpEventListener();
+    }
+
+    dom.addEventListener("mousedown", mousedown as any, capture.down);
+    dom.addEventListener("touchstart", touchStart as any, capture.down);
 
     // 返回取消全部事件函数
     return removeAllEventListener;
@@ -491,84 +494,6 @@ export function isTextAreaElement(el: HTMLElement): el is HTMLTextAreaElement {
 }
 
 
-/**
- * @param element
- * @return string
- */
-function select(element: HTMLElement) {
-    let selectedText;
-    if (isSelectElement(element)) {
-        element.focus();
-        selectedText = element.value;
-    } else if (isInputElement(element) || isTextAreaElement(element)) {
-        const isReadOnly = element.hasAttribute("readonly");
-        if (!isReadOnly) {
-            element.setAttribute("readonly", "");
-        }
-        element.select();
-        element.setSelectionRange(0, element.value.length);
-        if (!isReadOnly) {
-            element.removeAttribute("readonly");
-        }
-        selectedText = element.value;
-    } else {
-        if (element.hasAttribute("contenteditable")) {
-            element.focus();
-        }
-        const selection = window.getSelection() as Selection;
-        const range = document.createRange();
-        range.selectNodeContents(element);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        selectedText = selection.toString();
-    }
-    return selectedText;
-}
-
-/**
- * 复制文字或html
- * @param target {HTMLElement | string}
- * @return {Promise}
- */
-export function copy(target: HTMLElement | string): Promise<void> {
-    let el: HTMLElement;
-    const isText = typeof target === "string";
-    if (isText) {
-        const text = target as string;
-        el = document.createElement("div");
-        el.innerText = text;
-        el.style.position = "fixed";
-        el.style.left = "-100000px";
-        document.body.appendChild(el);
-    } else {
-        el = target as HTMLElement;
-    }
-    const p = new Promise<void>(function (resolve, reject) {
-        select(el);
-        let succeeded;
-        let error: any;
-        try {
-            succeeded = document.execCommand("copy");
-        } catch (err) {
-            succeeded = false;
-            error = err
-        }
-        if (succeeded) {
-            resolve();
-            return;
-        }
-        reject(error);
-    });
-    p.finally(function () {
-        (window.getSelection() as Selection).removeAllRanges();
-        if (isText) {
-            document.body.removeChild(el);
-        }
-    });
-    return p;
-}
-
-
 export function noScroll(scrollContainer: Window | HTMLElement | string) {
     let target: HTMLElement = scrollContainer as HTMLElement;
     if (isString(scrollContainer)) {
@@ -590,5 +515,5 @@ export function noScroll(scrollContainer: Window | HTMLElement | string) {
     return function () {
         target.scrollTop = scrollTop;
         Object.assign(target.style, last);
-    }
+    };
 }

@@ -1,6 +1,6 @@
 // 所有主要浏览器都支持 createElement() 方法
-import { typeOf } from "./common";
-import { isFunction, isString } from "./is";
+import { pickByKeys, typeOf } from "./common";
+import { isFunction, isString } from "./type";
 let elementStyle = document.createElement('div').style;
 let vendor = (() => {
     let transformName = {
@@ -68,6 +68,21 @@ export function prefixStyle(style) {
         return style;
     }
     return vendor + style.charAt(0).toUpperCase() + style.substr(1);
+}
+/**
+ * 判断是否支持css
+ * @param key
+ * @param value
+ * @returns {boolean}
+ */
+export function cssSupport(key, value) {
+    if (key in elementStyle) {
+        elementStyle[key] = value;
+        return elementStyle[key] === value;
+    }
+    else {
+        return false;
+    }
 }
 /**
  * 事件代理
@@ -177,7 +192,7 @@ export function addDragEventListener({ el, onDown, onMove, onUp, capture = { dow
         lastXY = downXY;
         let backVal = void 0;
         if (onDown && isFunction(onDown)) {
-            backVal = onDown.call(this, event, downXY, downXY);
+            backVal = onDown.call(this, event, downXY);
         }
         return backVal;
     }
@@ -203,6 +218,19 @@ export function addDragEventListener({ el, onDown, onMove, onUp, capture = { dow
         removeMoveAndUpEventListener();
         return backVal;
     }
+    function mousedown(event) {
+        const backVal = down.call(this, event, "mouse");
+        window.addEventListener("mousemove", move, capture.move);
+        window.addEventListener("mouseup", up, capture.up);
+        return backVal;
+    }
+    function touchStart(event) {
+        const backVal = down.call(this, event, "touch");
+        window.addEventListener("touchmove", move, capture.move);
+        window.addEventListener("touchend", up, capture.up);
+        window.addEventListener("touchcancel", up, capture.up);
+        return backVal;
+    }
     // 移除touch与mouse 的move与up事件
     function removeMoveAndUpEventListener() {
         window.removeEventListener("mousemove", move, capture.move);
@@ -216,19 +244,6 @@ export function addDragEventListener({ el, onDown, onMove, onUp, capture = { dow
         dom.removeEventListener("mousedown", mousedown, capture.down);
         dom.removeEventListener("touchstart", touchStart, capture.down);
         removeMoveAndUpEventListener();
-    }
-    function mousedown(event) {
-        const backVal = down.call(this, event, "mouse");
-        window.addEventListener("mousemove", move, capture.move);
-        window.addEventListener("mouseup", up, capture.up);
-        return backVal;
-    }
-    function touchStart(event) {
-        const backVal = down.call(this, event, "touch");
-        window.addEventListener("touchmove", move, capture.move);
-        window.addEventListener("touchend", up, capture.up);
-        window.addEventListener("touchcancel", up, capture.up);
-        return backVal;
     }
     dom.addEventListener("mousedown", mousedown, capture.down);
     dom.addEventListener("touchstart", touchStart, capture.down);
@@ -300,4 +315,144 @@ export function onElResize(el, handler) {
     }
     expand.addEventListener('scroll', onScroll);
     shrink.addEventListener('scroll', onScroll);
+}
+function getWH(el) {
+    const wh = { w: 0, h: 0 };
+    if (el === window) {
+        wh.w = window.innerWidth;
+        wh.h = window.innerHeight;
+    }
+    else {
+        el = el;
+        wh.w = el.offsetWidth;
+        wh.h = el.offsetHeight;
+    }
+    return wh;
+}
+// TODO 未完待续 参考：emergency
+export function isVisible(target, container = window) {
+    /* if (container !== window && !isVisible(container as HTMLElement, window)) {
+         return false
+     }*/
+    const wh = getWH(container);
+    const targetWh = getWH(target);
+    const scrollTop = container.scrollTop;
+    const top = target.offsetTop - scrollTop;
+    return top >= -targetWh.h && top <= wh.h;
+}
+export function isScrollEnd(el, direct = 'vertical', offset = 10) {
+    if (direct === 'vertical') {
+        return el.scrollTop >= el.scrollHeight - el.clientHeight - offset;
+    }
+    else {
+        return el.scrollLeft >= el.scrollWidth - el.clientWidth - offset;
+    }
+}
+export function isScrollStart(el, direct = 'vertical', offset = 10) {
+    if (direct === 'vertical') {
+        return el.scrollTop >= offset;
+    }
+    else {
+        return el.scrollLeft >= offset;
+    }
+}
+/**
+ * 基于原生canvas合成图片
+ * @param {String} posterSrc       海报
+ * @param {String|HTMLElement} qrCode       二维码
+ * @param {number} imageHeight  图片高度（传：1000(750 * 1000) 或 1334(750 * 1334)）
+ */
+export function mergeImg(posterSrc, qrCode, imageHeight) {
+    const imgData = {
+        width: 750,
+        height: 1334,
+    };
+    return new Promise(function (resolve, reject) {
+        const parent = document.body;
+        const canvas = document.createElement("canvas");
+        Object.assign(canvas.style, {
+            height: imgData.height + "px",
+            width: imgData.width + "px",
+            position: "fixed",
+            left: "-10000px",
+        });
+        canvas.width = imgData.width;
+        canvas.height = imgData.height;
+        parent.appendChild(canvas);
+        const ctx = canvas.getContext("2d");
+        const poster_image = new Image();
+        poster_image.setAttribute("crossOrigin", "anonymous");
+        poster_image.src = posterSrc;
+        poster_image.onload = function () {
+            ctx.drawImage(poster_image, 0, 0, imgData.width, imgData.height);
+            let code_image;
+            function onCodeLoaded() {
+                ctx.drawImage(code_image, 274, 1003, 202, 202);
+                const finalUrl = canvas.toDataURL("img/png");
+                parent.removeChild(canvas);
+                resolve(finalUrl);
+            }
+            if (isDom(qrCode)) {
+                code_image = qrCode;
+                onCodeLoaded();
+            }
+            else {
+                code_image = new Image();
+                code_image.setAttribute("crossOrigin", "anonymous");
+                code_image.src = qrCode;
+            }
+            code_image.onload = onCodeLoaded;
+        };
+    });
+}
+/**
+ * 手动添加img标签下载图片
+ * @param url
+ */
+export function loadImg(url) {
+    return new Promise(function (resolve, reject) {
+        const img = new Image();
+        img.setAttribute("crossOrigin", "anonymous");
+        img.onload = () => {
+            resolve(img);
+        };
+        img.onabort = img.onerror = (ev) => {
+            reject(ev);
+        };
+        img.src = url;
+    });
+}
+export function isSelectElement(el) {
+    return el.nodeName === "SELECT";
+}
+export function isInputElement(el) {
+    return el.nodeName === "INPUT";
+}
+export function isTextAreaElement(el) {
+    return el.nodeName === "TEXTAREA";
+}
+export function noScroll(scrollContainer) {
+    let target = scrollContainer;
+    if (isString(scrollContainer)) {
+        target = document.querySelector(scrollContainer);
+        if (!target)
+            throw new TypeError();
+    }
+    else if (scrollContainer === window) {
+        if (document.documentElement.scrollTop) {
+            target = document.documentElement;
+        }
+        else {
+            target = document.body;
+        }
+    }
+    const last = pickByKeys(target.style, ["marginTop", "overflow"]);
+    const scrollTop = target.scrollTop;
+    target.scrollTop = 0;
+    target.style.overflow = "hidden";
+    target.style.marginTop = -scrollTop + "px";
+    return function () {
+        target.scrollTop = scrollTop;
+        Object.assign(target.style, last);
+    };
 }

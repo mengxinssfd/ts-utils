@@ -12,10 +12,12 @@ export declare function isUndefined(target: any): target is undefined;
  * @param target
  * @param types
  */
-export declare function is(target: any, types: string[] | string): boolean;
+export declare function type(target: any, types: string[] | string): boolean;
 export declare function isPromiseLike<T, S>(target: PromiseLike<T> | S): target is PromiseLike<T>;
 export declare function isNaN(target: any): boolean;
 export declare function isEmptyObject(target: object): boolean;
 export declare function isEmpty(target: any): boolean;
 export declare function isEqual(a: any, b: any): boolean;
 export declare function objectIsEqual(obj1: object, obj2: object): boolean;
+export declare function isSameType(a: any, b: any): boolean;
+export declare function isIterable(target: any): target is Iterable<any>;

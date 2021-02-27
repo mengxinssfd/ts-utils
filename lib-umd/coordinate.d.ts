@@ -29,6 +29,7 @@ export declare function getAngle(origin: Point, target: Point, direct?: Direct):
  */
 export declare function getRotatePoint(center: Point, radius: number, rotate: number): Point;
 /**
+ * fixme 无法单元测试
  * 生成二阶贝塞尔曲线路径点
  * @param {number} t 当前百分比
  * @param {Array} startPos 起点坐标
@@ -36,3 +37,17 @@ export declare function getRotatePoint(center: Point, radius: number, rotate: nu
  * @param {Array} controlPoint 控制点
  */
 export declare function twoBezier(t: number, startPos: Point, endPos: Point, controlPoint: Point): Point;
+/**
+ * 根据余弦定理(c^2 = a^2 + b^2 - 2 * a * b * cosA)获取任意边长
+ * @param a
+ * @param b
+ * @param angle 要获取的边长对应的角度
+ */
+export declare function getBorderWidthByCos(a: number, b: number, angle: number): number;
+/**
+ * 根据正弦定理(a/sinA = b/sinB = c/sinC)获取对应边长
+ * @param a
+ * @param angleA
+ * @param angleB 要获取的边长对应的角度
+ */
+export declare function getBorderWidthBySin(a: number, angleA: number, angleB: number): number;

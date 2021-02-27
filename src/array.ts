@@ -2,27 +2,29 @@ import {typeOf} from "./common";
 import {deepClone} from "./clone";
 import {isEmpty, isNaN, isArray} from "./type";
 
-// @overload
-// ({start: 0, end: 2}) => [0, 1];
-// (start: 0, len: 2, fill: item => item+1) => [1, 2];
-export function createArray({start, end, len, fill}: {
-    start?: number,
-    end?: number,
-    len?: number,
-    fill?: ((item: number, index: number) => any)
-}): any[];
-// @overload
-// ({start:0, end:2, len:2, fill:1}) => [1, 1];
-export function createArray({start, end, len, fill}: {
-    start?: number,
-    end?: number,
-    len?: number,
-    fill?: any
-}): any[];
 /**
- * 创建一个包含开始数字和结束数字的数组 包左不包右: start <= item < (end || start + len)
+ * @description len与end两个都有值时，以小的为准
+ * @example
+ * // returns [0, 1]
+ * createArray({end: 2});
+ * @example
+ * // returns [0, 1]
+ * createArray({start: 0, end: 2});
+ * @example
+ * // [1, 1]
+ * createArray({start:0, end:2, len:2, fill:1});
+ * @example
+ * // returns [1, 2]
+ * createArray(start: 0, len: 2, fill: item => item+1);
  */
-export function createArray({start = 0, end, len, fill}) {
+export function createArray<T = number>(
+    {start = 0, end, len, fill}: {
+        start?: number,
+        end?: number,
+        len?: number,
+        fill?: T | ((item: number, index: number) => T)
+    },
+): T[] {
     let e: number = start;
     if (len && end) {
         e = Math.min(start + len, end);
@@ -37,7 +39,7 @@ export function createArray({start = 0, end, len, fill}) {
     let callback: (item: number, index: number) => any;
     switch (typeOf(fill)) {
         case "function":
-            callback = fill;
+            callback = fill as typeof callback;
             break;
         case "undefined":
         case "null":

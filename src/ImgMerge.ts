@@ -1,5 +1,5 @@
-import {Point} from "coordinate";
-import {loadImg} from "dom";
+import {Point} from "./coordinate";
+import {loadImg} from "./dom";
 
 export class MergeImg {
     private ctx?: CanvasRenderingContext2D

@@ -45,7 +45,7 @@ export function isUndefined(target) {
  * @param target
  * @param types
  */
-export function is(target, types) {
+export function type(target, types) {
     if (!isArray(types))
         return typeOf(target) === types;
     return types.indexOf(typeOf(target)) > -1;
@@ -120,4 +120,18 @@ export function objectIsEqual(obj1, obj2) {
         }
     }
     return true;
+}
+export function isSameType(a, b) {
+    return typeOf(a) === typeOf(b);
+}
+export function isIterable(target) {
+    try {
+        for (const {} of target) {
+            break;
+        }
+        return true;
+    }
+    catch (e) {
+        return false;
+    }
 }

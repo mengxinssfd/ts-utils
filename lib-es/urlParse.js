@@ -1,4 +1,4 @@
-import { isArray } from "./is";
+import { typeOf } from "./common";
 /**
  * 解析url
  * @Author: dyh
@@ -7,12 +7,20 @@ import { isArray } from "./is";
  */
 export class UrlParse {
     constructor(url) {
+        this.schema = "";
+        this.port = "";
+        this.host = "";
+        this.path = "";
+        this.href = "";
+        this.hash = "";
+        this.query = "";
+        this.queryStr = "";
         if (!url)
             return;
         this.href = url;
-        this.parse(url);
+        this.parseAll(url);
     }
-    parse(url) {
+    parseAll(url) {
         this.schema = this.parseSchema(url);
         this.host = this.parseHost(url);
         this.port = this.parsePort(url);
@@ -62,7 +70,7 @@ export class UrlParse {
         return hash;
     }
     parseQuery(url) {
-        let query = {};
+        let result = {};
         // 去除?号前的
         url = url.split("?")[1];
         // 去掉hash
@@ -71,24 +79,22 @@ export class UrlParse {
         let params = url.split("&");
         for (const k in params) {
             const v = params[k];
-            let [key, value] = v.split("=");
-            key = decodeURIComponent(key);
+            let [key, value] = v.split("=").map(item => decodeURIComponent(item));
+            // fixme a[1]=0&a[0]=1 顺序会不对
             // a[]=0&a[]=1 || a[0]=0&a[1]=1 转成 a=0&a=1 TODO 看看vue的路由参数是怎么解析的
             key = key.replace(/\[\w*\]/g, "");
-            value = decodeURIComponent(value);
-            const queryValue = query[key];
-            if (queryValue === undefined) {
-                query[key] = value;
-            }
-            else {
-                if (isArray(queryValue)) {
-                    query[key].push(value);
-                }
-                else {
-                    query[key] = [queryValue, value];
-                }
+            const resultValue = result[key];
+            switch (typeOf(resultValue)) {
+                case 'undefined':
+                    result[key] = value;
+                    break;
+                case "array":
+                    result[key].push(value);
+                    break;
+                default:
+                    result[key] = [resultValue, value];
             }
         }
-        return query;
+        return result;
     }
 }

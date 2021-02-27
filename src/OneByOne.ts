@@ -16,7 +16,7 @@ enum ONEBYONE_STATE { 'default', 'pause', 'stop'}
 export class OneByOne {
     sayWord: string;
     private wordArr: string[];
-    private timer: number;
+    private timer!: number;
     status = ONEBYONE_STATE.default;
     config: OneByOneConfig;
     joinWord: string = "";
@@ -30,7 +30,7 @@ export class OneByOne {
     private run() {
         const handler = () => {
             if (this.status !== ONEBYONE_STATE.default) return;
-            const word = this.wordArr.shift();
+            const word = this.wordArr.shift() as string;
             this.joinWord += word;
             let len = this.wordArr.length;
             let keepRun = !!len;

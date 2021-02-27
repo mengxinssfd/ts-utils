@@ -4,7 +4,26 @@
  * @param delay 延时
  * @returns {Function}
  */
-export declare function debounce(callback: (...args: any[]) => void, delay: number): (...args: any[]) => void;
+export declare function debounce<CB extends (...args: any[]) => void>(callback: CB, delay: number): CB;
+/**
+ * 如果callback执行了的话，那么不论是否resolved都不会再被reject
+ * @param callback
+ * @param delay
+ */
+export declare function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(callback: CB, delay: number): CB;
+/**
+ * 可取消防抖函数
+ * @param callback 回调
+ * @param delay 延时
+ * @returns {Function}
+ */
+export declare function debounceCancelable(callback: (...args: any[]) => void, delay: number): (...args: any[]) => () => void;
+/**
+ * 前一个promise未完成即reject，最后一个或者中断前调用的才会执行
+ * 无法阻止cb被调用 不推荐使用
+ * @param callback
+ */
+export declare function debounceByPromise<T, CB extends (...args: any[]) => Promise<T>>(callback: CB): CB;
 /**
  * 轮询函数
  * @param callback
@@ -12,18 +31,7 @@ export declare function debounce(callback: (...args: any[]) => void, delay: numb
  * @param immediate 是否马上执行第一次
  */
 export declare function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
-export declare function forEachByLen(len: number, callback: (index: number) => any | false): void;
-export interface formatDateInterface {
-    (format: string): string;
-    seasonText: string[];
-    weekText: string[];
-}
-/**
- * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
- * @param format
- * @returns String
- */
-export declare const formatDate: formatDateInterface;
+export declare function forEachByLen(len: number, callback: (index: number) => (any | false)): void;
 export declare function typeOf(target: any): string;
 export declare function randomNumber(): number;
 export declare function randomNumber(end: number): number;
@@ -34,12 +42,6 @@ export declare function randomNumber(start: number, end: number, length: number)
  */
 export declare function randomColor(): string;
 export declare function randomColor(len: number): string[];
-/**
- * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
- * @param date 格式：yyyy-MM-dd hh:mm:ss
- * @returns {Date}
- */
-export declare function getDateFromStr(date: string): Date | null;
 /**
  * 千位分隔 1,234,567,890
  * @param num
@@ -89,7 +91,6 @@ export interface Chinese2Number {
 export declare const chinese2Number: Chinese2Number;
 export declare function generateFunctionCode(argsArrayLength: number): string;
 export declare function generateFunction(obj: object, property: string, args: any[]): any;
-export declare function dateDiff(start: Date, end: Date, format?: string): string;
 export declare function getTreeMaxDeep(tree: object): number;
 export declare function getTreeNodeLen(tree: object, nodeNumber?: number): number;
 export declare function merge<T extends object, U extends object>(first: T, second: U): T & U;
@@ -101,3 +102,60 @@ export declare function sleep(delay: number): Promise<void>;
  * @returns {string}
  */
 export declare function createUUID(length: number): string;
+/**
+ * 格式化json
+ * @param json
+ * @param indent tab空格占位
+ */
+export declare function formatJSON(json: object | string, indent?: number): string;
+export declare function createEnum<T extends string>(items: T[]): {
+    [k in T]: number;
+} & {
+    [k: number]: T;
+};
+export declare function createEnumByObj<T extends object, K extends keyof T, O extends {
+    [k: string]: K;
+}>(obj: T): T & {
+    [k: string]: K;
+};
+/**
+ * @param originObj
+ * @param pickKeys
+ * @param cb
+ */
+export declare function pickByKeys<T extends object, K extends keyof T, O extends Pick<T, K>>(originObj: T, pickKeys: K[], cb?: (value: T[K], key: K, originObj: T) => Pick<T, K>[K]): Pick<T, K>;
+export declare function pickRename<T extends object, K extends keyof T, O extends {
+    [k: string]: K;
+}>(originObj: T, renamePickObj: O, cb?: (value: T[O[keyof O]], key: O[keyof O], originObj: T) => T[O[keyof O]]): {
+    [k in keyof O]: T[O[k]];
+};
+/**
+ * 功能与pickByKeys函数一致
+ * @param originObj
+ * @param pickKeys
+ * @param cb
+ */
+export declare function pick<T extends object, K extends keyof T, KS extends K[]>(originObj: T, pickKeys: KS, cb?: (value: T[K], key: K, fromObj: T) => T[K]): {
+    [key in K]: T[key];
+};
+/**
+ * 功能与pickRename函数一致
+ * @param originObj
+ * @param renamePickObj
+ * @param cb
+ */
+export declare function pick<T extends object, K extends keyof T, O extends {
+    [k: string]: K;
+}>(originObj: T, renamePickObj: O, cb?: (value: T[O[keyof O]], key: O[keyof O], fromObj: T) => T[O[keyof O]]): {
+    [k in keyof O]: T[O[k]];
+};
+/**
+ * object key-value翻转
+ * @param obj
+ */
+export declare function getReverseObj(obj: {
+    [k: string]: string;
+}): {
+    [k: string]: string;
+};
+export declare function promiseAny<T>(list: Promise<T>[]): Promise<T>;

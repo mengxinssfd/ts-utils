@@ -8,6 +8,13 @@ export declare function removeClass(dom: any, className: string): string;
  */
 export declare function prefixStyle(style: string): string | false;
 /**
+ * 判断是否支持css
+ * @param key
+ * @param value
+ * @returns {boolean}
+ */
+export declare function cssSupport(key: any, value: any): boolean;
+/**
  * 事件代理
  * @param containerEl
  * @param eventType
@@ -27,14 +34,17 @@ declare type xy = {
     x: number;
     y: number;
 };
+declare type OnDown = (e: MouseEvent | TouchEvent, currentXY: xy) => any;
+declare type OnMove = (e: MouseEvent | TouchEvent, currentXY: xy, lastXY: xy, downXY: xy) => any;
+declare type OnUp = (e: MouseEvent | TouchEvent, currentXY: xy, downXY: xy) => any;
 /**
  * 拖动事件 返回取消事件
  */
 export declare function addDragEventListener({ el, onDown, onMove, onUp, capture }: {
     el?: string | HTMLElement;
-    onDown?: (e: MouseEvent | TouchEvent, currentXY: xy) => any;
-    onMove?: (e: MouseEvent | TouchEvent, currentXY: xy, lastXY: xy, downXY: xy) => any;
-    onUp?: (e: MouseEvent | TouchEvent, currentXY: xy, downXY: xy) => any;
+    onDown?: OnDown;
+    onMove?: OnMove;
+    onUp?: OnUp;
     capture?: {
         down?: boolean;
         up?: boolean;
@@ -47,4 +57,23 @@ export declare function addDragEventListener({ el, onDown, onMove, onUp, capture
  * @param handler
  */
 export declare function onElResize(el: HTMLElement, handler: () => void): void;
+export declare function isVisible(target: HTMLElement, container?: HTMLElement | typeof window): boolean;
+export declare function isScrollEnd(el: HTMLElement, direct?: 'vertical' | 'horizontal', offset?: number): boolean;
+export declare function isScrollStart(el: HTMLElement, direct?: 'vertical' | 'horizontal', offset?: number): boolean;
+/**
+ * 基于原生canvas合成图片
+ * @param {String} posterSrc       海报
+ * @param {String|HTMLElement} qrCode       二维码
+ * @param {number} imageHeight  图片高度（传：1000(750 * 1000) 或 1334(750 * 1334)）
+ */
+export declare function mergeImg(posterSrc: string, qrCode: string | HTMLElement, imageHeight: number): Promise<unknown>;
+/**
+ * 手动添加img标签下载图片
+ * @param url
+ */
+export declare function loadImg(url: string): Promise<HTMLImageElement>;
+export declare function isSelectElement(el: HTMLElement): el is HTMLSelectElement;
+export declare function isInputElement(el: HTMLElement): el is HTMLInputElement;
+export declare function isTextAreaElement(el: HTMLElement): el is HTMLTextAreaElement;
+export declare function noScroll(scrollContainer: Window | HTMLElement | string): () => void;
 export {};
