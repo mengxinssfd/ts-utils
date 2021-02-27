@@ -1,3 +1,4 @@
+import { __awaiter } from "tslib";
 import { loadImg } from "./dom";
 export class MergeImg {
     constructor(width, height) {
@@ -18,23 +19,25 @@ export class MergeImg {
         this.ctx = canvas.getContext('2d');
         parent.appendChild(canvas);
     }
-    async addImg(url, location, size) {
-        if (!this.ctx)
-            throw new Error();
-        const img = await loadImg(url);
-        const ctx = this.ctx;
-        const [x, y] = location;
-        let dw;
-        let dh;
-        if (size) {
-            dw = size[0];
-            dh = size[1];
-        }
-        else {
-            dw = img.width;
-            dh = img.height;
-        }
-        ctx.drawImage(img, x, y, dw, dh);
+    addImg(url, location, size) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.ctx)
+                throw new Error();
+            const img = yield loadImg(url);
+            const ctx = this.ctx;
+            const [x, y] = location;
+            let dw;
+            let dh;
+            if (size) {
+                dw = size[0];
+                dh = size[1];
+            }
+            else {
+                dw = img.width;
+                dh = img.height;
+            }
+            ctx.drawImage(img, x, y, dw, dh);
+        });
     }
     toDataURL(type = 'image/png') {
         if (!this.canvas)
@@ -42,8 +45,9 @@ export class MergeImg {
         return this.canvas.toDataURL(type);
     }
     toBlob() {
+        var _a;
         const arr = this.toDataURL().split(',');
-        const mime = (arr[0].match(/:(.*?);/) ?? [])[1];
+        const mime = ((_a = arr[0].match(/:(.*?);/)) !== null && _a !== void 0 ? _a : [])[1];
         const atob1 = window.atob(arr[1]);
         let n = atob1.length;
         const u8arr = new Uint8Array(n);

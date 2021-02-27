@@ -20,11 +20,7 @@ const cloneStrategies = (function () {
             return new target.constructor(target);
         },
     };
-    return {
-        ...st,
-        object: st.array,
-        regexp: st.date,
-    };
+    return Object.assign(Object.assign({}, st), { object: st.array, regexp: st.date });
 })();
 export function deepClone(target) {
     const type = typeOf(target);

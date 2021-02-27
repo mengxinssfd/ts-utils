@@ -1,3 +1,4 @@
+import { __awaiter } from "tslib";
 import { isInputElement, isSelectElement, isTextAreaElement } from "./dom";
 /**
  * @param element
@@ -80,20 +81,23 @@ export function copy2Clipboard(target) {
 }
 const cb = window.navigator.clipboard;
 export function supportClipboardWrite() {
-    return Boolean(cb?.write);
+    var _a;
+    return Boolean((_a = cb) === null || _a === void 0 ? void 0 : _a.write);
 }
 /**
  * 写进剪贴板
  * @param contentList
  */
-export async function write2Clipboard(contentList) {
-    if (!supportClipboardWrite())
-        throw new Error("unsupported navigator.clipboard.write");
-    const clipboardItems = contentList.map(item => {
-        const blob = item instanceof Blob ? item : new Blob([item], { type: 'text/plain' });
-        return new ClipboardItem({
-            [blob.type]: blob,
+export function write2Clipboard(contentList) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!supportClipboardWrite())
+            throw new Error("unsupported navigator.clipboard.write");
+        const clipboardItems = contentList.map(item => {
+            const blob = item instanceof Blob ? item : new Blob([item], { type: 'text/plain' });
+            return new ClipboardItem({
+                [blob.type]: blob,
+            });
         });
+        yield cb.write(clipboardItems);
     });
-    await cb.write(clipboardItems);
 }
