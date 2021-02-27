@@ -148,9 +148,9 @@ export function typeOf(target: any): string {
 export function randomNumber(): number
 // start = 0 生成0-end之间的随机数
 export function randomNumber(end: number): number
-// 生成start到end之间的随机数 包含start与end
+// 生成start到end之间的随机数 包含start不包含end
 export function randomNumber(start: number, end: number): number
-// 生成start到end之间的随机数组 包含start与end length：数组长度
+// 生成start到end之间的随机数组 包含start不包含end length：数组长度
 export function randomNumber(start: number, end: number, length: number): number[]
 export function randomNumber(start?, end?, length?) {
     // randomNumber()
