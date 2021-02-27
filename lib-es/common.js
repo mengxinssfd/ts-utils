@@ -1,5 +1,6 @@
 import { __awaiter } from "tslib";
 import { isArray, isString, isObject, isPromiseLike } from "./type";
+import { createArray } from "./array";
 /**
  * 防抖函数
  * @param callback 回调
@@ -146,14 +147,11 @@ export function randomNumber(start, end, length) {
     }
     // randomNumber(start, end)
     if (length === undefined) {
-        const len = end - start + 1;
-        return ~~(Math.random() * len) + start;
+        const len = end - start;
+        return (Math.random() * len) + start;
     }
     else {
-        // randomNumber(start, end, length)
-        const arr = [];
-        forEachByLen(length, () => arr.push(randomNumber(start, end)));
-        return arr;
+        return createArray({ len: length, fill: () => randomNumber(start, end) });
     }
 }
 export function randomColor(len) {

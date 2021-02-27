@@ -50,6 +50,37 @@ test('randomNumber', () => {
     }
     const randArr2: number[] = cm.randomNumber(0, 5, 0);
     expect(randArr2).toEqual([]);
+
+    const arr3 = cm.randomNumber(0, 1, 500);
+    expect(arr3.length).toBe(500);
+    expect(arr3.some(i => i > 0)).toBeTruthy();
+    expect(arr3.some(i => i < 1)).toBeTruthy();
+    expect(arr3.some(i => i > 0.3 && i < 0.5)).toBeTruthy();
+    expect(arr3.some(i => i >= 0 && i < 0.2)).toBeTruthy();
+    expect(arr3.some(i => i > 0.7 && i < 0.9)).toBeTruthy();
+    expect(arr3.some(i => i >= 1)).toBeFalsy();
+    expect(arr3.some(i => i < 0)).toBeFalsy();
+
+    const arr4 = cm.randomNumber(-10, 10, 200);
+    expect(arr4.some(i => i > -10)).toBeTruthy();
+    expect(arr4.some(i => i < 10)).toBeTruthy();
+    expect(arr4.some(i => i > 5 && i < 6)).toBeTruthy();
+    expect(arr4.some(i => i > -6 && i < -1)).toBeTruthy();
+    expect(arr4.some(i => i > -5 && i < 5)).toBeTruthy();
+    expect(arr4.some(i => i > 10)).toBeFalsy();
+    expect(arr4.some(i => i < -10)).toBeFalsy();
+
+    const arr5 = cm.randomNumber(10, 11, 520);
+    expect(arr5.length).toBe(520);
+    expect(arr5.some(i => i < 10)).toBeFalsy();
+    expect(arr5.some(i => i < 10.1)).toBeTruthy();
+
+    const arr6 = cm.randomNumber(0.2, 0.4, 300);
+    expect(arr6.length).toBe(300);
+    expect(arr6.some(i => i < 0.2)).toBeFalsy();
+    expect(arr6.some(i => i < 0.4)).toBeTruthy();
+    expect(arr6.some(i => i >= 0.4)).toBeFalsy();
+    expect(arr3.some(i => i > 0.3 && i < 0.4)).toBeTruthy();
 });
 test('strPadStart', () => {
     expect(cm.strPadStart("123", 6, "0")).toBe("000123");

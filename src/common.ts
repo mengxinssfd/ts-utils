@@ -1,4 +1,5 @@
 import {isArray, isString, isObject, isPromiseLike} from "./type";
+import {createArray} from "./array";
 
 /**
  * 防抖函数
@@ -162,13 +163,10 @@ export function randomNumber(start?, end?, length?) {
 
     // randomNumber(start, end)
     if (length === undefined) {
-        const len = (end as number) - (start as number) + 1;
-        return ~~(Math.random() * len) + (start as number);
+        const len = (end as number) - (start as number);
+        return (Math.random() * len) + (start as number);
     } else {
-        // randomNumber(start, end, length)
-        const arr: number[] = [];
-        forEachByLen(length, () => arr.push(randomNumber(start, end)));
-        return arr;
+        return createArray({len: length, fill: () => randomNumber(start, end)});
     }
 }
 
