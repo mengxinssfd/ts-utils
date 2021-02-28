@@ -18,11 +18,13 @@
     </style>
 </head>
 <body>
+<button onclick="clickBtn()">copy btn</button>
 <section class="copy">
     <h1>使用copy</h1>
     <div class="test">
         <h2>远程图片</h2>
-        <img src="https://cdn.jsdelivr.net/gh/mengxinssfd/imgBase@main/img/image-20210218190434007.png"/>
+<!--        <img crossorigin="anonymous" contenteditable="true" src="https://cdn.jsdelivr.net/gh/mengxinssfd/imgBase@main/img/image-20210218190434007.png"/>-->
+        <img crossorigin="anonymous" src="http://img-haodanku-com.cdn.fudaiapp.com/5_1614508885756.jpg"/>
         <p>水电费水电费水电费水电费水电费</p>
     </div>
     <div class="test">
@@ -35,7 +37,7 @@
     <h1>使用clipboard</h1>
     <div class="test">
         <h2>远程图片</h2>
-        <img src="https://cdn.jsdelivr.net/gh/mengxinssfd/imgBase@main/img/image-20210218190434007.png"/>
+        <img crossorigin="anonymous" src="http://cdn.jsdelivr.net/gh/mengxinssfd/imgBase@main/img/image-20210218190434007.png"/>
         <p>水电费水电费水电费水电费水电费</p>
     </div>
     <div class="test">
@@ -49,16 +51,38 @@
     // console.log(tsUtils.supportClipboardWrite());
     // tsUtils.oneByOne("sdfsdf", 1000);
 
+    function clickBtn() {
+        document.addEventListener('cut', async (event) => {
+
+            // event.clipboardData.setData("text/plain","hello world")
+            const mi = new tsUtils.MergeImg();
+            await mi.setBg(document.querySelector(".test img").src)
+
+            event.clipboardData.setData("image/png", mi.toDataURL());
+            console.log(event);
+
+            event.preventDefault();
+        });
+        document.execCommand("cut");
+
+    }
+
     Array.prototype.forEach.call(document.querySelectorAll(".copy .test"), function (el) {
         el.addEventListener("click", async function (e) {
-            /* tsUtils.copy(this).then(function () {
+             tsUtils.copy2Clipboard(this).then(function () {
                  console.log("成功");
-             });*/
+             });
             // tsUtils.write2Clipboard()
+            return
             const img = this.querySelector("img");
             const im = new tsUtils.MergeImg(img.width, img.height);
             await im.addImg(img.src, [0, 0]);
-            tsUtils.write2Clipboard([im.toBlob()]).then(() => console.log('ssssssss'));
+            const blob = await im.toBlob();
+            tsUtils.write2Clipboard([
+                "hello",
+                // blob,
+                // "world"
+            ],).then(() => console.log('ssssssss'));
         });
     });
     var clipboard = new ClipboardJS('.clipboard .test', {
@@ -86,6 +110,7 @@
             const blob = await data.blob();
 
             await navigator.clipboard.write([
+                new Blob(["hello"], {type: "text/"}),
                 new ClipboardItem({
                     [blob.type]: blob
                 })

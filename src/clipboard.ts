@@ -4,7 +4,7 @@ import {isInputElement, isSelectElement, isTextAreaElement} from "./dom";
  * @param element
  * @return string
  */
-function select(element: HTMLElement) {
+export function select(element: HTMLElement) {
     let selectedText;
     if (isSelectElement(element)) {
         element.focus();
@@ -83,10 +83,19 @@ export function supportClipboardWrite() {
     return Boolean((cb as any)?.write);
 }
 
+export function supportCopySetData2Clipboard() {
+    const source = document.querySelector('.source') as HTMLDivElement;
+    source.addEventListener('copy', (event: ClipboardEvent) => {
+        // event.clipboardData.setData('text/plain',);
+        event.preventDefault();
+    });
+}
+
 declare const ClipboardItem: any;
 
 /**
  * 写进剪贴板
+ * @desc notice - 只有在https或者localhost上可以用
  * @param contentList
  */
 export async function write2Clipboard(contentList: Array<string | Blob>) {

@@ -105,7 +105,7 @@ export interface formatDateInterface {
  * @param format
  * @returns String
  */
-export const formatDate: formatDateInterface = function (format) {
+export const formatDate: formatDateInterface = function (this: Date, format) {
     let o: any = {
         "M+": this.getMonth() + 1,                    //月份
         "d+": this.getDate(),                         //日
@@ -146,6 +146,7 @@ export const formatDate: formatDateInterface = function (format) {
 };
 formatDate.weekText = [];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
+
 
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date

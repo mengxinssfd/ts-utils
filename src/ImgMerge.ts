@@ -2,11 +2,11 @@ import {Point} from "./coordinate";
 import {loadImg} from "./dom";
 
 export class MergeImg {
-    private ctx?: CanvasRenderingContext2D;
+    private _ctx?: CanvasRenderingContext2D;
     private canvas?: HTMLCanvasElement;
     private readonly parent: Element;
 
-    constructor(readonly width: number, readonly height: number) {
+    constructor(readonly width = 0, readonly height = 0) {
         const parent = document.body;
         const canvas = document.createElement('canvas');
         this.canvas = canvas;
@@ -19,14 +19,26 @@ export class MergeImg {
         });
         canvas.width = width;
         canvas.height = height;
-        this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        this._ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         parent.appendChild(canvas);
     }
 
-    async addImg(url: string, location: Point, size?: Point) {
-        if (!this.ctx) throw new Error();
+    get context(): CanvasRenderingContext2D | void {
+        return this._ctx;
+    }
+
+    async setBg(url: string) {
+        if (!this._ctx || !this.canvas) throw new Error();
         const img = await loadImg(url);
-        const ctx = this.ctx;
+        this.canvas.width = img.width;
+        this.canvas.height = img.height;
+        this._ctx.drawImage(img, 0, 0, img.width, img.height);
+    }
+
+    async addImg(url: string, location: Point, size?: Point) {
+        if (!this._ctx) throw new Error();
+        const img = await loadImg(url);
+        const ctx = this._ctx;
         const [x, y] = location;
         let dw: number;
         let dh: number;
@@ -40,13 +52,24 @@ export class MergeImg {
         ctx.drawImage(img, x, y, dw, dh);
     }
 
-    toDataURL(type = 'image/png'): string {
+    toDataURL(type = 'image/png', quality?: any): string {
         if (!this.canvas) throw new Error();
-        return this.canvas.toDataURL(type);
+        return this.canvas.toDataURL(type, quality);
     }
 
-    toBlob(): Blob {
-        const arr: string[] = this.toDataURL().split(',');
+    toBlob(type = 'image/png', quality?: any): Promise<Blob> {
+        const canvas = this.canvas;
+        if (!canvas) throw new Error();
+        return new Promise((resolve, reject) => {
+            // canvas.toBlob ie10
+            canvas.toBlob((blob) => {
+                blob ? resolve(blob) : reject(blob);
+            }, type, quality);
+        });
+    }
+
+    dataURLToBlob(dataURL: string): Blob {
+        const arr: string[] = dataURL.split(',');
         const mime = (arr[0].match(/:(.*?);/) ?? [])[1];
         const atob1 = window.atob(arr[1]);
         let n = atob1.length;
@@ -61,6 +84,6 @@ export class MergeImg {
         if (!this.canvas) throw new Error('destroyed');
         this.parent.removeChild(this.canvas);
         this.canvas = undefined;
-        this.ctx = undefined;
+        this._ctx = undefined;
     }
 }

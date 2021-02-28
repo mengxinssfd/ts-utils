@@ -4,7 +4,7 @@ import { isInputElement, isSelectElement, isTextAreaElement } from "./dom";
  * @param element
  * @return string
  */
-function select(element) {
+export function select(element) {
     let selectedText;
     if (isSelectElement(element)) {
         element.focus();
@@ -83,6 +83,13 @@ const cb = window.navigator.clipboard;
 export function supportClipboardWrite() {
     var _a;
     return Boolean((_a = cb) === null || _a === void 0 ? void 0 : _a.write);
+}
+export function supportCopySetData2Clipboard() {
+    const source = document.querySelector('.source');
+    source.addEventListener('copy', (event) => {
+        // event.clipboardData.setData('text/plain',);
+        event.preventDefault();
+    });
 }
 /**
  * 写进剪贴板
