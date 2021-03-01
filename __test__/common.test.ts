@@ -98,7 +98,7 @@ test('strPadEnd', () => {
     expect(cm.strPadEnd("123", -1, "0")).toBe("123");
 });
 test('randomColor', () => {
-    const reg = /#[0-9a-f]{6}/;
+    const reg = /#[0-9a-f]{6}$/;
     expect(reg.test(cm.randomColor())).toBeTruthy();
     // array
     const arr = cm.randomColor(10);
@@ -166,7 +166,7 @@ test('generateFunction', () => {
 test('polling', (done) => {
     let t = 0;
     const cancel = cm.polling((times) => {
-        return new Promise((res) => {
+        return new Promise<void>((res) => {
             expect(times).toBe(t);
             t++;
             if (times === 10) {

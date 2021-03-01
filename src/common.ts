@@ -176,14 +176,12 @@ export function randomNumber(start?, end?, length?) {
 export function randomColor(): string
 export function randomColor(len: number): string[]
 export function randomColor(len?) {
-    const num = randomNumber(0xffffff).toString(16);
+    const num = (~~randomNumber(0xffffff)).toString(16);
     const color = "#" + strPadStart(num, 6, "0");
     if (len === undefined) {
         return color;
     } else {
-        const colorList: string[] = [];
-        forEachByLen(len, () => colorList.push(randomColor() as string));
-        return colorList;
+        return createArray({len, fill: () => randomColor()});
     }
 }
 
