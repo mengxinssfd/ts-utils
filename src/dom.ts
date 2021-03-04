@@ -412,57 +412,6 @@ export function isScrollStart(el: HTMLElement, direct: 'vertical' | 'horizontal'
 }
 
 /**
- * 基于原生canvas合成图片
- * @param {String} posterSrc       海报
- * @param {String|HTMLElement} qrCode       二维码
- * @param {number} imageHeight  图片高度（传：1000(750 * 1000) 或 1334(750 * 1334)）
- */
-export function mergeImg(posterSrc: string, qrCode: string | HTMLElement, imageHeight: number) {
-    const imgData = {
-        width: 750,
-        height: 1334,
-    };
-    return new Promise(function (resolve, reject) {
-        const parent = document.body;
-        const canvas = document.createElement("canvas");
-        Object.assign(canvas.style, {
-            height: imgData.height + "px",
-            width: imgData.width + "px",
-            position: "fixed",
-            left: "-10000px",
-        });
-        canvas.width = imgData.width;
-        canvas.height = imgData.height;
-        parent.appendChild(canvas);
-        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-        const poster_image = new Image();
-        poster_image.setAttribute("crossOrigin", "anonymous");
-        poster_image.src = posterSrc;
-        poster_image.onload = function () {
-            ctx.drawImage(poster_image, 0, 0, imgData.width, imgData.height);
-            let code_image;
-
-            function onCodeLoaded() {
-                ctx.drawImage(code_image, 274, 1003, 202, 202);
-                const finalUrl = canvas.toDataURL("img/png");
-                parent.removeChild(canvas);
-                resolve(finalUrl);
-            }
-
-            if (isDom(qrCode)) {
-                code_image = qrCode;
-                onCodeLoaded();
-            } else {
-                code_image = new Image();
-                code_image.setAttribute("crossOrigin", "anonymous");
-                code_image.src = qrCode;
-            }
-            code_image.onload = onCodeLoaded;
-        };
-    });
-}
-
-/**
  * 手动添加img标签下载图片
  * @param url
  */

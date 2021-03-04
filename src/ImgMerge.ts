@@ -1,5 +1,6 @@
 import {Point} from "./coordinate";
 import {loadImg} from "./dom";
+import {isPromiseLike} from "type";
 
 export class MergeImg {
     private _ctx?: CanvasRenderingContext2D;
@@ -27,17 +28,25 @@ export class MergeImg {
         return this._ctx;
     }
 
-    async setBg(url: string) {
-        if (!this._ctx || !this.canvas) throw new Error();
-        const img = await loadImg(url);
-        this.canvas.width = img.width;
-        this.canvas.height = img.height;
-        this._ctx.drawImage(img, 0, 0, img.width, img.height);
+    // 根据背景图创建一个MergeImg类 好处是可以根据背景图宽高设置canvas宽高，不用再额外设置
+    static async createWithBg(url: string): Promise<MergeImg> {
+        const promise = loadImg(url);
+        const img = await promise;
+        const mi = new MergeImg(img.width, img.height);
+        await mi.addImg(promise);
+        return mi;
     }
 
-    async addImg(url: string, location: Point, size?: Point) {
+    async addImg(url: string, location?: Point, size?: Point): Promise<HTMLImageElement>
+    async addImg(promiseImg: Promise<HTMLImageElement>, location?: Point, size?: Point): Promise<HTMLImageElement>
+    async addImg(urlOrPromiseImg, location = [0, 0], size?) {
         if (!this._ctx) throw new Error();
-        const img = await loadImg(url);
+        let img: HTMLImageElement;
+        if (isPromiseLike(urlOrPromiseImg as Promise<HTMLImageElement>)) {
+            img = await urlOrPromiseImg;
+        } else {
+            img = await loadImg(urlOrPromiseImg);
+        }
         const ctx = this._ctx;
         const [x, y] = location;
         let dw: number;
@@ -50,6 +59,7 @@ export class MergeImg {
             dh = img.height;
         }
         ctx.drawImage(img, x, y, dw, dh);
+        return img
     }
 
     toDataURL(type = 'image/png', quality?: any): string {
