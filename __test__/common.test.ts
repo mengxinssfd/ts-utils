@@ -1,6 +1,6 @@
 import * as cm from "../src/common";
 
-test('forEachByLen', () => {
+test("forEachByLen", () => {
     const arr: number[] = [];
     cm.forEachByLen(3, (index) => arr.push(index));
     expect(arr).toEqual([0, 1, 2]);
@@ -12,7 +12,7 @@ test('forEachByLen', () => {
     });
 });
 
-test('typeOf', () => {
+test("typeOf", () => {
     // 六大基本类型 string boolean number object null undefined
     expect(cm.typeOf("")).toBe("string");
     expect(cm.typeOf(true)).toBe("boolean");
@@ -28,7 +28,7 @@ test('typeOf', () => {
     expect(cm.typeOf(/abc/)).toBe("regexp");
 });
 
-test('randomNumber', () => {
+test("randomNumber", () => {
     const rand = cm.randomNumber(0, 10);
     expect(rand).toBeGreaterThanOrEqual(0);
     expect(rand).toBeLessThanOrEqual(10);
@@ -82,7 +82,7 @@ test('randomNumber', () => {
     expect(arr6.some(i => i >= 0.4)).toBeFalsy();
     expect(arr3.some(i => i > 0.3 && i < 0.4)).toBeTruthy();
 });
-test('strPadStart', () => {
+test("strPadStart", () => {
     expect(cm.strPadStart("123", 6, "0")).toBe("000123");
     expect(cm.strPadStart("123", 0, "0")).toBe("123");
     expect(cm.strPadStart("123", 4, "hello")).toBe("h123");
@@ -90,14 +90,14 @@ test('strPadStart', () => {
     expect(cm.strPadStart("123", -1, "0")).toBe("123");
     expect(cm.strPadStart("0", 2, "0")).toBe("00");
 });
-test('strPadEnd', () => {
+test("strPadEnd", () => {
     expect(cm.strPadEnd("123", 6, "0")).toBe("123000");
     expect(cm.strPadEnd("123", 0, "0")).toBe("123");
     expect(cm.strPadEnd("123", 4, "hello")).toBe("123h");
     expect(cm.strPadEnd("123", 20, "hello")).toBe("123hellohellohellohe");
     expect(cm.strPadEnd("123", -1, "0")).toBe("123");
 });
-test('randomColor', () => {
+test("randomColor", () => {
     const reg = /#[0-9a-f]{6}$/;
     expect(reg.test(cm.randomColor())).toBeTruthy();
     // array
@@ -108,13 +108,12 @@ test('randomColor', () => {
     });
 });
 
-
-test('thousandFormat', () => {
+test("thousandFormat", () => {
     expect(cm.thousandFormat(123456789)).toBe("123,456,789");
     expect(cm.thousandFormat(123)).toBe("123");
     expect(cm.thousandFormat(5763423)).toBe("5,763,423");
 });
-test('getChineseNumber', () => {
+test("getChineseNumber", () => {
     expect(cm.number2Chinese(123)).toBe("一百二十三");
     expect(cm.number2Chinese(1)).toBe("一");
     expect(cm.number2Chinese(11)).toBe("十一");
@@ -126,11 +125,11 @@ test('getChineseNumber', () => {
     expect(cm.number2Chinese(23456789)).toBe("二千三百四十五万六千七百八十九");
     expect(cm.number2Chinese(123456789)).toBe("一亿二千三百四十五万六千七百八十九");
 });
-test('getFormatStr', () => {
+test("getFormatStr", () => {
     expect(cm.getFormatStr("hell%s worl%s", "o", "d")).toBe("hello world");
     expect(cm.getFormatStr("hell%s worl%s")).toBe("hell worl");
 });
-test('debounce', (done) => {
+test("debounce", (done) => {
     let times = 0;
     const d = cm.debounce(() => {
         times++;
@@ -146,7 +145,7 @@ test('debounce', (done) => {
     }, 500);
 });
 
-test('oneByOne', (done) => {
+test("oneByOne", (done) => {
     const s = "hello world";
     cm.oneByOne(s, 10, (w, index) => {
         expect(w).toBe(s[index]);
@@ -156,14 +155,14 @@ test('oneByOne', (done) => {
     });
     cm.oneByOne(s, 10);
 });
-test('generateFunction', () => {
+test("generateFunction", () => {
     // const args = [1, 2, 3];
     // (new Function(generateFunctionCode(args.length)))(object, property, args);
     // expect(cm.strFillPrefix("123", "0", 6)).toBe("000123");
     const value = cm.generateFunction(cm, "strPadStart", ["123", 6, "0"]);
     expect(value).toBe("000123");
 });
-test('polling', (done) => {
+test("polling", (done) => {
     let t = 0;
     const cancel = cm.polling((times) => {
         return new Promise<void>((res) => {
@@ -281,7 +280,6 @@ test("deepMerge", () => {
     expect(cm.deepMerge(c, b).test.a === 1).toEqual(true);
     expect(cm.deepMerge(c, b).test !== c.test && c.test === Object.assign({}, c, b).test).toEqual(true);
 
-
     function Fn() {
         this.a = 100;
     }
@@ -290,7 +288,6 @@ test("deepMerge", () => {
     const d = new Fn();
     expect(cm.deepMerge(a, d)).toEqual(Object.assign({}, a, d));
     expect(cm.deepMerge(a, d).b).toEqual(undefined);
-
 
     expect(cm.deepMerge(a, {a: [{b: 123}]})).toEqual(Object.assign({}, a, {a: [{b: 123}]}));
 });
@@ -421,7 +418,6 @@ test("promiseAny", async () => {
     await expect(fn(true as any)).rejects.toEqual(isNotIterable);
     await expect(fn({} as any)).rejects.toEqual(isNotIterable);
 
-
     const allReject = "AggregateError: All promises were rejected";
     await expect(fn([])).rejects.toEqual(allReject);
     await expect(fn([Promise.reject(0), Promise.reject(1)])).rejects.toEqual(allReject);
@@ -440,7 +436,6 @@ test("debounceAsync", async () => {
             resolve(times++);
         });
     };
-
 
     const dbFn = fn(cb, 100);
     await cm.promiseAny([dbFn(), dbFn(), dbFn(), dbFn()]);
@@ -470,7 +465,6 @@ test("debounceByPromise", async () => {
         return p;
     };
 
-
     const dbFn = fn(cb);
 
     await expect(cm.promiseAny([dbFn(40), dbFn(20), dbFn(60), dbFn(30)])).resolves.toEqual(30);
@@ -489,7 +483,6 @@ test("debounceCancelable", async () => {
     const cb = () => {
         times++;
     };
-
 
     const dbFn = fn(cb, 20);
 
@@ -527,5 +520,48 @@ test("createEnum", async () => {
     }
 
     expect(fn(["a", "b", "c"])).toEqual(e);
+});
+test("forEachObj", () => {
+    const fn = cm.forEachObj;
+
+    const testFn = (obj: object) => {
+        let times = 0;
+        fn(obj, (v, k, o) => {
+            expect(typeof k).toEqual("string");
+            expect(v).toEqual(obj[k]);
+            expect(obj).toEqual(obj);
+            times++;
+        });
+        expect(times).toEqual(Object.keys(obj).length);
+    };
+
+    testFn({a: 1, b: "2", c: true});
+    testFn({a: 1, b: "2", c: {test: 1231}});
+});
+test("reduceObj", () => {
+    const fn = cm.reduceObj;
+    const obj = {a: 1, b: 2, c: "3"};
+    const result = fn(obj, (r, v, k, o) => {
+        r[k] = v;
+        return r;
+    }, {});
+
+    expect(result).toEqual(obj);
+    expect(result === obj).toEqual(false);
+
+    const result2 = fn(obj, (r, v, k, o) => {
+        r[k] = v + "1";
+        return r;
+    }, {});
+    const result3 = Object.keys(obj).reduce((r, key, index, keyArr) => {
+        const v = obj[key];
+        r[key] = v + "1";
+        return r;
+    }, {});
+
+    expect(result2).toEqual({
+        a: "11", b: "21", c: "31",
+    });
+    expect(result2).toEqual(result3);
 });
 

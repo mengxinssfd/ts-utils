@@ -135,14 +135,12 @@ export function forEachByLen(len: number, callback: (index: number) => (any | fa
     }
 }
 
-
 // 获取数据类型
 export function typeOf(target: any): string {
     const tp = typeof target;
-    if (tp !== 'object') return tp;
+    if (tp !== "object") return tp;
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
-
 
 // start end都不传  return Math.random()
 export function randomNumber(): number
@@ -184,7 +182,6 @@ export function randomColor(len?) {
         return createArray({len, fill: () => randomColor()});
     }
 }
-
 
 /**
  * 千位分隔 1,234,567,890
@@ -304,7 +301,6 @@ export const number2Chinese: Number2Chinese = function (number) {
 number2Chinese.units = [...units];
 number2Chinese.numbers = [...numberArr];
 
-
 export interface Chinese2Number {
     (chineseNumber: string): number
 
@@ -323,7 +319,7 @@ export const chinese2Number: Chinese2Number = function (chineseNumber) {
 
     // 用万和亿分割
     const arr = chineseNumber.split(new RegExp(`[${chinese2Number.units[4]}${chinese2Number.units[8]}]`, "g"));
-    const numberArr = arr.map((it, index) => {
+    const numberArr = arr.map((it) => {
         let res = 0;
         let unit = 1;
         // 从个位数往大数累加
@@ -356,15 +352,15 @@ chinese2Number.numbers = [...numberArr];
 
 // 代替扩展符"...", 实现apply的时候可以使用此方法
 export function generateFunctionCode(argsArrayLength: number) {
-    let code = 'return arguments[0][arguments[1]](';
+    let code = "return arguments[0][arguments[1]](";
     // 拼接args
     for (let i = 0; i < argsArrayLength; i++) {
         if (i > 0) {
-            code += ',';
+            code += ",";
         }
-        code += 'arguments[2][' + i + ']';
+        code += "arguments[2][" + i + "]";
     }
-    code += ')';
+    code += ")";
     // return object.property(args)
     // return arguments[0][arguments[1]](arg1, arg2, arg3...)
     return code;
@@ -375,7 +371,6 @@ export function generateFunctionCode(argsArrayLength: number) {
 export function generateFunction(obj: object, property: string, args: any[]) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
 }
-
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree: object): number {
@@ -521,7 +516,7 @@ export function formatJSON(json: object | string, indent = 2): string {
                 // 函数的}位置有点对不上
                 return `"${js.toString()}"`;
             default:
-                return isString(js) ? ('"' + js + '"') : js;
+                return isString(js) ? ("\"" + js + "\"") : js;
         }
     }
 
@@ -552,7 +547,6 @@ export function createEnumByObj<T extends object, K extends keyof T, O extends {
      return res;*/
     return Object.assign({}, obj, getReverseObj(obj as any)) as any;
 }
-
 
 /**
  * @param originObj
@@ -586,9 +580,15 @@ export function pickRename<T extends object, K extends keyof T, O extends { [k: 
     cb?: (value: T[O[keyof O]], key: O[keyof O], originObj: T) => T[O[keyof O]],
 ): { [k in keyof O]: T[O[k]] } {
     const callback = cb || (v => v);
-    const renames = Object.keys(renamePickObj) as (keyof O)[];
-    return renames.reduce((result, rename) => {
-        const pick = renamePickObj[rename];
+    /* const renames = Object.keys(renamePickObj) as (keyof O)[];
+     return renames.reduce((result, rename) => {
+         const pick = renamePickObj[rename];
+         if (originObj.hasOwnProperty(pick)) {
+             result[rename] = callback(originObj[pick], pick, originObj);
+         }
+         return result;
+     }, {} as any);*/
+    return reduceObj(renamePickObj, (result, pick, rename) => {
         if (originObj.hasOwnProperty(pick)) {
             result[rename] = callback(originObj[pick], pick, originObj);
         }
@@ -693,3 +693,35 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
 
     }));
 }
+
+/**
+ * 代替Object.keys(obj).forEach，减少循环次数
+ * @param obj
+ * @param callbackFn 返回false的时候中断
+ */
+export function forEachObj<T extends object>(obj: T, callbackFn: (value: T[keyof T], key: keyof T, obj: T) => (void | false)) {
+    for (const k in obj) {
+        if (!obj.hasOwnProperty(k)) continue;
+        const v = obj[k];
+        if (callbackFn(v, k, obj) === false) return;
+    }
+}
+
+/**
+ * 代替Object.keys(obj).reduce，减少循环次数
+ * @param obj
+ * @param callbackFn
+ * @param initialValue 初始值
+ */
+export function reduceObj<T extends object, R>(
+    obj: T,
+    callbackFn: (previousValue: R, value: T[keyof T], key: keyof T, obj: T) => R,
+    initialValue: R,
+): R {
+    let result = initialValue;
+    forEachObj(obj, (v, k, o) => {
+        result = callbackFn(result, v, k, o);
+    });
+    return result;
+}
+
