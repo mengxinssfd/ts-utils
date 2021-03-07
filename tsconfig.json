@@ -28,7 +28,7 @@
     "strict": true,
     // "allowSyntheticDefaultImports": true,
     "paths": {
-      "*": [
+      "@/*": [
         "src/*"
       ]
     }
