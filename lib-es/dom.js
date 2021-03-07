@@ -1,14 +1,14 @@
-// 所有主要浏览器都支持 createElement() 方法
-import { pickByKeys, typeOf } from "./common";
+import { forEachObj, pickByKeys, typeOf } from "./common";
 import { isFunction, isString } from "./type";
-let elementStyle = document.createElement('div').style;
+// 所有主要浏览器都支持 createElement() 方法
+let elementStyle = document.createElement("div").style;
 let vendor = (() => {
     let transformName = {
-        webkit: 'webkitTransform',
-        Moz: 'MozTransform',
-        O: 'OTransform',
-        ms: 'msTransform',
-        standard: 'transform',
+        webkit: "webkitTransform",
+        Moz: "MozTransform",
+        O: "OTransform",
+        ms: "msTransform",
+        standard: "transform",
     };
     for (let key in transformName) {
         if (elementStyle[transformName[key]] !== undefined) {
@@ -19,12 +19,12 @@ let vendor = (() => {
 })();
 export const isDom = (function () {
     // HTMLElement ie8以上支持 此类库不支持ie8及以下所以意义不是很大
-    return (typeof HTMLElement === 'object') ?
+    return (typeof HTMLElement === "object") ?
         function (target) {
             return target instanceof HTMLElement;
         } :
         function (target) {
-            return target && typeof target === 'object' && target.nodeType === 1 && typeof target.nodeName === 'string';
+            return target && typeof target === "object" && target.nodeType === 1 && typeof target.nodeName === "string";
         };
 })();
 export const addClass = (function () {
@@ -51,7 +51,7 @@ export function removeClass(dom, className) {
         dom.classList.remove(className);
     }
     else {
-        dom.className = dom.className.replace(new RegExp('(^|\\s)' + className + '(\\s|$)', "gi"), "");
+        dom.className = dom.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)", "gi"), "");
     }
     return dom.className;
 }
@@ -64,7 +64,7 @@ export function prefixStyle(style) {
     if (vendor === false) {
         return false;
     }
-    if (vendor === 'transform') {
+    if (vendor === "transform") {
         return style;
     }
     return vendor + style.charAt(0).toUpperCase() + style.substr(1);
@@ -151,6 +151,11 @@ export function onceEvent(el, eventType, callback, capture = false) {
 }
 /**
  * 拖动事件 返回取消事件
+ * @param el
+ * @param onDown
+ * @param onMove
+ * @param onUp
+ * @param capture
  */
 export function addDragEventListener({ el, onDown, onMove, onUp, capture = { down: false, up: true, move: false } }) {
     let dom = el;
@@ -263,33 +268,33 @@ export function onElResize(el, handler) {
     }
     // https://www.w3.org/TR/html/syntax.html#writing-html-documents-elements
     if (/^(area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr|script|style|textarea|title)$/i.test(el.tagName)) {
-        throw new TypeError('Unsupported tag type. Change the tag or wrap it in a supported tag(e.g. div).');
+        throw new TypeError("Unsupported tag type. Change the tag or wrap it in a supported tag(e.g. div).");
     }
-    if (typeof handler !== 'function') {
+    if (typeof handler !== "function") {
         throw new TypeError("Parameter 2 is not of type 'function'.");
     }
     let lastWidth = el.offsetWidth || 1;
     let lastHeight = el.offsetHeight || 1;
     const maxWidth = 10000 * (lastWidth);
     const maxHeight = 10000 * (lastHeight);
-    const expand = document.createElement('div');
+    const expand = document.createElement("div");
     expand.className = "expand";
-    expand.style.cssText = 'position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;';
+    expand.style.cssText = "position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;";
     const shrink = expand.cloneNode(false);
     shrink.className = "shrink";
-    const expandChild = document.createElement('div');
-    expandChild.style.cssText = 'transition:0s;animation:none;';
+    const expandChild = document.createElement("div");
+    expandChild.style.cssText = "transition:0s;animation:none;";
     const shrinkChild = expandChild.cloneNode(false);
-    expandChild.style.width = maxWidth + 'px';
-    expandChild.style.height = maxHeight + 'px';
-    shrinkChild.style.width = '250%';
-    shrinkChild.style.height = '250%';
+    expandChild.style.width = maxWidth + "px";
+    expandChild.style.height = maxHeight + "px";
+    shrinkChild.style.width = "250%";
+    shrinkChild.style.height = "250%";
     expand.appendChild(expandChild);
     shrink.appendChild(shrinkChild);
     el.appendChild(expand);
     el.appendChild(shrink);
     if (expand.offsetParent !== el) {
-        el.style.position = 'relative';
+        el.style.position = "relative";
     }
     expand.scrollTop = shrink.scrollTop = maxHeight;
     expand.scrollLeft = shrink.scrollLeft = maxWidth;
@@ -313,8 +318,8 @@ export function onElResize(el, handler) {
         expand.scrollTop = shrink.scrollTop = maxHeight;
         expand.scrollLeft = shrink.scrollLeft = maxWidth;
     }
-    expand.addEventListener('scroll', onScroll);
-    shrink.addEventListener('scroll', onScroll);
+    expand.addEventListener("scroll", onScroll);
+    shrink.addEventListener("scroll", onScroll);
 }
 function getWH(el) {
     const wh = { w: 0, h: 0 };
@@ -340,70 +345,21 @@ export function isVisible(target, container = window) {
     const top = target.offsetTop - scrollTop;
     return top >= -targetWh.h && top <= wh.h;
 }
-export function isScrollEnd(el, direct = 'vertical', offset = 10) {
-    if (direct === 'vertical') {
+export function isScrollEnd(el, direct = "vertical", offset = 10) {
+    if (direct === "vertical") {
         return el.scrollTop >= el.scrollHeight - el.clientHeight - offset;
     }
     else {
         return el.scrollLeft >= el.scrollWidth - el.clientWidth - offset;
     }
 }
-export function isScrollStart(el, direct = 'vertical', offset = 10) {
-    if (direct === 'vertical') {
+export function isScrollStart(el, direct = "vertical", offset = 10) {
+    if (direct === "vertical") {
         return el.scrollTop >= offset;
     }
     else {
         return el.scrollLeft >= offset;
     }
-}
-/**
- * 基于原生canvas合成图片
- * @param {String} posterSrc       海报
- * @param {String|HTMLElement} qrCode       二维码
- * @param {number} imageHeight  图片高度（传：1000(750 * 1000) 或 1334(750 * 1334)）
- */
-export function mergeImg(posterSrc, qrCode, imageHeight) {
-    const imgData = {
-        width: 750,
-        height: 1334,
-    };
-    return new Promise(function (resolve, reject) {
-        const parent = document.body;
-        const canvas = document.createElement("canvas");
-        Object.assign(canvas.style, {
-            height: imgData.height + "px",
-            width: imgData.width + "px",
-            position: "fixed",
-            left: "-10000px",
-        });
-        canvas.width = imgData.width;
-        canvas.height = imgData.height;
-        parent.appendChild(canvas);
-        const ctx = canvas.getContext("2d");
-        const poster_image = new Image();
-        poster_image.setAttribute("crossOrigin", "anonymous");
-        poster_image.src = posterSrc;
-        poster_image.onload = function () {
-            ctx.drawImage(poster_image, 0, 0, imgData.width, imgData.height);
-            let code_image;
-            function onCodeLoaded() {
-                ctx.drawImage(code_image, 274, 1003, 202, 202);
-                const finalUrl = canvas.toDataURL("img/png");
-                parent.removeChild(canvas);
-                resolve(finalUrl);
-            }
-            if (isDom(qrCode)) {
-                code_image = qrCode;
-                onCodeLoaded();
-            }
-            else {
-                code_image = new Image();
-                code_image.setAttribute("crossOrigin", "anonymous");
-                code_image.src = qrCode;
-            }
-            code_image.onload = onCodeLoaded;
-        };
-    });
 }
 /**
  * 手动添加img标签下载图片
@@ -455,4 +411,16 @@ export function noScroll(scrollContainer) {
         target.scrollTop = scrollTop;
         Object.assign(target.style, last);
     };
+}
+/**
+ * 通过object来生成html元素
+ * @param tagName
+ * @param attribute
+ */
+export function createElement(tagName, attribute) {
+    const el = document.createElement(tagName);
+    forEachObj(attribute, (v, k, o) => {
+        el.setAttribute(k, v);
+    });
+    return el;
 }

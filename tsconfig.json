@@ -38,6 +38,8 @@
     "tslib",
     "lib*",
     "webpack.config.js",
-    "test.ts"
+    "test.ts",
+    "test/*",
+    "webpack.dev.config.js"
   ]
 }
