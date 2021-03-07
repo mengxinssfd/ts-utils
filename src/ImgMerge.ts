@@ -74,9 +74,9 @@ export class MergeImg {
                 dw = this.width - right - left;
             }
         } else if (left !== undefined) {
-
+            x = left;
         } else if (right !== undefined) {
-
+            x = this.width - right - dw;
         }
 
         if (top !== undefined && bottom !== undefined) {
