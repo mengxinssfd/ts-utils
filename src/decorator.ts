@@ -28,7 +28,7 @@ export function Polling(interval: number, immediate = true) {
         const origin = descriptor.value;
 
         function start() {
-            return new Promise((res, rej) => {
+            return new Promise<void>((res, rej) => {
                 let timer: any;
                 let status: state;
                 let times = 0;

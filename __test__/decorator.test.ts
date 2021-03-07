@@ -1,7 +1,7 @@
 import {sleep} from "../src/common";
 import * as dc from "../src/decorator";
 
-test('Debounce', async (done) => {
+test("Debounce", async (done) => {
     const Debounce = dc.Debounce;
 
     const now = Date.now();
@@ -36,7 +36,7 @@ test('Debounce', async (done) => {
     done();
 });
 
-test('Polling', async (done) => {
+test("Polling", async (done) => {
     const Polling = dc.Polling;
 
     class Test {
@@ -46,7 +46,7 @@ test('Polling', async (done) => {
 
         @Polling(100)
         test(times?: number) {
-            return new Promise((res, rej) => {
+            return new Promise<void>((res, rej) => {
                 if (times! >= 5) {
                     rej();
                 } else {
