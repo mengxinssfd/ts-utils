@@ -79,7 +79,7 @@ export declare function noScroll(scrollContainer: Window | HTMLElement | string)
  * @param tagName
  * @param attribute
  */
-export declare function createElement(tagName: string, attribute: {
+export declare function createElement<K extends keyof HTMLElementTagNameMap>(tagName: K, attribute: {
     [k: string]: any;
-}): HTMLElement;
+}): HTMLElementTagNameMap[K];
 export {};

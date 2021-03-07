@@ -420,7 +420,7 @@ export function noScroll(scrollContainer) {
 export function createElement(tagName, attribute) {
     const el = document.createElement(tagName);
     forEachObj(attribute, (v, k, o) => {
-        el.setAttribute(k, v);
+        el.setAttribute(k, typeof v === "object" ? JSON.stringify(v) : v);
     });
     return el;
 }
