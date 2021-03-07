@@ -1,15 +1,14 @@
-// 所有主要浏览器都支持 createElement() 方法
-import {pickByKeys, typeOf} from "./common";
+import {forEachObj, pickByKeys, typeOf} from "./common";
 import {isFunction, isString} from "./type";
-
-let elementStyle = document.createElement('div').style;
+// 所有主要浏览器都支持 createElement() 方法
+let elementStyle = document.createElement("div").style;
 let vendor = ((): string | false => {
     let transformName: any = {
-        webkit: 'webkitTransform',
-        Moz: 'MozTransform',
-        O: 'OTransform',
-        ms: 'msTransform',
-        standard: 'transform',
+        webkit: "webkitTransform",
+        Moz: "MozTransform",
+        O: "OTransform",
+        ms: "msTransform",
+        standard: "transform",
     };
     for (let key in transformName) {
         if (elementStyle[transformName[key]] !== undefined) {
@@ -20,12 +19,12 @@ let vendor = ((): string | false => {
 })();
 export const isDom: (target: any) => target is HTMLElement = (function () {
     // HTMLElement ie8以上支持 此类库不支持ie8及以下所以意义不是很大
-    return (typeof HTMLElement === 'object') ?
+    return (typeof HTMLElement === "object") ?
         function (target: any): target is HTMLElement {
             return target instanceof HTMLElement;
         } :
         function (target: any): target is HTMLElement {
-            return target && typeof target === 'object' && target.nodeType === 1 && typeof target.nodeName === 'string';
+            return target && typeof target === "object" && target.nodeType === 1 && typeof target.nodeName === "string";
         };
 })();
 export const addClass: (target: HTMLElement, className: string | string[]) => string = (function () {
@@ -51,7 +50,7 @@ export function removeClass(dom: any, className: string): string {
     if (dom.classList) {
         dom.classList.remove(className);
     } else {
-        dom.className = dom.className.replace(new RegExp('(^|\\s)' + className + '(\\s|$)', "gi"), "");
+        dom.className = dom.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)", "gi"), "");
     }
     return dom.className;
 }
@@ -65,7 +64,7 @@ export function prefixStyle(style: string): string | false {
     if (vendor === false) {
         return false;
     }
-    if (vendor === 'transform') {
+    if (vendor === "transform") {
         return style;
     }
     return vendor + style.charAt(0).toUpperCase() + style.substr(1);
@@ -169,6 +168,11 @@ type OnUp = (e: MouseEvent | TouchEvent, currentXY: xy, downXY: xy) => any
 
 /**
  * 拖动事件 返回取消事件
+ * @param el
+ * @param onDown
+ * @param onMove
+ * @param onUp
+ * @param capture
  */
 export function addDragEventListener({el, onDown, onMove, onUp, capture = {down: false, up: true, move: false}}: {
     el?: string | HTMLElement,
@@ -303,9 +307,9 @@ export function onElResize(el: HTMLElement, handler: () => void) {
     }
     // https://www.w3.org/TR/html/syntax.html#writing-html-documents-elements
     if (/^(area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr|script|style|textarea|title)$/i.test(el.tagName)) {
-        throw new TypeError('Unsupported tag type. Change the tag or wrap it in a supported tag(e.g. div).');
+        throw new TypeError("Unsupported tag type. Change the tag or wrap it in a supported tag(e.g. div).");
     }
-    if (typeof handler !== 'function') {
+    if (typeof handler !== "function") {
         throw new TypeError("Parameter 2 is not of type 'function'.");
     }
 
@@ -314,20 +318,20 @@ export function onElResize(el: HTMLElement, handler: () => void) {
     const maxWidth = 10000 * (lastWidth);
     const maxHeight = 10000 * (lastHeight);
 
-    const expand: HTMLElement = document.createElement('div');
+    const expand: HTMLElement = document.createElement("div");
     expand.className = "expand";
-    expand.style.cssText = 'position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;';
+    expand.style.cssText = "position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;";
     const shrink: HTMLElement = expand.cloneNode(false) as HTMLElement;
     shrink.className = "shrink";
 
-    const expandChild: HTMLElement = document.createElement('div') as HTMLElement;
-    expandChild.style.cssText = 'transition:0s;animation:none;';
+    const expandChild: HTMLElement = document.createElement("div") as HTMLElement;
+    expandChild.style.cssText = "transition:0s;animation:none;";
     const shrinkChild: HTMLElement = expandChild.cloneNode(false) as HTMLElement;
 
-    expandChild.style.width = maxWidth + 'px';
-    expandChild.style.height = maxHeight + 'px';
-    shrinkChild.style.width = '250%';
-    shrinkChild.style.height = '250%';
+    expandChild.style.width = maxWidth + "px";
+    expandChild.style.height = maxHeight + "px";
+    shrinkChild.style.width = "250%";
+    shrinkChild.style.height = "250%";
 
     expand.appendChild(expandChild);
     shrink.appendChild(shrinkChild);
@@ -335,7 +339,7 @@ export function onElResize(el: HTMLElement, handler: () => void) {
     el.appendChild(shrink);
 
     if (expand.offsetParent !== el) {
-        el.style.position = 'relative';
+        el.style.position = "relative";
     }
 
     expand.scrollTop = shrink.scrollTop = maxHeight;
@@ -364,8 +368,8 @@ export function onElResize(el: HTMLElement, handler: () => void) {
         expand.scrollLeft = shrink.scrollLeft = maxWidth;
     }
 
-    expand.addEventListener('scroll', onScroll);
-    shrink.addEventListener('scroll', onScroll);
+    expand.addEventListener("scroll", onScroll);
+    shrink.addEventListener("scroll", onScroll);
 }
 
 function getWH(el: HTMLElement | typeof window): { w: number, h: number } {
@@ -394,17 +398,16 @@ export function isVisible(target: HTMLElement, container: HTMLElement | typeof w
     return top >= -targetWh.h && top <= wh.h;
 }
 
-
-export function isScrollEnd(el: HTMLElement, direct: 'vertical' | 'horizontal' = 'vertical', offset = 10) {
-    if (direct === 'vertical') {
+export function isScrollEnd(el: HTMLElement, direct: "vertical" | "horizontal" = "vertical", offset = 10) {
+    if (direct === "vertical") {
         return el.scrollTop >= el.scrollHeight - el.clientHeight - offset;
     } else {
         return el.scrollLeft >= el.scrollWidth - el.clientWidth - offset;
     }
 }
 
-export function isScrollStart(el: HTMLElement, direct: 'vertical' | 'horizontal' = 'vertical', offset = 10) {
-    if (direct === 'vertical') {
+export function isScrollStart(el: HTMLElement, direct: "vertical" | "horizontal" = "vertical", offset = 10) {
+    if (direct === "vertical") {
         return el.scrollTop >= offset;
     } else {
         return el.scrollLeft >= offset;
@@ -429,7 +432,6 @@ export function loadImg(url: string): Promise<HTMLImageElement> {
     });
 }
 
-
 export function isSelectElement(el: HTMLElement): el is HTMLSelectElement {
     return el.nodeName === "SELECT";
 }
@@ -441,7 +443,6 @@ export function isInputElement(el: HTMLElement): el is HTMLInputElement {
 export function isTextAreaElement(el: HTMLElement): el is HTMLTextAreaElement {
     return el.nodeName === "TEXTAREA";
 }
-
 
 export function noScroll(scrollContainer: Window | HTMLElement | string) {
     let target: HTMLElement = scrollContainer as HTMLElement;
@@ -465,4 +466,17 @@ export function noScroll(scrollContainer: Window | HTMLElement | string) {
         target.scrollTop = scrollTop;
         Object.assign(target.style, last);
     };
+}
+
+/**
+ * 通过object来生成html元素
+ * @param tagName
+ * @param attribute
+ */
+export function createElement(tagName: string, attribute: { [k: string]: any }): HTMLElement {
+    const el = document.createElement(tagName);
+    forEachObj(attribute, (v, k, o) => {
+        el.setAttribute(k as string, v);
+    });
+    return el;
 }
