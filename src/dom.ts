@@ -476,7 +476,14 @@ export function noScroll(scrollContainer: Window | HTMLElement | string) {
 export function createElement<K extends keyof HTMLElementTagNameMap>(tagName: K, attribute: { [k: string]: any }): HTMLElementTagNameMap[K] {
     const el = document.createElement(tagName);
     forEachObj(attribute, (v, k, o) => {
-        el.setAttribute(k as string, typeof v === "object" ? JSON.stringify(v) : v);
+        const isObjValue = typeof v === "object";
+        if (k === "style" && isObjValue) {
+            forEachObj(v, (value, key) => {
+                el.style[key] = value;
+            });
+            return;
+        }
+        el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
     });
     return el;
 }
