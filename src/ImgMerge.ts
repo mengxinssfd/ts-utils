@@ -1,3 +1,4 @@
+import {assign} from "@/common";
 import {isPromiseLike} from "./type";
 import {loadImg} from "./dom";
 
@@ -20,7 +21,7 @@ export class MergeImg {
         const canvas = document.createElement("canvas");
         this.canvas = canvas;
         this.parent = parent;
-        Object.assign(canvas.style, {
+        assign(canvas.style, {
             height: height + "px",
             width: width + "px",
             position: "fixed",

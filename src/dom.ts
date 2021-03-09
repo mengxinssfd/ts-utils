@@ -1,5 +1,6 @@
-import {forEachObj, pickByKeys, typeOf} from "./common";
-import {isFunction, isString} from "./type";
+import {filter, includes, unique} from "@/array";
+import {assign, forEachObj, pickByKeys, typeOf} from "./common";
+import {isArray, isFunction, isString} from "./type";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 let vendor = ((): string | false => {
@@ -30,15 +31,15 @@ export const isDom: (target: any) => target is HTMLElement = (function () {
 export const addClass: (target: HTMLElement, className: string | string[]) => string = (function () {
     // classList ie9以上支持
     return !!document.documentElement.classList ? function (target: HTMLElement, className: string | string[]) {
-        target.classList.add(...Array.isArray(className) ? className : [className]);
+        target.classList.add(...isArray(className) ? className : [className]);
         return target.className;
     } : function (target: HTMLElement, className: string | string[]) {
         const originClass = target.className;
         const originClassArr = originClass.split(" ");
-        className = Array.isArray(className) ? className : [className];
+        className = isArray(className) ? className : [className];
         // [...new Set(array)] ts不支持这种格式 只能使用Array.from替代
-        className = Array.from(new Set(className));
-        className = className.filter(cname => !originClassArr.includes(cname));
+        className = unique(className);
+        className = filter(cname => includes(originClassArr, cname), className);
         if (!className.length) return originClass;
         className = className.join(" ");
         target.className = !!originClass ? originClass + " " + className : className;
@@ -464,7 +465,7 @@ export function noScroll(scrollContainer: Window | HTMLElement | string) {
     target.style.marginTop = -scrollTop + "px";
     return function () {
         target.scrollTop = scrollTop;
-        Object.assign(target.style, last);
+        assign(target.style, last);
     };
 }
 
