@@ -145,6 +145,21 @@ export function find<T>(
     }
 }
 
+export function findIndex<T>(
+    predicate: (value: T, index: number, obj: T[]) => boolean,
+    thisArg?: ArrayLike<T>,
+): number {
+    const arr = thisArg || this;
+    // if (!isArrayLike(arr)) throw new TypeError();
+    // if (!isFunction(predicate)) return; // 在typescript中有类型检查，不需要这一句
+    const len = arr.length;
+    for (let i = 0; i < len; i++) {
+        const item: T = arr[i];
+        if (predicate(item, i, arr)) return i;
+    }
+    return -1;
+}
+
 export function flat<T>(target: readonly T[], depth: number = 1): T[] {
     function innerFlat(innerArr: readonly any[], innerDepth: number = 0): any {
         if (!isArray(innerArr)) return innerArr;

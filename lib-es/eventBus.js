@@ -1,3 +1,4 @@
+import { findIndex } from "./array";
 export class EventBus {
     constructor() {
         this.events = {};
@@ -50,7 +51,7 @@ export class EventBus {
     }
     off(eventName, callback) {
         const list = this.getCallbackList(eventName);
-        let index = list.findIndex(i => i === callback);
+        let index = findIndex(i => i === callback, list);
         (index > -1) && list.splice(index, 1);
     }
     offAll() {

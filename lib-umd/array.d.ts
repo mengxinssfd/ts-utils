@@ -26,6 +26,7 @@ export declare function includes<T>(thisArg: ArrayLike<T>, searchElement: (v: T,
 export declare function includes<T>(thisArg: ArrayLike<T>, searchElement: T, fromIndex?: number): boolean;
 export declare function keys<T>(target: T): (keyof T)[];
 export declare function find<T>(predicate: (value: T, index: number, obj: T[]) => boolean, thisArg?: ArrayLike<T>): T | void;
+export declare function findIndex<T>(predicate: (value: T, index: number, obj: T[]) => boolean, thisArg?: ArrayLike<T>): number;
 export declare function flat<T>(target: readonly T[], depth?: number): T[];
 /**
  * 二分查找item

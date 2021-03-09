@@ -131,6 +131,18 @@ export function find(predicate, thisArg) {
             return item;
     }
 }
+export function findIndex(predicate, thisArg) {
+    const arr = thisArg || this;
+    // if (!isArrayLike(arr)) throw new TypeError();
+    // if (!isFunction(predicate)) return; // 在typescript中有类型检查，不需要这一句
+    const len = arr.length;
+    for (let i = 0; i < len; i++) {
+        const item = arr[i];
+        if (predicate(item, i, arr))
+            return i;
+    }
+    return -1;
+}
 export function flat(target, depth = 1) {
     function innerFlat(innerArr, innerDepth = 0) {
         if (!isArray(innerArr))

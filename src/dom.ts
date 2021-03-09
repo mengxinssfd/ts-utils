@@ -113,7 +113,7 @@ export function eventProxy(
         let targetDom = isDom(targetEl)
             ? [targetEl]
             : Array.prototype.slice.call(document.querySelectorAll(targetEl), 0);
-        if (targetDom.includes(e.target)) {
+        if (includes(targetDom, e.target)) {
             callback(e);
         }
     }
