@@ -250,3 +250,15 @@ export function insertToArray<T>(insert: T, to: number, array: T[]): T[] {
     // newArray.push(...end);
     return newArray;
 }
+
+export function unique<T>(target: T[], callbackFn?: (value: T, value2: T) => boolean) {
+    if (!target.length) return target;
+    const fn = callbackFn || ((v1, v2) => v1 === v2);
+    const result: T[] = [];
+    for (let i = 0; i < target.length; i++) {
+        const item = target[i];
+        if (result.some(resItem => fn(resItem, item))) continue;
+        result.push(item);
+    }
+    return result;
+}

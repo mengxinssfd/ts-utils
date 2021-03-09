@@ -564,4 +564,15 @@ test("reduceObj", () => {
     });
     expect(result2).toEqual(result3);
 });
+test("assign", () => {
+    const fn = cm.assign;
+    const a = {a: 1, b: 2, c: 3};
+    const b = {a: 4, c: 6, d: 7};
+    const c = {aa: 4, cc: 6, dd: 7};
+    expect(fn({}, a)).toEqual(a);
+    expect(fn({}, a)).toEqual(Object.assign({}, a));
+    expect(fn({}, a, [1, 2, 3])).toEqual(Object.assign({}, a, [1, 2, 3]));
+    expect(fn({}, a, b, c)).toEqual(Object.assign({}, a, b, c));
+    expect(fn({}, a, b, c, a, b, c, a, b)).toEqual(Object.assign({}, a, b, c));
+});
 

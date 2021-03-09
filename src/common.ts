@@ -725,3 +725,16 @@ export function reduceObj<T extends object, R>(
     return result;
 }
 
+export function assign<T, U>(target: T, source: U): T & U;
+export function assign<T, U, V>(target: T, source1: U, source2: V): T & U & V;
+export function assign<T, U, V, W>(target: T, source1: U, source2: V, source3: W): T & U & V & W;
+export function assign(target: object, ...args: object[]);
+export function assign(target, ...args) {
+    args.forEach(arg => {
+        for (const key in arg) {
+            if (!arg.hasOwnProperty(key)) continue;
+            target[key] = arg[key];
+        }
+    });
+    return target;
+}
