@@ -1,6 +1,6 @@
 import * as arr from "../src/array";
 
-test('forEach', () => {
+test("forEach", () => {
     const arr1: any[] = [1, 2, 3];
     arr.forEach((v, k) => arr1[k] = k, arr1);
     expect(arr1).toEqual([0, 1, 2]);
@@ -23,14 +23,14 @@ test('forEach', () => {
     arr.forEach((v, k) => arr2[k] = "a" + k, arr2);
     expect(arr2).toEqual(["a0", "a1", "a2"]);
 });
-test('from', () => {
+test("from", () => {
     expect(arr.from([1, 2, 3])).toEqual([1, 2, 3]);
     // ArrayLike
     expect(arr.from({0: 2, 1: 1, length: 2})).toEqual([2, 1]);
     // mapFn
     expect(arr.from([1, 2, 3], (v, k) => v + "" + k)).toEqual(["10", "21", "32"]);
 });
-test('includes', () => {
+test("includes", () => {
     const list: any[] = ["", undefined, 0, NaN, null];
     expect(arr.includes([1, 2, 3], 10)).toBe(false);
     expect(arr.includes(list, NaN)).toBe(true);
@@ -44,7 +44,7 @@ test('includes', () => {
     expect(arr.includes(list, (item) => item === undefined)).toBe(true);
     expect(arr.includes.call(list, undefined as any, NaN)).toBe(true);
 });
-test('createArray', () => {
+test("createArray", () => {
     expect(arr.createArray({start: 0, end: 2})).toEqual([0, 1]);
     expect(arr.createArray({start: 0, len: 2})).toEqual([0, 1]);
     expect(arr.createArray({len: 2})).toEqual([0, 1]);
@@ -63,7 +63,7 @@ test('createArray', () => {
     })).toEqual(["30", "41"]);
     expect(arr.createArray({start: 3, len: 5, end: 6, fill: 0})).toEqual([0, 0, 0]);
 });
-test('filter', () => {
+test("filter", () => {
     // 未找到
     expect(arr.filter((v, k, arr) => {
         return v > 10;
@@ -77,7 +77,7 @@ test('filter', () => {
         return (v as number) < 7 && k > 2 && arr.length === 8;
     })).toEqual([4, 5, 6]);
 });
-test('keys', () => {
+test("keys", () => {
     // array
     expect(arr.keys([1, 2, 3, 4])).toEqual(["0", "1", "2", "3"]);
     // object
@@ -91,7 +91,7 @@ test('keys', () => {
     // if (isEmpty(target)) return [];
     expect(arr.keys([])).toEqual([]);
 });
-test('find', () => {
+test("find", () => {
     expect(arr.find((v, k, arr) => {
         return v === 3 && k === 2 && arr.length === 4;
     }, [1, 2, 3, 4])).toBe(3);
@@ -105,7 +105,7 @@ test('find', () => {
         return v === 3 && k === 2 && arr.length === 6;
     })).toBeUndefined();
 });
-test('flat', () => {
+test("flat", () => {
     expect([1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]].flat(1)).toEqual([1, 2, 3, 1, 2, 3, [1, 2, 3], 1, 2, 3, [1, 2, 3]]);
 
     const list = [1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]];
@@ -125,7 +125,6 @@ test('flat', () => {
     expect(arr.flat([1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]], -1)).toEqual([1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]);
 
 });
-
 
 test("binaryFind", () => {
     const list: { id: number }[] = [...Array(100).keys()].map(i => ({id: i * 2}));
@@ -267,4 +266,19 @@ test("insertToArray", () => {
     expect(arr3).toEqual([5, 1, 2, 3, 4]);
     const arr4 = arr.insertToArray(5, 100, arr1);
     expect(arr4).toEqual([1, 2, 3, 4, 5]);
+});
+test("unique", () => {
+    const fn = arr.unique;
+    expect(fn([1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1])).toEqual([1, 2, 3, 4]);
+    const a = {value: 1};
+    const b = {value: 2};
+    const c = {value: 3};
+    const d = {value: 2};
+    expect(fn([a, b, c, d])).toEqual([a, b, c, d]);
+    expect(
+        fn(
+            [a, b, c, d],
+            (v1, v2) => v1.value === v2.value,
+        ),
+    ).toEqual([a, b, c]);
 });
