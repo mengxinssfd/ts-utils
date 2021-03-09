@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/ts-utils",
-  "version": "2.2.1",
+  "version": "2.3.1",
   "description": "ts utils ts工具函数",
   "main": "./lib-umd/index.js",
   "module": "./lib-es/index.js",
@@ -8,7 +8,6 @@
   "typings": "./types/index.d.ts",
   "sideEffects": false,
   "files": [
-    "src",
     "lib-es/*",
     "lib-umd/*",
     "types/*.d.ts"

@@ -1,5 +1,6 @@
-import { forEachObj, pickByKeys, typeOf } from "./common";
-import { isFunction, isString } from "./type";
+import { filter, includes, unique } from "@/array";
+import { assign, forEachObj, pickByKeys, typeOf } from "./common";
+import { isArray, isFunction, isString } from "./type";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 let vendor = (() => {
@@ -30,15 +31,15 @@ export const isDom = (function () {
 export const addClass = (function () {
     // classList ie9以上支持
     return !!document.documentElement.classList ? function (target, className) {
-        target.classList.add(...Array.isArray(className) ? className : [className]);
+        target.classList.add(...isArray(className) ? className : [className]);
         return target.className;
     } : function (target, className) {
         const originClass = target.className;
         const originClassArr = originClass.split(" ");
-        className = Array.isArray(className) ? className : [className];
+        className = isArray(className) ? className : [className];
         // [...new Set(array)] ts不支持这种格式 只能使用Array.from替代
-        className = Array.from(new Set(className));
-        className = className.filter(cname => !originClassArr.includes(cname));
+        className = unique(className);
+        className = filter(cname => includes(originClassArr, cname), className);
         if (!className.length)
             return originClass;
         className = className.join(" ");
@@ -409,7 +410,7 @@ export function noScroll(scrollContainer) {
     target.style.marginTop = -scrollTop + "px";
     return function () {
         target.scrollTop = scrollTop;
-        Object.assign(target.style, last);
+        assign(target.style, last);
     };
 }
 /**
@@ -420,7 +421,14 @@ export function noScroll(scrollContainer) {
 export function createElement(tagName, attribute) {
     const el = document.createElement(tagName);
     forEachObj(attribute, (v, k, o) => {
-        el.setAttribute(k, typeof v === "object" ? JSON.stringify(v) : v);
+        const isObjValue = typeof v === "object";
+        if (k === "style" && isObjValue) {
+            forEachObj(v, (value, key) => {
+                el.style[key] = value;
+            });
+            return;
+        }
+        el.setAttribute(k, isObjValue ? JSON.stringify(v) : v);
     });
     return el;
 }

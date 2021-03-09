@@ -40,8 +40,6 @@ const config = {
             console.log(alias);
             return alias;
         })(),
-
-
     },
     plugins: [
         new HtmlPlugin({

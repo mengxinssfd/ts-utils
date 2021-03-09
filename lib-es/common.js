@@ -611,3 +611,13 @@ export function reduceObj(obj, callbackFn, initialValue) {
     });
     return result;
 }
+export function assign(target, ...args) {
+    args.forEach(arg => {
+        for (const key in arg) {
+            if (!arg.hasOwnProperty(key))
+                continue;
+            target[key] = arg[key];
+        }
+    });
+    return target;
+}

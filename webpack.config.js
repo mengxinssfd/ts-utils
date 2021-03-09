@@ -1,7 +1,9 @@
 const path = require("path");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
-const resolve = dir => require('path').join(__dirname, dir);
-
+const resolve = dir => require("path").join(__dirname, dir);
+const fs = require("fs");
+const str = fs.readFileSync("./tsconfig.json").toString();
+const tsconfig = JSON.parse(str.replace(/\/\//g, ""));
 const config = {
     mode: "production",
     entry: {
@@ -10,10 +12,10 @@ const config = {
     output: {
         path: path.resolve(__dirname, "lib-umd"),
         filename: "[name].js",
-        library: 'tsUtils', // 指定类库名,主要用于直接引用的方式(比如使用script 标签)
+        library: "tsUtils", // 指定类库名,主要用于直接引用的方式(比如使用script 标签)
         libraryExport: "default", // 对外暴露default属性，就可以直接调用default里的属性
-        globalObject: 'this', // 定义全局变量,兼容node和浏览器运行，避免出现"window is not defined"的情况
-        libraryTarget: 'umd', // 定义打包方式Universal Module Definition,同时支持在CommonJS、AMD和全局变量使用
+        globalObject: "this", // 定义全局变量,兼容node和浏览器运行，避免出现"window is not defined"的情况
+        libraryTarget: "umd", // 定义打包方式Universal Module Definition,同时支持在CommonJS、AMD和全局变量使用
     },
     module: {
         rules: [
@@ -34,6 +36,16 @@ const config = {
     },
     resolve: {
         extensions: [".ts", ".tsx", ".js"],
+        alias: (function () {
+            const obj = tsconfig.compilerOptions.paths;
+            const alias = {};
+            for (const k in obj) {
+                const v = obj[k];
+                alias[k.replace(/\/\*/, "")] = path.resolve(__dirname, v[0].replace(/\/\*/, ""));
+            }
+            console.log(alias);
+            return alias;
+        })(),
     },
     plugins: [
         // package.js有了clean命令
