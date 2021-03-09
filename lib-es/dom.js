@@ -37,7 +37,6 @@ export const addClass = (function () {
         const originClass = target.className;
         const originClassArr = originClass.split(" ");
         className = isArray(className) ? className : [className];
-        // [...new Set(array)] ts不支持这种格式 只能使用Array.from替代
         className = unique(className);
         className = filter(cname => includes(originClassArr, cname), className);
         if (!className.length)
@@ -106,7 +105,9 @@ export function eventProxy(containerEl, eventType, targetEl, callback) {
     function handle(e) {
         e = e || window.event;
         // TODO 通过document.querySelectorAll匹配  并且该函数被滥用的话，会有性能问题
-        let targetDom = isDom(targetEl) ? [targetEl] : Array.from(document.querySelectorAll(targetEl));
+        let targetDom = isDom(targetEl)
+            ? [targetEl]
+            : Array.prototype.slice.call(document.querySelectorAll(targetEl), 0);
         if (targetDom.includes(e.target)) {
             callback(e);
         }
