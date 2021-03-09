@@ -1,9 +1,6 @@
 const path = require("path");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const resolve = dir => require("path").join(__dirname, dir);
-const fs = require("fs");
-const str = fs.readFileSync("./tsconfig.json").toString();
-const tsconfig = JSON.parse(str.replace(/\/\//g, ""));
 const config = {
     mode: "production",
     entry: {
@@ -36,16 +33,6 @@ const config = {
     },
     resolve: {
         extensions: [".ts", ".tsx", ".js"],
-        alias: (function () {
-            const obj = tsconfig.compilerOptions.paths;
-            const alias = {};
-            for (const k in obj) {
-                const v = obj[k];
-                alias[k.replace(/\/\*/, "")] = path.resolve(__dirname, v[0].replace(/\/\*/, ""));
-            }
-            console.log(alias);
-            return alias;
-        })(),
     },
     plugins: [
         // package.js有了clean命令

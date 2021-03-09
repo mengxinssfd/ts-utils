@@ -1,4 +1,4 @@
-import {filter, includes, unique} from "@/array";
+import {filter, includes, unique} from "./array";
 import {assign, forEachObj, pickByKeys, typeOf} from "./common";
 import {isArray, isFunction, isString} from "./type";
 // 所有主要浏览器都支持 createElement() 方法

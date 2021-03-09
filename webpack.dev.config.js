@@ -1,8 +1,5 @@
-const fs = require("fs");
 const path = require("path");
 const HtmlPlugin = require("html-webpack-plugin");
-const str = fs.readFileSync("./tsconfig.json").toString();
-const tsconfig = JSON.parse(str.replace(/\/\//g, ""));
 const config = {
     entry: {
         ImgMerge: "./test/merge-img/index.ts",
@@ -30,16 +27,6 @@ const config = {
     },
     resolve: {
         extensions: [".js", ".ts"],
-        alias: (function () {
-            const obj = tsconfig.compilerOptions.paths;
-            const alias = {};
-            for (const k in obj) {
-                const v = obj[k];
-                alias[k.replace(/\/\*/, "")] = path.resolve(__dirname, v[0].replace(/\/\*/, ""));
-            }
-            console.log(alias);
-            return alias;
-        })(),
     },
     plugins: [
         new HtmlPlugin({
