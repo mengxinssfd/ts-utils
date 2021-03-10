@@ -1,6 +1,6 @@
 import {typeOf} from "./common";
 import {deepClone} from "./clone";
-import {isEmpty, isNaN, isArray} from "./type";
+import {isEmpty, isNaN, isArray, isArrayLike, isFunction} from "./type";
 
 /**
  * @description len与end两个都有值时，以小的为准
@@ -150,12 +150,12 @@ export function findIndex<T>(
     thisArg?: ArrayLike<T>,
 ): number {
     const arr = thisArg || this;
-    // if (!isArrayLike(arr)) throw new TypeError();
-    // if (!isFunction(predicate)) return; // 在typescript中有类型检查，不需要这一句
+    if (!isArrayLike(arr)) throw new TypeError();
+    if (!isFunction(predicate)) return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
     const len = arr.length;
     for (let i = 0; i < len; i++) {
         const item: T = arr[i];
-        if (predicate(item, i, arr)) return i;
+        if (predicate(item, i, arr as any)) return i;
     }
     return -1;
 }

@@ -67,7 +67,7 @@ export function dateDiff(start, end, format = "y年d天 hh时mm分ss秒") {
  * @param format
  * @returns String
  */
-export const formatDate = function (format) {
+export const formatDate = function (format = 'yyyy-MM-dd hh:mm:ss') {
     let o = {
         "M+": this.getMonth() + 1,
         "d+": this.getDate(),

@@ -487,7 +487,7 @@ export function createEnumByObj(obj) {
      Object.freeze(res); // freeze值不可变
      // Object.seal(result); // seal值可以变
      return res;*/
-    return Object.assign({}, obj, getReverseObj(obj));
+    return assign({}, obj, getReverseObj(obj));
 }
 /**
  * @param originObj
@@ -554,9 +554,8 @@ export function pick(originObj, picks, cb) {
  * @param obj
  */
 export function getReverseObj(obj) {
-    return Object.keys(obj).reduce((res, key) => {
-        const v = obj[key];
-        res[v] = key;
+    return reduceObj(obj, (res, v, k) => {
+        res[v] = k;
         return res;
     }, {});
 }

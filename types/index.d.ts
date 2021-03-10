@@ -1,6 +1,7 @@
 export * from "./array";
 export * from "./clipboard";
 export * from "./clone";
+export * from "./cookie";
 export * from "./common";
 export * from "./coordinate";
 export * from "./date";
