@@ -1,4 +1,4 @@
-import {typeOf} from "./common";
+import {reduceObj, typeOf} from "./common";
 
 /**
  * 解析url
@@ -95,7 +95,7 @@ export class UrlParse {
 
             const resultValue = result[key];
             switch (typeOf(resultValue)) {
-                case 'undefined':
+                case "undefined":
                     result[key] = value;
                     break;
                 case "array":
@@ -107,5 +107,20 @@ export class UrlParse {
         }
 
         return result;
+    }
+
+    public static queryStringfy(query: { [k: string]: any }): string {
+        return reduceObj(query, (initValue, v, k, obj) => {
+            if (typeof v === "object") {
+                for (const key in v) {
+                    let val;
+                    if (!v.hasOwnProperty(key) || undefined === (val = v[key])) continue;
+                    initValue.push(`${v}[${key}]=${val}`);
+                }
+            } else {
+                initValue.push(`${k}=${v}`);
+            }
+            return initValue;
+        }, [] as string[]).join("&");
     }
 }

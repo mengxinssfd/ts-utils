@@ -659,6 +659,21 @@ export function pick(originObj, picks, cb) {
 // pick({a: 132, b: "123123"}, ["a", "b"]);
 
 /**
+ * Omit 省略
+ * @example
+ *  // returns {c: true}
+ *  omit({a: 123, b: "bbb", c: true}, ["a", "b"])
+ * @param target
+ * @param keys
+ */
+export function omit<T extends object, K extends keyof T>(target: T, keys: K[]): Omit<T, K> {
+    return {} as any;
+}
+
+// omit({a: 123, b: "bbb", c: true}, ["a", "b", "d"]);
+// type O = Omit<{ a: 123, b: "bbb", c: true }, "a" | "c">
+
+/**
  * object key-value翻转
  * @param obj
  */
