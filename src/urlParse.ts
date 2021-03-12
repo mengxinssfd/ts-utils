@@ -79,8 +79,9 @@ export class UrlParse {
 
     public parseQuery(url: string): { [key: string]: string } {
         let result: any = {};
+        const sp = url.split("?");
         // 去除?号前的
-        url = url.split("?")[1];
+        url = sp.length > 1 ? sp[1] : sp[0];
         // 去掉hash
         url = url.split("#")[0];
         this.queryStr = url;
@@ -109,13 +110,13 @@ export class UrlParse {
         return result;
     }
 
-    public static queryStringfy(query: { [k: string]: any }): string {
+    public static queryStringify(query: { [k: string]: any }): string {
         return reduceObj(query, (initValue, v, k, obj) => {
             if (typeof v === "object") {
                 for (const key in v) {
                     let val;
                     if (!v.hasOwnProperty(key) || undefined === (val = v[key])) continue;
-                    initValue.push(`${v}[${key}]=${val}`);
+                    initValue.push(`${k}[${key}]=${encodeURIComponent(val)}`);
                 }
             } else {
                 initValue.push(`${k}=${v}`);

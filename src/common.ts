@@ -666,12 +666,14 @@ export function pick(originObj, picks, cb) {
  * @param target
  * @param keys
  */
-export function omit<T extends object, K extends keyof T>(target: T, keys: K[]): Omit<T, K> {
+export function omit<T extends object, K extends keyof T>(target: T, keys: readonly K[]): Omit<T, K> {
+    const newKeys = keys.slice();
     return reduceObj(target, (initValue, v, k) => {
-        const index = keys.indexOf(k as K);
+        const index = newKeys.indexOf(k as K);
         if (index === -1) {
             initValue[k] = v;
-            // keys.splice(index, 1);
+        } else {
+            newKeys.splice(index, 1);
         }
         return initValue;
     }, {} as any);

@@ -1,4 +1,5 @@
 import * as cm from "../src/common";
+import * as arr from "../src/array";
 
 test("forEachByLen", () => {
     const arr: number[] = [];
@@ -580,7 +581,13 @@ test("omit", () => {
     expect(fn({a: 12, b: true, c: "c"}, ["a"])).toEqual({b: true, c: "c"});
     expect(fn({a: 12, b: true, c: "c"}, ["a", "b"])).toEqual({c: "c"});
     expect(fn({c: "c"}, ["c"])).toEqual({});
+
+    const obj: { [k: string]: number } = {};
+    cm.forEachByLen(10000, index => obj[index] = index);
+    const keys = arr.createArray({len: 500, fill: v => String(v)});
     console.time("run");
+    const result = fn(obj, keys);
+    expect(Object.keys(result).length).toEqual(9500);
     console.timeEnd("run");
 });
 
