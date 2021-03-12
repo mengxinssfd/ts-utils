@@ -667,7 +667,14 @@ export function pick(originObj, picks, cb) {
  * @param keys
  */
 export function omit<T extends object, K extends keyof T>(target: T, keys: K[]): Omit<T, K> {
-    return {} as any;
+    return reduceObj(target, (initValue, v, k) => {
+        const index = keys.indexOf(k as K);
+        if (index === -1) {
+            initValue[k] = v;
+            // keys.splice(index, 1);
+        }
+        return initValue;
+    }, {} as any);
 }
 
 // omit({a: 123, b: "bbb", c: true}, ["a", "b", "d"]);

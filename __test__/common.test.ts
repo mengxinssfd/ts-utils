@@ -575,4 +575,12 @@ test("assign", () => {
     expect(fn({}, a, b, c)).toEqual(Object.assign({}, a, b, c));
     expect(fn({}, a, b, c, a, b, c, a, b)).toEqual(Object.assign({}, a, b, c));
 });
+test("omit", () => {
+    const fn = cm.omit;
+    expect(fn({a: 12, b: true, c: "c"}, ["a"])).toEqual({b: true, c: "c"});
+    expect(fn({a: 12, b: true, c: "c"}, ["a", "b"])).toEqual({c: "c"});
+    expect(fn({c: "c"}, ["c"])).toEqual({});
+    console.time("run");
+    console.timeEnd("run");
+});
 
