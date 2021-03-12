@@ -159,3 +159,20 @@ export declare function getReverseObj(obj: {
     [k: string]: string;
 };
 export declare function promiseAny<T>(list: Promise<T>[]): Promise<T>;
+/**
+ * 代替Object.keys(obj).forEach，减少循环次数
+ * @param obj
+ * @param callbackFn 返回false的时候中断
+ */
+export declare function forEachObj<T extends object>(obj: T, callbackFn: (value: T[keyof T], key: keyof T, obj: T) => (void | false)): void;
+/**
+ * 代替Object.keys(obj).reduce，减少循环次数
+ * @param obj
+ * @param callbackFn
+ * @param initialValue 初始值
+ */
+export declare function reduceObj<T extends object, R>(obj: T, callbackFn: (previousValue: R, value: T[keyof T], key: keyof T, obj: T) => R, initialValue: R): R;
+export declare function assign<T, U>(target: T, source: U): T & U;
+export declare function assign<T, U, V>(target: T, source1: U, source2: V): T & U & V;
+export declare function assign<T, U, V, W>(target: T, source1: U, source2: V, source3: W): T & U & V & W;
+export declare function assign(target: object, ...args: object[]): any;

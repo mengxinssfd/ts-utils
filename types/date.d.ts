@@ -5,7 +5,7 @@
 export declare function number2Date(millisecond: number, format?: string): string;
 export declare function dateDiff(start: Date, end: Date, format?: string): string;
 export interface formatDateInterface {
-    (format: string): string;
+    (format?: string): string;
     seasonText: string[];
     weekText: string[];
 }

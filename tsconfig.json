@@ -27,17 +27,14 @@
     "esModuleInterop": true,
     "strict": true,
     // "allowSyntheticDefaultImports": true,
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    }
   },
   // "include": ["src/**/*", "src/global.d.ts"],
   "exclude": [
     "tslib",
     "lib*",
     "webpack.config.js",
-    "test.ts"
+    "test.ts",
+    "test/*",
+    "webpack.dev.config.js"
   ]
 }

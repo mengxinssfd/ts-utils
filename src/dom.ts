@@ -1,4 +1,4 @@
-import {filter, includes, unique} from "@/array";
+import {filter, includes, unique} from "./array";
 import {assign, forEachObj, pickByKeys, typeOf} from "./common";
 import {isArray, isFunction, isString} from "./type";
 // 所有主要浏览器都支持 createElement() 方法
@@ -37,7 +37,6 @@ export const addClass: (target: HTMLElement, className: string | string[]) => st
         const originClass = target.className;
         const originClassArr = originClass.split(" ");
         className = isArray(className) ? className : [className];
-        // [...new Set(array)] ts不支持这种格式 只能使用Array.from替代
         className = unique(className);
         className = filter(cname => includes(originClassArr, cname), className);
         if (!className.length) return originClass;
@@ -111,8 +110,10 @@ export function eventProxy(
     function handle(e) {
         e = e || window.event;
         // TODO 通过document.querySelectorAll匹配  并且该函数被滥用的话，会有性能问题
-        let targetDom = isDom(targetEl) ? [targetEl] : Array.from(document.querySelectorAll(targetEl));
-        if (targetDom.includes(e.target)) {
+        let targetDom = isDom(targetEl)
+            ? [targetEl]
+            : Array.prototype.slice.call(document.querySelectorAll(targetEl), 0);
+        if (includes(targetDom, e.target)) {
             callback(e);
         }
     }
@@ -474,10 +475,17 @@ export function noScroll(scrollContainer: Window | HTMLElement | string) {
  * @param tagName
  * @param attribute
  */
-export function createElement(tagName: string, attribute: { [k: string]: any }): HTMLElement {
+export function createElement<K extends keyof HTMLElementTagNameMap>(tagName: K, attribute: { [k: string]: any }): HTMLElementTagNameMap[K] {
     const el = document.createElement(tagName);
     forEachObj(attribute, (v, k, o) => {
-        el.setAttribute(k as string, v);
+        const isObjValue = typeof v === "object";
+        if (k === "style" && isObjValue) {
+            forEachObj(v, (value, key) => {
+                el.style[key] = value;
+            });
+            return;
+        }
+        el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
     });
     return el;
 }

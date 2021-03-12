@@ -13,6 +13,7 @@ export declare function supportClipboardWrite(): boolean;
 export declare function supportCopySetData2Clipboard(): void;
 /**
  * 写进剪贴板
+ * @desc notice - 只有在https或者localhost上可以用
  * @param contentList
  */
 export declare function write2Clipboard(contentList: Array<string | Blob>): Promise<void>;

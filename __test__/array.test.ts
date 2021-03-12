@@ -282,3 +282,9 @@ test("unique", () => {
         ),
     ).toEqual([a, b, c]);
 });
+test("findIndex", () => {
+    const fn = arr.findIndex;
+    expect(fn(v => v === 4, [1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1])).toEqual(5);
+    expect(fn(v => v.v === 4, [{v: 1}, {v: 2}])).toEqual(-1);
+    expect(fn(v => v.v === 2, [{v: 1}, {v: 2}])).toEqual(1);
+});

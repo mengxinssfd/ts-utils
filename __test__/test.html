@@ -23,7 +23,7 @@
     <h1>使用copy</h1>
     <div class="test">
         <h2>远程图片</h2>
-<!--        <img crossorigin="anonymous" contenteditable="true" src="https://cdn.jsdelivr.net/gh/mengxinssfd/imgBase@main/img/image-20210218190434007.png"/>-->
+        <!--        <img crossorigin="anonymous" contenteditable="true" src="https://cdn.jsdelivr.net/gh/mengxinssfd/imgBase@main/img/image-20210218190434007.png"/>-->
         <img crossorigin="anonymous" src="http://img-haodanku-com.cdn.fudaiapp.com/5_1614508885756.jpg"/>
         <p>水电费水电费水电费水电费水电费</p>
     </div>
@@ -37,7 +37,8 @@
     <h1>使用clipboard</h1>
     <div class="test">
         <h2>远程图片</h2>
-        <img crossorigin="anonymous" src="http://cdn.jsdelivr.net/gh/mengxinssfd/imgBase@main/img/image-20210218190434007.png"/>
+        <img crossorigin="anonymous"
+             src="http://cdn.jsdelivr.net/gh/mengxinssfd/imgBase@main/img/image-20210218190434007.png"/>
         <p>水电费水电费水电费水电费水电费</p>
     </div>
     <div class="test">
@@ -50,97 +51,103 @@
 <script>
     // console.log(tsUtils.supportClipboardWrite());
     // tsUtils.oneByOne("sdfsdf", 1000);
+    var div = tsUtils.createElement("div", {class: "test", style: {color: "red", border: "1px solid pink"}});
+    div.innerHTML = "test";
+    document.body.appendChild(div);
+    console.log(div);
+    /*
 
-    function clickBtn() {
-        document.addEventListener('cut', async (event) => {
+        function clickBtn() {
+            document.addEventListener('cut', async (event) => {
 
-            // event.clipboardData.setData("text/plain","hello world")
-            const mi = new tsUtils.MergeImg();
-            await mi.setBg(document.querySelector(".test img").src)
+                // event.clipboardData.setData("text/plain","hello world")
+                const mi = new tsUtils.MergeImg();
+                await mi.setBg(document.querySelector(".test img").src)
 
-            event.clipboardData.setData("image/png", mi.toDataURL());
-            console.log(event);
+                event.clipboardData.setData("image/png", mi.toDataURL());
+                console.log(event);
 
-            event.preventDefault();
-        });
-        document.execCommand("cut");
+                event.preventDefault();
+            });
+            document.execCommand("cut");
 
-    }
-
-    Array.prototype.forEach.call(document.querySelectorAll(".copy .test"), function (el) {
-        el.addEventListener("click", async function (e) {
-             tsUtils.copy2Clipboard(this).then(function () {
-                 console.log("成功");
-             });
-            // tsUtils.write2Clipboard()
-            return
-            const img = this.querySelector("img");
-            const im = new tsUtils.MergeImg(img.width, img.height);
-            await im.addImg(img.src, [0, 0]);
-            const blob = await im.toBlob();
-            tsUtils.write2Clipboard([
-                "hello",
-                // blob,
-                // "world"
-            ],).then(() => console.log('ssssssss'));
-        });
-    });
-    var clipboard = new ClipboardJS('.clipboard .test', {
-        target: function (trigger) {
-            return trigger;
-        },
-    });
-    clipboard.on('success', function (e) {
-        console.info('Action:', e.action);
-        console.info('Text:', e.text);
-        console.info('Trigger:', e.trigger);
-
-        e.clearSelection();
-    });
-
-    clipboard.on('error', function (e) {
-        console.error('Action:', e.action);
-        console.error('Trigger:', e.trigger);
-    });
-
-    async function write() {
-        try {
-            const data = await fetch(`./img.png`);
-            // const data = await fetch('/management/attachments/63848472471ea1095093874a498d25dba07d478a.do')
-            const blob = await data.blob();
-
-            await navigator.clipboard.write([
-                new Blob(["hello"], {type: "text/"}),
-                new ClipboardItem({
-                    [blob.type]: blob
-                })
-            ]);
-            console.log('Fetched image copied.');
-        } catch (err) {
-            console.error(err.name, err.message);
         }
-    }
 
-    async function read() {
-        try {
-            const clipboardItems = await navigator.clipboard.read();
-            console.log(clipboardItems);
+        Array.prototype.forEach.call(document.querySelectorAll(".copy .test"), function (el) {
+            el.addEventListener("click", async function (e) {
+                 tsUtils.copy2Clipboard(this).then(function () {
+                     console.log("成功");
+                 });
+                // tsUtils.write2Clipboard()
+                return
+                const img = this.querySelector("img");
+                const im = new tsUtils.MergeImg(img.width, img.height);
+                await im.addImg(img.src, [0, 0]);
+                const blob = await im.toBlob();
+                tsUtils.write2Clipboard([
+                    "hello",
+                    // blob,
+                    // "world"
+                ],).then(() => console.log('ssssssss'));
+            });
+        });
+        var clipboard = new ClipboardJS('.clipboard .test', {
+            target: function (trigger) {
+                return trigger;
+            },
+        });
+        clipboard.on('success', function (e) {
+            console.info('Action:', e.action);
+            console.info('Text:', e.text);
+            console.info('Trigger:', e.trigger);
 
-            for (const clipboardItem of clipboardItems) {
+            e.clearSelection();
+        });
 
-                for (const type of clipboardItem.types) {
-                    const blob = await clipboardItem.getType(type);
-                    // we can now use blob here
-                    console.log(blob);
-                }
+        clipboard.on('error', function (e) {
+            console.error('Action:', e.action);
+            console.error('Trigger:', e.trigger);
+        });
 
+        async function write() {
+            try {
+                const data = await fetch(`./img.png`);
+                // const data = await fetch('/management/attachments/63848472471ea1095093874a498d25dba07d478a.do')
+                const blob = await data.blob();
+
+                await navigator.clipboard.write([
+                    new Blob(["hello"], {type: "text/"}),
+                    new ClipboardItem({
+                        [blob.type]: blob
+                    })
+                ]);
+                console.log('Fetched image copied.');
+            } catch (err) {
+                console.error(err.name, err.message);
             }
-            const readText = await navigator.clipboard.readText();
-            console.log(readText);
-        } catch (e) {
-            console.error(e);
         }
-    }
+
+        async function read() {
+            try {
+                const clipboardItems = await navigator.clipboard.read();
+                console.log(clipboardItems);
+
+                for (const clipboardItem of clipboardItems) {
+
+                    for (const type of clipboardItem.types) {
+                        const blob = await clipboardItem.getType(type);
+                        // we can now use blob here
+                        console.log(blob);
+                    }
+
+                }
+                const readText = await navigator.clipboard.readText();
+                console.log(readText);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    */
 
     // read();
 </script>

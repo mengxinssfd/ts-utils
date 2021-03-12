@@ -1,3 +1,4 @@
+import { includes } from "./array";
 import { typeOf } from "./common";
 export function isObject(target) {
     return typeOf(target) === "object";
@@ -74,7 +75,7 @@ export function isEmptyObject(target) {
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 export function isEmpty(target) {
     // TO DO 可以替换array里的includes
-    if ([undefined, null, "", NaN].includes(target))
+    if (includes([undefined, null, "", NaN], target))
         return true;
     // if (includes([undefined, null, "", NaN], target)) return true;
     switch (typeOf(target)) {

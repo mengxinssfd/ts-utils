@@ -545,7 +545,7 @@ export function createEnumByObj<T extends object, K extends keyof T, O extends {
      Object.freeze(res); // freeze值不可变
      // Object.seal(result); // seal值可以变
      return res;*/
-    return Object.assign({}, obj, getReverseObj(obj as any)) as any;
+    return assign({}, obj, getReverseObj(obj as any)) as any;
 }
 
 /**
@@ -685,9 +685,8 @@ export function omit<T extends object, K extends keyof T>(target: T, keys: K[]):
  * @param obj
  */
 export function getReverseObj(obj: { [k: string]: string }): { [k: string]: string } {
-    return Object.keys(obj).reduce((res, key) => {
-        const v = obj[key];
-        res[v] = key;
+    return reduceObj(obj, (res, v, k) => {
+        res[v] = k;
         return res;
     }, {});
 }

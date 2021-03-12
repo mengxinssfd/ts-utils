@@ -1,3 +1,5 @@
+import {findIndex} from "./array";
+
 type Callback = (...args: any[]) => void
 
 export class EventBus {
@@ -61,7 +63,7 @@ export class EventBus {
 
     off(eventName: string, callback: Callback) {
         const list = this.getCallbackList(eventName);
-        let index = list.findIndex(i => i === callback);
+        let index = findIndex(i => i === callback, list);
         (index > -1) && list.splice(index, 1);
     }
 

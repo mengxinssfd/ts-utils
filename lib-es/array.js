@@ -1,6 +1,6 @@
 import { typeOf } from "./common";
 import { deepClone } from "./clone";
-import { isEmpty, isNaN, isArray } from "./type";
+import { isEmpty, isNaN, isArray, isArrayLike, isFunction } from "./type";
 /**
  * @description len与end两个都有值时，以小的为准
  * @example
@@ -131,6 +131,20 @@ export function find(predicate, thisArg) {
             return item;
     }
 }
+export function findIndex(predicate, thisArg) {
+    const arr = thisArg || this;
+    if (!isArrayLike(arr))
+        throw new TypeError();
+    if (!isFunction(predicate))
+        return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
+    const len = arr.length;
+    for (let i = 0; i < len; i++) {
+        const item = arr[i];
+        if (predicate(item, i, arr))
+            return i;
+    }
+    return -1;
+}
 export function flat(target, depth = 1) {
     function innerFlat(innerArr, innerDepth = 0) {
         if (!isArray(innerArr))
@@ -236,4 +250,17 @@ export function insertToArray(insert, to, array) {
     Array.prototype.push.apply(newArray, end);
     // newArray.push(...end);
     return newArray;
+}
+export function unique(target, callbackFn) {
+    if (!target.length)
+        return target;
+    const fn = callbackFn || ((v1, v2) => v1 === v2);
+    const result = [];
+    for (let i = 0; i < target.length; i++) {
+        const item = target[i];
+        if (result.some(resItem => fn(resItem, item)))
+            continue;
+        result.push(item);
+    }
+    return result;
 }

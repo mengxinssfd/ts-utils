@@ -94,7 +94,7 @@ export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H
 
 
 export interface formatDateInterface {
-    (format: string): string;
+    (format?: string): string;
 
     seasonText: string[];
     weekText: string[];
@@ -105,7 +105,7 @@ export interface formatDateInterface {
  * @param format
  * @returns String
  */
-export const formatDate: formatDateInterface = function (this: Date, format) {
+export const formatDate: formatDateInterface = function (this: Date, format = 'yyyy-MM-dd hh:mm:ss') {
     let o: any = {
         "M+": this.getMonth() + 1,                    //月份
         "d+": this.getDate(),                         //日
@@ -146,7 +146,6 @@ export const formatDate: formatDateInterface = function (this: Date, format) {
 };
 formatDate.weekText = [];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
-
 
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date

@@ -39,6 +39,11 @@ declare type OnMove = (e: MouseEvent | TouchEvent, currentXY: xy, lastXY: xy, do
 declare type OnUp = (e: MouseEvent | TouchEvent, currentXY: xy, downXY: xy) => any;
 /**
  * 拖动事件 返回取消事件
+ * @param el
+ * @param onDown
+ * @param onMove
+ * @param onUp
+ * @param capture
  */
 export declare function addDragEventListener({ el, onDown, onMove, onUp, capture }: {
     el?: string | HTMLElement;
@@ -58,15 +63,8 @@ export declare function addDragEventListener({ el, onDown, onMove, onUp, capture
  */
 export declare function onElResize(el: HTMLElement, handler: () => void): void;
 export declare function isVisible(target: HTMLElement, container?: HTMLElement | typeof window): boolean;
-export declare function isScrollEnd(el: HTMLElement, direct?: 'vertical' | 'horizontal', offset?: number): boolean;
-export declare function isScrollStart(el: HTMLElement, direct?: 'vertical' | 'horizontal', offset?: number): boolean;
-/**
- * 基于原生canvas合成图片
- * @param {String} posterSrc       海报
- * @param {String|HTMLElement} qrCode       二维码
- * @param {number} imageHeight  图片高度（传：1000(750 * 1000) 或 1334(750 * 1334)）
- */
-export declare function mergeImg(posterSrc: string, qrCode: string | HTMLElement, imageHeight: number): Promise<unknown>;
+export declare function isScrollEnd(el: HTMLElement, direct?: "vertical" | "horizontal", offset?: number): boolean;
+export declare function isScrollStart(el: HTMLElement, direct?: "vertical" | "horizontal", offset?: number): boolean;
 /**
  * 手动添加img标签下载图片
  * @param url
@@ -76,4 +74,12 @@ export declare function isSelectElement(el: HTMLElement): el is HTMLSelectElemen
 export declare function isInputElement(el: HTMLElement): el is HTMLInputElement;
 export declare function isTextAreaElement(el: HTMLElement): el is HTMLTextAreaElement;
 export declare function noScroll(scrollContainer: Window | HTMLElement | string): () => void;
+/**
+ * 通过object来生成html元素
+ * @param tagName
+ * @param attribute
+ */
+export declare function createElement<K extends keyof HTMLElementTagNameMap>(tagName: K, attribute: {
+    [k: string]: any;
+}): HTMLElementTagNameMap[K];
 export {};

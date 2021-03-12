@@ -1,4 +1,5 @@
 # typescript工具函数
+工欲善其事必先利其器，此其器也
 ## 使用方法
    import导入
 ```javascript

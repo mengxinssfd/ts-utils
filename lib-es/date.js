@@ -11,6 +11,7 @@ export function number2Date(millisecond, format = 'd天hh时mm分ss秒') {
         's+': seconds % 60,
         'm+': ~~(seconds / 60) % 60,
         'h+': ~~(seconds / (60 * 60)) % 24,
+        // 'd+': ~~(seconds / (60 * 60 * 24))
     };
     // 有多少天就显示多少天,但不会补0
     const days = ~~(seconds / (60 * 60 * 24));
@@ -66,7 +67,7 @@ export function dateDiff(start, end, format = "y年d天 hh时mm分ss秒") {
  * @param format
  * @returns String
  */
-export const formatDate = function (format) {
+export const formatDate = function (format = 'yyyy-MM-dd hh:mm:ss') {
     let o = {
         "M+": this.getMonth() + 1,
         "d+": this.getDate(),
