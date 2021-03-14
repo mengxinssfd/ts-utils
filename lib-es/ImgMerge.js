@@ -26,7 +26,7 @@ export class MergeImg {
     }
     // 根据背景图创建一个MergeImg类 好处是可以根据背景图宽高设置canvas宽高，不用再额外设置
     static createWithBg(url) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter_1(this, void 0, void 0, function* () {
             const promise = loadImg(url);
             const img = yield promise;
             const mi = new MergeImg(img.width, img.height);
@@ -36,7 +36,7 @@ export class MergeImg {
     }
     addImg(urlOrPromiseImg, location = {}, size = []) {
         var _a, _b;
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter_1(this, void 0, void 0, function* () {
             if (!this._ctx)
                 throw new Error();
             let img;

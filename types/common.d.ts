@@ -150,6 +150,15 @@ export declare function pick<T extends object, K extends keyof T, O extends {
     [k in keyof O]: T[O[k]];
 };
 /**
+ * Omit 省略
+ * @example
+ *  // returns {c: true}
+ *  omit({a: 123, b: "bbb", c: true}, ["a", "b"])
+ * @param target
+ * @param keys
+ */
+export declare function omit<T extends object, K extends keyof T>(target: T, keys: readonly K[]): Omit<T, K>;
+/**
  * object key-value翻转
  * @param obj
  */

@@ -1,4 +1,4 @@
-import { typeOf } from "./common";
+import { reduceObj, typeOf } from "./common";
 /**
  * 解析url
  * @Author: dyh
@@ -71,8 +71,9 @@ export class UrlParse {
     }
     parseQuery(url) {
         let result = {};
+        const sp = url.split("?");
         // 去除?号前的
-        url = url.split("?")[1];
+        url = sp.length > 1 ? sp[1] : sp[0];
         // 去掉hash
         url = url.split("#")[0];
         this.queryStr = url;
@@ -85,7 +86,7 @@ export class UrlParse {
             key = key.replace(/\[\w*\]/g, "");
             const resultValue = result[key];
             switch (typeOf(resultValue)) {
-                case 'undefined':
+                case "undefined":
                     result[key] = value;
                     break;
                 case "array":
@@ -96,5 +97,21 @@ export class UrlParse {
             }
         }
         return result;
+    }
+    static queryStringify(query) {
+        return reduceObj(query, (initValue, v, k, obj) => {
+            if (typeof v === "object") {
+                for (const key in v) {
+                    let val;
+                    if (!v.hasOwnProperty(key) || undefined === (val = v[key]))
+                        continue;
+                    initValue.push(`${k}[${key}]=${encodeURIComponent(val)}`);
+                }
+            }
+            else {
+                initValue.push(`${k}=${v}`);
+            }
+            return initValue;
+        }, []).join("&");
     }
 }

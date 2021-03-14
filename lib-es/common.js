@@ -36,7 +36,7 @@ export function debounceAsync(callback, delay) {
                 rej("debounceAsync reject");
             }
             rej = reject;
-            timer = setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+            timer = setTimeout(() => __awaiter_1(this, void 0, void 0, function* () {
                 timer = null;
                 const result = yield callback.apply(this, args);
                 resolve(result);
@@ -76,7 +76,7 @@ export function debounceByPromise(callback) {
     let rejectFn;
     return function (...args) {
         rejectFn && rejectFn();
-        return new Promise((res, rej) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise((res, rej) => __awaiter_1(this, void 0, void 0, function* () {
             rejectFn = rej;
             const result = yield callback.apply(this, args);
             res(result);
@@ -549,6 +549,29 @@ export function pick(originObj, picks, cb) {
     return isObj ? pickRename(originObj, picks, cb) : pickByKeys(originObj, picks, cb);
 }
 // pick({a: 132, b: "123123"}, ["a", "b"]);
+/**
+ * Omit 省略
+ * @example
+ *  // returns {c: true}
+ *  omit({a: 123, b: "bbb", c: true}, ["a", "b"])
+ * @param target
+ * @param keys
+ */
+export function omit(target, keys) {
+    const newKeys = keys.slice();
+    return reduceObj(target, (initValue, v, k) => {
+        const index = newKeys.indexOf(k);
+        if (index === -1) {
+            initValue[k] = v;
+        }
+        else {
+            newKeys.splice(index, 1);
+        }
+        return initValue;
+    }, {});
+}
+// omit({a: 123, b: "bbb", c: true}, ["a", "b", "d"]);
+// type O = Omit<{ a: 123, b: "bbb", c: true }, "a" | "c">
 /**
  * object key-value翻转
  * @param obj

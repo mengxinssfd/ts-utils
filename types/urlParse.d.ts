@@ -23,4 +23,7 @@ export declare class UrlParse {
     parseQuery(url: string): {
         [key: string]: string;
     };
+    static queryStringify(query: {
+        [k: string]: any;
+    }): string;
 }
