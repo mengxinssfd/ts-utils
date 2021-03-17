@@ -1,6 +1,7 @@
 import { __awaiter } from "tslib";
-import { isArray, isString, isObject, isPromiseLike } from "./type";
+import { isArray, isString, isPromiseLike } from "./type";
 import { createArray } from "./array";
+import { assign, getReverseObj } from "./object";
 /**
  * 防抖函数
  * @param callback 回调
@@ -329,74 +330,6 @@ export function generateFunctionCode(argsArrayLength) {
 export function generateFunction(obj, property, args) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
 }
-// 获取object树的最大层数 tree是object的话，tree就是层数1
-export function getTreeMaxDeep(tree) {
-    function deeps(obj, num = 0) {
-        if (typeof tree !== "object" || tree === null)
-            return num;
-        let arr = [++num];
-        for (const k in obj) {
-            if (!obj.hasOwnProperty(k))
-                continue;
-            arr.push(deeps(obj[k], num));
-        }
-        return Math.max(...arr);
-    }
-    return deeps(tree);
-}
-// 获取树某层的节点数 0是tree本身
-export function getTreeNodeLen(tree, nodeNumber = 1) {
-    let result = 0;
-    if (typeof tree !== "object" || tree === null || nodeNumber < 0)
-        return result;
-    function deeps(obj, num = 0) {
-        if (nodeNumber === num++) {
-            result++;
-            return;
-        }
-        for (const k in obj) {
-            if (!obj.hasOwnProperty(k))
-                continue;
-            deeps(obj[k], num);
-        }
-    }
-    deeps(tree);
-    return result;
-}
-// 合并两个object
-export function merge(first, second) {
-    const result = {};
-    function assign(receive, obj) {
-        for (const k in obj) {
-            if (obj.hasOwnProperty(k)) {
-                receive[k] = obj[k];
-            }
-        }
-    }
-    assign(result, first);
-    assign(result, second);
-    return result;
-}
-// 合并两个object
-export function deepMerge(first, second) {
-    function assign(receive, obj) {
-        for (const k in obj) {
-            if (!obj.hasOwnProperty(k))
-                continue;
-            const v = obj[k];
-            if (v && typeof v === "object") {
-                receive[k] = new v.constructor();
-                assign(receive[k], v);
-            }
-            else
-                receive[k] = v;
-        }
-    }
-    const result = {};
-    assign(result, first);
-    assign(result, second);
-    return result;
-}
 export function sleep(delay) {
     return new Promise(res => setTimeout(res, delay));
 }
@@ -489,99 +422,8 @@ export function createEnumByObj(obj) {
      return res;*/
     return assign({}, obj, getReverseObj(obj));
 }
-/**
- * @param originObj
- * @param pickKeys
- * @param cb
- */
-export function pickByKeys(originObj, pickKeys, cb) {
-    const callback = cb || (v => v);
-    return pickKeys.reduce((res, key) => {
-        if (originObj.hasOwnProperty(key))
-            res[key] = callback(originObj[key], key, originObj);
-        return res;
-    }, {});
-}
-// TODO 不完美的地方：k === "a"时应该限定返回值类型为number
-/*pickByKeys({a: 123, b: "111", c: false}, ["a", "b"], (v, k, o) => {
-    if(k === "a"){
-        return "123123"
-    }
-    return v;
-});*/
-// 新属性名作为键名的好处是可以多个属性对应一个值
-export function pickRename(originObj, renamePickObj, cb) {
-    const callback = cb || (v => v);
-    /* const renames = Object.keys(renamePickObj) as (keyof O)[];
-     return renames.reduce((result, rename) => {
-         const pick = renamePickObj[rename];
-         if (originObj.hasOwnProperty(pick)) {
-             result[rename] = callback(originObj[pick], pick, originObj);
-         }
-         return result;
-     }, {} as any);*/
-    return reduceObj(renamePickObj, (result, pick, rename) => {
-        if (originObj.hasOwnProperty(pick)) {
-            result[rename] = callback(originObj[pick], pick, originObj);
-        }
-        return result;
-    }, {});
-}
-/**
- * 合并pickByKeys与pickRename两者的功能
- */
-export function pick(originObj, picks, cb) {
-    const isObj = isObject(picks);
-    // ------- 第一种写法 -------
-    // const callback = cb || (v => v);
-    // const pickKeys = isObj ? Object.keys(picks) : picks;
-    // const getOriginObjKey = isObj ? k => picks[k] : k => k;
-    // return pickKeys.reduce((res, k) => {
-    //     const originObjKey = getOriginObjKey(k);
-    //     if (originObj.hasOwnProperty(originObjKey)) {
-    //         res[k] = callback(originObj[originObjKey], originObjKey, originObj);
-    //     }
-    //     return res;
-    // }, {} as any);
-    // ------- 第二种写法 -------
-    // 更简洁 减少判断次数
-    // TODO 需要判断返回值类型是否改变了  改变则抛出异常
-    return isObj ? pickRename(originObj, picks, cb) : pickByKeys(originObj, picks, cb);
-}
-// pick({a: 132, b: "123123"}, ["a", "b"]);
-/**
- * Omit 省略
- * @example
- *  // returns {c: true}
- *  omit({a: 123, b: "bbb", c: true}, ["a", "b"])
- * @param target
- * @param keys
- */
-export function omit(target, keys) {
-    const newKeys = keys.slice();
-    return reduceObj(target, (initValue, v, k) => {
-        const index = newKeys.indexOf(k);
-        if (index === -1) {
-            initValue[k] = v;
-        }
-        else {
-            newKeys.splice(index, 1);
-        }
-        return initValue;
-    }, {});
-}
 // omit({a: 123, b: "bbb", c: true}, ["a", "b", "d"]);
 // type O = Omit<{ a: 123, b: "bbb", c: true }, "a" | "c">
-/**
- * object key-value翻转
- * @param obj
- */
-export function getReverseObj(obj) {
-    return reduceObj(obj, (res, v, k) => {
-        res[v] = k;
-        return res;
-    }, {});
-}
 export function promiseAny(list) {
     return new Promise(((resolve, reject) => {
         let rejectTimes = 0;
@@ -605,41 +447,4 @@ export function promiseAny(list) {
             reject(e.toString());
         }
     }));
-}
-/**
- * 代替Object.keys(obj).forEach，减少循环次数
- * @param obj
- * @param callbackFn 返回false的时候中断
- */
-export function forEachObj(obj, callbackFn) {
-    for (const k in obj) {
-        if (!obj.hasOwnProperty(k))
-            continue;
-        const v = obj[k];
-        if (callbackFn(v, k, obj) === false)
-            return;
-    }
-}
-/**
- * 代替Object.keys(obj).reduce，减少循环次数
- * @param obj
- * @param callbackFn
- * @param initialValue 初始值
- */
-export function reduceObj(obj, callbackFn, initialValue) {
-    let result = initialValue;
-    forEachObj(obj, (v, k, o) => {
-        result = callbackFn(result, v, k, o);
-    });
-    return result;
-}
-export function assign(target, ...args) {
-    args.forEach(arg => {
-        for (const key in arg) {
-            if (!arg.hasOwnProperty(key))
-                continue;
-            target[key] = arg[key];
-        }
-    });
-    return target;
 }

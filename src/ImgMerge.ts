@@ -1,4 +1,4 @@
-import {assign} from "./common";
+import {assign} from "./object";
 import {isPromiseLike} from "./type";
 import {loadImg} from "./dom";
 

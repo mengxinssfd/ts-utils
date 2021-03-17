@@ -1,5 +1,6 @@
 import { filter, includes, unique } from "./array";
-import { assign, forEachObj, pickByKeys, typeOf } from "./common";
+import { typeOf } from "./common";
+import { assign, forEachObj, pickByKeys } from "./object";
 import { isArray, isFunction, isString } from "./type";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;

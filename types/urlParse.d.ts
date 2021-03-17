@@ -5,7 +5,7 @@
  * @Description:
  */
 export declare class UrlParse {
-    schema: string;
+    protocol: string;
     port: number | string;
     host: string;
     path: string;
@@ -15,7 +15,7 @@ export declare class UrlParse {
     queryStr: string;
     constructor(url?: string);
     private parseAll;
-    parseSchema(url: string): string;
+    parseProtocol(url: string): string;
     parseHost(url: string): string;
     parsePort(url: string): string;
     parsePath(url: string): string;

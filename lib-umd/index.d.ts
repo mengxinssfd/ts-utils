@@ -14,3 +14,5 @@ export * from "./numberCalc";
 export * from "./OneByOne";
 export * from "./type";
 export * from "./urlParse";
+export * from "./object";
+export * from "./Pool";

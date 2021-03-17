@@ -1,4 +1,5 @@
-import { reduceObj, typeOf } from "./common";
+import { typeOf } from "./common";
+import { reduceObj } from "./object";
 /**
  * 解析url
  * @Author: dyh
@@ -7,7 +8,7 @@ import { reduceObj, typeOf } from "./common";
  */
 export class UrlParse {
     constructor(url) {
-        this.schema = "";
+        this.protocol = "";
         this.port = "";
         this.host = "";
         this.path = "";
@@ -21,15 +22,15 @@ export class UrlParse {
         this.parseAll(url);
     }
     parseAll(url) {
-        this.schema = this.parseSchema(url);
+        this.protocol = this.parseProtocol(url);
         this.host = this.parseHost(url);
         this.port = this.parsePort(url);
         this.path = this.parsePath(url);
         this.hash = this.parseHash(url);
         this.query = this.parseQuery(url);
     }
-    parseSchema(url) {
-        const reg = /^(https?):\/\//;
+    parseProtocol(url) {
+        const reg = /^(\w+):\/\//;
         let schema = "";
         if (reg.test(url)) {
             schema = RegExp.$1;
