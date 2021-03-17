@@ -67,6 +67,14 @@ export function forEach<T>(callbackfn: (value: T, index: number, array: ArrayLik
     }
 }
 
+export function forEachRight<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>) {
+    const arr = thisArg || this;
+    // if (!isArrayLike(arr)) throw new TypeError();
+    for (let i = arr.length - 1; i > -1; i--) {
+        if (callbackfn(arr[i], i, arr) === false) break;
+    }
+}
+
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
 export function from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapFn?: (v: T, k: number) => U): U[] {
     const arr: U[] = [];
