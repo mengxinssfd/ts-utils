@@ -21,6 +21,7 @@ class PoolItem {
     }
 }
 
+// 在项目使用中测
 test("Pool", () => {
     const pool = new Pool<PoolItem>();
     pool.add(() => new PoolItem(0, 0));
@@ -28,7 +29,7 @@ test("Pool", () => {
     pool.add(() => new PoolItem(2, 2));
     pool.shift();
     pool.add(() => new PoolItem(3, 3));
-    expect(pool.recycleList.length).toBe(3);
+    expect(pool.aliveList.length).toBe(3);
     expect(pool.aliveList[0].x).toBe(1);
     const pi = pool.unshift((a, b) => new PoolItem(10, 10));
     pi.y = 100;

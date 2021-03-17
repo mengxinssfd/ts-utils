@@ -1,4 +1,5 @@
-import {reduceObj, typeOf} from "./common";
+import {typeOf} from "./common";
+import {reduceObj} from "./object";
 
 /**
  * 解析url
@@ -7,7 +8,7 @@ import {reduceObj, typeOf} from "./common";
  * @Description:
  */
 export class UrlParse {
-    schema: string = "";
+    protocol: string = "";
     port: number | string = "";
     host: string = "";
     path: string = "";
@@ -23,7 +24,7 @@ export class UrlParse {
     }
 
     private parseAll(url: string) {
-        this.schema = this.parseSchema(url);
+        this.protocol = this.parseProtocol(url);
         this.host = this.parseHost(url);
         this.port = this.parsePort(url);
         this.path = this.parsePath(url);
@@ -31,8 +32,8 @@ export class UrlParse {
         this.query = this.parseQuery(url);
     }
 
-    public parseSchema(url: string): string {
-        const reg = /^(https?):\/\//;
+    public parseProtocol(url: string): string {
+        const reg = /^(\w+):\/\//;
         let schema = "";
         if (reg.test(url)) {
             schema = RegExp.$1;
@@ -124,17 +125,4 @@ export class UrlParse {
             return initValue;
         }, [] as string[]).join("&");
     }
-}
-
-/**
- * 来源于网页调起qq 只获取url参数的话可以使用这个
- * @param name
- * @param href
- * @param noDecode
- */
-export function getUrlParam(name: string, href: string = location.href, noDecode = false) {
-    const re = new RegExp("(?:\\?|#|&)" + name + "=([^&]*)(?:$|&|#)", "i"),
-        m = re.exec(href);
-    const ret = m ? m[1] : "";
-    return !noDecode ? decodeURIComponent(ret) : ret;
 }

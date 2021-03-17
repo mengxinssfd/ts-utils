@@ -17,7 +17,7 @@ export class Pool<T> {
     }
 
     add(addFn: AddFn<T>): T {
-        const item = this.getRecycleOne() ?? addFn(this.aliveList, this.recycleList);
+        const item = this.getRecycleOne() || addFn(this.aliveList, this.recycleList);
         if (this._aliveList.indexOf(item) > -1) return item;
         this._aliveList.push(item);
         return item;
@@ -46,7 +46,7 @@ export class Pool<T> {
     }
 
     unshift(addFn: AddFn<T>): T {
-        const item = this.getRecycleOne() ?? addFn(this.aliveList, this.recycleList);
+        const item = this.getRecycleOne() || addFn(this.aliveList, this.recycleList);
         const acList = this._aliveList;
         const index = acList.indexOf(item);
         if (index > -1) {
