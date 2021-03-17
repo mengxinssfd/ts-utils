@@ -1,38 +1,53 @@
+type AddFn<T> = (aliveList: readonly T[], recycleList: readonly T[]) => T;
+
+// T的属性必须是可以在外部更改的
 export class Pool<T> {
-    aliveList: T[] = [];
-    recycleList: T[] = [];
+    get recycleList(): T[] {
+        return this._recycleList.slice();
+    }
+
+    get aliveList(): T[] {
+        return this._aliveList.slice();
+    }
+
+    private _aliveList: T[] = [];
+    private _recycleList: T[] = [];
 
     constructor() {
     }
 
-    push(item: T) {
-        if (this.aliveList.indexOf(item) > -1) return;
-        this.aliveList.push(item);
+    add(addFn: AddFn<T>): T {
+        const item = this.getRecycleOne() ?? addFn(this.aliveList, this.recycleList);
+        if (this._aliveList.indexOf(item) > -1) return item;
+        this._aliveList.push(item);
+        return item;
     };
 
-    splice(item: T) {
-        const index = this.aliveList.indexOf(item);
+    remove(item: T) {
+        const index = this._aliveList.indexOf(item);
         if (index === -1) return;
-        this.aliveList.splice(index, 1);
-        this.recycleList.push(item);
-    }
-
-    pop() {
-        const acList = this.aliveList;
-        if (acList.length === 0) return;
-        this.recycleList.push(acList.pop() as T);
-    }
-
-    shift() {
-        const acList = this.aliveList;
-        if (acList.length === 0) return;
-        const item = acList.shift() as T;
-        this.recycleList.push(item);
+        this._aliveList.splice(index, 1);
+        this._recycleList.push(item);
         return item;
     }
 
-    unshift(item: T) {
-        const acList = this.aliveList;
+    pop() {
+        const acList = this._aliveList;
+        if (acList.length === 0) return;
+        this._recycleList.push(acList.pop() as T);
+    }
+
+    shift() {
+        const acList = this._aliveList;
+        if (acList.length === 0) return;
+        const item = acList.shift() as T;
+        this._recycleList.push(item);
+        return item;
+    }
+
+    unshift(addFn: AddFn<T>): T {
+        const item = this.getRecycleOne() ?? addFn(this.aliveList, this.recycleList);
+        const acList = this._aliveList;
         const index = acList.indexOf(item);
         if (index > -1) {
             acList.splice(index, 1);
@@ -42,19 +57,10 @@ export class Pool<T> {
     }
 
     getRecycleOne() {
-        return this.recycleList.shift();
+        return this._recycleList.shift();
     }
 
     clear() {
     }
 
 }
-
-class test {
-    constructor() {
-    }
-}
-
-const p = new Pool();
-p.push(new test());
-p.splice(p);
