@@ -125,3 +125,16 @@ export class UrlParse {
         }, [] as string[]).join("&");
     }
 }
+
+/**
+ * 来源于网页调起qq 只获取url参数的话可以使用这个
+ * @param name
+ * @param href
+ * @param noDecode
+ */
+export function getUrlParam(name: string, href: string = location.href, noDecode = false) {
+    const re = new RegExp("(?:\\?|#|&)" + name + "=([^&]*)(?:$|&|#)", "i"),
+        m = re.exec(href);
+    const ret = m ? m[1] : "";
+    return !noDecode ? decodeURIComponent(ret) : ret;
+}

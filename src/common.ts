@@ -807,3 +807,21 @@ type Pick2<T, K extends keyof T> = {
 type K = keyof A
 type V = A[K]
 type B = Pick2<A, keyof A>*/
+
+/**
+ * 创建一个object 代替支持es6的动态key
+ * @example
+ * // {a:1, b:2}
+ * createObj(['a', 1], ['b', 2])
+ * @return {{}}
+ */
+export function createObj() {
+    const result = {};
+    Array.prototype.forEach.call(arguments, function (item: any) {
+        if (!isArray(item) || item.length < 1) throw new TypeError("createObj args type error");
+        if (item[0] !== undefined) {
+            result[item[0]] = item[1];
+        }
+    });
+    return result;
+}
