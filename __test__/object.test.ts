@@ -2,6 +2,13 @@ import * as cm from "../src/object";
 import * as arr from "../src/array";
 import {forEachByLen} from "../src/common";
 
+function TestExtends() {
+    this.a = 1;
+    this.b = 2;
+}
+
+TestExtends.prototype.c = 3;
+TestExtends.prototype.d = 4;
 test("getTreeMaxDeep", () => {
     expect(cm.getTreeMaxDeep({})).toBe(1);
     expect(cm.getTreeMaxDeep({a: 1})).toBe(2);
@@ -51,24 +58,6 @@ test("getTreeNodeLen", () => {
     expect(cm.getTreeNodeLen(fn, 2)).toBe(2);
 });
 
-test("merge", () => {
-    const a = {one: 1, two: 2, three: 3};
-    const b = {one: 11, four: 4, five: 5};
-    expect(cm.merge(a, b)).toEqual(Object.assign({}, a, b));
-
-    const c = {...a, test: {a: 1, b: 2, c: 3}};
-    expect(cm.merge(c, b)).toEqual(Object.assign({}, c, b));
-    expect(cm.merge(c, b).test === c.test && c.test === Object.assign({}, c, b).test).toEqual(true);
-
-    function Fn() {
-        this.a = 100;
-    }
-
-    Fn.prototype.b = 200;
-    const d = new Fn();
-    expect(cm.merge(a, d)).toEqual(Object.assign({}, a, d));
-    expect(cm.merge(a, d).b).toEqual(undefined);
-});
 test("deepMerge", () => {
     const a = {one: 1, two: 2, three: 3};
     const b = {one: 11, four: 4, five: 5};
@@ -111,6 +100,8 @@ const testPickByKeys = (fn: typeof cm.pickByKeys) => {
             }
             return "test";
         })).toEqual({a: 2, b: "test"});
+
+        expect(fn(new TestExtends(), ["a", "c"])).toEqual({a: 1});
     };
 };
 test("pickByKeys", () => {
@@ -137,6 +128,8 @@ const testPickRename = (fn: typeof cm.pickRename) => {
             }
             return "test";
         })).toEqual({A: 2, B: "test"});
+
+        expect(fn(new TestExtends(), {aa: "a", cc: "c"})).toEqual({aa: 1});
     };
 };
 test("pickRename", () => {
@@ -191,6 +184,12 @@ test("forEachObj", () => {
 
     testFn({a: 1, b: "2", c: true});
     testFn({a: 1, b: "2", c: {test: 1231}});
+    let times = 0;
+    fn({a: 1, b: 2, c: 3}, () => {
+        times++;
+        return times == 2 ? false : void 0;
+    });
+    expect(times).toBe(2);
 });
 test("reduceObj", () => {
     const fn = cm.reduceObj;
@@ -236,6 +235,7 @@ test("assign", () => {
     const objArr2 = [{a: 12, b: undefined, c: 3}, {a: 1}, {b: 2}, {c: undefined}];
     expect(fn({}, ...objArr2)).toEqual(Object.assign({}, ...objArr2));
     expect(fn(objArr2[0], ...objArr2.slice(1))).toEqual({a: 1, b: 2, c: undefined});
+    expect(fn({}, new TestExtends())).toEqual({a: 1, b: 2});
 });
 test("omit", () => {
     const fn = cm.omit;
