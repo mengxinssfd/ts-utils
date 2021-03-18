@@ -23,6 +23,19 @@ test("forEach", () => {
     arr.forEach((v, k) => arr2[k] = "a" + k, arr2);
     expect(arr2).toEqual(["a0", "a1", "a2"]);
 });
+test("forEachRight", () => {
+    const fn = arr.forEachRight;
+    const arr2: number[] = [];
+    fn((i) => arr2.push(i + 1), [1, 2, 3, 4]);
+    expect(arr2).toEqual([5, 4, 3, 2]);
+    const nFn = fn.bind([1, 2, 3, 4]);
+
+    const arr3: number[] = [];
+    // 用call apply bind不会自动推导this的类型
+    nFn((i: number) => arr3.push(i + 1));
+
+    expect(arr3).toEqual([5, 4, 3, 2]);
+});
 test("from", () => {
     expect(arr.from([1, 2, 3])).toEqual([1, 2, 3]);
     // ArrayLike

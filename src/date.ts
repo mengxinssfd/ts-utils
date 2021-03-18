@@ -1,29 +1,28 @@
 import {number2Chinese, strPadStart} from "./common";
 import {createArray} from "./array";
 
-
 /**
  * @param millisecond
  * @param {string} [format=d天hh时mm分ss秒] - 格式化模板
  */
-export function number2Date(millisecond: number, format = 'd天hh时mm分ss秒') {
+export function number2Date(millisecond: number, format = "d天hh时mm分ss秒") {
     let result = format;
     const seconds = millisecond / 1000;
     const obj: { [k: string]: number } = {
-        's+': seconds % 60,
-        'm+': ~~(seconds / 60) % 60,
-        'h+': ~~(seconds / (60 * 60)) % 24,
+        "s+": seconds % 60,
+        "m+": ~~(seconds / 60) % 60,
+        "h+": ~~(seconds / (60 * 60)) % 24,
         // 'd+': ~~(seconds / (60 * 60 * 24))
     };
     // 有多少天就显示多少天,但不会补0
     const days = ~~(seconds / (60 * 60 * 24));
     result = result.replace(/d+/, String(days));
     for (const k in obj) {
-        const reg = new RegExp('(' + k + ')');
+        const reg = new RegExp("(" + k + ")");
         if (reg.test(result)) {
             const s1 = RegExp.$1;
             const v = obj[k];
-            let value = String(v).padStart(s1.length, '0');
+            let value = String(v).padStart(s1.length, "0");
             value = value.substring(value.length - s1.length);
             result = result.replace(s1, value);
         }
@@ -92,7 +91,6 @@ export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H
 }
 */
 
-
 export interface formatDateInterface {
     (format?: string): string;
 
@@ -105,7 +103,7 @@ export interface formatDateInterface {
  * @param format
  * @returns String
  */
-export const formatDate: formatDateInterface = function (this: Date, format = 'yyyy-MM-dd hh:mm:ss') {
+export const formatDate: formatDateInterface = function (this: Date, format = "yyyy-MM-dd hh:mm:ss") {
     let o: any = {
         "M+": this.getMonth() + 1,                    //月份
         "d+": this.getDate(),                         //日
@@ -146,6 +144,8 @@ export const formatDate: formatDateInterface = function (this: Date, format = 'y
 };
 formatDate.weekText = [];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
+
+Date.prototype.format = formatDate;
 
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date

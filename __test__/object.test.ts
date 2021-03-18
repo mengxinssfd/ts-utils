@@ -264,6 +264,14 @@ test("createObj", () => {
     expect(fn(["a", 123], ["b", 111], ["c", ["ca", 123]])).toEqual({a: 123, b: 111, c: ["ca", 123]});
     // 转换值为object,使用createObj嵌套
     expect(fn(["a", 123], ["b", 111], ["c", fn(["ca", 123])])).toEqual({a: 123, b: 111, c: {ca: 123}});
+
+    expect(() => {
+        fn([] as any);
+    }).toThrowError();
+    expect(() => {
+        fn(undefined as any);
+    }).toThrowError();
+    expect(fn([undefined, undefined] as any)).toEqual({});
 });
 test("defaults", () => {
     const fn = cm.defaults;
