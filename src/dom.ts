@@ -435,6 +435,22 @@ export function loadImg(url: string): Promise<HTMLImageElement> {
     });
 }
 
+/**
+ * 手动添加script
+ * @param url
+ */
+export function loadScript(url: string): Promise<void> {
+    return new Promise(function (resolve, reject) {
+        const script = document.createElement("script");
+        script.onload = () => resolve();
+        script.onabort = script.onerror = (ev) => {
+            reject(ev);
+        };
+        script.src = url;
+        document.body.appendChild(script);
+    });
+}
+
 export function isSelectElement(el: HTMLElement): el is HTMLSelectElement {
     return el.nodeName === "SELECT";
 }
