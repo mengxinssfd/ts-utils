@@ -23,7 +23,6 @@ export function getUrlHost(url: string): string {
     return host;
 }
 
-
 export function getUrlPort(url: string): string {
     url = url.split("?")[0];
     if (/:(\d+)/.test(url)) {
@@ -94,4 +93,21 @@ export function queryStringify(query: { [k: string]: any }): string {
         }
         return initValue;
     }, [] as string[]).join("&");
+}
+
+/**
+ * 来源于网页调起qq 只获取url参数的话可以使用这个
+ * @tips 该函数有局限性，只能获取一般的参数，不能获取数组
+ * @param name
+ * @param url
+ * @param noDecode
+ */
+export function getUrlParam(name: string, url = location.href, noDecode = false) {
+    // 原代码hash也会获取
+    // const re = new RegExp("(?:\\?|#|&)" + name + "=([^&]*)(?:$|&|#)", "i"),
+    // 修改后不会获取到hash
+    const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i"),
+        m = re.exec(url);
+    const ret = m ? m[1] : "";
+    return !noDecode ? decodeURIComponent(ret) : ret;
 }
