@@ -170,6 +170,15 @@ export function randomNumber(start?, end?, length?) {
 }
 
 /**
+ * 随机获取数组中的一个
+ * @param arr
+ */
+export function randomItem<T>(arr: T[]): T {
+    const index = ~~randomNumber(arr.length);
+    return arr[index];
+}
+
+/**
  * 随机颜色
  */
 export function randomColor(): string

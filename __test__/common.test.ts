@@ -1,4 +1,5 @@
 import * as cm from "../src/common";
+import {createArray} from "../src/array";
 
 test("forEachByLen", () => {
     const arr: number[] = [];
@@ -81,6 +82,22 @@ test("randomNumber", () => {
     expect(arr6.some(i => i < 0.4)).toBeTruthy();
     expect(arr6.some(i => i >= 0.4)).toBeFalsy();
     expect(arr3.some(i => i > 0.3 && i < 0.4)).toBeTruthy();
+});
+test("randomItem", () => {
+    const fn = cm.randomItem;
+    const arr = [1, 2];
+    cm.forEachByLen(100, () => {
+        expect(arr.indexOf(fn(arr)) > -1).toBeTruthy();
+    });
+
+    const arr2 = createArray({len: 20});
+    const results = createArray({len: 100, fill: () => fn(arr2)});
+
+    expect(results.length).toBe(100);
+    arr2.forEach(it => {
+        expect(results.includes(it)).toBeTruthy();
+    });
+    expect(results.includes(undefined as any)).toBeFalsy();
 });
 test("strPadStart", () => {
     expect(cm.strPadStart("123", 6, "0")).toBe("000123");
@@ -203,7 +220,6 @@ test("chinese2Number", () => {
     }).toThrow();
     expect(cm.chinese2Number("壹亿贰仟叁佰肆拾伍萬陆仟柒佰捌拾玖")).toBe(123456789);
 });
-
 
 test("sleep", async () => {
     const date = Date.now();
