@@ -70,6 +70,11 @@ export declare function isScrollStart(el: HTMLElement, direct?: "vertical" | "ho
  * @param url
  */
 export declare function loadImg(url: string): Promise<HTMLImageElement>;
+/**
+ * 手动添加script
+ * @param url
+ */
+export declare function loadScript(url: string): Promise<void>;
 export declare function isSelectElement(el: HTMLElement): el is HTMLSelectElement;
 export declare function isInputElement(el: HTMLElement): el is HTMLInputElement;
 export declare function isTextAreaElement(el: HTMLElement): el is HTMLTextAreaElement;

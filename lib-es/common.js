@@ -37,7 +37,7 @@ export function debounceAsync(callback, delay) {
                 rej("debounceAsync reject");
             }
             rej = reject;
-            timer = setTimeout(() => __awaiter_1(this, void 0, void 0, function* () {
+            timer = setTimeout(() => __awaiter(this, void 0, void 0, function* () {
                 timer = null;
                 const result = yield callback.apply(this, args);
                 resolve(result);
@@ -77,7 +77,7 @@ export function debounceByPromise(callback) {
     let rejectFn;
     return function (...args) {
         rejectFn && rejectFn();
-        return new Promise((res, rej) => __awaiter_1(this, void 0, void 0, function* () {
+        return new Promise((res, rej) => __awaiter(this, void 0, void 0, function* () {
             rejectFn = rej;
             const result = yield callback.apply(this, args);
             res(result);
@@ -154,6 +154,14 @@ export function randomNumber(start, end, length) {
     else {
         return createArray({ len: length, fill: () => randomNumber(start, end) });
     }
+}
+/**
+ * 随机获取数组中的一个
+ * @param arr
+ */
+export function randomItem(arr) {
+    const index = ~~randomNumber(arr.length);
+    return arr[index];
 }
 export function randomColor(len) {
     const num = (~~randomNumber(0xffffff)).toString(16);

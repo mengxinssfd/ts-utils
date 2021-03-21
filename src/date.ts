@@ -145,6 +145,7 @@ export const formatDate: formatDateInterface = function (this: Date, format = "y
 formatDate.weekText = [];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
 
+// 可能会影响打包tree shaking
 Date.prototype.format = formatDate;
 
 /**

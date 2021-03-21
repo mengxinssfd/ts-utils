@@ -381,6 +381,21 @@ export function loadImg(url) {
         img.src = url;
     });
 }
+/**
+ * 手动添加script
+ * @param url
+ */
+export function loadScript(url) {
+    return new Promise(function (resolve, reject) {
+        const script = document.createElement("script");
+        script.onload = () => resolve();
+        script.onabort = script.onerror = (ev) => {
+            reject(ev);
+        };
+        script.src = url;
+        document.body.appendChild(script);
+    });
+}
 export function isSelectElement(el) {
     return el.nodeName === "SELECT";
 }

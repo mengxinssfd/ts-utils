@@ -1,6 +1,5 @@
 export declare function getTreeMaxDeep(tree: object): number;
 export declare function getTreeNodeLen(tree: object, nodeNumber?: number): number;
-export declare function merge<T extends object, U extends object>(first: T, second: U): T & U;
 export declare function deepMerge<T extends object, U extends object>(first: T, second: U): T & U;
 /**
  * 代替Object.keys(obj).forEach，减少循环次数

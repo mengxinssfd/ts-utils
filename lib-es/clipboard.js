@@ -97,7 +97,7 @@ export function supportCopySetData2Clipboard() {
  * @param contentList
  */
 export function write2Clipboard(contentList) {
-    return __awaiter_1(this, void 0, void 0, function* () {
+    return __awaiter(this, void 0, void 0, function* () {
         if (!supportClipboardWrite())
             throw new Error("unsupported navigator.clipboard.write");
         const clipboardItems = contentList.map(item => {

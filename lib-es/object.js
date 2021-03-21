@@ -5,11 +5,9 @@ export function getTreeMaxDeep(tree) {
         if (typeof tree !== "object" || tree === null)
             return num;
         let arr = [++num];
-        for (const k in obj) {
-            if (!obj.hasOwnProperty(k))
-                continue;
-            arr.push(deeps(obj[k], num));
-        }
+        forEachObj(obj, (v, k) => {
+            arr.push(deeps(v, num));
+        });
         return Math.max(...arr);
     }
     return deeps(tree);
@@ -24,30 +22,14 @@ export function getTreeNodeLen(tree, nodeNumber = 1) {
             result++;
             return;
         }
-        for (const k in obj) {
-            if (!obj.hasOwnProperty(k))
-                continue;
-            deeps(obj[k], num);
-        }
+        forEachObj(obj, (v) => {
+            deeps(v, num);
+        });
     }
     deeps(tree);
     return result;
 }
-// 合并两个object
-export function merge(first, second) {
-    const result = {};
-    function assign(receive, obj) {
-        for (const k in obj) {
-            if (obj.hasOwnProperty(k)) {
-                receive[k] = obj[k];
-            }
-        }
-    }
-    assign(result, first);
-    assign(result, second);
-    return result;
-}
-// 合并两个object
+// 合并两个object TODO 可优化
 export function deepMerge(first, second) {
     function assign(receive, obj) {
         for (const k in obj) {
@@ -198,11 +180,7 @@ export function omit(target, keys) {
  */
 export function assign(target, ...args) {
     args.forEach(arg => {
-        for (const key in arg) {
-            if (!arg.hasOwnProperty(key))
-                continue;
-            target[key] = arg[key];
-        }
+        forEachObj(arg, (v, k) => target[k] = v);
     });
     return target;
 }
@@ -219,11 +197,11 @@ export function assign(target, ...args) {
  */
 export function defaults(target, ...args) {
     args.forEach(arg => {
-        for (const key in arg) {
-            if (!arg.hasOwnProperty(key) || arg[key] === undefined || target[key] !== undefined)
-                continue;
-            target[key] = arg[key];
-        }
+        forEachObj(arg, (v, k) => {
+            if (v === undefined || target[k] !== undefined)
+                return;
+            target[k] = v;
+        });
     });
     return target;
 }

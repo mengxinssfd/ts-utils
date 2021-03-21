@@ -38,6 +38,11 @@ export declare function randomNumber(end: number): number;
 export declare function randomNumber(start: number, end: number): number;
 export declare function randomNumber(start: number, end: number, length: number): number[];
 /**
+ * 随机获取数组中的一个
+ * @param arr
+ */
+export declare function randomItem<T>(arr: T[]): T;
+/**
  * 随机颜色
  */
 export declare function randomColor(): string;
