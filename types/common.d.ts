@@ -33,20 +33,6 @@ export declare function debounceByPromise<T, CB extends (...args: any[]) => Prom
 export declare function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
 export declare function forEachByLen(len: number, callback: (index: number) => (any | false)): void;
 export declare function typeOf(target: any): string;
-export declare function randomNumber(): number;
-export declare function randomNumber(end: number): number;
-export declare function randomNumber(start: number, end: number): number;
-export declare function randomNumber(start: number, end: number, length: number): number[];
-/**
- * 随机获取数组中的一个
- * @param arr
- */
-export declare function randomItem<T>(arr: T[]): T;
-/**
- * 随机颜色
- */
-export declare function randomColor(): string;
-export declare function randomColor(len: number): string[];
 /**
  * 千位分隔 1,234,567,890
  * @param num

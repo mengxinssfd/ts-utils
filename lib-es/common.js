@@ -1,6 +1,5 @@
 import { __awaiter } from "tslib";
 import { isArray, isString, isPromiseLike } from "./type";
-import { createArray } from "./array";
 import { assign, getReverseObj } from "./object";
 /**
  * 防抖函数
@@ -136,42 +135,6 @@ export function typeOf(target) {
     if (tp !== "object")
         return tp;
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
-}
-export function randomNumber(start, end, length) {
-    // randomNumber()
-    if (!arguments.length)
-        return Math.random();
-    // randomNumber(end)
-    if (arguments.length === 1) {
-        end = start;
-        start = 0;
-    }
-    // randomNumber(start, end)
-    if (length === undefined) {
-        const len = end - start;
-        return (Math.random() * len) + start;
-    }
-    else {
-        return createArray({ len: length, fill: () => randomNumber(start, end) });
-    }
-}
-/**
- * 随机获取数组中的一个
- * @param arr
- */
-export function randomItem(arr) {
-    const index = ~~randomNumber(arr.length);
-    return arr[index];
-}
-export function randomColor(len) {
-    const num = (~~randomNumber(0xffffff)).toString(16);
-    const color = "#" + strPadStart(num, 6, "0");
-    if (len === undefined) {
-        return color;
-    }
-    else {
-        return createArray({ len, fill: () => randomColor() });
-    }
 }
 /**
  * 千位分隔 1,234,567,890

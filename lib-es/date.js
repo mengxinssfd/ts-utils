@@ -108,6 +108,7 @@ export const formatDate = function (format = "yyyy-MM-dd hh:mm:ss") {
 };
 formatDate.weekText = [];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
+// 可能会影响打包tree shaking
 Date.prototype.format = formatDate;
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
