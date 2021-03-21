@@ -1,5 +1,4 @@
 import * as cm from "../src/common";
-import {createArray} from "../src/array";
 
 test("forEachByLen", () => {
     const arr: number[] = [];
@@ -29,76 +28,6 @@ test("typeOf", () => {
     expect(cm.typeOf(/abc/)).toBe("regexp");
 });
 
-test("randomNumber", () => {
-    const rand = cm.randomNumber(0, 10);
-    expect(rand).toBeGreaterThanOrEqual(0);
-    expect(rand).toBeLessThanOrEqual(10);
-    //
-    const rand2 = cm.randomNumber();
-    expect(rand2).toBeGreaterThanOrEqual(0);
-    expect(rand2).toBeLessThanOrEqual(1);
-    // start as end
-    const rand3 = cm.randomNumber(5);
-    expect(rand3).toBeGreaterThanOrEqual(0);
-    expect(rand3).toBeLessThanOrEqual(5);
-    // arr
-    const randArr: number[] = cm.randomNumber(0, 5, 4) as number[];
-    expect(randArr.length).toBe(4);
-    for (let i = 0; i < randArr.length; i++) {
-        const item = randArr[i];
-        expect(item).toBeGreaterThanOrEqual(0);
-        expect(item).toBeLessThanOrEqual(5);
-    }
-    const randArr2: number[] = cm.randomNumber(0, 5, 0);
-    expect(randArr2).toEqual([]);
-
-    const arr3 = cm.randomNumber(0, 1, 500);
-    expect(arr3.length).toBe(500);
-    expect(arr3.some(i => i > 0)).toBeTruthy();
-    expect(arr3.some(i => i < 1)).toBeTruthy();
-    expect(arr3.some(i => i > 0.3 && i < 0.5)).toBeTruthy();
-    expect(arr3.some(i => i >= 0 && i < 0.2)).toBeTruthy();
-    expect(arr3.some(i => i > 0.7 && i < 0.9)).toBeTruthy();
-    expect(arr3.some(i => i >= 1)).toBeFalsy();
-    expect(arr3.some(i => i < 0)).toBeFalsy();
-
-    const arr4 = cm.randomNumber(-10, 10, 200);
-    expect(arr4.some(i => i > -10)).toBeTruthy();
-    expect(arr4.some(i => i < 10)).toBeTruthy();
-    expect(arr4.some(i => i > 5 && i < 6)).toBeTruthy();
-    expect(arr4.some(i => i > -6 && i < -1)).toBeTruthy();
-    expect(arr4.some(i => i > -5 && i < 5)).toBeTruthy();
-    expect(arr4.some(i => i > 10)).toBeFalsy();
-    expect(arr4.some(i => i < -10)).toBeFalsy();
-
-    const arr5 = cm.randomNumber(10, 11, 520);
-    expect(arr5.length).toBe(520);
-    expect(arr5.some(i => i < 10)).toBeFalsy();
-    expect(arr5.some(i => i < 10.1)).toBeTruthy();
-
-    const arr6 = cm.randomNumber(0.2, 0.4, 300);
-    expect(arr6.length).toBe(300);
-    expect(arr6.some(i => i < 0.2)).toBeFalsy();
-    expect(arr6.some(i => i < 0.4)).toBeTruthy();
-    expect(arr6.some(i => i >= 0.4)).toBeFalsy();
-    expect(arr3.some(i => i > 0.3 && i < 0.4)).toBeTruthy();
-});
-test("randomItem", () => {
-    const fn = cm.randomItem;
-    const arr = [1, 2];
-    cm.forEachByLen(100, () => {
-        expect(arr.indexOf(fn(arr)) > -1).toBeTruthy();
-    });
-
-    const arr2 = createArray({len: 20});
-    const results = createArray({len: 100, fill: () => fn(arr2)});
-
-    expect(results.length).toBe(100);
-    arr2.forEach(it => {
-        expect(results.includes(it)).toBeTruthy();
-    });
-    expect(results.includes(undefined as any)).toBeFalsy();
-});
 test("strPadStart", () => {
     expect(cm.strPadStart("123", 6, "0")).toBe("000123");
     expect(cm.strPadStart("123", 0, "0")).toBe("123");
@@ -113,16 +42,6 @@ test("strPadEnd", () => {
     expect(cm.strPadEnd("123", 4, "hello")).toBe("123h");
     expect(cm.strPadEnd("123", 20, "hello")).toBe("123hellohellohellohe");
     expect(cm.strPadEnd("123", -1, "0")).toBe("123");
-});
-test("randomColor", () => {
-    const reg = /#[0-9a-f]{6}$/;
-    expect(reg.test(cm.randomColor())).toBeTruthy();
-    // array
-    const arr = cm.randomColor(10);
-    expect(arr.length === 10).toBeTruthy();
-    cm.forEachByLen(arr.length, (i) => {
-        expect(reg.test(arr[i])).toBeTruthy();
-    });
 });
 
 test("thousandFormat", () => {
@@ -248,14 +167,34 @@ test("createUUID", () => {
 
 test("formatJSON", () => {
     const formatJSON = cm.formatJSON;
-    const str = {a: 1, b: 2};
-    expect(formatJSON(str, 4)).toBe(`{\r\n    "a":1,\r\n    "b":2\r\n}`);
-    /*  const rs = formatJSON({
-          ...str,
-          fn: function () {
-          },
-      }, 4);*/
-    // expect(rs).toBe(`{\r\n    "a":1,\r\n    "b":2,\r\n    "fn":"function () {\r\n        }"\r\n}`);
+    const space = "    ";
+    const str = {a: 1, b: "2"};
+    expect(formatJSON(str, 4)).toBe(`{\r\n${space}"a":1,\r\n${space}"b":"2"\r\n}`);
+    expect(formatJSON(JSON.stringify(str), 4)).toBe(`{\r\n${space}"a":1,\r\n${space}"b":"2"\r\n}`);
+
+    expect(formatJSON({a: [1, 2]}, 4)).toBe("{\r\n" +
+        "    \"a\":[\r\n" +
+        "        1,\r\n" +
+        "        2\r\n" +
+        "    ]\r\n" +
+        "}");
+
+    expect(() => {
+        formatJSON("");
+    }).toThrowError();
+    let obj;
+    eval("obj={test:function(){}}");
+    expect(formatJSON(obj, 4)).toBe("{\r\n" +
+        "    \"test\":\"function(){}\"\r\n" +
+        "}");
+
+    function Ext() {
+        this.a = 1;
+    }
+
+    Ext.prototype.b = "2";
+
+    expect(formatJSON(new Ext(), 4)).toBe(`{\r\n    "a":1\r\n}`);
 });
 
 test("promiseAny", async () => {

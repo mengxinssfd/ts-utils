@@ -1,0 +1,93 @@
+import {createArray} from "./array";
+import {strPadStart} from "./common";
+import {isArrayLike} from "./type";
+
+// min end都不传  return Math.random()
+export function randomFloat(): number
+// min = 0 生成0-max之间的随机数
+export function randomFloat(max: number): number
+// 生成min到end之间的随机数 包含min不包含max
+export function randomFloat(min: number, max: number): number
+// 生成min到end之间的随机数组 包含min不包含end len：数组长度
+export function randomFloat(min: number, max: number, len: number): number[]
+export function randomFloat(min?, max?, len?) {
+    // randomFloat()
+    if (!arguments.length) return Math.random();
+    // randomFloat(max)
+    if (arguments.length === 1) {
+        max = min;
+        min = 0;
+    }
+
+    // randomFloat(min, max)
+    if (len === undefined) {
+        const dif = (max as number) - (min as number);
+        return (Math.random() * dif) + (min as number);
+    } else {
+        return createArray({len, fill: () => randomFloat(min, max)});
+    }
+}
+
+export function randomInt(): number
+// min = 0 生成0-max之间的随机数
+export function randomInt(end: number): number
+// 生成min到max之间的随机数 包含start不包含max
+export function randomInt(min: number, max: number): number
+// 生成min到max之间的随机数组 包含min不包含max len：数组长度
+export function randomInt(min: number, max: number, len: number): number[]
+export function randomInt(min?, max?, len?) {
+    // randomInt()
+    if (!arguments.length) return Math.random();
+    // randomInt(max)
+    if (arguments.length === 1) {
+        max = min;
+        min = 0;
+    }
+
+    if (len === undefined) {
+        const dif = (max as number) - (min as number);
+        // 直接调用randomFloat的话randomInt(-10,10)永远都不会出现-10
+        return ~~(Math.random() * dif) + (min as number);
+    } else {
+        return createArray({len, fill: () => randomInt(min, max)});
+    }
+}
+
+/**
+ * 随机获取数组中的一个
+ * @param arr
+ */
+export function randomItem<T>(arr: T[]): T {
+    const index = randomInt(arr.length);
+    return arr[index];
+}
+
+/**
+ * 洗牌
+ * @param arr
+ */
+export function shuffle<T>(arr: ArrayLike<T>): T[] {
+    if (!isArrayLike(arr)) throw new TypeError();
+    const result: T[] = [];
+    const indexArr = createArray({len: arr.length});
+    while (indexArr.length) {
+        const index = randomInt(indexArr.length);
+        const arrIndex = indexArr.splice(index, 1)[0];
+        result.push(arr[arrIndex]);
+    }
+    return result;
+}
+
+/**
+ * 随机颜色
+ */
+export function randomColor(): string
+export function randomColor(len: number): string[]
+export function randomColor(len?) {
+    if (len === undefined) {
+        const num = randomInt(0xffffff).toString(16);
+        return "#" + strPadStart(num, 6, "0");
+    } else {
+        return createArray({len, fill: () => randomColor()});
+    }
+}

@@ -1,5 +1,4 @@
 import {isArray, isString, isPromiseLike} from "./type";
-import {createArray} from "./array";
 import {assign, getReverseObj} from "./object";
 
 /**
@@ -141,56 +140,6 @@ export function typeOf(target: any): string {
     const tp = typeof target;
     if (tp !== "object") return tp;
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
-}
-
-// start end都不传  return Math.random()
-export function randomNumber(): number
-// start = 0 生成0-end之间的随机数
-export function randomNumber(end: number): number
-// 生成start到end之间的随机数 包含start不包含end
-export function randomNumber(start: number, end: number): number
-// 生成start到end之间的随机数组 包含start不包含end length：数组长度
-export function randomNumber(start: number, end: number, length: number): number[]
-export function randomNumber(start?, end?, length?) {
-    // randomNumber()
-    if (!arguments.length) return Math.random();
-    // randomNumber(end)
-    if (arguments.length === 1) {
-        end = start;
-        start = 0;
-    }
-
-    // randomNumber(start, end)
-    if (length === undefined) {
-        const len = (end as number) - (start as number);
-        return (Math.random() * len) + (start as number);
-    } else {
-        return createArray({len: length, fill: () => randomNumber(start, end)});
-    }
-}
-
-/**
- * 随机获取数组中的一个
- * @param arr
- */
-export function randomItem<T>(arr: T[]): T {
-    const index = ~~randomNumber(arr.length);
-    return arr[index];
-}
-
-/**
- * 随机颜色
- */
-export function randomColor(): string
-export function randomColor(len: number): string[]
-export function randomColor(len?) {
-    const num = (~~randomNumber(0xffffff)).toString(16);
-    const color = "#" + strPadStart(num, 6, "0");
-    if (len === undefined) {
-        return color;
-    } else {
-        return createArray({len, fill: () => randomColor()});
-    }
 }
 
 /**
@@ -512,6 +461,3 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
 
     }));
 }
-
-
-

@@ -80,6 +80,8 @@ test("getUrlParam", () => {
     expect(fn("a", url2)).toEqual("1");
     expect(fn("b", url2)).toEqual("2");
     expect(fn("c", url2)).toEqual("3");
+    expect(fn("f", url2)).toBe("");
+    expect(fn("f")).toBe("");
     // 该函数有局限性，只能获取一般的参数，不能获取数组
     // expect(fn("d[0]", url2)).toEqual("4");
     // expect(fn("d[1]", url2)).toEqual("5");

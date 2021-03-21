@@ -1,7 +1,6 @@
 import * as clone from "../src/clone";
 
-
-test('deepClone', () => {
+test("deepClone", () => {
     const arr = [1, 2, 3];
     const newArr = clone.deepClone(arr);
     // copy == arr
@@ -41,22 +40,22 @@ test('deepClone', () => {
     expect(newArr2[1]()).toEqual(arr2[1]());
 
     function Foo() {
-        this.name = 'foo';
+        this.name = "foo";
         this.sayHi = function () {
-            console.log('Say Hi');
+            console.log("Say Hi");
         };
     }
 
     Foo.prototype.sayGoodBy = function () {
-        console.log('Say Good By');
+        console.log("Say Good By");
     };
     let myPro = new Foo();
-    expect(myPro.hasOwnProperty('name')).toBeTruthy();//true
-    expect(myPro.hasOwnProperty('toString')).toBeFalsy();//false
-    expect(myPro.hasOwnProperty('hasOwnProperty')).toBeFalsy();//fasle
-    expect(myPro.hasOwnProperty('sayHi')).toBeTruthy();// true
-    expect(myPro.hasOwnProperty('sayGoodBy')).toBeFalsy();//false
-    expect('sayGoodBy' in myPro).toBeTruthy();// true
+    expect(myPro.hasOwnProperty("name")).toBeTruthy();//true
+    expect(myPro.hasOwnProperty("toString")).toBeFalsy();//false
+    expect(myPro.hasOwnProperty("hasOwnProperty")).toBeFalsy();//fasle
+    expect(myPro.hasOwnProperty("sayHi")).toBeTruthy();// true
+    expect(myPro.hasOwnProperty("sayGoodBy")).toBeFalsy();//false
+    expect("sayGoodBy" in myPro).toBeTruthy();// true
 
     // test cov if (!(target as any).hasOwnProperty(k)) continue;
     const copyFoo = clone.deepClone(myPro);
@@ -104,6 +103,8 @@ test("cloneFunction", () => {
     expect((function (a, b) {
         return a + b;
     })(50, 50)).toBe(100);
+
+    expect(clone.cloneFunction(1 as any)).toBe(1);
 });
 test("deepCloneBfs", () => {
     const obj10086 = {a: 1, b: 2, c: 3, d: 4};
@@ -135,4 +136,15 @@ test("deepCloneBfs", () => {
     // 0 === 0
     expect(clone.deepCloneBfs(0)).toBe(0);
 
+    function Ext() {
+        this.a = 1;
+    }
+
+    Ext.prototype.b = "2";
+
+    expect(clone.deepCloneBfs(new Ext())).toEqual({a: 1});
+
+    const obj2 = {a: 1, b: [1, 2]};
+    expect(clone.deepCloneBfs(obj2)).toEqual({a: 1, b: [1, 2]});
+    expect(obj2 !== clone.deepCloneBfs(obj2)).toBeTruthy();
 });

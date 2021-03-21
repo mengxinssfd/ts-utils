@@ -102,12 +102,12 @@ export function queryStringify(query: { [k: string]: any }): string {
  * @param url
  * @param noDecode
  */
-export function getUrlParam(name: string, url = location.href, noDecode = false) {
+export function getUrlParam(name: string, url = location.href/* node也有 */, noDecode = false) {
     // 原代码hash也会获取
     // const re = new RegExp("(?:\\?|#|&)" + name + "=([^&]*)(?:$|&|#)", "i"),
     // 修改后不会获取到hash
-    const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i"),
-        m = re.exec(url);
+    const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i");
+    const m = re.exec(url);
     const ret = m ? m[1] : "";
     return !noDecode ? decodeURIComponent(ret) : ret;
 }

@@ -6,7 +6,7 @@ test('str2Date', () => {
     expect(t2).toBeGreaterThan(t1);
     expect(dt.str2Date("abcd")).toBeNull();
 
-    function fn(date: string, format: string) {
+    function fn(date: string, format?: string) {
         return dt.formatDate.call(dt.str2Date(date), format);
     }
 
@@ -23,6 +23,7 @@ test('str2Date', () => {
     expect(fn("2020-02-02 12:00:00", "ss")).toBe("00");
     expect(fn("2020-02-02 12:00:10", "ss")).toBe("10");
     expect(fn("2020-02-02 12:11:10", "mm")).toBe("11");
+    expect(fn("2020-02-02 12:11:10")).toBe("2020-02-02 12:11:10");
 });
 test('formatDate', () => {
     const date1 = dt.getDateFromStr("2020-02-02 10:10:10");

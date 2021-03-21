@@ -35,6 +35,36 @@ test("forEachRight", () => {
     nFn((i: number) => arr3.push(i + 1));
 
     expect(arr3).toEqual([5, 4, 3, 2]);
+
+    expect(() => fn(() => {
+    })).toThrowError();
+
+    const result: any = {};
+    fn((v, k) => {
+        result[k] = v;
+        if (k === 10) return false;
+        return;
+    }, arr.createArray({len: 20}));
+    expect(result).toEqual(arr.createArray({start: 10, end: 20}).reduce((obj, v, k) => {
+        obj[v] = v;
+        return obj;
+    }, {}));
+
+    const result2: any[] = [];
+    fn((v, k) => {
+        result2.push({[k]: v});
+        if (k === 15) return false;
+        return;
+    }, arr.createArray({len: 20}));
+
+    expect(result2).toEqual([
+        {19: 19},
+        {18: 18},
+        {17: 17},
+        {16: 16},
+        {15: 15},
+    ]);
+
 });
 test("from", () => {
     expect(arr.from([1, 2, 3])).toEqual([1, 2, 3]);
@@ -123,7 +153,7 @@ test("flat", () => {
 
     const list = [1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]];
 
-    // Array.property.flag(depth=1)
+    // Array.property.flat(depth=1)
     expect(list.flat()).toEqual(list.flat(1));
     expect(arr.flat(list, 1)).toEqual(list.flat());
     expect(arr.flat(list, 1)).toEqual(list.flat(1));
@@ -136,6 +166,7 @@ test("flat", () => {
     expect(arr.flat([1, 2, 3, [1, 2, 3], [1, 2, 3]], -1)).toEqual([1, 2, 3, 1, 2, 3, 1, 2, 3]);
     expect(arr.flat([1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3]], -1)).toEqual([1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]);
     expect(arr.flat([1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]], -1)).toEqual([1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]);
+    expect(arr.flat([1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]])).toEqual([1, 2, 3, 1, 2, 3, [1, 2, 3], 1, 2, 3, [1, 2, 3]]);
 
 });
 
@@ -288,6 +319,7 @@ test("unique", () => {
     const c = {value: 3};
     const d = {value: 2};
     expect(fn([a, b, c, d])).toEqual([a, b, c, d]);
+    expect(fn([])).toEqual([]);
     expect(
         fn(
             [a, b, c, d],
@@ -300,4 +332,10 @@ test("findIndex", () => {
     expect(fn(v => v === 4, [1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1])).toEqual(5);
     expect(fn(v => v.v === 4, [{v: 1}, {v: 2}])).toEqual(-1);
     expect(fn(v => v.v === 2, [{v: 1}, {v: 2}])).toEqual(1);
+    const nFn = fn.bind(undefined as any);
+    expect(() => {
+        nFn(function () {
+        } as any);
+    }).toThrowError();
+    expect(fn(undefined as any, [])).toBe(-1);
 });
