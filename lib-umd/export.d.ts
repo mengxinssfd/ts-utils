@@ -19,3 +19,4 @@ export * from "./object";
 export * from "./Pool";
 export * from "./extension";
 export * from "./random";
+export * from "./color";

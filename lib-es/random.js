@@ -1,6 +1,6 @@
 import { createArray } from "./array";
 import { strPadStart } from "./common";
-import { isArrayLike } from "./type";
+import { isArrayLike, isNumber } from "./type";
 export function randomFloat(min, max, len) {
     // randomFloat()
     if (!arguments.length)
@@ -67,14 +67,21 @@ export function randomRGB() {
 }
 export function randomRGBA() {
     const num = randomInt(0, 255, 3);
-    const opacity = randomFloat().toFixed(3);
+    const opacity = randomFloat().toFixed(2);
     return `rgba(${num[0]},${num[1]},${num[2]},${opacity})`;
 }
 export function randomHEX() {
     const num = randomInt(0xffffff).toString(16);
     return "#" + strPadStart(num, 6, "0");
 }
-export function randomColor(type = "HEX", len) {
+export function randomColor(type, len) {
+    if (isNumber(type)) {
+        len = type;
+        type = "HEX";
+    }
+    if (type === undefined) {
+        type = "HEX";
+    }
     type = type.toUpperCase();
     if (len === undefined) {
         const map = {
