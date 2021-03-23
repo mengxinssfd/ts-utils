@@ -1,3 +1,4 @@
-import * as utils from "./index";
+import * as all from "./index";
 
-export default utils;
+const tsUtils = all
+export default tsUtils;
