@@ -61,12 +61,30 @@ export function shuffle(arr) {
     }
     return result;
 }
-export function randomColor(len) {
+export function randomRGB() {
+    const num = randomInt(0, 255, 3);
+    return `rgb(${num[0]},${num[1]},${num[2]})`;
+}
+export function randomRGBA() {
+    const num = randomInt(0, 255, 3);
+    const opacity = randomFloat().toFixed(3);
+    return `rgba(${num[0]},${num[1]},${num[2]},${opacity})`;
+}
+export function randomHEX() {
+    const num = randomInt(0xffffff).toString(16);
+    return "#" + strPadStart(num, 6, "0");
+}
+export function randomColor(type = "HEX", len) {
+    type = type.toUpperCase();
     if (len === undefined) {
-        const num = randomInt(0xffffff).toString(16);
-        return "#" + strPadStart(num, 6, "0");
+        const map = {
+            "HEX": randomHEX,
+            "RGB": randomRGB,
+            "RGBA": randomRGBA,
+        };
+        return (map[type] || map.HEX)();
     }
     else {
-        return createArray({ len, fill: () => randomColor() });
+        return createArray({ len, fill: () => randomColor(type) });
     }
 }

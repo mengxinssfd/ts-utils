@@ -1,3 +1,4 @@
+import {isHEXColor, isRGBColor} from "../src/color";
 import * as cm from "../src/random";
 import {forEachByLen} from "../src/common";
 import {createArray} from "../src/array";
@@ -125,15 +126,41 @@ test("randomItem", () => {
     });
     expect(results.includes(undefined as any)).toBeFalsy();
 });
+
+test("randomRGB", () => {
+    const fn = cm.randomRGB;
+    const rgbList = createArray({len: 100, fill: () => fn()});
+    rgbList.forEach(it => {
+        expect(isRGBColor(it)).toBeTruthy();
+    });
+});
+test("randomRGBA", () => {
+    const fn = cm.randomRGBA;
+    const rgbList = createArray({len: 100, fill: () => fn()});
+    rgbList.forEach(it => {
+        expect(isRGBColor(it)).toBeTruthy();
+    });
+});
+
 test("randomColor", () => {
-    const reg = /#[0-9a-f]{6}$/;
-    expect(reg.test(cm.randomColor())).toBeTruthy();
+    const fn = cm.randomColor;
+    expect(isHEXColor(cm.randomColor())).toBeTruthy();
     // array
     const arr = cm.randomColor(10);
     expect(arr.length === 10).toBeTruthy();
     forEachByLen(arr.length, (i) => {
-        expect(reg.test(arr[i])).toBeTruthy();
+        expect(isHEXColor(arr[i])).toBeTruthy();
     });
+    expect(isHEXColor(cm.randomColor("HEX"))).toBeTruthy();
+    expect(isRGBColor(cm.randomColor("RGB"))).toBeTruthy();
+    expect(isRGBColor(cm.randomColor("RGBA"))).toBeTruthy();
+
+    const rgbList = fn("RGB", 20);
+    expect(rgbList.length).toBe(20);
+    rgbList.forEach(it => expect(isRGBColor(it)).toBeTruthy());
+    const rgbaList = fn("RGBA", 20);
+    expect(rgbaList.length).toBe(20);
+    rgbaList.forEach(it => expect(isRGBColor(it)).toBeTruthy());
 });
 test("shuffle", () => {
     const fn = cm.shuffle;

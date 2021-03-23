@@ -8,7 +8,7 @@ const resolve = dir => require("path").join(__dirname, dir);
 const config = {
     mode: "production",
     entry: {
-        "index-umd": "./src/index-umd.ts",
+        "index": "./src/index.umd.ts",
     },
     output: {
         path: path.resolve(__dirname, "lib-umd"),

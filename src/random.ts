@@ -1,6 +1,6 @@
 import {createArray} from "./array";
 import {strPadStart} from "./common";
-import {isArrayLike} from "./type";
+import {isArrayLike, isNumber} from "./type";
 
 // min end都不传  return Math.random()
 export function randomFloat(): number
@@ -85,7 +85,7 @@ export function randomRGB(): string {
 
 export function randomRGBA(): string {
     const num = randomInt(0, 255, 3);
-    const opacity = randomFloat().toFixed(3);
+    const opacity = randomFloat().toFixed(2);
     return `rgba(${num[0]},${num[1]},${num[2]},${opacity})`;
 }
 
@@ -99,10 +99,18 @@ type ColorType = "HEX" | "RGB" | "RGBA";
 /**
  * 随机颜色
  */
-export function randomColor(): string
-export function randomColor(type: ColorType): string
-export function randomColor(type: ColorType, len: number): string[]
-export function randomColor(type = "HEX", len?) {
+export function randomColor(): string;
+export function randomColor(type: ColorType): string;
+export function randomColor(len: number): string;
+export function randomColor(type: ColorType, len: number): string[];
+export function randomColor(type?, len?) {
+    if (isNumber(type)) {
+        len = type;
+        type = "HEX";
+    }
+    if (type === undefined) {
+        type = "HEX";
+    }
     type = type.toUpperCase();
     if (len === undefined) {
         const map = {
