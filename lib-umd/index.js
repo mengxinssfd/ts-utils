@@ -1,5 +1,5 @@
 /*!
- * tsUtils v2.3.11
+ * tsUtils v2.5.1
  * Author: dyh
  * Documentation: https://github.com/mengxinssfd/utilTs#readme
  * Date: 2021-3-23
