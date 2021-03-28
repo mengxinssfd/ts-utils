@@ -167,17 +167,6 @@ export function omit(target, keys) {
         return initValue;
     }, {});
 }
-/**
- * 与lodash defaults一样 只替换target里面的值为undefined的属性
- * 类型推导会以前面的为准
- * @example
- * // {a: 1, b: 2, c: 3, d: 4}
- * assign({a: 12, b: undefined, c: 3}, {a: 1}, {b: 2}, {d: 4});
- * // {a: 1, b: 2, c: undefined}
- * assign({a:12,b:undefined,c:3},{a:1},{b:2},{c:undefined})
- * @param target
- * @param args
- */
 export function assign(target, ...args) {
     args.forEach(arg => {
         forEachObj(arg, (v, k) => target[k] = v);

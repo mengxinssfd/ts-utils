@@ -1,4 +1,3 @@
-// 对象深拷贝办法(深度优先)
 import { typeOf } from "./type";
 // 如果要复制函数属性的话，使用deepCopy
 export function cloneFunction(fn) {
@@ -20,8 +19,11 @@ const cloneStrategies = (function () {
             return new target.constructor(target);
         },
     };
-    return Object.assign(Object.assign({}, st), { object: st.array, regexp: st.date });
+    st.object = st.array;
+    st.regexp = st.date;
+    return st;
 })();
+// 对象深拷贝办法(深度优先)
 export function deepClone(target) {
     const type = typeOf(target);
     // 使用策略模式
