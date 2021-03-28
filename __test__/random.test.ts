@@ -136,9 +136,10 @@ test("randomRGB", () => {
 });
 test("randomRGBA", () => {
     const fn = cm.randomRGBA;
-    const rgbList = createArray({len: 100, fill: () => fn()});
+    const rgbList = createArray({len: 10000, fill: () => fn()});
     rgbList.forEach(it => {
-        expect(isRGBColor(it)).toBeTruthy();
+        const flag = isRGBColor(it);
+        expect(flag).toBeTruthy();
     });
 });
 

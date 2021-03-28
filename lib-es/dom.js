@@ -1,7 +1,8 @@
 import { filter, includes, unique } from "./array";
-import { typeOf } from "./common";
+import { typeOf } from "./type";
 import { assign, forEachObj, pickByKeys } from "./object";
 import { isArray, isFunction, isString } from "./type";
+import { isDom } from "./domType";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 let vendor = (() => {
@@ -18,16 +19,6 @@ let vendor = (() => {
         }
     }
     return false;
-})();
-export const isDom = (function () {
-    // HTMLElement ie8以上支持 此类库不支持ie8及以下所以意义不是很大
-    return (typeof HTMLElement === "object") ?
-        function (target) {
-            return target instanceof HTMLElement;
-        } :
-        function (target) {
-            return target && typeof target === "object" && target.nodeType === 1 && typeof target.nodeName === "string";
-        };
 })();
 export const addClass = (function () {
     // classList ie9以上支持
@@ -395,15 +386,6 @@ export function loadScript(url) {
         script.src = url;
         document.body.appendChild(script);
     });
-}
-export function isSelectElement(el) {
-    return el.nodeName === "SELECT";
-}
-export function isInputElement(el) {
-    return el.nodeName === "INPUT";
-}
-export function isTextAreaElement(el) {
-    return el.nodeName === "TEXTAREA";
 }
 export function noScroll(scrollContainer) {
     let target = scrollContainer;

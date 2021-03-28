@@ -129,13 +129,6 @@ export function forEachByLen(len, callback) {
         break;
     }
 }
-// 获取数据类型
-export function typeOf(target) {
-    const tp = typeof target;
-    if (tp !== "object")
-        return tp;
-    return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
-}
 /**
  * 千位分隔 1,234,567,890
  * @param num

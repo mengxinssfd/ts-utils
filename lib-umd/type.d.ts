@@ -1,3 +1,4 @@
+export declare function typeOf(target: any): string;
 export declare function isObject(target: any): target is object;
 export declare function isArray(target: any): target is Array<any>;
 export declare function isArrayLike(target: any): target is ArrayLike<any>;
@@ -7,12 +8,12 @@ export declare function isFunction(target: any): target is Function;
 export declare function isBoolean(target: any): target is boolean;
 export declare function isUndefined(target: any): target is undefined;
 /**
- *  用is("123", ["string", "number"]) 代替  typeOf("123") === "string" || typeOf("123") === "number"
+ *  用typeIn("123", ["string", "number"]) 代替  typeOf("123") === "string" || typeOf("123") === "number"
  * @description 注意： 只能判断typeOf能够判断的类型   不能判断是否是NaN 是否是""
  * @param target
  * @param types
  */
-export declare function type(target: any, types: string[] | string): boolean;
+export declare function inTypes(target: any, types: string[]): boolean;
 export declare function isPromiseLike<T, S>(target: PromiseLike<T> | S): target is PromiseLike<T>;
 export declare function isNaN(target: any): boolean;
 export declare function isEmptyObject(target: object): boolean;

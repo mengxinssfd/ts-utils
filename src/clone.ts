@@ -1,5 +1,5 @@
 // 对象深拷贝办法(深度优先)
-import {typeOf} from "./common";
+import {typeOf} from "./type";
 
 // 如果要复制函数属性的话，使用deepCopy
 export function cloneFunction<T extends Function>(fn: T): T {

@@ -135,13 +135,6 @@ export function forEachByLen(len: number, callback: (index: number) => (any | fa
     }
 }
 
-// 获取数据类型
-export function typeOf(target: any): string {
-    const tp = typeof target;
-    if (tp !== "object") return tp;
-    return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
-}
-
 /**
  * 千位分隔 1,234,567,890
  * @param num

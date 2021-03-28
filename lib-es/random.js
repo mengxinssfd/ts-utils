@@ -67,7 +67,7 @@ export function randomRGB() {
 }
 export function randomRGBA() {
     const num = randomInt(0, 255, 3);
-    const opacity = randomFloat().toFixed(2);
+    const opacity = +randomFloat().toFixed(2);
     return `rgba(${num[0]},${num[1]},${num[2]},${opacity})`;
 }
 export function randomHEX() {

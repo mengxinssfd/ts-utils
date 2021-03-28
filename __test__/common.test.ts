@@ -12,22 +12,6 @@ test("forEachByLen", () => {
     });
 });
 
-test("typeOf", () => {
-    // 六大基本类型 string boolean number object null undefined
-    expect(cm.typeOf("")).toBe("string");
-    expect(cm.typeOf(true)).toBe("boolean");
-    expect(cm.typeOf(0)).toBe("number");
-    expect(cm.typeOf(undefined)).toBe("undefined");
-    expect(cm.typeOf({})).toBe("object");
-    expect(cm.typeOf(null)).toBe("null");
-    // 非6
-    expect(cm.typeOf(() => {
-    })).toBe("function");
-    expect(cm.typeOf([])).toBe("array");
-    expect(cm.typeOf(NaN)).toBe("number");
-    expect(cm.typeOf(/abc/)).toBe("regexp");
-});
-
 test("strPadStart", () => {
     expect(cm.strPadStart("123", 6, "0")).toBe("000123");
     expect(cm.strPadStart("123", 0, "0")).toBe("123");

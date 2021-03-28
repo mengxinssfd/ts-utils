@@ -1,5 +1,11 @@
 import { includes } from "./array";
-import { typeOf } from "./common";
+// 获取数据类型
+export function typeOf(target) {
+    const tp = typeof target;
+    if (tp !== "object")
+        return tp;
+    return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
+}
 export function isObject(target) {
     return typeOf(target) === "object";
 }
@@ -41,15 +47,16 @@ export function isUndefined(target) {
 }
 // type t = "number" | "string" | "object" | "array" | "function" | "undefined" | "null" | "boolean" | "regexp"
 /**
- *  用is("123", ["string", "number"]) 代替  typeOf("123") === "string" || typeOf("123") === "number"
+ *  用typeIn("123", ["string", "number"]) 代替  typeOf("123") === "string" || typeOf("123") === "number"
  * @description 注意： 只能判断typeOf能够判断的类型   不能判断是否是NaN 是否是""
  * @param target
  * @param types
  */
-export function type(target, types) {
+export function inTypes(target, types) {
     if (!isArray(types))
-        return typeOf(target) === types;
-    return types.indexOf(typeOf(target)) > -1;
+        throw TypeError("inTypes param types expected Array<string> but received " + typeOf(types));
+    const type = typeOf(target);
+    return types.indexOf(type) > -1;
 }
 // 参考is-promise
 export function isPromiseLike(target) {

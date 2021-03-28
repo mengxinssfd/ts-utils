@@ -1,7 +1,8 @@
 import {filter, includes, unique} from "./array";
-import {typeOf} from "./common";
+import {typeOf} from "./type";
 import {assign, forEachObj, pickByKeys} from "./object";
 import {isArray, isFunction, isString} from "./type";
+import {isDom} from "./domType";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 let vendor = ((): string | false => {
@@ -19,16 +20,7 @@ let vendor = ((): string | false => {
     }
     return false;
 })();
-export const isDom: (target: any) => target is HTMLElement = (function () {
-    // HTMLElement ie8以上支持 此类库不支持ie8及以下所以意义不是很大
-    return (typeof HTMLElement === "object") ?
-        function (target: any): target is HTMLElement {
-            return target instanceof HTMLElement;
-        } :
-        function (target: any): target is HTMLElement {
-            return target && typeof target === "object" && target.nodeType === 1 && typeof target.nodeName === "string";
-        };
-})();
+
 export const addClass: (target: HTMLElement, className: string | string[]) => string = (function () {
     // classList ie9以上支持
     return !!document.documentElement.classList ? function (target: HTMLElement, className: string | string[]) {
@@ -449,18 +441,6 @@ export function loadScript(url: string): Promise<void> {
         script.src = url;
         document.body.appendChild(script);
     });
-}
-
-export function isSelectElement(el: HTMLElement): el is HTMLSelectElement {
-    return el.nodeName === "SELECT";
-}
-
-export function isInputElement(el: HTMLElement): el is HTMLInputElement {
-    return el.nodeName === "INPUT";
-}
-
-export function isTextAreaElement(el: HTMLElement): el is HTMLTextAreaElement {
-    return el.nodeName === "TEXTAREA";
 }
 
 export function noScroll(scrollContainer: Window | HTMLElement | string) {

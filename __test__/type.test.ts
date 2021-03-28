@@ -1,7 +1,23 @@
 import * as type from "../src/type";
 import * as cm from "../src/common";
 
-test('isArrayLike', () => {
+test("typeOf", () => {
+    const fn = type.typeOf;
+    // 六大基本类型 string boolean number object null undefined
+    expect(fn("")).toBe("string");
+    expect(fn(true)).toBe("boolean");
+    expect(fn(0)).toBe("number");
+    expect(fn(undefined)).toBe("undefined");
+    expect(fn({})).toBe("object");
+    expect(fn(null)).toBe("null");
+    // 非6
+    expect(fn(() => {
+    })).toBe("function");
+    expect(fn([])).toBe("array");
+    expect(fn(NaN)).toBe("number");
+    expect(fn(/abc/)).toBe("regexp");
+});
+test("isArrayLike", () => {
     expect(type.isArrayLike([1, 2, 3])).toBe(true);
     expect(type.isArrayLike([])).toBe(true);
     expect(type.isArrayLike({length: 1, 0: 1})).toBe(true);
@@ -15,7 +31,7 @@ test('isArrayLike', () => {
     expect(type.isArrayLike(() => {
     })).toBe(false);
 });
-test('isArray', () => {
+test("isArray", () => {
     expect(type.isArray(0.12345667)).toBeFalsy();
     expect(type.isArray("")).toBeFalsy();
     expect(type.isArray({})).toBeFalsy();
@@ -29,7 +45,7 @@ test('isArray', () => {
     expect(type.isArray([1, 2, 3])).toBeTruthy();
     expect(type.isArray([])).toBeTruthy();
 });
-test('isNumber', () => {
+test("isNumber", () => {
     expect(type.isNumber("")).toBeFalsy();
     expect(type.isNumber({})).toBeFalsy();
     expect(type.isNumber({0: 1, 1: 2, length: 2})).toBeFalsy();
@@ -43,16 +59,16 @@ test('isNumber', () => {
     expect(type.isNumber(NaN)).toBeTruthy();
     expect(type.isNumber(123)).toBeTruthy();
 });
-test('isFunction', () => {
+test("isFunction", () => {
     expect(type.isFunction("")).toBeFalsy();
     expect(type.isFunction(() => {
     })).toBeTruthy();
 });
-test('isString', () => {
+test("isString", () => {
     expect(type.isString(123123)).toBeFalsy();
     expect(type.isString("")).toBeTruthy();
 });
-test('isObject', () => {
+test("isObject", () => {
     expect(type.isObject(123123)).toBeFalsy();
     expect(type.isObject(undefined)).toBeFalsy();
     expect(type.isObject(123123)).toBeFalsy();
@@ -71,7 +87,7 @@ test('isObject', () => {
     expect(typeof f === "object").toBeFalsy();
     expect(type.isObject(f)).toBeFalsy();
 });
-test('isBoolean', () => {
+test("isBoolean", () => {
     expect(type.isBoolean(0)).toBeFalsy();
     expect(type.isBoolean(123123)).toBeFalsy();
     expect(type.isBoolean(undefined)).toBeFalsy();
@@ -80,13 +96,13 @@ test('isBoolean', () => {
     expect(type.isBoolean([])).toBeFalsy();
     expect(type.isBoolean({})).toBeFalsy();
 });
-test('is', () => {
-    expect(type.type(0, "string")).toBeFalsy();
-    expect(type.type(0, "number")).toBe(true);
-    expect(type.type(0, ["string", "number"])).toBe(true);
-    expect(type.type(0, ["string", "function", "object"])).toBe(false);
+test("inTypes", () => {
+    expect(() => type.inTypes(0, "number" as any)).toThrowError();
+    // expect(type.typeIn(0, "number" as any)).toBe(true);
+    expect(type.inTypes(0, ["string", "number"])).toBe(true);
+    expect(type.inTypes(0, ["string", "function", "object"])).toBe(false);
 });
-test('isUndefined', () => {
+test("isUndefined", () => {
     expect(type.isUndefined(0)).toBeFalsy();
     expect(type.isUndefined(123123)).toBeFalsy();
     expect(type.isUndefined("")).toBeFalsy();
@@ -96,7 +112,7 @@ test('isUndefined', () => {
     let a;
     expect(type.isUndefined(a)).toBeTruthy();
 });
-test('isNaN', () => {
+test("isNaN", () => {
     expect(NaN === NaN).toBeFalsy();
     expect(type.isNaN(NaN)).toBeTruthy();
     expect(type.isNaN({a: 1})).toBeFalsy();
@@ -115,7 +131,7 @@ test('isNaN', () => {
     expect(type.isNaN("123")).toBeFalsy();
     expect(type.isNaN("NaN")).toBeFalsy();
 });
-test('isEmptyObject', () => {
+test("isEmptyObject", () => {
     expect(type.isEmptyObject({})).toBeTruthy();
     expect(type.isEmptyObject({a: 1})).toBeFalsy();
     expect(type.isEmptyObject({true: 1})).toBeFalsy();
@@ -127,7 +143,7 @@ test('isEmptyObject', () => {
     expect(type.isEmptyObject(function () {
     })).toBeFalsy();
 });
-test('isEmpty', () => {
+test("isEmpty", () => {
     expect(type.isEmpty(NaN)).toBeTruthy();
     expect(type.isEmpty("")).toBeTruthy();
     expect(type.isEmpty({})).toBeTruthy();
@@ -153,8 +169,8 @@ test("isPromiseLike", () => {
     expect(type.isPromiseLike(0)).toBe(false);
     expect(type.isPromiseLike(-42)).toBe(false);
     expect(type.isPromiseLike(42)).toBe(false);
-    expect(type.isPromiseLike('')).toBe(false);
-    expect(type.isPromiseLike('then')).toBe(false);
+    expect(type.isPromiseLike("")).toBe(false);
+    expect(type.isPromiseLike("then")).toBe(false);
     expect(type.isPromiseLike(false)).toBe(false);
     expect(type.isPromiseLike(true)).toBe(false);
     expect(type.isPromiseLike({})).toBe(false);
@@ -176,7 +192,7 @@ test("isPromiseLike", () => {
     };
     expect(type.isPromiseLike(fn)).toBe(true);
 });
-test('isEqual', () => {
+test("isEqual", () => {
     expect(type.isEqual({a: 1}, {a: 1})).toBeTruthy();
     expect(type.isEqual({a: 1}, {a: 2})).toBeFalsy();
     expect(type.isEqual(1, 1)).toBeTruthy();
@@ -202,12 +218,12 @@ test('isEqual', () => {
     expect(type.isEqual(NaN, NaN)).toBeTruthy();
     expect(type.isEqual("", "")).toBeTruthy();
 });
-test('objectIsEqual', () => {
+test("objectIsEqual", () => {
     expect(type.objectIsEqual(cm, cm)).toBeTruthy();
     expect(type.objectIsEqual({a: 1}, {a: 1})).toBeTruthy();
     expect(type.objectIsEqual({a: 1}, {a: 2})).toBeFalsy();
 });
-test('isSameType', () => {
+test("isSameType", () => {
     const fn = type.isSameType;
     expect(fn(cm, cm)).toBeTruthy();
     expect(fn(1, 2)).toBeTruthy();
@@ -218,7 +234,7 @@ test('isSameType', () => {
     expect(fn({}, () => 0)).toBeFalsy();
     expect(fn({}, null)).toBeFalsy();
 });
-test('isIterable', () => {
+test("isIterable", () => {
     const fn = type.isIterable;
     expect(fn(null)).toBeFalsy();
     expect(fn(undefined)).toBeFalsy();

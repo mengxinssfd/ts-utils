@@ -1,4 +1,4 @@
-import {isInputElement, isSelectElement, isTextAreaElement} from "./dom";
+import {isInputElement, isSelectElement, isTextAreaElement} from "./domType";
 
 /**
  * @param element

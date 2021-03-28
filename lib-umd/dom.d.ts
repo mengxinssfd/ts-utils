@@ -1,4 +1,3 @@
-export declare const isDom: (target: any) => target is HTMLElement;
 export declare const addClass: (target: HTMLElement, className: string | string[]) => string;
 export declare function removeClass(dom: any, className: string): string;
 /**
@@ -75,9 +74,6 @@ export declare function loadImg(url: string): Promise<HTMLImageElement>;
  * @param url
  */
 export declare function loadScript(url: string): Promise<void>;
-export declare function isSelectElement(el: HTMLElement): el is HTMLSelectElement;
-export declare function isInputElement(el: HTMLElement): el is HTMLInputElement;
-export declare function isTextAreaElement(el: HTMLElement): el is HTMLTextAreaElement;
 export declare function noScroll(scrollContainer: Window | HTMLElement | string): () => void;
 /**
  * 通过object来生成html元素

@@ -1,4 +1,4 @@
-import { typeOf } from "./common";
+import { typeOf } from "./type";
 import { reduceObj } from "./object";
 export function getUrlProtocol(url) {
     const reg = /^(\w+):\/\//;

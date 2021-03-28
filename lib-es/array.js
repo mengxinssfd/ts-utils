@@ -1,4 +1,4 @@
-import { typeOf } from "./common";
+import { typeOf } from "./type";
 import { deepClone } from "./clone";
 import { isEmpty, isNaN, isArray, isArrayLike, isFunction } from "./type";
 /**

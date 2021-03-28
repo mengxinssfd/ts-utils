@@ -32,7 +32,6 @@ export declare function debounceByPromise<T, CB extends (...args: any[]) => Prom
  */
 export declare function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
 export declare function forEachByLen(len: number, callback: (index: number) => (any | false)): void;
-export declare function typeOf(target: any): string;
 /**
  * 千位分隔 1,234,567,890
  * @param num
