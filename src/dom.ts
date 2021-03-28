@@ -282,6 +282,8 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
         removeMoveAndUpEventListener();
     }
 
+    // touchstart事件会优先于mousedown事件，touchmove后不会触发mousedown事件
+    // 所以move和up的事件不会同时触发两次，也不用去专门处理触发事件
     dom.addEventListener("mousedown", mousedown as any, capture.down);
     dom.addEventListener("touchstart", touchStart as any, capture.down);
 
