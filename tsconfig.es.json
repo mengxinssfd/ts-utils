@@ -8,14 +8,6 @@
     "declarationDir": "types"
   },
   "exclude": [
-    "tslib",
-    "lib*",
-    "webpack.config.js",
-    "webpack.dev.config.js",
-    "test",
-    "__test__",
-    "jest.config.js",
-    "src/index.umd.ts",
-    "test/*"
+    "src/index.umd.ts"
   ]
 }
