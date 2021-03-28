@@ -9,3 +9,4 @@ export declare function isImgElement(el: HTMLElement): el is HTMLImageElement;
 export declare function isDivElement(el: HTMLElement): el is HTMLDivElement;
 export declare function isSpanElement(el: HTMLElement): el is HTMLSpanElement;
 export declare function isUlElement(el: HTMLElement): el is HTMLUListElement;
+export declare function supportTouch(): boolean;

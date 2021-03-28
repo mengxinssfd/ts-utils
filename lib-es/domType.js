@@ -35,3 +35,6 @@ export function isSpanElement(el) {
 export function isUlElement(el) {
     return isElementOf("UL", el);
 }
+export function supportTouch() {
+    return "ontouchstart" in window;
+}

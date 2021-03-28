@@ -93,3 +93,7 @@ test("isUlElement", () => {
     expect(fn(document.createElement("img"))).toBeFalsy();
     expect(fn(new Image())).toBeFalsy();
 });
+test("supportTouch", () => {
+    const fn = domType.supportTouch;
+    expect(fn()).toBeFalsy();
+});
