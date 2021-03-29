@@ -169,7 +169,10 @@ export function omit(target, keys) {
 }
 export function assign(target, ...args) {
     args.forEach(arg => {
-        forEachObj(arg, (v, k) => target[k] = v);
+        // forEachObj(arg, (v, k) => target[k] = v);  // 不能把“target[k] = v”返回值，v可能会为false，为false会中断循环
+        forEachObj(arg, (v, k) => {
+            target[k] = v;
+        });
     });
     return target;
 }

@@ -236,6 +236,38 @@ test("assign", () => {
     expect(fn({}, ...objArr2)).toEqual(Object.assign({}, ...objArr2));
     expect(fn(objArr2[0], ...objArr2.slice(1))).toEqual({a: 1, b: 2, c: undefined});
     expect(fn({}, new TestExtends())).toEqual({a: 1, b: 2});
+
+    const opt = {
+        scale: {
+            step: -1,
+        },
+        triggerEl: [".img-zoom"],
+    };
+    const defaultScale = {
+        max: 10,
+        min: 0.1,
+        step: 0.1,
+        default: 1,
+    };
+    const defaultOptions = {
+        triggerEl: ".img-zoom",
+        isClickViewImgClose: false,
+        dataset: "data-img-zoom",
+    };
+    const opts = fn({}, defaultOptions, opt || {});
+    opts.scale = fn({}, defaultScale, opts.scale || {});
+
+    expect(opts).toEqual({
+        triggerEl: [".img-zoom"],
+        isClickViewImgClose: false,
+        dataset: "data-img-zoom",
+        scale: {
+            max: 10,
+            min: 0.1,
+            step: -1,
+            default: 1,
+        },
+    });
 });
 test("omit", () => {
     const fn = cm.omit;

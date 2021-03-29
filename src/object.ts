@@ -232,7 +232,10 @@ export function assign<T, U, V, W>(target: T, source1: U, source2: V, source3: W
 export function assign(target: object, ...args: object[]);
 export function assign(target, ...args) {
     args.forEach(arg => {
-        forEachObj(arg, (v, k) => target[k] = v);
+        // forEachObj(arg, (v, k) => target[k] = v);  // 不能返回“target[k] = v”值，v可能会为false，为false会中断循环
+        forEachObj(arg, (v, k) => {
+            target[k] = v;
+        });
     });
     return target;
 }
