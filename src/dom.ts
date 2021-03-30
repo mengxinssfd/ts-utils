@@ -210,3 +210,22 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(tagName: K,
     });
     return el;
 }
+
+/**
+ * 获取文字缩放大小
+ * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效
+ * @param reverse
+ * @return {number}
+ */
+export function getFontScale(reverse = false) {
+    const fontSize = 10;
+    const div = document.createElement("div");
+    document.body.appendChild(div);
+    div.style.fontSize = 10 + "px";
+    const realFontSize = getComputedStyle(div).fontSize;
+    document.body.removeChild(div);
+    if(reverse) {
+        return fontSize / parseInt(realFontSize);
+    }
+    return parseInt(realFontSize) / fontSize;
+}
