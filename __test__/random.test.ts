@@ -91,7 +91,7 @@ test("randomInt", () => {
     expect(arr7.every(i => i > -1)).toBeTruthy();
     expect(arr7.every(i => i < 5)).toBeTruthy();
 
-    const arr4 = fn(-10, 10, 100);
+    const arr4 = fn(-10, 10, 500);
     expect(arr4.some(i => i === -10)).toBeTruthy();
     expect(arr4.every(i => i >= -10)).toBeTruthy();
     expect(arr4.every(i => i < 10)).toBeTruthy();
@@ -109,6 +109,9 @@ test("randomInt", () => {
     const arr6 = fn(0.2, 0.4, 300);
     expect(arr6.length).toBe(300);
     expect(arr6.every(i => i === 0.2)).toBeTruthy();
+    const arr8 = createArray({len: 200, fill: () => fn()});
+    expect(arr8.length).toBe(200);
+    expect(arr8.every(i => i >=0 && i < 1)).toBeTruthy();
 });
 test("randomItem", () => {
     const fn = cm.randomItem;

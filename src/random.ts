@@ -101,7 +101,7 @@ type ColorType = "HEX" | "RGB" | "RGBA";
  */
 export function randomColor(): string;
 export function randomColor(type: ColorType): string;
-export function randomColor(len: number): string;
+export function randomColor(len: number): string[];
 export function randomColor(type: ColorType, len: number): string[];
 export function randomColor(type?, len?) {
     if (isNumber(type)) {

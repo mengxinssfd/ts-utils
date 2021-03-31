@@ -1,25 +1,29 @@
-import {isArray} from "./type";
+// import {isArray} from "./type";
 
 export function isRGBColor(color: string) {
-    const reg = /^[rR][gG][Bb][Aa]?[\(]([\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?),){2}[\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?),?[\s]*(0\.\d{1,2}|1|0)?[\)]{1}$/g;
+    const reg = /^[rR][gG][Bb][Aa]?[\(]([\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?),){2}[\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)(,[\s]*(0\.\d{1,2}|1|0))?[\)]{1}$/g;
     return reg.test(color);
 }
 
 export function isHEXColor(color: string) {
-    const reg = /#[0-9a-f]{6}$/;
+    const reg = /^#([\da-fA-F]{3}){1,2}$/;
     return reg.test(color);
 }
 
-export function hexToRgb(hexValue: string) {
+// 移动到RGB.fromHEX
+/*export function hexToRgb(hexValue: string) {
+    // if (!isHEXColor(hexValue)) throw new TypeError("hexValue is not hex color");
     const rgx = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    const hex = hexValue.replace(rgx, (m, r, g, b) => r + r + g + g + b + b);
+    const hex = hexValue.replace(rgx, (m, r, g, b) => {
+        return r + r + g + g + b + b;
+    });
     const rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) as string[];
     if (!isArray(rgb) || rgb.length < 4) throw new TypeError();
     const r = parseInt(rgb[1], 16);
     const g = parseInt(rgb[2], 16);
     const b = parseInt(rgb[3], 16);
     return `rgb(${r},${g},${b})`;
-}
+}*/
 
 export function rgbToHex(color: string) {
     if (!isRGBColor(color)) throw new TypeError();
@@ -109,6 +113,6 @@ export function getAverageRGB(imgEl: HTMLImageElement) {
 
 }
 
-export function getReveseRGB(){
+export function getReverseRGB() {
 
 }
