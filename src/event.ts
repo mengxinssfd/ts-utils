@@ -223,9 +223,9 @@ export function addResizeListener(el: HTMLElement, handler: () => void) {
  * @param targetEl
  * @param callback
  */
-export function eventProxy(
+export function eventProxy<K extends keyof HTMLElementEventMap>(
     containerEl: string | HTMLElement | null,
-    eventType: string,
+    eventType: K,
     targetEl: string | HTMLElement,
     callback: (e: Event) => void,
 ): null | (() => void) {
@@ -266,9 +266,9 @@ export function eventProxy(
  * @param callback
  * @param capture 捕获还是冒泡，默认冒泡
  */
-export function onceEvent(
+export function onceEvent<K extends keyof HTMLElementEventMap>(
     el: Window | HTMLElement | string | null | undefined,
-    eventType: string,
+    eventType: K,
     callback: (e: Event) => false | undefined,
     capture = false,
 ) {
