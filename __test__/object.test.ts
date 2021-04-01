@@ -285,25 +285,26 @@ test("omit", () => {
 });
 test("createObj", () => {
     const fn = cm.createObj;
-    const obj = fn(["a", 123], ["b", 111]);
+    const obj = fn([["a", 123], ["b", 111]]);
     expect(obj).toEqual({a: 123, b: 111});
-    expect(fn(["a", 123], ["b", 111], ["c", undefined])).toEqual({a: 123, b: 111, c: undefined});
-    expect(fn(["a", 123], ["b", 111], ["c", null])).toEqual({a: 123, b: 111, c: null});
-    expect(fn(["a", 123], ["b", 111], ["c", false])).toEqual({a: 123, b: 111, c: false});
-    expect(fn(["a", 123], ["b", 111], ["c", NaN])).toEqual({a: 123, b: 111, c: NaN});
-    expect(fn(["a", 123], ["b", 111], ["c", {aa: 1}])).toEqual({a: 123, b: 111, c: {aa: 1}});
+    expect(fn([["a", 123], ["b", 111], ["c", undefined]])).toEqual({a: 123, b: 111, c: undefined});
+    expect(fn([["a", 123], ["b", 111], ["c", null]])).toEqual({a: 123, b: 111, c: null});
+    expect(fn([["a", 123], ["b", 111], ["c", false]])).toEqual({a: 123, b: 111, c: false});
+    expect(fn([["a", 123], ["b", 111], ["c", NaN]])).toEqual({a: 123, b: 111, c: NaN});
+    expect(fn([["a", 123], ["b", 111], ["c", {aa: 1}]])).toEqual({a: 123, b: 111, c: {aa: 1}});
     // 不会自动转换值
-    expect(fn(["a", 123], ["b", 111], ["c", ["ca", 123]])).toEqual({a: 123, b: 111, c: ["ca", 123]});
+    expect(fn([["a", 123], ["b", 111], ["c", ["ca", 123]]])).toEqual({a: 123, b: 111, c: ["ca", 123]});
     // 转换值为object,使用createObj嵌套
-    expect(fn(["a", 123], ["b", 111], ["c", fn(["ca", 123])])).toEqual({a: 123, b: 111, c: {ca: 123}});
+    expect(fn([["a", 123], ["b", 111], ["c", fn([["ca", 123]])]])).toEqual({a: 123, b: 111, c: {ca: 123}});
 
+    expect(fn([])).toEqual({});
     expect(() => {
-        fn([] as any);
+        fn([[]] as any);
     }).toThrowError();
     expect(() => {
         fn(undefined as any);
     }).toThrowError();
-    expect(fn([undefined, undefined] as any)).toEqual({});
+    expect(fn([[undefined, undefined]] as any)).toEqual({});
 });
 test("defaults", () => {
     const fn = cm.defaults;
