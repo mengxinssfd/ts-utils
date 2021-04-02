@@ -25,6 +25,6 @@ declare type ColorType = "HEX" | "RGB" | "RGBA";
  */
 export declare function randomColor(): string;
 export declare function randomColor(type: ColorType): string;
-export declare function randomColor(len: number): string;
+export declare function randomColor(len: number): string[];
 export declare function randomColor(type: ColorType, len: number): string[];
 export {};

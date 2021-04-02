@@ -169,7 +169,7 @@ export function omit(target, keys) {
 }
 export function assign(target, ...args) {
     args.forEach(arg => {
-        // forEachObj(arg, (v, k) => target[k] = v);  // 不能把“target[k] = v”返回值，v可能会为false，为false会中断循环
+        // forEachObj(arg, (v, k) => target[k] = v);  // 不能返回“target[k] = v”值，v可能会为false，为false会中断循环
         forEachObj(arg, (v, k) => {
             target[k] = v;
         });
@@ -207,19 +207,19 @@ type K = keyof A
 type V = A[K]
 type B = Pick2<A, keyof A>*/
 /**
- * 创建一个object 代替支持es6的动态key
+ * 创建一个object 代替es6的动态key object
  * @example
- * // {a:1, b:2}
- * createObj(['a', 1], ['b', 2])
+ * const k1 = "a",k2 = "b"
+ * createObj([[k1, 1], [k2, 2]]); // {a:1, b:2}
+ * @param entries
  * @return {{}}
  */
-export function createObj(...args) {
-    // Array.prototype.forEach.call(arguments,item=> {
-    return args.reduce((initValue, item) => {
+export function createObj(entries) {
+    return entries.reduce((initValue, item) => {
         if (!isArray(item) || item.length < 1)
             throw new TypeError("createObj args type error");
         const [key, value] = item;
-        if (key !== undefined) {
+        if (key !== void 0) {
             initValue[key] = value;
         }
         return initValue;

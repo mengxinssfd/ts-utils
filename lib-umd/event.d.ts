@@ -37,7 +37,7 @@ export declare function addResizeListener(el: HTMLElement, handler: () => void):
  * @param targetEl
  * @param callback
  */
-export declare function eventProxy(containerEl: string | HTMLElement | null, eventType: string, targetEl: string | HTMLElement, callback: (e: Event) => void): null | (() => void);
+export declare function eventProxy<K extends keyof HTMLElementEventMap>(containerEl: string | HTMLElement | null, eventType: K, targetEl: string | HTMLElement, callback: (e: Event) => void): null | (() => void);
 /**
  * 一次性事件
  * @param el
@@ -45,7 +45,7 @@ export declare function eventProxy(containerEl: string | HTMLElement | null, eve
  * @param callback
  * @param capture 捕获还是冒泡，默认冒泡
  */
-export declare function onceEvent(el: Window | HTMLElement | string | null | undefined, eventType: string, callback: (e: Event) => false | undefined, capture?: boolean): void;
+export declare function onceEvent<K extends keyof HTMLElementEventMap>(el: Window | HTMLElement | string | null | undefined, eventType: K, callback: (e: Event) => false | undefined, capture?: boolean): void;
 export declare function isVisible(target: HTMLElement, container?: HTMLElement | typeof window): boolean;
 export declare function isScrollEnd(el: HTMLElement, direct?: "vertical" | "horizontal", offset?: number): boolean;
 export declare function isScrollStart(el: HTMLElement, direct?: "vertical" | "horizontal", offset?: number): boolean;

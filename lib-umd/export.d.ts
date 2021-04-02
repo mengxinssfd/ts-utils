@@ -22,3 +22,4 @@ export * from "./random";
 export * from "./color";
 export * from "./domType";
 export * from "./event";
+export * from "./RGB";

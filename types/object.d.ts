@@ -72,12 +72,13 @@ export declare function defaults<T, U, V>(target: T, source1: U, source2: V): T 
 export declare function defaults<T, U, V, W>(target: T, source1: U, source2: V, source3: W): T & U & V & W;
 export declare function defaults(target: object, ...args: object[]): any;
 /**
- * 创建一个object 代替支持es6的动态key
+ * 创建一个object 代替es6的动态key object
  * @example
- * // {a:1, b:2}
- * createObj(['a', 1], ['b', 2])
+ * const k1 = "a",k2 = "b"
+ * createObj([[k1, 1], [k2, 2]]); // {a:1, b:2}
+ * @param entries
  * @return {{}}
  */
-export declare function createObj(...args: Array<[string, any]>): {
+export declare function createObj(entries: Array<[string, any]>): {
     [k: string]: any;
 };

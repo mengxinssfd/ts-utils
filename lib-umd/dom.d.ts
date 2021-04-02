@@ -44,3 +44,10 @@ export declare function noScroll(scrollContainer: Window | HTMLElement | string)
 export declare function createElement<K extends keyof HTMLElementTagNameMap>(tagName: K, attribute: {
     [k: string]: any;
 }): HTMLElementTagNameMap[K];
+/**
+ * 获取文字缩放大小
+ * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效
+ * @param reverse
+ * @return {number}
+ */
+export declare function getFontScale(reverse?: boolean): number;
