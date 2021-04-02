@@ -7,7 +7,4 @@
     "declaration": true,
     "declarationDir": "types"
   },
-  "exclude": [
-    "src/index.umd.ts"
-  ]
 }
