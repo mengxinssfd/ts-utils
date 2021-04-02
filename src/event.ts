@@ -1,6 +1,6 @@
 import {includes} from "./array";
 import {isDom} from "./domType";
-import {isFunction, isString, typeOf} from "./type";
+import {isFunction, isString} from "./type";
 
 type xy = { x: number, y: number }
 type OnDown = (e: MouseEvent | TouchEvent, currentXY: xy) => any
@@ -137,7 +137,6 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
     return removeAllEventListener;
 }
 
-
 // from => https://blog.crimx.com/2017/07/15/element-onresize/
 // TODO 未测
 /**
@@ -267,33 +266,33 @@ export function eventProxy<K extends keyof HTMLElementEventMap>(
  * @param capture 捕获还是冒泡，默认冒泡
  */
 export function onceEvent<K extends keyof HTMLElementEventMap>(
-    el: Window | HTMLElement | string | null | undefined,
+    el: Window | HTMLElement | string | null | void,
     eventType: K,
-    callback: (e: Event) => false | undefined,
+    callback: (e: Event) => any,
     capture = false,
 ) {
-    let dom: HTMLElement | Window | null = el as HTMLElement;
-    if (typeOf(el) === "string") {
-        dom = document.querySelector(<string>el) as HTMLElement;
+    let dom: HTMLElement | Window;
+
+    if (isString(el)) {
+        dom = document.querySelector(el) as HTMLElement;
         if (!dom) {
             throw new Error("element not found!");
         }
+    } else if (isDom(el)) {
+        dom = el;
     } else {
         dom = window;
     }
     let handler = (e) => {
-        let istRemove: false | undefined = false;
-        if (callback && isFunction(callback)) {
-            // callback 返回false的时候不remove事件
-            istRemove = callback(e);
-        }
         // 移除的时候也要带上捕获还是冒泡
-        (istRemove !== false) && (<HTMLElement>dom).removeEventListener(eventType, handler, capture);
+        dom.removeEventListener(eventType, handler, capture);
+        if (callback && isFunction(callback)) {
+            return callback(e);
+        }
     };
     // 使用捕获优先度高，冒泡的话会在同一个事件里执行
     dom.addEventListener(eventType, handler, capture);
 }
-
 
 function getWH(el: HTMLElement | typeof window): { w: number, h: number } {
     const wh = {w: 0, h: 0};
