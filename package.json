@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/ts-utils",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "description": "utils工具函数ts/js库",
   "main": "./lib-umd/index.js",
   "module": "./lib-es/index.js",
@@ -15,7 +15,7 @@
   "scripts": {
     "clean": "rimraf lib-* types coverage",
     "build": "run-p clean lib:es lib:umd",
-    "lib:umd": "set NODE_ENV=production&webpack --mode production&npm run rename",
+    "lib:umd": "set NODE_ENV=production&webpack --mode production",
     "lib:es": "tsc --build tsconfig.es.json",
     "pub": "npm publish --access=public",
     "rename": "reName lib-umd\\index.umd.d.ts index.d.ts",
