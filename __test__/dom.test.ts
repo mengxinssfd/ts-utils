@@ -104,26 +104,44 @@ test("prefixStyle", () => {
 test("cssSupport", () => {
     const fn = dom.cssSupport;
     expect(fn("position", "sticky")).toBeTruthy();
-    expect(fn("ppppp", "test")).toBeFalsy();
+    expect(fn("ppppp" as any, "test")).toBeFalsy();
 });
 test("createElement", () => {
     const fn = dom.createElement;
     let clickTest = 0;
     const div = fn("div", {
-        class: "a b c",
-        style: {
-            "fontSize": "20px",
-            color: "red",
+        attrs: {
+            "data-test": 100,
+            "data-test2": {
+                a: 1,
+                b: 2,
+            },
         },
-        onclick() {
-            clickTest = 1;
+        props: {
+            className: "a b c",
+            // clientHeight: 110, // readonly
+            style: {
+                // parentRule: null, // readonly
+                fontSize: "20px",
+                color: "red"
+            },
+            onclick() {
+                clickTest++;
+            },
         },
+
     });
     document.body.appendChild(div);
-    // div.click();
+    div.click();
+    div.click();
     expect(isDivElement(div)).toBeTruthy();
     expect(div.className).toBe("a b c");
-    expect(clickTest).toBe(0);
+    expect(clickTest).toBe(2);
     expect(div.style.fontSize).toBe("20px");
     expect(div.style.color).toBe("red");
+    expect(div.getAttribute("data-test")).toBe("100");
+    expect(div.getAttribute("data-test2")).toBe(JSON.stringify({
+        a: 1,
+        b: 2,
+    }));
 });

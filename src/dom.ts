@@ -1,5 +1,6 @@
 import {includes, unique} from "./array";
 import {assign, forEachObj, pickByKeys} from "./object";
+import {ReadonlyKeys} from "./TsTypes";
 import {isString} from "./type";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
@@ -108,14 +109,14 @@ export function toggleClass(target: HTMLElement, className: string): string {
  * @param style
  * @returns {*}
  */
-export function prefixStyle(style: string): string | false {
+export function prefixStyle<T extends keyof CSSStyleDeclaration>(style: T): T | false {
     if (vendor === false) {
         return false;
     }
     if (vendor === "transform") {
         return style;
     }
-    return vendor + style.charAt(0).toUpperCase() + style.substr(1);
+    return vendor + (style as string).charAt(0).toUpperCase() + (style as string).substr(1) as any;
 }
 
 /**
@@ -124,7 +125,7 @@ export function prefixStyle(style: string): string | false {
  * @param value
  * @returns {boolean}
  */
-export function cssSupport(key, value) {
+export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSStyleDeclaration[K]>(key: K, value: V) {
     if (key in elementStyle) {
         elementStyle[key] = value;
         return elementStyle[key] === value;
@@ -193,12 +194,21 @@ export function noScroll(scrollContainer: Window | HTMLElement | string) {
 
 /**
  * 通过object来生成html元素
+ * @tips: attribute（特性），是我们赋予某个事物的特质或对象。property（属性），是早已存在的不需要外界赋予的特质。
  * @param tagName
- * @param attribute
+ * @param params
  */
-export function createElement<K extends keyof HTMLElementTagNameMap>(tagName: K, attribute: { [k: string]: any }): HTMLElementTagNameMap[K] {
+export function createElement<K extends keyof HTMLElementTagNameMap,
+    R extends HTMLElementTagNameMap[K]>(
+    tagName: K,
+    params: {
+        attrs?: { [k: string]: any },
+        props?: { style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>> } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>
+    } = {},
+): R {
     const el = document.createElement(tagName);
-    forEachObj(attribute, (v, k, o) => {
+    const {attrs = {}, props = {}} = params;
+    forEachObj(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
             forEachObj(v, (value, key) => {
@@ -206,9 +216,13 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(tagName: K,
             });
             return;
         }
+        el[k] = v;
+    });
+    forEachObj(attrs, (v, k, o) => {
+        const isObjValue = typeof v === "object";
         el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
     });
-    return el;
+    return el as any;
 }
 
 /**
@@ -224,7 +238,7 @@ export function getFontScale(reverse = false) {
     div.style.fontSize = 10 + "px";
     const realFontSize = getComputedStyle(div).fontSize;
     document.body.removeChild(div);
-    if(reverse) {
+    if (reverse) {
         return fontSize / parseInt(realFontSize);
     }
     return parseInt(realFontSize) / fontSize;
