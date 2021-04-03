@@ -240,9 +240,9 @@ export function eventProxy<K extends keyof HTMLElementEventMap>(
     function handle(e) {
         e = e || window.event;
         // TODO 通过document.querySelectorAll匹配  并且该函数被滥用的话，会有性能问题
-        let targetDom = isDom(targetEl)
+        const targetDom = isDom(targetEl)
             ? [targetEl]
-            : Array.prototype.slice.call(document.querySelectorAll(targetEl), 0);
+            : document.querySelectorAll(targetEl);
         if (includes(targetDom, e.target)) {
             callback(e);
         }

@@ -1,7 +1,8 @@
 import {includes, unique} from "./array";
 import {assign, forEachObj, pickByKeys} from "./object";
 import {ReadonlyKeys} from "./TsTypes";
-import {isString} from "./type";
+import {isArray, isString} from "./type";
+import {isDom} from "./domType";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 let vendor = ((): string | false => {
@@ -202,8 +203,10 @@ export function createElement<K extends keyof HTMLElementTagNameMap,
     R extends HTMLElementTagNameMap[K]>(
     tagName: K,
     params: {
-        attrs?: { [k: string]: any },
-        props?: { style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>> } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>
+        attrs?: { [k: string]: any };
+        props?: { style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>> } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
+        parent?: HTMLElement | false;
+        children?: HTMLElement[]
     } = {},
 ): R {
     const el = document.createElement(tagName);
@@ -222,6 +225,17 @@ export function createElement<K extends keyof HTMLElementTagNameMap,
         const isObjValue = typeof v === "object";
         el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
     });
+    const {parent,children} = params;
+    if (parent !== false) {
+        if (isDom(parent)) {
+            parent.appendChild(el);
+        } else {
+            document.body.appendChild(el);
+        }
+    }
+    if(isArray(children)){
+        children.forEach(child=>el.appendChild(child))
+    }
     return el as any;
 }
 

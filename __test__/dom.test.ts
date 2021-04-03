@@ -140,8 +140,5 @@ test("createElement", () => {
     expect(div.style.fontSize).toBe("20px");
     expect(div.style.color).toBe("red");
     expect(div.getAttribute("data-test")).toBe("100");
-    expect(div.getAttribute("data-test2")).toBe(JSON.stringify({
-        a: 1,
-        b: 2,
-    }));
+    expect(div.getAttribute("data-test2")).toBe(JSON.stringify({a: 1, b: 2,}));
 });
