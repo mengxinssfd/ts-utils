@@ -5,7 +5,7 @@ import {isArray, isString} from "./type";
 import {isDom} from "./domType";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
-let vendor = ((): string | false => {
+const vendor: string | false = (() => {
     let transformName: any = {
         webkit: "webkitTransform",
         Moz: "MozTransform",
@@ -108,13 +108,13 @@ export function toggleClass(target: HTMLElement, className: string): string {
 /**
  * 判断是什么种类的浏览器并返回拼接前缀后的数据
  * @param style
- * @returns {*}
+ * @returns {string}
  */
 export function prefixStyle<T extends keyof CSSStyleDeclaration>(style: T): T | false {
     if (vendor === false) {
         return false;
     }
-    if (vendor === "transform") {
+    if (vendor === "standard") {
         return style;
     }
     return vendor + (style as string).charAt(0).toUpperCase() + (style as string).substr(1) as any;

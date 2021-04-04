@@ -123,7 +123,7 @@ test("createElement", () => {
             style: {
                 // parentRule: null, // readonly
                 fontSize: "20px",
-                color: "red"
+                color: "red",
             },
             onclick() {
                 clickTest++;
@@ -140,5 +140,21 @@ test("createElement", () => {
     expect(div.style.fontSize).toBe("20px");
     expect(div.style.color).toBe("red");
     expect(div.getAttribute("data-test")).toBe("100");
-    expect(div.getAttribute("data-test2")).toBe(JSON.stringify({a: 1, b: 2,}));
+    expect(div.getAttribute("data-test2")).toBe(JSON.stringify({a: 1, b: 2}));
+    const parent = fn("div", {
+        children: [div],
+        props: {
+            className: "p",
+        },
+    });
+    expect(parent.childNodes.length).toBe(1);
+    expect(parent.getElementsByClassName("a")[0]).toBe(div);
+    const child = fn("div", {
+        parent,
+        props: {
+            className: "child",
+        },
+    });
+    expect(child.parentNode).toBe(parent);
+    expect(parent.getElementsByTagName("div")[1]).toBe(child);
 });

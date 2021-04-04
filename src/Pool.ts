@@ -1,5 +1,3 @@
-type AddFn<T> = (aliveList: readonly T[], recycleList: readonly T[]) => T;
-
 // T的属性必须是可以在外部更改的
 export class Pool<T> {
     get recycleList(): T[] {
@@ -13,11 +11,11 @@ export class Pool<T> {
     private _aliveList: T[] = [];
     private _recycleList: T[] = [];
 
-    constructor() {
+    constructor(public readonly itemClass: { new(): T }) {
     }
 
-    add(addFn: AddFn<T>): T {
-        const item = this.getRecycleOne() || addFn(this.aliveList, this.recycleList);
+    add(): T {
+        const item = this.getRecycleOne() || new this.itemClass();
         if (this._aliveList.indexOf(item) > -1) return item;
         this._aliveList.push(item);
         return item;
@@ -31,13 +29,15 @@ export class Pool<T> {
         return item;
     }
 
-    pop() {
+    pop(): void | T {
         const acList = this._aliveList;
         if (acList.length === 0) return;
-        this._recycleList.push(acList.pop() as T);
+        const item = acList.pop();
+        this._recycleList.push(item!);
+        return item;
     }
 
-    shift() {
+    shift(): T | void {
         const acList = this._aliveList;
         if (acList.length === 0) return;
         const item = acList.shift() as T;
@@ -45,8 +45,8 @@ export class Pool<T> {
         return item;
     }
 
-    unshift(addFn: AddFn<T>): T {
-        const item = this.getRecycleOne() || addFn(this.aliveList, this.recycleList);
+    unshift(): T {
+        const item = this.getRecycleOne() || new this.itemClass();
         const acList = this._aliveList;
         const index = acList.indexOf(item);
         if (index > -1) {

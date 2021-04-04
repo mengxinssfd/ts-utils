@@ -26,6 +26,7 @@ test("eventProxy", () => {
         },
         children: [d],
     });
+
     let c = 0, c2 = 0, c3 = 0;
     d.onclick = function () {
         c++;
@@ -43,4 +44,22 @@ test("eventProxy", () => {
     expect(c).toBe(3);
     expect(c2).toBe(3);
     expect(c3).toBe(3);
+
+
+    let cc = 0;
+    const d3 = createElement("div", {
+        props: {
+            className: "test2",
+        },
+    });
+    const d4 = createElement("div", {
+        props: {
+            className: "test3",
+            onclick: () => cc++,
+        },
+        parent: d3,
+    });
+    d4.click();
+    d4.click();
+    expect(cc).toBe(2);
 });
