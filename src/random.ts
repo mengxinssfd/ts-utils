@@ -30,7 +30,7 @@ export function randomFloat(min?, max?, len?) {
 
 export function randomInt(): number
 // min = 0 生成0-max之间的随机数
-export function randomInt(end: number): number
+export function randomInt(max: number): number
 // 生成min到max之间的随机数 包含start不包含max
 export function randomInt(min: number, max: number): number
 // 生成min到max之间的随机数组 包含min不包含max len：数组长度
