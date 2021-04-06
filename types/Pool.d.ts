@@ -1,16 +1,23 @@
-declare type AddFn<T> = (aliveList: readonly T[], recycleList: readonly T[]) => T;
+import { EventBus } from "./eventBus";
 export declare class Pool<T> {
-    get recycleList(): T[];
-    get aliveList(): T[];
+    readonly itemClass: {
+        new (): T;
+    };
+    readonly events: EventBus;
+    constructor(itemClass: {
+        new (): T;
+    });
     private _aliveList;
+    get aliveList(): T[];
     private _recycleList;
-    constructor();
-    add(addFn: AddFn<T>): T;
-    remove(item: T): T | undefined;
-    pop(): void;
-    shift(): T | undefined;
-    unshift(addFn: AddFn<T>): T;
+    get recycleList(): T[];
+    get length(): number;
+    add(msg?: any): T;
+    remove(item: T, msg?: any): T | undefined;
+    pop(msg?: any): void | T;
+    shift(msg?: any): T | void;
+    unshift(msg?: any): T;
     getRecycleOne(): T | undefined;
+    forEach(callbackFn: (value: T, index: number, array: T[]) => void): void;
     clear(): void;
 }
-export {};

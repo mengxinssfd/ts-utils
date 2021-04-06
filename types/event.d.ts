@@ -45,7 +45,7 @@ export declare function eventProxy<K extends keyof HTMLElementEventMap>(containe
  * @param callback
  * @param capture 捕获还是冒泡，默认冒泡
  */
-export declare function onceEvent<K extends keyof HTMLElementEventMap>(el: Window | HTMLElement | string | null | undefined, eventType: K, callback: (e: Event) => false | undefined, capture?: boolean): void;
+export declare function onceEvent<K extends keyof HTMLElementEventMap>(el: Window | HTMLElement | string | null | void, eventType: K, callback: (e: Event) => any, capture?: boolean): void;
 export declare function isVisible(target: HTMLElement, container?: HTMLElement | typeof window): boolean;
 export declare function isScrollEnd(el: HTMLElement, direct?: "vertical" | "horizontal", offset?: number): boolean;
 export declare function isScrollStart(el: HTMLElement, direct?: "vertical" | "horizontal", offset?: number): boolean;

@@ -1,6 +1,6 @@
 import { includes } from "./array";
 import { isDom } from "./domType";
-import { isFunction, isString, typeOf } from "./type";
+import { isFunction, isString } from "./type";
 /**
  * 拖动事件 返回取消事件
  * @param el
@@ -196,9 +196,9 @@ export function eventProxy(containerEl, eventType, targetEl, callback) {
     function handle(e) {
         e = e || window.event;
         // TODO 通过document.querySelectorAll匹配  并且该函数被滥用的话，会有性能问题
-        let targetDom = isDom(targetEl)
+        const targetDom = isDom(targetEl)
             ? [targetEl]
-            : Array.prototype.slice.call(document.querySelectorAll(targetEl), 0);
+            : document.querySelectorAll(targetEl);
         if (includes(targetDom, e.target)) {
             callback(e);
         }
@@ -220,24 +220,25 @@ export function eventProxy(containerEl, eventType, targetEl, callback) {
  * @param capture 捕获还是冒泡，默认冒泡
  */
 export function onceEvent(el, eventType, callback, capture = false) {
-    let dom = el;
-    if (typeOf(el) === "string") {
+    let dom;
+    if (isString(el)) {
         dom = document.querySelector(el);
         if (!dom) {
             throw new Error("element not found!");
         }
     }
+    else if (isDom(el)) {
+        dom = el;
+    }
     else {
         dom = window;
     }
     let handler = (e) => {
-        let istRemove = false;
-        if (callback && isFunction(callback)) {
-            // callback 返回false的时候不remove事件
-            istRemove = callback(e);
-        }
         // 移除的时候也要带上捕获还是冒泡
-        (istRemove !== false) && dom.removeEventListener(eventType, handler, capture);
+        dom.removeEventListener(eventType, handler, capture);
+        if (callback && isFunction(callback)) {
+            return callback(e);
+        }
     };
     // 使用捕获优先度高，冒泡的话会在同一个事件里执行
     dom.addEventListener(eventType, handler, capture);

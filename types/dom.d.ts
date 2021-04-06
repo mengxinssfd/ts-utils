@@ -1,3 +1,4 @@
+import { ReadonlyKeys } from "./TsTypes";
 export declare function supportClassList(): boolean;
 export declare function hasClassIe8(target: HTMLElement, className: string[] | string): boolean;
 export declare function hasClassStandard(target: HTMLElement, className: string[] | string): boolean;
@@ -15,16 +16,16 @@ export declare function toggleClass(target: HTMLElement, className: string): str
 /**
  * 判断是什么种类的浏览器并返回拼接前缀后的数据
  * @param style
- * @returns {*}
+ * @returns {string}
  */
-export declare function prefixStyle(style: string): string | false;
+export declare function prefixStyle<T extends keyof CSSStyleDeclaration>(style: T): T | false;
 /**
  * 判断是否支持css
  * @param key
  * @param value
  * @returns {boolean}
  */
-export declare function cssSupport(key: any, value: any): boolean;
+export declare function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSStyleDeclaration[K]>(key: K, value: V): boolean;
 /**
  * 手动添加img标签下载图片
  * @param url
@@ -38,12 +39,20 @@ export declare function loadScript(url: string): Promise<void>;
 export declare function noScroll(scrollContainer: Window | HTMLElement | string): () => void;
 /**
  * 通过object来生成html元素
+ * @tips: attribute（特性），是我们赋予某个事物的特质或对象。property（属性），是早已存在的不需要外界赋予的特质。
  * @param tagName
- * @param attribute
+ * @param params
  */
-export declare function createElement<K extends keyof HTMLElementTagNameMap>(tagName: K, attribute: {
-    [k: string]: any;
-}): HTMLElementTagNameMap[K];
+export declare function createElement<K extends keyof HTMLElementTagNameMap, R extends HTMLElementTagNameMap[K]>(tagName: K, params?: {
+    attrs?: {
+        [k: string]: any;
+    };
+    props?: {
+        style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>>;
+    } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
+    parent?: HTMLElement | false;
+    children?: HTMLElement[];
+}): R;
 /**
  * 获取文字缩放大小
  * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效

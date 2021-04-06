@@ -37,7 +37,7 @@ export declare function forEachByLen(len: number, callback: (index: number) => (
  * @param num
  */
 export declare function thousandFormat(num: string | number): string;
-export declare function getFormatStr(str: any, ...params: any[]): any;
+export declare function strTemplate(str: any, ...params: any[]): any;
 /**
  * 给长度不满足要求的字符串添加前缀 strFillPrefix
  * @param target

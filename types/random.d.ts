@@ -3,7 +3,7 @@ export declare function randomFloat(max: number): number;
 export declare function randomFloat(min: number, max: number): number;
 export declare function randomFloat(min: number, max: number, len: number): number[];
 export declare function randomInt(): number;
-export declare function randomInt(end: number): number;
+export declare function randomInt(max: number): number;
 export declare function randomInt(min: number, max: number): number;
 export declare function randomInt(min: number, max: number, len: number): number[];
 /**

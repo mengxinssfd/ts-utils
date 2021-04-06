@@ -1,9 +1,10 @@
 import { includes, unique } from "./array";
 import { assign, forEachObj, pickByKeys } from "./object";
-import { isString } from "./type";
+import { isArray, isString } from "./type";
+import { isDom } from "./domType";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
-let vendor = (() => {
+const vendor = (() => {
     let transformName = {
         webkit: "webkitTransform",
         Moz: "MozTransform",
@@ -92,13 +93,13 @@ export function toggleClass(target, className) {
 /**
  * 判断是什么种类的浏览器并返回拼接前缀后的数据
  * @param style
- * @returns {*}
+ * @returns {string}
  */
 export function prefixStyle(style) {
     if (vendor === false) {
         return false;
     }
-    if (vendor === "transform") {
+    if (vendor === "standard") {
         return style;
     }
     return vendor + style.charAt(0).toUpperCase() + style.substr(1);
@@ -177,12 +178,14 @@ export function noScroll(scrollContainer) {
 }
 /**
  * 通过object来生成html元素
+ * @tips: attribute（特性），是我们赋予某个事物的特质或对象。property（属性），是早已存在的不需要外界赋予的特质。
  * @param tagName
- * @param attribute
+ * @param params
  */
-export function createElement(tagName, attribute) {
+export function createElement(tagName, params = {}) {
     const el = document.createElement(tagName);
-    forEachObj(attribute, (v, k, o) => {
+    const { attrs = {}, props = {} } = params;
+    forEachObj(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
             forEachObj(v, (value, key) => {
@@ -190,8 +193,24 @@ export function createElement(tagName, attribute) {
             });
             return;
         }
+        el[k] = v;
+    });
+    forEachObj(attrs, (v, k, o) => {
+        const isObjValue = typeof v === "object";
         el.setAttribute(k, isObjValue ? JSON.stringify(v) : v);
     });
+    const { parent, children } = params;
+    if (parent !== false) {
+        if (isDom(parent)) {
+            parent.appendChild(el);
+        }
+        else {
+            document.body.appendChild(el);
+        }
+    }
+    if (isArray(children)) {
+        children.forEach(child => el.appendChild(child));
+    }
     return el;
 }
 /**
