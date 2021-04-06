@@ -46,8 +46,8 @@ test("getChineseNumber", () => {
     expect(cm.number2Chinese(123456789)).toBe("一亿二千三百四十五万六千七百八十九");
 });
 test("getFormatStr", () => {
-    expect(cm.getFormatStr("hell%s worl%s", "o", "d")).toBe("hello world");
-    expect(cm.getFormatStr("hell%s worl%s")).toBe("hell worl");
+    expect(cm.strTemplate("hell%s worl%s", "o", "d")).toBe("hello world");
+    expect(cm.strTemplate("hell%s worl%s")).toBe("hell worl");
 });
 test("debounce", (done) => {
     let times = 0;

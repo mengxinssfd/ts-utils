@@ -144,8 +144,8 @@ export function thousandFormat(num: string | number): string {
 }
 
 // 给不能用``模板字符串的环境使用
-// es5的格式化字符串 example: getFormatStr("11%s111%s", 3, 4) => "1131114"
-export function getFormatStr(str, ...params) {
+// es5的格式化字符串 example: strTemplate("11%s111%s", 3, 4) => "1131114"
+export function strTemplate(str, ...params) {
     /*
     // es5; typescript不需要str, ...params参数
     var args = Array.prototype.slice.call(arguments, 0);
