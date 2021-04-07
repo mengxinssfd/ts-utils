@@ -157,15 +157,46 @@ export function find<T>(
 }
 
 export function findIndex<T>(
-    predicate: (value: T, index: number, obj: T[]) => boolean,
-    thisArg?: ArrayLike<T>,
+    predicate: (value: T, index: number, obj: ArrayLike<T>) => boolean,
+    thisArg: ArrayLike<T>,
+): number;
+export function findIndex<T, A extends ArrayLike<T>>(
+    this: A,
+    predicate: (value: T, index: number, obj: A) => boolean,
+): number;
+export function findIndex(
+    predicate,
+    thisArg?,
 ): number {
     const arr = thisArg || this;
     if (!isArrayLike(arr)) throw new TypeError();
     if (!isFunction(predicate)) return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
     const len = arr.length;
     for (let i = 0; i < len; i++) {
-        const item: T = arr[i];
+        const item = arr[i];
+        if (predicate(item, i, arr as any)) return i;
+    }
+    return -1;
+}
+
+export function findIndexRight<T>(
+    predicate: (value: T, index: number, obj: ArrayLike<T>) => boolean,
+    thisArg: ArrayLike<T>,
+): number;
+export function findIndexRight<T, A extends ArrayLike<T>>(
+    this: A,
+    predicate: (value: T, index: number, obj: A) => boolean,
+): number;
+export function findIndexRight(
+    predicate,
+    thisArg?,
+) {
+    const arr = thisArg || this;
+    if (!isArrayLike(arr)) throw new TypeError();
+    if (!isFunction(predicate)) return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
+    const end = arr.length - 1;
+    for (let i = end; i >= 0; i--) {
+        const item = arr[i];
         if (predicate(item, i, arr as any)) return i;
     }
     return -1;
