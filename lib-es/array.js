@@ -155,6 +155,20 @@ export function findIndex(predicate, thisArg) {
     }
     return -1;
 }
+export function findIndexRight(predicate, thisArg) {
+    const arr = thisArg || this;
+    if (!isArrayLike(arr))
+        throw new TypeError();
+    if (!isFunction(predicate))
+        return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
+    const end = arr.length - 1;
+    for (let i = end; i >= 0; i--) {
+        const item = arr[i];
+        if (predicate(item, i, arr))
+            return i;
+    }
+    return -1;
+}
 export function flat(target, depth = 1) {
     function innerFlat(innerArr, innerDepth = 0) {
         if (!isArray(innerArr))

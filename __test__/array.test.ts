@@ -329,7 +329,39 @@ test("unique", () => {
 });
 test("findIndex", () => {
     const fn = arr.findIndex;
+    // 中途删除
+    expect([1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1].findIndex((v, index, a) => {
+        if (v === 1) {
+            a.splice(index, 1);
+        }
+        return v === 4;
+    })).toEqual(3);
+    expect(fn((v, index, a) => {
+        if (v === 1) {
+            (a as number[]).splice(index, 1);
+        }
+        return v === 4;
+    }, [1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1])).toEqual(3);
     expect(fn(v => v === 4, [1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1])).toEqual(5);
+    expect(fn(v => v.v === 4, [{v: 1}, {v: 2}])).toEqual(-1);
+    expect(fn(v => v.v === 2, [{v: 1}, {v: 2}])).toEqual(1);
+    const nFn = fn.bind(undefined as any);
+    expect(() => {
+        nFn(function () {
+        } as any);
+    }).toThrowError();
+    expect(fn(undefined as any, [])).toBe(-1);
+});
+test("findIndexRight", () => {
+    const fn = arr.findIndexRight;
+    const list = [1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1];
+    const result: number[] = [];
+    expect(fn(v => {
+        result.push(v)
+        return v === 4;
+    }, list)).toEqual(5);
+    expect(result).toEqual([1, 1, 1, 1, 1, 4]);
+    expect(fn.call(list, v => v === 4)).toEqual(5);
     expect(fn(v => v.v === 4, [{v: 1}, {v: 2}])).toEqual(-1);
     expect(fn(v => v.v === 2, [{v: 1}, {v: 2}])).toEqual(1);
     const nFn = fn.bind(undefined as any);
