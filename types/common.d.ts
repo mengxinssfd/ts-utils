@@ -4,13 +4,14 @@
  * @param delay 延时
  * @returns {Function}
  */
-export declare function debounce<CB extends (...args: any[]) => void>(callback: CB, delay: number): CB;
+export declare function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number): CB;
 /**
  * 如果callback执行了的话，那么不论是否resolved都不会再被reject
  * @param callback
  * @param delay
  */
 export declare function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(callback: CB, delay: number): CB;
+export declare function throttle<CB extends (...args: any[]) => (void | any)>(callback: CB, delay: number, invalidCB?: Function): CB;
 /**
  * 可取消防抖函数
  * @param callback 回调

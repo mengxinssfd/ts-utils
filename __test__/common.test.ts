@@ -289,3 +289,26 @@ test("createEnum", async () => {
 
     expect(fn(["a", "b", "c"])).toEqual(e);
 });
+test("throttle", async () => {
+    // expect.assertions(4);
+    const fn = cm.throttle;
+    let times = 0;
+    let invalidTimes = 0;
+    const th = fn(() => times++, 1000, () => invalidTimes++);
+
+    const now = Date.now();
+    await new Promise<void>(((resolve, reject) => {
+        // TODO 可以使用OneByOne代替
+        th()
+        const index = setInterval(() => {
+            const t = th();
+            expect(t).toBe(t === undefined ? undefined : times - 1);
+            if (Date.now() - now > 2200) {
+                clearInterval(index);
+                resolve();
+            }
+        }, 100);
+    }));
+    expect(times).toBe(3);
+    expect(invalidTimes).toBe(20);
+});

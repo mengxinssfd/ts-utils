@@ -7,7 +7,7 @@ import {assign, getReverseObj} from "./object";
  * @param delay 延时
  * @returns {Function}
  */
-export function debounce<CB extends (...args: any[]) => void>(callback: CB, delay: number): CB {
+export function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number): CB {
     let timer: any = null;
     return function (...args: any[]) {
         if (timer) {
@@ -44,6 +44,19 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(call
                 resolve(result);
             }, delay);
         });
+    } as CB;
+}
+
+export function throttle<CB extends (...args: any[]) => (void | any)>(callback: CB, delay: number, invalidCB?: Function): CB {
+    let lastTime = 0;
+    return function (...args: any[]) {
+        const now = Date.now();
+        if (now - lastTime < delay) {
+            invalidCB && invalidCB(...args);
+            return;
+        }
+        lastTime = now;
+        return callback.apply(this, args);
     } as CB;
 }
 

@@ -44,6 +44,18 @@ export function debounceAsync(callback, delay) {
         });
     };
 }
+export function throttle(callback, delay, invalidCB) {
+    let lastTime = 0;
+    return function (...args) {
+        const now = Date.now();
+        if (now - lastTime < delay) {
+            invalidCB && invalidCB(...args);
+            return;
+        }
+        lastTime = now;
+        return callback.apply(this, args);
+    };
+}
 /**
  * 可取消防抖函数
  * @param callback 回调
