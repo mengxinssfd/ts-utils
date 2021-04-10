@@ -1,3 +1,4 @@
+import {createTimeCountDown} from "./time";
 import {isArray, isString, isPromiseLike} from "./type";
 import {assign, getReverseObj} from "./object";
 
@@ -47,6 +48,10 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(call
     } as CB;
 }
 
+export function timeDown() {
+
+}
+
 /**
  * 节流函数
  * @param callback
@@ -54,6 +59,24 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(call
  * @param invalidCB {function}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
  */
 export function throttle<CB extends (...args: any[]) => (void | any)>(
+    callback: CB,
+    delay: number,
+    invalidCB?: (interval: number) => void,
+): CB {
+    let countDown = () => 0;
+    return function (...args: any[]) {
+        const interval = countDown();
+        if (interval > 0) {
+            invalidCB && invalidCB(interval);
+            return;
+        }
+        countDown = createTimeCountDown(delay);
+        return callback.apply(this, args);
+    } as CB;
+}
+
+// 第1种实现方式
+/*export function throttle<CB extends (...args: any[]) => (void | any)>(
     callback: CB,
     delay: number,
     invalidCB?: (interval: number) => void,
@@ -69,7 +92,26 @@ export function throttle<CB extends (...args: any[]) => (void | any)>(
         lastTime = now;
         return callback.apply(this, args);
     } as CB;
-}
+}*/
+
+// 第三种实现方式，不能获取剩余时间或者另外获取时间，有点多余
+/*export function throttleByTimeOut<CB extends (...args: any[]) => (void | any)>(
+    callback: CB,
+    delay: number,
+    invalidCB?: (interval: number) => void,
+): CB {
+    let throttling = false;
+    return function (...args: any[]) {
+        if (throttling) {
+            return;
+        }
+        throttling = true;
+        setTimeout(() => {
+            throttling = false;
+        }, delay);
+        return callback.apply(this, args);
+    } as CB;
+}*/
 
 /**
  * 可取消防抖函数
@@ -227,7 +269,7 @@ export function oneByOne(words: string, delay: number, callback?: (word: string,
             const flag = callback(word as string, index, words);
             keepRun = keepRun && flag !== false;
         } else {
-            console.log(word);
+            // console.log(word);
         }
         if (!keepRun) cancel();
     }, delay);
@@ -346,10 +388,6 @@ export function generateFunctionCode(argsArrayLength: number) {
 // (new Function(generateFunctionCode(args.length)))(object, property, args);
 export function generateFunction(obj: object, property: string, args: any[]) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
-}
-
-export function sleep(delay: number): Promise<void> {
-    return new Promise(res => setTimeout(res, delay));
 }
 
 /**

@@ -66,7 +66,7 @@ export function deepCloneBfs<T>(target: T): T {
         const [k, v, parent] = queue.shift()!;
 
         const type = typeof v;
-        console.log(type);
+        // console.log(type);
         if (type !== "object") {
             parent[k] = v;
             continue;

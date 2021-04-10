@@ -1,4 +1,5 @@
 import * as cm from "../src/common";
+import {sleep} from "../src/time";
 
 test("forEachByLen", () => {
     const arr: number[] = [];
@@ -124,12 +125,6 @@ test("chinese2Number", () => {
     expect(cm.chinese2Number("壹亿贰仟叁佰肆拾伍萬陆仟柒佰捌拾玖")).toBe(123456789);
 });
 
-test("sleep", async () => {
-    const date = Date.now();
-    await cm.sleep(100);
-    expect(Date.now() - date).toBeGreaterThan(80);
-});
-
 test("createUUID", () => {
     const uuid = cm.createUUID(10);
 
@@ -217,9 +212,9 @@ test("debounceAsync", async () => {
     expect(times).toEqual(1);
 
     dbFn();
-    await cm.sleep(150);
+    await sleep(150);
     dbFn();
-    await cm.sleep(150);
+    await sleep(150);
     expect(times).toEqual(3);
 });
 test("debounceByPromise", async () => {
@@ -244,9 +239,9 @@ test("debounceByPromise", async () => {
     await expect(cm.promiseAny([dbFn(40), dbFn(20), dbFn(60), dbFn(30)])).resolves.toEqual(30);
 
     dbFn(100);
-    await cm.sleep(150);
+    await sleep(150);
     dbFn();
-    await cm.sleep(150);
+    await sleep(150);
     // fixme 执行了6次， debounceByPromise无法阻止cb被调用 不推荐使用
     expect(times).toEqual(6);
 });
@@ -263,12 +258,12 @@ test("debounceCancelable", async () => {
     let cancelFn = dbFn();
     cancelFn();
 
-    await cm.sleep(30);
+    await sleep(30);
 
     expect(times).toEqual(0);
 
     dbFn();
-    await cm.sleep(150);
+    await sleep(150);
     expect(times).toEqual(1);
 });
 test("createEnumByObj", async () => {
@@ -307,31 +302,95 @@ test("throttle", async () => {
     await new Promise<void>(((resolve, reject) => {
         // TODO 可以使用OneByOne代替
         th();
-        const index = setInterval(() => {
-            const t = th();
-            expect(t).toBe(t === undefined ? undefined : times - 1);
-            if (Date.now() - now > 2200) {
-                clearInterval(index);
-                resolve();
-            }
-        }, 100);
+
+        function exec() {
+            const index = setTimeout(() => {
+                const t = th();
+                expect(t).toBe(t === undefined ? undefined : times - 1);
+                if (Date.now() - now > 2200) {
+                    clearInterval(index);
+                    resolve();
+                    return;
+                }
+                exec();
+            }, 100);
+        }
+
+        exec();
     }));
     expect(times).toBe(3);
-    expect(invalidTimes).toBe(20);
+    // 有些电脑能够执行20次 与定时器有关 实际并不准确
+    expect(invalidTimes).toBeGreaterThanOrEqual(15);
+    expect(invalidTimes).toBeLessThanOrEqual(20);
 
-    interval = 0;
-    await cm.sleep(810);
+    // interval = 0;
+    await sleep(1000);
     th();
     expect(interval).toBe(0);
-    await cm.sleep(100);
+    await sleep(100);
     th();
     expect(interval).toBeLessThanOrEqual(900);
-    expect(interval).toBeGreaterThanOrEqual(890);
-    await cm.sleep(200);
+    expect(interval).toBeGreaterThanOrEqual(800);
+    await sleep(200);
     th();
     expect(interval).toBeLessThanOrEqual(700);
-    expect(interval).toBeGreaterThanOrEqual(690);
-    await cm.sleep(701);
+    expect(interval).toBeGreaterThanOrEqual(600);
+    await sleep(701);
     th();
     expect(interval).toBe(0);
 });
+/*test("throttleByTimeDown", async () => {
+    // expect.assertions(4);
+    const fn = cm.throttleByTimeDown;
+    let times = 0;
+    let invalidTimes = 0;
+    let interval = 0;
+    const th = fn(() => {
+        interval = 0;
+        return times++;
+    }, 1000, (int) => {
+        interval = int;
+        invalidTimes++;
+    });
+
+    const now = Date.now();
+    await new Promise<void>(((resolve, reject) => {
+        // TODO 可以使用OneByOne代替
+        th();
+
+        function exec() {
+            const index = setTimeout(() => {
+                const t = th();
+                expect(t).toBe(t === undefined ? undefined : times - 1);
+                if (Date.now() - now > 2200) {
+                    clearInterval(index);
+                    resolve();
+                    return;
+                }
+                exec();
+            }, 100);
+        }
+
+        exec();
+    }));
+    expect(times).toBe(3);
+    // 有些电脑能够执行20次 与定时器有关 实际并不准确
+    expect(invalidTimes).toBeGreaterThanOrEqual(15);
+    expect(invalidTimes).toBeLessThanOrEqual(20);
+
+    // interval = 0;
+    await sleep(1000);
+    th();
+    expect(interval).toBe(0);
+    await sleep(100);
+    th();
+    expect(interval).toBeLessThanOrEqual(900);
+    expect(interval).toBeGreaterThanOrEqual(800);
+    await sleep(200);
+    th();
+    expect(interval).toBeLessThanOrEqual(700);
+    expect(interval).toBeGreaterThanOrEqual(600);
+    await sleep(701);
+    th();
+    expect(interval).toBe(0);
+});*/

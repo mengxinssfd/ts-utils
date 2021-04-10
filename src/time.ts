@@ -166,3 +166,26 @@ export function getDateFromStr(date: string): Date | null {
 }
 
 export const str2Date = getDateFromStr;
+
+export function sleep(delay: number): Promise<void> {
+    return new Promise(res => setTimeout(res, delay));
+}
+
+/**
+ * 创建一个倒计时函数
+ * @param countDown 目标毫秒
+ */
+export function createTimeCountDown(countDown: number): () => number {
+    let initTime = Date.now();
+    return function () {
+        const ms = Date.now() - initTime;
+        return countDown - ms;
+    };
+}
+
+export function createTimeCountUp(): () => number {
+    let initTime = Date.now();
+    return function () {
+        return Date.now() - initTime;
+    };
+}

@@ -1,4 +1,4 @@
-import {sleep} from "../src/common";
+import {sleep} from "../src/time";
 import * as dc from "../src/decorator";
 
 test("Debounce", async (done) => {
@@ -50,7 +50,7 @@ test("Polling", async (done) => {
                 if (times! >= 5) {
                     rej();
                 } else {
-                    console.log(times);
+                    // console.log(times);
                     res();
                 }
             });
