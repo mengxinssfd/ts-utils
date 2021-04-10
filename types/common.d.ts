@@ -11,7 +11,13 @@ export declare function debounce<CB extends (...args: any[]) => any>(callback: C
  * @param delay
  */
 export declare function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(callback: CB, delay: number): CB;
-export declare function throttle<CB extends (...args: any[]) => (void | any)>(callback: CB, delay: number, invalidCB?: Function): CB;
+/**
+ * 节流函数
+ * @param callback
+ * @param delay
+ * @param invalidCB {function}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
+ */
+export declare function throttle<CB extends (...args: any[]) => (void | any)>(callback: CB, delay: number, invalidCB?: (interval: number) => void): CB;
 /**
  * 可取消防抖函数
  * @param callback 回调

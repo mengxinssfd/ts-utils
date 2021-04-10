@@ -294,12 +294,19 @@ test("throttle", async () => {
     const fn = cm.throttle;
     let times = 0;
     let invalidTimes = 0;
-    const th = fn(() => times++, 1000, () => invalidTimes++);
+    let interval = 0;
+    const th = fn(() => {
+        interval = 0;
+        return times++;
+    }, 1000, (int) => {
+        interval = int;
+        invalidTimes++;
+    });
 
     const now = Date.now();
     await new Promise<void>(((resolve, reject) => {
         // TODO 可以使用OneByOne代替
-        th()
+        th();
         const index = setInterval(() => {
             const t = th();
             expect(t).toBe(t === undefined ? undefined : times - 1);
@@ -311,4 +318,20 @@ test("throttle", async () => {
     }));
     expect(times).toBe(3);
     expect(invalidTimes).toBe(20);
+
+    interval = 0;
+    await cm.sleep(810);
+    th();
+    expect(interval).toBe(0);
+    await cm.sleep(100);
+    th();
+    expect(interval).toBeLessThanOrEqual(900);
+    expect(interval).toBeGreaterThanOrEqual(890);
+    await cm.sleep(200);
+    th();
+    expect(interval).toBeLessThanOrEqual(700);
+    expect(interval).toBeGreaterThanOrEqual(690);
+    await cm.sleep(701);
+    th();
+    expect(interval).toBe(0);
 });

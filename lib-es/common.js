@@ -44,12 +44,19 @@ export function debounceAsync(callback, delay) {
         });
     };
 }
+/**
+ * 节流函数
+ * @param callback
+ * @param delay
+ * @param invalidCB {function}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
+ */
 export function throttle(callback, delay, invalidCB) {
     let lastTime = 0;
     return function (...args) {
         const now = Date.now();
-        if (now - lastTime < delay) {
-            invalidCB && invalidCB(...args);
+        const interval = now - lastTime;
+        if (interval < delay) {
+            invalidCB && invalidCB(delay - interval);
             return;
         }
         lastTime = now;

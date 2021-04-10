@@ -47,12 +47,23 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(call
     } as CB;
 }
 
-export function throttle<CB extends (...args: any[]) => (void | any)>(callback: CB, delay: number, invalidCB?: Function): CB {
+/**
+ * 节流函数
+ * @param callback
+ * @param delay
+ * @param invalidCB {function}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
+ */
+export function throttle<CB extends (...args: any[]) => (void | any)>(
+    callback: CB,
+    delay: number,
+    invalidCB?: (interval: number) => void,
+): CB {
     let lastTime = 0;
     return function (...args: any[]) {
         const now = Date.now();
-        if (now - lastTime < delay) {
-            invalidCB && invalidCB(...args);
+        const interval = now - lastTime;
+        if (interval < delay) {
+            invalidCB && invalidCB(delay - interval);
             return;
         }
         lastTime = now;
