@@ -325,6 +325,20 @@ test("objKeys", () => {
     obj[undefined as any] = "";
     expect(fn(obj)).toEqual(Object.keys(obj));
 });
+test("objValues", () => {
+    const fn = cm.objValues;
+    const obj: any = {a: 1, b: 2, c: 3};
+    expect(fn(obj)).toEqual(Object.values(obj));
+    obj[1] = "";
+    obj[NaN] = "";
+    obj[""] = "";
+    obj[null as any] = "";
+    obj[0] = "";
+    obj[true as any] = "";
+    obj[false as any] = "";
+    obj[undefined as any] = "";
+    expect(fn(obj)).toEqual(Object.values(obj));
+});
 test("objEntries", () => {
     const fn = cm.objEntries;
     const obj: any = {a: 1, b: 2, c: 3};

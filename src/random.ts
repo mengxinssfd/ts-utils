@@ -1,4 +1,5 @@
 import {createArray} from "./array";
+import {deepCloneBfs} from "./clone";
 import {strPadStart} from "./common";
 import {isArrayLike, isNumber} from "./type";
 
@@ -66,6 +67,18 @@ export function randomItem<T>(arr: T[]): T {
  * 洗牌
  * @param arr
  */
+export function shuffle<T, A extends ArrayLike<T>>(arr: A): A {
+    if (!isArrayLike(arr)) throw new TypeError();
+    const newArr: any = deepCloneBfs(arr);
+    let m = newArr.length;
+    while (m) {
+        const i = randomInt(m--);
+        [newArr[m], newArr[i]] = [newArr[i], newArr[m]];
+    }
+    return newArr;
+}
+
+/*
 export function shuffle<T>(arr: ArrayLike<T>): T[] {
     if (!isArrayLike(arr)) throw new TypeError();
     const result: T[] = [];
@@ -77,6 +90,7 @@ export function shuffle<T>(arr: ArrayLike<T>): T[] {
     }
     return result;
 }
+*/
 
 export function randomRGB(): string {
     const num = randomInt(0, 255, 3);

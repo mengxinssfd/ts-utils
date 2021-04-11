@@ -1,7 +1,9 @@
 import {isHEXColor, isRGBColor} from "../src/color";
 import * as cm from "../src/random";
 import {forEachByLen} from "../src/common";
-import {createArray} from "../src/array";
+import {createArray, unique} from "../src/array";
+import {isArrayLike} from "../src/type";
+import {omit} from "../src/object";
 
 test("randomFloat", () => {
     const rand = cm.randomFloat(0, 10);
@@ -111,7 +113,7 @@ test("randomInt", () => {
     expect(arr6.every(i => i === 0.2)).toBeTruthy();
     const arr8 = createArray({len: 200, fill: () => fn()});
     expect(arr8.length).toBe(200);
-    expect(arr8.every(i => i >=0 && i < 1)).toBeTruthy();
+    expect(arr8.every(i => i >= 0 && i < 1)).toBeTruthy();
 });
 test("randomItem", () => {
     const fn = cm.randomItem;
@@ -178,6 +180,18 @@ test("shuffle", () => {
     expect(arr).not.toEqual(shuffleArr);
     expect(fn([])).toEqual([]);
     expect(() => fn(undefined as any)).toThrowError();
+
+    const arrLike = {0: 1, 1: "a", 2: true, length: 3};
+    const newArrLike = fn(arrLike);
+    expect(isArrayLike(arrLike)).toBeTruthy();
+    expect(arrLike.length).toBe(newArrLike.length);
+    expect(arrLike).not.toEqual(newArrLike);
+
+    const values = Object.values(omit(arrLike, ["length"]));
+    const shuffleValues = Object.values(omit(newArrLike, ["length"]));
+    expect(unique(shuffleValues).length).toBe(3);
+
+    expect(values.every(it => shuffleValues.includes(it))).toBeTruthy();
 });
 
 

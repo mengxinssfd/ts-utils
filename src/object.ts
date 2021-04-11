@@ -305,6 +305,17 @@ export function objKeys<T extends object, K extends keyof T>(obj: T): K[] {
     }, [] as K[]);
 }
 
+/**
+ * Object.values
+ * @param obj
+ */
+export function objValues<T extends object, K extends keyof T, V extends T[K]>(obj: T): V[] {
+    return reduceObj(obj, (init, v, k) => {
+        init.push(v as V);
+        return init;
+    }, [] as V[]);
+}
+
 objKeys({a: 123, b: "", c: 111});
 
 export function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K]][] {
