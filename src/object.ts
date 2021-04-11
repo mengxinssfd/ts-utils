@@ -293,3 +293,23 @@ export function createObj(entries: Array<[string, any]>): { [k: string]: any } {
         return initValue;
     }, {});
 }
+
+/**
+ * Object.keys
+ * @param obj
+ */
+export function objKeys<T extends object, K extends keyof T>(obj: T): K[] {
+    return reduceObj(obj, (init, v, k) => {
+        init.push(k as K);
+        return init;
+    }, [] as K[]);
+}
+
+objKeys({a: 123, b: "", c: 111});
+
+export function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K]][] {
+    return reduceObj(obj, (init, v, k) => {
+        init.push([k, v]);
+        return init;
+    }, [] as any);
+}

@@ -14,19 +14,39 @@ test("forEachByLen", () => {
 });
 
 test("strPadStart", () => {
-    expect(cm.strPadStart("123", 6, "0")).toBe("000123");
-    expect(cm.strPadStart("123", 0, "0")).toBe("123");
-    expect(cm.strPadStart("123", 4, "hello")).toBe("h123");
-    expect(cm.strPadStart("123", 20, "hello")).toBe("hellohellohellohe123");
-    expect(cm.strPadStart("123", -1, "0")).toBe("123");
-    expect(cm.strPadStart("0", 2, "0")).toBe("00");
+    const fn = cm.strPadStart;
+    expect(fn("123", 6, "0")).toBe("000123");
+    expect("123".padStart(6, "0")).toBe("000123");
+    expect(fn("123", 0, "0")).toBe("123");
+    expect("123".padStart(0, "0")).toBe("123");
+    expect(fn("123", 4, "hello")).toBe("h123");
+    expect(fn("123", 20, "hello")).toBe("hellohellohellohe123");
+    expect("123".padStart(20, "hello")).toBe("hellohellohellohe123");
+    expect(fn("123", -1, "0")).toBe("123");
+    expect("123".padStart(-1, "0")).toBe("123");
+    expect(fn("0", 2, "0")).toBe("00");
+    expect(fn("0", 2)).toBe(" 0");
+    expect(fn("0", 5)).toBe("    0");
+    expect("0".padStart(5)).toBe("    0");
+    expect(fn("0", 5, "")).toBe("0");
+    expect("0".padStart(5, "")).toBe("0");
 });
 test("strPadEnd", () => {
-    expect(cm.strPadEnd("123", 6, "0")).toBe("123000");
-    expect(cm.strPadEnd("123", 0, "0")).toBe("123");
-    expect(cm.strPadEnd("123", 4, "hello")).toBe("123h");
-    expect(cm.strPadEnd("123", 20, "hello")).toBe("123hellohellohellohe");
-    expect(cm.strPadEnd("123", -1, "0")).toBe("123");
+    const fn = cm.strPadEnd;
+    expect(fn("123", 6, "0")).toBe("123000");
+    expect("123".padEnd(6, "0")).toBe("123000");
+    expect(fn("123", 0, "0")).toBe("123");
+    expect("123".padEnd(0, "0")).toBe("123");
+    expect(fn("123", 4, "hello")).toBe("123h");
+    expect("123".padEnd(4, "hello")).toBe("123h");
+    expect(fn("123", 20, "hello")).toBe("123hellohellohellohe");
+    expect("123".padEnd(20, "hello")).toBe("123hellohellohellohe");
+    expect(fn("123", -1, "0")).toBe("123");
+    expect("123".padEnd(-1, "0")).toBe("123");
+    expect(fn("0", 2)).toBe("0 ");
+    expect("0".padEnd(2)).toBe("0 ");
+    expect(fn("0", 2, "")).toBe("0");
+    expect("0".padEnd(2, "")).toBe("0");
 });
 
 test("thousandFormat", () => {

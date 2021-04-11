@@ -311,4 +311,34 @@ test("defaults", () => {
     expect(fn({a: 12, b: undefined, c: 3}, {a: 1}, {b: 2}, {d: 4})).toEqual({a: 12, b: 2, c: 3, d: 4});
     expect(fn({a: 12, b: undefined, c: 3}, {a: 1}, {b: 2}, {c: undefined})).toEqual({a: 12, b: 2, c: 3});
 });
+test("objKeys", () => {
+    const fn = cm.objKeys;
+    const obj: any = {a: 1, b: 2, c: 3};
+    expect(fn(obj)).toEqual(Object.keys(obj));
+    obj[1] = "";
+    obj[NaN] = "";
+    obj[""] = "";
+    obj[null as any] = "";
+    obj[0] = "";
+    obj[true as any] = "";
+    obj[false as any] = "";
+    obj[undefined as any] = "";
+    expect(fn(obj)).toEqual(Object.keys(obj));
+});
+test("objEntries", () => {
+    const fn = cm.objEntries;
+    const obj: any = {a: 1, b: 2, c: 3};
+    expect(fn(obj)).toEqual(Object.entries(obj));
+    obj[1] = "";
+    obj[NaN] = "";
+    obj[""] = "";
+    obj[null as any] = "";
+    obj[0] = "";
+    obj[true as any] = "";
+    obj[false as any] = "";
+    obj[undefined as any] = "";
+    const result = fn(obj);
+    const result2 = Object.entries(obj);
+    expect(result).toEqual(result2);
+});
 

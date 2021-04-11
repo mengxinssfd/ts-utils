@@ -319,3 +319,15 @@ export function unique<T>(target: T[], callbackFn?: (value: T, value2: T) => boo
     }
     return result;
 }
+
+export function castArray<T>(value: T[]): T[];
+export function castArray<T>(value: T): T[];
+/**
+ * @example
+ * castArray(1); // [1]
+ * castArray([1]); // [1]
+ * @param value
+ */
+export function castArray(value) {
+    return isArray(value) ? value : [value];
+}

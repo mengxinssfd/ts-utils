@@ -357,7 +357,7 @@ test("findIndexRight", () => {
     const list = [1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1];
     const result: number[] = [];
     expect(fn(v => {
-        result.push(v)
+        result.push(v);
         return v === 4;
     }, list)).toEqual(5);
     expect(result).toEqual([1, 1, 1, 1, 1, 4]);
@@ -370,4 +370,10 @@ test("findIndexRight", () => {
         } as any);
     }).toThrowError();
     expect(fn(undefined as any, [])).toBe(-1);
+});
+test("castArray", () => {
+    const fn = arr.castArray;
+    expect(fn(0)).toEqual([0]);
+    expect(fn("")).toEqual([""]);
+    expect(fn([1, 2, 3])).toEqual([1, 2, 3]);
 });
