@@ -49,17 +49,17 @@ export declare function strTemplate(str: any, ...params: any[]): any;
 /**
  * 给长度不满足要求的字符串添加前缀 strFillPrefix
  * @param target
- * @param len
+ * @param maxLen
  * @param fill
  */
-export declare function strPadStart(target: string, len: number, fill: string): string;
+export declare function strPadStart(target: string, maxLen: number, fill?: string): string;
 /**
  * 给长度不满足要求的字符串添加后缀 strFillPrefix
  * @param target
- * @param len
+ * @param maxLen
  * @param fill
  */
-export declare function strPadEnd(target: string, len: number, fill: string): string;
+export declare function strPadEnd(target: string, maxLen: number, fill?: string): string;
 /**
  * 每隔一段事件返回字符串中的一个单词
  * @param words

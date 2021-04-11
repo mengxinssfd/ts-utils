@@ -318,6 +318,10 @@ export function objValues<T extends object, K extends keyof T, V extends T[K]>(o
 
 objKeys({a: 123, b: "", c: 111});
 
+/**
+ * Object.entries
+ * @param obj
+ */
 export function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K]][] {
     return reduceObj(obj, (init, v, k) => {
         init.push([k, v]);

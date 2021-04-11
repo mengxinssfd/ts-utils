@@ -82,3 +82,18 @@ export declare function defaults(target: object, ...args: object[]): any;
 export declare function createObj(entries: Array<[string, any]>): {
     [k: string]: any;
 };
+/**
+ * Object.keys
+ * @param obj
+ */
+export declare function objKeys<T extends object, K extends keyof T>(obj: T): K[];
+/**
+ * Object.values
+ * @param obj
+ */
+export declare function objValues<T extends object, K extends keyof T, V extends T[K]>(obj: T): V[];
+/**
+ * Object.entries
+ * @param obj
+ */
+export declare function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K]][];

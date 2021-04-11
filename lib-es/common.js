@@ -210,13 +210,13 @@ export function strTemplate(str, ...params) {
 /**
  * 给长度不满足要求的字符串添加前缀 strFillPrefix
  * @param target
- * @param len
+ * @param maxLen
  * @param fill
  */
-export function strPadStart(target, len, fill) {
-    if (target.length >= len)
+export function strPadStart(target, maxLen, fill = " ") {
+    if (target.length >= maxLen || fill === "")
         return target;
-    const lessLen = len - target.length;
+    const lessLen = maxLen - target.length;
     while (fill.length < lessLen) {
         fill += fill;
     }
@@ -226,14 +226,14 @@ export function strPadStart(target, len, fill) {
 /**
  * 给长度不满足要求的字符串添加后缀 strFillPrefix
  * @param target
- * @param len
+ * @param maxLen
  * @param fill
  */
-export function strPadEnd(target, len, fill) {
-    if (target.length >= len)
+export function strPadEnd(target, maxLen, fill = " ") {
+    if (target.length >= maxLen || fill === "")
         return target;
-    let lessLen = len - target.length;
-    let end = strPadStart(target, len, fill).substr(0, lessLen);
+    let lessLen = maxLen - target.length;
+    let end = strPadStart(target, maxLen, fill).substr(0, lessLen);
     return target + end;
 }
 /**

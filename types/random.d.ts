@@ -15,7 +15,7 @@ export declare function randomItem<T>(arr: T[]): T;
  * 洗牌
  * @param arr
  */
-export declare function shuffle<T>(arr: ArrayLike<T>): T[];
+export declare function shuffle<T, A extends ArrayLike<T>>(arr: A): A;
 export declare function randomRGB(): string;
 export declare function randomRGBA(): string;
 export declare function randomHEX(): string;

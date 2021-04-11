@@ -181,7 +181,7 @@ test("shuffle", () => {
     expect(fn([])).toEqual([]);
     expect(() => fn(undefined as any)).toThrowError();
 
-    const arrLike = {0: 1, 1: "a", 2: true, length: 3};
+    const arrLike = {0: 1, 1: "a", 2: true, 3: "3", 4: "4", 5: "5", length: 6};
     const newArrLike = fn(arrLike);
     expect(isArrayLike(arrLike)).toBeTruthy();
     expect(arrLike.length).toBe(newArrLike.length);
@@ -189,7 +189,7 @@ test("shuffle", () => {
 
     const values = Object.values(omit(arrLike, ["length"]));
     const shuffleValues = Object.values(omit(newArrLike, ["length"]));
-    expect(unique(shuffleValues).length).toBe(3);
+    expect(unique(shuffleValues).length).toBe(6);
 
     expect(values.every(it => shuffleValues.includes(it))).toBeTruthy();
 });

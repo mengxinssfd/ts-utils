@@ -288,3 +288,6 @@ export function unique(target, callbackFn) {
     }
     return result;
 }
+export function castArray(value) {
+    return isArray(value) ? value : [value];
+}

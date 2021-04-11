@@ -1,4 +1,5 @@
 import { createArray } from "./array";
+import { deepCloneBfs } from "./clone";
 import { strPadStart } from "./common";
 import { isArrayLike, isNumber } from "./type";
 export function randomFloat(min, max, len) {
@@ -52,8 +53,19 @@ export function randomItem(arr) {
 export function shuffle(arr) {
     if (!isArrayLike(arr))
         throw new TypeError();
-    const result = [];
-    const indexArr = createArray({ len: arr.length });
+    const newArr = deepCloneBfs(arr);
+    let m = newArr.length;
+    while (m) {
+        const i = randomInt(m--);
+        [newArr[m], newArr[i]] = [newArr[i], newArr[m]];
+    }
+    return newArr;
+}
+/*
+export function shuffle<T>(arr: ArrayLike<T>): T[] {
+    if (!isArrayLike(arr)) throw new TypeError();
+    const result: T[] = [];
+    const indexArr = createArray({len: arr.length});
     while (indexArr.length) {
         const index = randomInt(indexArr.length);
         const arrIndex = indexArr.splice(index, 1)[0];
@@ -61,6 +73,7 @@ export function shuffle(arr) {
     }
     return result;
 }
+*/
 export function randomRGB() {
     const num = randomInt(0, 255, 3);
     return `rgb(${num[0]},${num[1]},${num[2]})`;

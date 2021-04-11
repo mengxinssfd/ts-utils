@@ -225,3 +225,34 @@ export function createObj(entries) {
         return initValue;
     }, {});
 }
+/**
+ * Object.keys
+ * @param obj
+ */
+export function objKeys(obj) {
+    return reduceObj(obj, (init, v, k) => {
+        init.push(k);
+        return init;
+    }, []);
+}
+/**
+ * Object.values
+ * @param obj
+ */
+export function objValues(obj) {
+    return reduceObj(obj, (init, v, k) => {
+        init.push(v);
+        return init;
+    }, []);
+}
+objKeys({ a: 123, b: "", c: 111 });
+/**
+ * Object.entries
+ * @param obj
+ */
+export function objEntries(obj) {
+    return reduceObj(obj, (init, v, k) => {
+        init.push([k, v]);
+        return init;
+    }, []);
+}

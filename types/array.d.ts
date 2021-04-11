@@ -55,3 +55,15 @@ export declare function binaryFindIndex<T>(arr: T[], handler: (item: T, index: n
  */
 export declare function insertToArray<T>(insert: T, to: number, array: T[]): T[];
 export declare function unique<T>(target: T[], callbackFn?: (value: T, value2: T) => boolean): T[];
+/**
+ * @example
+ * castArray([1]); // [1]
+ * @param value
+ */
+export declare function castArray<T>(value: T[]): T[];
+/**
+ * @example
+ * castArray(1); // [1]
+ * @param value
+ */
+export declare function castArray<T>(value: T): T[];
