@@ -11,6 +11,7 @@ export declare function debounce<CB extends (...args: any[]) => any>(callback: C
  * @param delay
  */
 export declare function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(callback: CB, delay: number): CB;
+export declare function timeDown(): void;
 /**
  * 节流函数
  * @param callback
@@ -88,7 +89,6 @@ export interface Chinese2Number {
 export declare const chinese2Number: Chinese2Number;
 export declare function generateFunctionCode(argsArrayLength: number): string;
 export declare function generateFunction(obj: object, property: string, args: any[]): any;
-export declare function sleep(delay: number): Promise<void>;
 /**
  * 生成不重复的字符串
  * @param length

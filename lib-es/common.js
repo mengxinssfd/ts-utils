@@ -1,4 +1,5 @@
 import { __awaiter } from "tslib";
+import { createTimeCountDown } from "./time";
 import { isArray, isString, isPromiseLike } from "./type";
 import { assign, getReverseObj } from "./object";
 /**
@@ -44,6 +45,8 @@ export function debounceAsync(callback, delay) {
         });
     };
 }
+export function timeDown() {
+}
 /**
  * 节流函数
  * @param callback
@@ -51,8 +54,25 @@ export function debounceAsync(callback, delay) {
  * @param invalidCB {function}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
  */
 export function throttle(callback, delay, invalidCB) {
-    let lastTime = 0;
+    let countDown = () => 0;
     return function (...args) {
+        const interval = countDown();
+        if (interval > 0) {
+            invalidCB && invalidCB(interval);
+            return;
+        }
+        countDown = createTimeCountDown(delay);
+        return callback.apply(this, args);
+    };
+}
+// 第1种实现方式
+/*export function throttle<CB extends (...args: any[]) => (void | any)>(
+    callback: CB,
+    delay: number,
+    invalidCB?: (interval: number) => void,
+): CB {
+    let lastTime = 0;
+    return function (...args: any[]) {
         const now = Date.now();
         const interval = now - lastTime;
         if (interval < delay) {
@@ -61,8 +81,26 @@ export function throttle(callback, delay, invalidCB) {
         }
         lastTime = now;
         return callback.apply(this, args);
-    };
-}
+    } as CB;
+}*/
+// 第三种实现方式，不能获取剩余时间或者另外获取时间，有点多余
+/*export function throttleByTimeOut<CB extends (...args: any[]) => (void | any)>(
+    callback: CB,
+    delay: number,
+    invalidCB?: (interval: number) => void,
+): CB {
+    let throttling = false;
+    return function (...args: any[]) {
+        if (throttling) {
+            return;
+        }
+        throttling = true;
+        setTimeout(() => {
+            throttling = false;
+        }, delay);
+        return callback.apply(this, args);
+    } as CB;
+}*/
 /**
  * 可取消防抖函数
  * @param callback 回调
@@ -215,7 +253,7 @@ export function oneByOne(words, delay, callback) {
             keepRun = keepRun && flag !== false;
         }
         else {
-            console.log(word);
+            // console.log(word);
         }
         if (!keepRun)
             cancel();
@@ -312,9 +350,6 @@ export function generateFunctionCode(argsArrayLength) {
 // (new Function(generateFunctionCode(args.length)))(object, property, args);
 export function generateFunction(obj, property, args) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
-}
-export function sleep(delay) {
-    return new Promise(res => setTimeout(res, delay));
 }
 /**
  * 生成不重复的字符串

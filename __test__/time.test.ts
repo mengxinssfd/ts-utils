@@ -109,24 +109,6 @@ test("number2Date", () => {
     expect(fn(60 * 60 * 1000)).toBe("0天01时00分00秒");
     expect(fn(60 * 60 * 24 * 1000)).toBe("1天00时00分00秒");
 });
-test("createTimeCountDown", async () => {
-    const ctd = t.createTimeCountDown;
-    let down = 1000;
-    let sleep = 10;
-    let initTime = Date.now();
-    await t.sleep(sleep);
-    expect(Date.now() - initTime).toBeGreaterThanOrEqual(sleep);
-    let time = sleep;
-    const fn = ctd(down);
-    initTime = Date.now();
-    while (time < down) {
-        await t.sleep(sleep);
-        const t1 = fn();
-        const dis = Date.now() - initTime;
-        expect(t1).toBe(down - dis);
-        time += sleep;
-    }
-});
 test("createTimeCountUp", async () => {
     const c = t.createTimeCountUp;
     const fn = c();
@@ -143,4 +125,22 @@ test("createTimeCountUp", async () => {
     const t3 = fn();
     expect(t3).toBeGreaterThanOrEqual(800);
     expect(t3).toBeLessThanOrEqual(800 + 100);
+});
+test("createTimeCountDown", async () => {
+    const ctd = t.createTimeCountDown;
+    let down = 1000;
+    let sleep = 10;
+    let initTime = Date.now();
+    await t.sleep(sleep);
+    expect(Date.now() - initTime).toBeGreaterThanOrEqual(sleep);
+    const fn = ctd(down);
+
+    await t.sleep(50);
+    let t1 = fn();
+    expect(t1).toBeLessThanOrEqual(down - 50);
+    expect(t1).toBeGreaterThanOrEqual(down - 150);
+    await t.sleep(150);
+    t1 = fn();
+    expect(t1).toBeLessThanOrEqual(down - 200);
+    expect(t1).toBeGreaterThanOrEqual(down - 300);
 });

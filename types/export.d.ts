@@ -4,7 +4,7 @@ export * from "./clone";
 export * from "./cookie";
 export * from "./common";
 export * from "./coordinate";
-export * from "./date";
+export * from "./time";
 export * from "./decorator";
 export * from "./dom";
 export * from "./download";

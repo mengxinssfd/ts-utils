@@ -22,3 +22,10 @@ export declare const formatDate: formatDateInterface;
  */
 export declare function getDateFromStr(date: string): Date | null;
 export declare const str2Date: typeof getDateFromStr;
+export declare function sleep(delay: number): Promise<void>;
+export declare function createTimeCountUp(): () => number;
+/**
+ * 创建一个倒计时函数
+ * @param countDown 目标毫秒
+ */
+export declare function createTimeCountDown(countDown: number): () => number;

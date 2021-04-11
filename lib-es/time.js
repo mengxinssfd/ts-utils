@@ -128,3 +128,34 @@ export function getDateFromStr(date) {
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 export const str2Date = getDateFromStr;
+export function sleep(delay) {
+    return new Promise(res => setTimeout(res, delay));
+}
+export function createTimeCountUp() {
+    const startTime = Date.now();
+    return function () {
+        return Date.now() - startTime;
+    };
+}
+/*
+/!**
+ * 创建一个倒计时函数
+ * @param countDown 目标毫秒
+ *!/
+export function createTimeCountDown(countDown: number): () => number {
+    const startTime = Date.now();
+    return function () {
+        const ms = Date.now() - startTime;
+        return countDown - ms;
+    };
+}*/
+/**
+ * 创建一个倒计时函数
+ * @param countDown 目标毫秒
+ */
+export function createTimeCountDown(countDown) {
+    const timeCountUp = createTimeCountUp();
+    return function () {
+        return countDown - timeCountUp();
+    };
+}

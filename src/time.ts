@@ -171,21 +171,32 @@ export function sleep(delay: number): Promise<void> {
     return new Promise(res => setTimeout(res, delay));
 }
 
+export function createTimeCountUp(): () => number {
+    const startTime = Date.now();
+    return function () {
+        return Date.now() - startTime;
+    };
+}
+/*
+/!**
+ * 创建一个倒计时函数
+ * @param countDown 目标毫秒
+ *!/
+export function createTimeCountDown(countDown: number): () => number {
+    const startTime = Date.now();
+    return function () {
+        const ms = Date.now() - startTime;
+        return countDown - ms;
+    };
+}*/
+
 /**
  * 创建一个倒计时函数
  * @param countDown 目标毫秒
  */
 export function createTimeCountDown(countDown: number): () => number {
-    let initTime = Date.now();
+    const timeCountUp = createTimeCountUp();
     return function () {
-        const ms = Date.now() - initTime;
-        return countDown - ms;
-    };
-}
-
-export function createTimeCountUp(): () => number {
-    let initTime = Date.now();
-    return function () {
-        return Date.now() - initTime;
+        return countDown - timeCountUp();
     };
 }
