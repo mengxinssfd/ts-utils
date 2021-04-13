@@ -1,12 +1,14 @@
 {
   "presets": [
     [
-      "@babel/preset-env"
-    ]
-  ],
-  "plugins": [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "loose": true
+      }
+    ],
     [
-      "@babel/transform-runtime"
+      "@babel/preset-typeScript"
     ]
   ]
 }

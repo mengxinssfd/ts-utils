@@ -1,10 +1,12 @@
 import {typeOf} from "./type";
 
+let ev = eval;
+
 // 如果要复制函数属性的话，使用deepCopy
 export function cloneFunction<T extends Function>(fn: T): T {
     if (typeOf(fn) !== "function") return fn;
     let newFn: any;
-    eval("newFn = " + fn.toString());
+    ev("newFn = " + fn.toString());
     return newFn;
 }
 
