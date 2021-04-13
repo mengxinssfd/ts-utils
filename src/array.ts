@@ -335,3 +335,21 @@ export function castArray<T>(value: T): T[];
 export function castArray(value) {
     return isArray(value) ? value : [value];
 }
+
+/**
+ * 数组分片
+ * @example
+ * chunk([0,1,2,3,4,5,6], 3) // => [[0,1,2],[3,4,5],[6]]
+ * @param arr
+ * @param chunkLen
+ */
+export function chunk(arr: any[], chunkLen: number) {
+    if (!isArray(arr)) throw new TypeError("chunk param arr type error");
+    if (chunkLen < 1) return arr.slice();
+    const result: any[] = [];
+    let i = 0;
+    while (i < arr.length) {
+        result.push(arr.slice(i, i += chunkLen));
+    }
+    return result;
+}

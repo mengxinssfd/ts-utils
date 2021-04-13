@@ -377,3 +377,22 @@ test("castArray", () => {
     expect(fn("")).toEqual([""]);
     expect(fn([1, 2, 3])).toEqual([1, 2, 3]);
 });
+test("chunk", () => {
+    const fn = arr.chunk;
+    expect(fn([0, 1, 2, 3, 4, 5, 6], 10)).toEqual([[0, 1, 2, 3, 4, 5, 6]]);
+    expect(fn([0, 1, 2, 3, 4, 5, 6], 1)).toEqual([[0], [1], [2], [3], [4], [5], [6]]);
+    expect(fn([0, 1, 2, 3, 4, 5, 6], 0)).toEqual([0, 1, 2, 3, 4, 5, 6]);
+    expect(fn([0, 1, 2, 3, 4, 5, 6], -1)).toEqual([0, 1, 2, 3, 4, 5, 6]);
+    expect(fn([0, 1, 2, 3, 4, 5, 6], 3)).toEqual([[0, 1, 2], [3, 4, 5], [6]]);
+    expect(fn([0, 1, 2, 3, 4, 5], 3)).toEqual([[0, 1, 2], [3, 4, 5]]);
+    expect(fn([0, 1, 2, 3, 4], 3)).toEqual([[0, 1, 2], [3, 4]]);
+    const emptyArr = [];
+    expect(fn(emptyArr, 3)).toEqual([]);
+    expect(fn(emptyArr, 3)).not.toBe(emptyArr);
+    expect(() => {
+        fn({} as any, 3);
+    }).toThrowError();
+    expect(() => {
+        fn(null as any, 3);
+    }).toThrowError();
+});
