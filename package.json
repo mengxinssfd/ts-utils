@@ -13,12 +13,15 @@
     "types/*.d.ts"
   ],
   "scripts": {
-    "lib:ru": "rollup -c",
+    "ru": "rollup -c",
     "clean": "rimraf lib-* types coverage",
-    "build": "run-p clean lib:es lib:umd",
+    "build-all": "run-p lib:es ru",
+    "build": "run-s clean build-all copy-d",
+    "build-que": "cmd-que -cmd=\"npm run clean,npm run lib:es,npm run ru,npm run copy-d\"",
     "lib:umd": "set NODE_ENV=production&webpack --mode production",
     "lib:es": "tsc --build tsconfig.es.json",
     "pub": "npm publish --access=public",
+    "copy-d": "copy src\\*.d.ts types\\",
     "rename": "reName lib-umd\\index.umd.d.ts index.d.ts",
     "test": "jest",
     "cov": "jest --coverage",
