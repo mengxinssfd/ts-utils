@@ -29,3 +29,9 @@ export declare function createTimeCountUp(): () => number;
  * @param countDown 目标毫秒
  */
 export declare function createTimeCountDown(countDown: number): () => number;
+/**
+ * 获取指定月份最后一个周日
+ * @param month
+ */
+export declare function getMonthTheLastSundayDate(month: Date): Date;
+export declare function getMonthTheLastWeekDay(month: Date, weekDay?: number): Date;

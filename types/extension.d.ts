@@ -7,4 +7,4 @@ declare global {
         format(format?: string): string;
     }
 }
-export {};
+export {}; 

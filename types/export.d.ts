@@ -17,7 +17,6 @@ export * from "./url";
 export * from "./UrlModel";
 export * from "./object";
 export * from "./Pool";
-export * from "./extension";
 export * from "./random";
 export * from "./color";
 export * from "./domType";
