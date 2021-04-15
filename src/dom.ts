@@ -169,12 +169,16 @@ export function loadScript(url: string): Promise<void> {
     });
 }
 
-export function noScroll(scrollContainer: Window | HTMLElement | string) {
-    let target: HTMLElement = scrollContainer as HTMLElement;
-    if (isString(scrollContainer)) {
-        target = document.querySelector(scrollContainer) as HTMLElement;
-        if (!target) throw new TypeError();
-    } else if (scrollContainer === window) {
+/**
+ * @param el
+ * @return {}
+ */
+export function noScroll(el: Window | HTMLElement | string) {
+    let target: HTMLElement = el as HTMLElement;
+    if (isString(el)) {
+        target = document.querySelector(el) as HTMLElement;
+        if (!target) throw new Error(`el not found`);
+    } else if (el === window) {
         if (document.documentElement.scrollTop) {
             target = document.documentElement;
         } else {
