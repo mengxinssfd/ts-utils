@@ -177,6 +177,7 @@ export function createTimeCountUp(): () => number {
         return Date.now() - startTime;
     };
 }
+
 /*
 /!**
  * 创建一个倒计时函数
@@ -199,4 +200,36 @@ export function createTimeCountDown(countDown: number): () => number {
     return function () {
         return countDown - timeCountUp();
     };
+}
+
+/**
+ * 获取指定月份最后一个周日
+ * @param month
+ */
+export function getMonthTheLastSundayDate(month: Date) {
+    const date = new Date(month);
+    date.setMonth(month.getMonth() + 1); // 下个月
+    date.setDate(0); // 月份最后一天
+    date.setDate(date.getDate() - date.getDay());
+    return date;
+}
+
+export function getMonthTheLastWeekDay(month: Date, weekDay = 0) {
+    const date = new Date(month);
+    date.setMonth(month.getMonth() + 1); // 下个月
+    date.setDate(-6); // 月份最后一天
+    const day = date.getDay();
+    if (day === weekDay) {
+        return date;
+    }
+
+    // fixme 这里有点硬代码
+    let dis = weekDay - day;
+    if (day === 0) {
+        dis = weekDay;
+    } else if (weekDay < day) {
+        dis = 6 - day + weekDay + 1;
+    }
+    date.setDate(date.getDate() + dis);
+    return date;
 }

@@ -67,3 +67,11 @@ export declare function castArray<T>(value: T[]): T[];
  * @param value
  */
 export declare function castArray<T>(value: T): T[];
+/**
+ * 数组分片
+ * @example
+ * chunk([0,1,2,3,4,5,6], 3) // => [[0,1,2],[3,4,5],[6]]
+ * @param arr
+ * @param chunkLen
+ */
+export declare function chunk(arr: any[], chunkLen: number): any[];

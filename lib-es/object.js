@@ -63,6 +63,7 @@ export function forEachObj(obj, callbackFn) {
             return;
     }
 }
+export const objForEach = forEachObj;
 /**
  * object key-value翻转
  * @param obj
@@ -86,6 +87,7 @@ export function reduceObj(obj, callbackFn, initialValue) {
     });
     return result;
 }
+export const objReduce = reduceObj;
 /**
  * @param originObj
  * @param pickKeys

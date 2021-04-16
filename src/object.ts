@@ -66,6 +66,8 @@ export function forEachObj<T extends object>(obj: T, callbackFn: (value: T[keyof
     }
 }
 
+export const objForEach = forEachObj
+
 /**
  * object key-value翻转
  * @param obj
@@ -94,6 +96,8 @@ export function reduceObj<T extends object, R>(
     });
     return result;
 }
+
+export const objReduce = reduceObj;
 
 /**
  * @param originObj
