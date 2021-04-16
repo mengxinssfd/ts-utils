@@ -9,11 +9,9 @@ export function isDomStandard(target: any): target is HTMLElement {
     return target instanceof HTMLElement;
 }
 
-export const isDom: (target: any) => target is HTMLElement = (function () {
-    // 在ie HTMLElement类型是object 在chrome/firefox HTMLElement是function ie9以下HTMLElement为undefined
-    // 不论object还是function都能用instanceof
-    return isUndefined(window.HTMLElement) ? isDomIe8 : isDomStandard;
-})();
+// 在ie HTMLElement类型是object 在chrome/firefox HTMLElement是function ie9以下HTMLElement为undefined
+// 不论object还是function都能用instanceof
+export const isDom: (target: any) => target is HTMLElement = isUndefined(window.HTMLElement) ? isDomIe8 : isDomStandard;
 
 export function isElementOf(nodeName: string, el: any): boolean {
     return isDom(el) && el.nodeName === nodeName.toUpperCase();
