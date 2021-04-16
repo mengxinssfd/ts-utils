@@ -36,7 +36,11 @@ export declare function loadImg(url: string): Promise<HTMLImageElement>;
  * @param url
  */
 export declare function loadScript(url: string): Promise<void>;
-export declare function noScroll(scrollContainer: Window | HTMLElement | string): () => void;
+/**
+ * @param el
+ * @return {}
+ */
+export declare function noScroll(el: Window | HTMLElement | string): () => void;
 /**
  * 通过object来生成html元素
  * @tips: attribute（特性），是我们赋予某个事物的特质或对象。property（属性），是早已存在的不需要外界赋予的特质。

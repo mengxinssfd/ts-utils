@@ -1,5 +1,8 @@
 import { __awaiter } from "tslib";
-import { isInputElement, isSelectElement, isTextAreaElement } from "./domType";
+import { isDom, isInputElement, isSelectElement, isTextAreaElement } from "./domType";
+import { onceEvent } from "./event";
+import { createElement } from "./dom";
+import { castArray } from "./array";
 /**
  * @param element
  * @return string
@@ -35,6 +38,12 @@ export function select(element) {
     }
     return selectedText;
 }
+export function isSupportedClipboardCommand(action = ["cut", "copy"]) {
+    const actions = castArray(action);
+    if (!!document.queryCommandSupported)
+        return false;
+    return actions.every((act) => document.queryCommandSupported(act));
+}
 /**
  * 复制文字或html
  * @param target {HTMLElement | string}
@@ -43,18 +52,32 @@ export function select(element) {
 export function copy2Clipboard(target) {
     let el;
     const isText = typeof target === "string";
-    if (isText) {
-        const text = target;
-        el = document.createElement("div");
-        el.innerText = text;
-        el.style.position = "fixed";
-        el.style.left = "-100000px";
-        document.body.appendChild(el);
-    }
-    else {
-        el = target;
-    }
-    const p = new Promise(function (resolve, reject) {
+    const isBindThis = isDom(this);
+    const p = new Promise((resolve, reject) => {
+        if (isBindThis) {
+            onceEvent(this.parentNode, "click", () => {
+                copy2Clipboard(target).then(resolve, reject);
+            });
+            return;
+        }
+        let el;
+        const isText = typeof target === "string";
+        if (isText) {
+            const text = target;
+            el = createElement("div", {
+                props: {
+                    innerText: text,
+                    style: {
+                        position: "fixed",
+                        left: "-100000px",
+                    }
+                },
+                parent: document.body
+            });
+        }
+        else {
+            el = target;
+        }
         select(el);
         let succeeded;
         let error;
@@ -72,6 +95,8 @@ export function copy2Clipboard(target) {
         reject(error);
     });
     p.finally(function () {
+        if (isBindThis)
+            return;
         window.getSelection().removeAllRanges();
         if (isText) {
             document.body.removeChild(el);

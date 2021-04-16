@@ -3,12 +3,13 @@
  * @return string
  */
 export declare function select(element: HTMLElement): any;
+export declare function isSupportedClipboardCommand<T extends "cut" | "copy">(action?: Array<T> | T): boolean;
 /**
  * 复制文字或html
  * @param target {HTMLElement | string}
  * @return {Promise}
  */
-export declare function copy2Clipboard(target: HTMLElement | string): Promise<void>;
+export declare function copy2Clipboard(this: HTMLElement | void, target: HTMLElement | string): Promise<void>;
 export declare function supportClipboardWrite(): boolean;
 export declare function supportCopySetData2Clipboard(): void;
 /**
