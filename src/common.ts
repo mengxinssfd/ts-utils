@@ -8,19 +8,40 @@ import {assign, getReverseObj} from "./object";
  * @param delay 延时
  * @returns {Function}
  */
-export function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number): CB {
-    let timer: any = null;
-    return function (...args: any[]) {
+export function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number): CB & { cancel(): void; flush: CB } {
+    let lastThis: any;
+    let lastArgs: any;
+    let lastResult: any;
+    let timer: any;
+    const cancel = () => {
+        clearTimeout(timer);
+        timer = undefined;
+    };
+    const debounced = function (...args: any[]) {
         if (timer) {
-            clearTimeout(timer);
-            timer = null;
+            cancel();
         }
+        lastThis = this;
+        lastArgs = args;
         timer = setTimeout(() => {
-            timer = null;
-            callback.apply(this, args);
+            cancel();
+            debounced.flush();
         }, delay);
-    } as CB;
+        return lastResult;
+    } as ReturnType<typeof debounce>;
+    debounced.cancel = cancel;
+    debounced.flush = () => {
+        lastResult = callback.apply(lastThis, lastArgs);
+        lastThis = lastArgs = undefined;
+        return lastResult;
+    };
+    return debounced as any;
 }
+
+const db = debounce((a: number, b: string) => {
+}, 1000);
+db(100, "");
+db.cancel();
 
 /**
  * 如果callback执行了的话，那么不论是否resolved都不会再被reject
@@ -386,7 +407,7 @@ export function generateFunctionCode(argsArrayLength: number) {
 
 // const args = [1, 2, 3];
 // (new Function(generateFunctionCode(args.length)))(object, property, args);
-export function generateFunction(obj: object, property: string, args: any[]) {
+export function functionApply<T extends object, K extends keyof T>(obj: T, property: K, args: any[]) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
 }
 

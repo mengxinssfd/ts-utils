@@ -248,3 +248,12 @@ test("isIterable", () => {
     expect(fn(new Map())).toBeTruthy();
     expect(fn(new Set())).toBeTruthy();
 });
+
+test("isNative", function () {
+    const fn = type.isNative;
+    let forEach = Array.prototype.forEach;
+    expect(fn(forEach)).toBeTruthy();
+    forEach = () => {
+    };
+    expect(fn(forEach)).toBeFalsy();
+});

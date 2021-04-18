@@ -70,20 +70,26 @@ test("getFormatStr", () => {
     expect(cm.strTemplate("hell%s worl%s", "o", "d")).toBe("hello world");
     expect(cm.strTemplate("hell%s worl%s")).toBe("hell worl");
 });
-test("debounce", (done) => {
+test("debounce", async (done) => {
     let times = 0;
-    const d = cm.debounce(() => {
-        times++;
-    }, 100);
+    const d = cm.debounce(() => times++, 100);
+    d();
+    expect(times).toBe(0);
+    d.flush();
+    expect(times).toBe(1);
+    d();
+    d.cancel();
+    await sleep(300);
     setTimeout(d, 10);
     setTimeout(d, 20);
     setTimeout(d, 30);
     setTimeout(d, 40);
     setTimeout(() => {
-        expect(times).toBe(1);
+        expect(times).toBe(2);
         // 异步代码需要调用done()
         done();
     }, 500);
+
 });
 
 test("oneByOne", (done) => {
@@ -96,11 +102,11 @@ test("oneByOne", (done) => {
     });
     cm.oneByOne(s, 10);
 });
-test("generateFunction", () => {
+test("functionApply", () => {
     // const args = [1, 2, 3];
     // (new Function(generateFunctionCode(args.length)))(object, property, args);
-    // expect(cm.strFillPrefix("123", "0", 6)).toBe("000123");
-    const value = cm.generateFunction(cm, "strPadStart", ["123", 6, "0"]);
+    expect(cm.strPadStart("123", 6, "0")).toBe("000123");
+    const value = cm.functionApply(cm, "strPadStart", ["123", 6, "0"]);
     expect(value).toBe("000123");
 });
 test("polling", (done) => {

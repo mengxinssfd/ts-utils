@@ -30,11 +30,11 @@ test("deepClone", () => {
     // copy !== arr2
     expect(newArr2 === arr2).toBeFalsy();
     // copy[0] == arr2[0]
-    expect(newArr2[0] == arr2[0]).toBe(false);
-    expect(newArr2[1] == arr2[1]).toEqual(false);
+    expect(newArr2[0] == arr2[0]).toBeTruthy();
+    expect(newArr2[1] == arr2[1]).toBeTruthy();
     // copy[0] === arr2[0]
-    expect(newArr2[0] !== arr2[0]).toBeTruthy();
-    expect(newArr2[1] !== arr2[1]).toBeTruthy();
+    expect(newArr2[0] === arr2[0]).toBeTruthy();
+    expect(newArr2[1] === arr2[1]).toBeTruthy();
     // copy[0]() === arr2[0]()
     expect(newArr2[1]() === arr2[1]()).toBeTruthy();
     expect(newArr2[1]()).toEqual(arr2[1]());
@@ -71,12 +71,12 @@ test("deepClone", () => {
     const nFn = clone.deepClone(fn);
 
     expect(fn(100)).toBe(200);
-    expect(fn === nFn).toBe(false);
+    expect(fn === nFn).toBeTruthy();
     expect(nFn(100)).toBe(200);
     expect(nFn.data).toBe(100);
     nFn.data = 200;
     expect(nFn.data).toBe(200);
-    expect(fn.data).toBe(100);
+    expect(fn.data).toBe(200);
 
     // copy date
     const date = new Date("2020-06-05 12:00:00");
@@ -89,22 +89,54 @@ test("deepClone", () => {
     const o2 = clone.deepClone({re});
     expect(o2.re.test("123")).toBe(true);
     expect(o2.re === re).toBe(false);
+
+    const o3: any = {a: 1, b: 2, c: 3, e: {a: 1}};
+    o3.d = o3;
+    const c = clone.deepClone(o3);
+    expect(c).toEqual(o3);
+    expect(o3).toBe(c.d);
+    expect(o3.e).toEqual(c.e);
+    expect(o3.e).not.toBe(c.e);
+
 });
 
 test("cloneFunction", () => {
+    const fn = clone.cloneFunction;
+
     function test(a, b) {
         return a + b;
     }
 
-    expect(clone.cloneFunction(test)(50, 50)).toBe(100);
+    expect(fn(test)(50, 50)).toBe(100);
 
     const test2 = (a, b) => a + b;
-    expect(clone.cloneFunction(test2)(50, 50)).toBe(100);
+    expect(fn(test2)(50, 50)).toBe(100);
     expect((function (a, b) {
         return a + b;
     })(50, 50)).toBe(100);
 
-    expect(clone.cloneFunction(1 as any)).toBe(1);
+    expect(fn(1 as any)).toBe(1);
+
+    const obj: any = {
+        a: 1,
+        fn1() {
+            return this.a++;
+        },
+        fn2: () => {
+            return obj.a++;
+        },
+        fn3: function () {
+            return this.a++;
+        },
+    };
+    obj.clone1 = fn(obj.fn1);
+    expect(obj.fn1()).toBe(1);
+    expect(obj.clone1()).toBe(2);
+
+    obj.clone2 = fn(obj.fn2);
+    expect(() => obj.clone2()).toThrowError();
+    obj.clone3 = fn(obj.fn3);
+    expect(obj.clone3()).toBe(3);
 });
 test("deepCloneBfs", () => {
     const obj10086 = {a: 1, b: 2, c: 3, d: 4};

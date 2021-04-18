@@ -167,8 +167,8 @@ export function getDateFromStr(date: string): Date | null {
 
 export const str2Date = getDateFromStr;
 
-export function sleep(delay: number): Promise<void> {
-    return new Promise(res => setTimeout(res, delay));
+export function sleep(ms: number): Promise<void> {
+    return new Promise(res => setTimeout(res, ms));
 }
 
 export function createTimeCountUp(): () => number {

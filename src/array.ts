@@ -1,6 +1,5 @@
-import {typeOf} from "./type";
 import {deepClone} from "./clone";
-import {isEmpty, isNaN, isArray, isArrayLike, isFunction} from "./type";
+import {typeOf, isEmpty, isNaN, isArray, isArrayLike, isFunction} from "./type";
 
 /**
  * @description len与end两个都有值时，以小的为准
