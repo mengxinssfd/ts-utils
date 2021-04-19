@@ -1,4 +1,3 @@
-import {deepClone} from "./clone";
 import {typeOf, isEmpty, isNaN, isArray, isArrayLike, isFunction} from "./type";
 
 /**
@@ -203,9 +202,7 @@ export function findIndexRight(
 
 export function flat<T>(target: readonly T[], depth: number = 1): T[] {
     function innerFlat(innerArr: readonly any[], innerDepth: number = 0): any {
-        if (!isArray(innerArr)) return innerArr;
-        if (innerDepth++ === depth) return deepClone(innerArr);
-
+        if (!isArray(innerArr)||innerDepth++ === depth) return innerArr;
         const result: any[] = [];
         for (let i = 0; i < innerArr.length; i++) {
             const newItem = innerFlat(innerArr[i], innerDepth);

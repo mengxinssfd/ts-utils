@@ -1,4 +1,4 @@
-import {isNative, isNaN} from "./index";
+import {isNative, isNaN} from "./type";
 
 abstract class CacheSup<T> {
     abstract set(value: T): this;
@@ -53,6 +53,5 @@ export class SetCache<T> extends CacheSup<T> {
     }
 }
 
-export const Stack = (function () {
-    return isNative(Map) ? SetCache : SetCache;
-})();
+export const Stack = isNative(Map) ? SetCache : ListCache;
+
