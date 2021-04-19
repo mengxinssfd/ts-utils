@@ -25,6 +25,9 @@ function testCache(clazz: typeof Cache.Stack) {
     expect(c.has(Function)).toBeFalsy();
     expect(c.has(Symbol("test"))).toBeFalsy();
     expect(c.has(() => 0)).toBeFalsy();
+
+    c.clear();
+    expect(c.size).toBe(0)
 }
 
 test("ListCache", function () {
