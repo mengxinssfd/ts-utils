@@ -4,7 +4,10 @@
  * @param delay 延时
  * @returns {Function}
  */
-export declare function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number): CB;
+export declare function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number): CB & {
+    cancel(): void;
+    flush: CB;
+};
 /**
  * 如果callback执行了的话，那么不论是否resolved都不会再被reject
  * @param callback
@@ -88,7 +91,7 @@ export interface Chinese2Number {
  */
 export declare const chinese2Number: Chinese2Number;
 export declare function generateFunctionCode(argsArrayLength: number): string;
-export declare function generateFunction(obj: object, property: string, args: any[]): any;
+export declare function functionApply<T extends object, K extends keyof T>(obj: T, property: K, args: any[]): any;
 /**
  * 生成不重复的字符串
  * @param length

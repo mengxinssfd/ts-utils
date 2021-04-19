@@ -1,6 +1,4 @@
-import { typeOf } from "./type";
-import { deepClone } from "./clone";
-import { isEmpty, isNaN, isArray, isArrayLike, isFunction } from "./type";
+import { typeOf, isEmpty, isNaN, isArray, isArrayLike, isFunction } from "./type";
 /**
  * @description len与end两个都有值时，以小的为准
  * @example
@@ -171,10 +169,8 @@ export function findIndexRight(predicate, thisArg) {
 }
 export function flat(target, depth = 1) {
     function innerFlat(innerArr, innerDepth = 0) {
-        if (!isArray(innerArr))
+        if (!isArray(innerArr) || innerDepth++ === depth)
             return innerArr;
-        if (innerDepth++ === depth)
-            return deepClone(innerArr);
         const result = [];
         for (let i = 0; i < innerArr.length; i++) {
             const newItem = innerFlat(innerArr[i], innerDepth);

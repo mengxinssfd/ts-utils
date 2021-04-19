@@ -1,4 +1,4 @@
-import * as types from "./type";
+import { isNative, isNaN } from "./type";
 class CacheSup {
 }
 export class ListCache extends CacheSup {
@@ -12,7 +12,7 @@ export class ListCache extends CacheSup {
         return this;
     }
     has(value) {
-        return this.cache.some(i => value === i || types.isNaN(value) && types.isNaN(i));
+        return this.cache.some(i => value === i || isNaN(value) && isNaN(i));
     }
     clear() {
         this.cache = [];
@@ -40,4 +40,4 @@ export class SetCache extends CacheSup {
         return this.cache.size;
     }
 }
-export const Stack = types.isNative(Map) ? SetCache : SetCache;
+export const Stack = isNative(Map) ? SetCache : ListCache;

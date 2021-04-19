@@ -18,5 +18,5 @@ export declare class SetCache<T> extends CacheSup<T> {
     clear(): void;
     get size(): number;
 }
-export declare const Stack: typeof SetCache;
+export declare const Stack: typeof ListCache | typeof SetCache;
 export {};

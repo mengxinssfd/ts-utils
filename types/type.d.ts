@@ -1,5 +1,7 @@
+export declare function isNative(value: any): boolean;
 export declare function typeOf(target: any): string;
 export declare function isObject(target: any): target is object;
+export declare function isBroadlyObject(value: object): value is object;
 export declare function isArray(target: any): target is Array<any>;
 export declare function isArrayLike(target: any): target is ArrayLike<any>;
 export declare function isString(target: any): target is string;

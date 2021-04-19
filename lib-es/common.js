@@ -9,18 +9,38 @@ import { assign, getReverseObj } from "./object";
  * @returns {Function}
  */
 export function debounce(callback, delay) {
-    let timer = null;
-    return function (...args) {
-        if (timer) {
-            clearTimeout(timer);
-            timer = null;
-        }
-        timer = setTimeout(() => {
-            timer = null;
-            callback.apply(this, args);
-        }, delay);
+    let lastThis;
+    let lastArgs;
+    let lastResult;
+    let timer;
+    const cancel = () => {
+        clearTimeout(timer);
+        timer = undefined;
     };
+    const debounced = function (...args) {
+        if (timer) {
+            cancel();
+        }
+        lastThis = this;
+        lastArgs = args;
+        timer = setTimeout(() => {
+            cancel();
+            debounced.flush();
+        }, delay);
+        return lastResult;
+    };
+    debounced.cancel = cancel;
+    debounced.flush = () => {
+        lastResult = callback.apply(lastThis, lastArgs);
+        lastThis = lastArgs = undefined;
+        return lastResult;
+    };
+    return debounced;
 }
+const db = debounce((a, b) => {
+}, 1000);
+db(100, "");
+db.cancel();
 /**
  * 如果callback执行了的话，那么不论是否resolved都不会再被reject
  * @param callback
@@ -348,7 +368,7 @@ export function generateFunctionCode(argsArrayLength) {
 }
 // const args = [1, 2, 3];
 // (new Function(generateFunctionCode(args.length)))(object, property, args);
-export function generateFunction(obj, property, args) {
+export function functionApply(obj, property, args) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
 }
 /**

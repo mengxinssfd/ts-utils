@@ -128,8 +128,8 @@ export function getDateFromStr(date) {
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 export const str2Date = getDateFromStr;
-export function sleep(delay) {
-    return new Promise(res => setTimeout(res, delay));
+export function sleep(ms) {
+    return new Promise(res => setTimeout(res, ms));
 }
 export function createTimeCountUp() {
     const startTime = Date.now();
