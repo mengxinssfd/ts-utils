@@ -23,12 +23,13 @@ async function getTimeoutMin() {
 test("sleep", async () => {
     const max = await getTimeoutMax();
     const min = await getTimeoutMin();
-    expect(max).toBeLessThanOrEqual(100);
+    expect(max).toBeLessThanOrEqual(200);
     expect(min).toBeGreaterThanOrEqual(0);
     const date = Date.now();
     await t.sleep(100);
+    // 时间与机器配置有关  波动大
     expect(Date.now() - date).toBeGreaterThanOrEqual(100);
-    expect(Date.now() - date).toBeLessThanOrEqual(100 + 100);
+    expect(Date.now() - date).toBeLessThanOrEqual(100 + 150);
 });
 
 test("str2Date", () => {
