@@ -24,7 +24,8 @@
     "copy-d": "copy src\\*.d.ts types\\",
     "rename": "reName lib-umd\\index.umd.d.ts index.d.ts",
     "test": "jest",
-    "cov": "jest --coverage --no-cache",
+    "cov": "jest --coverage",
+    "cov-no-cache": "jest --coverage --no-cache",
     "dev": "set NODE_ENV=development&webpack-dev-server --config webpack.dev.config.js --host 0.0.0.0",
     "clear_jest": "jest --clearCache"
   },
