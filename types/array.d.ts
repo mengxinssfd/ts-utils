@@ -46,14 +46,13 @@ export declare function binaryFind<T>(arr: T[], handler: (item: T, index: number
  * @param handler 判断条件 item => target - item 返回值为0时为要找的值，小于0则往前找，大于0往后找
  */
 export declare function binaryFindIndex<T>(arr: T[], handler: (item: T, index: number, start: number, end: number) => number): number;
-/**
- * item插入到数组，返回一个新数组
- * @param insert {any} 插入的item
- * @param to {number} index 要插入的位置
- * @param array {Array} 要插入item的数组
- * @returns Array
- */
-export declare function insertToArray<T>(insert: T, to: number, array: T[]): T[];
+export declare function insertToArray<T>(insert: T, to: number, array: T[], after?: boolean): number;
+export declare function insertToArray<T>(insert: T, findIndexCB: ((v: T, k: number, a: T[]) => boolean), array: T[], after?: boolean): number;
+export declare function insertToArray<T>(inserts: T[], to: number, array: T[], after?: boolean): number;
+export declare function insertToArray<T>(inserts: T[], findIndexCB: ((v: T, k: number, a: T[]) => boolean), array: T[], after?: boolean): number;
+export declare function insertToArrayRight<T>(insert: any, to: any, array: T[], after?: boolean): number;
+export declare function arrayRemoveItem<T>(item: T, array: T[]): void | T;
+export declare function arrayRemoveItemsBy<T>(by: (v: T, k: number, a: T[]) => boolean, array: T[]): T[];
 export declare function unique<T>(target: T[], callbackFn?: (value: T, value2: T) => boolean): T[];
 /**
  * @example

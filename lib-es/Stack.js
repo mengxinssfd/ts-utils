@@ -1,3 +1,4 @@
+import { root } from "./common";
 import { isNative, isNaN } from "./type";
 class CacheSup {
 }
@@ -40,4 +41,4 @@ export class SetCache extends CacheSup {
         return this.cache.size;
     }
 }
-export const Stack = isNative(window.Set) ? SetCache : ListCache;
+export const Stack = isNative(root.Set) ? SetCache : ListCache;

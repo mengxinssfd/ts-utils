@@ -486,3 +486,4 @@ export function promiseAny(list) {
         }
     }));
 }
+export const root = Function("return this")();

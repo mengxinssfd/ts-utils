@@ -311,7 +311,7 @@ export function insertToArray<T>(insert, to, array: T[], after = false): number 
     }
     after && index++;
     array.splice(index, 0, ...inserts);
-    return index;
+    return index > array.length ? array.length - 1 : index;
 }
 
 export function insertToArrayRight<T>(insert, to, array: T[], after = false): number {

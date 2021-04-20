@@ -258,18 +258,53 @@ export function binaryFindIndex(arr, handler) {
 }
 /**
  * item插入到数组，返回一个新数组
- * @param insert {any} 插入的item
- * @param to {number} index 要插入的位置
- * @param array {Array} 要插入item的数组
+ * @param insert 插入的item
+ * @param to 要插入的位置
+ * @param array 要插入item的数组
+ * @param after 默认插到前面去
  * @returns Array
  */
-export function insertToArray(insert, to, array) {
-    const newArray = array.slice();
-    const end = newArray.splice(to);
-    end.unshift(insert);
-    Array.prototype.push.apply(newArray, end);
-    // newArray.push(...end);
-    return newArray;
+export function insertToArray(insert, to, array, after = false) {
+    const inserts = castArray(insert);
+    let index = to;
+    if (isFunction(to)) {
+        index = findIndex(to, array);
+        if (index === -1) {
+            return -1;
+        }
+    }
+    after && index++;
+    array.splice(index, 0, ...inserts);
+    return index > array.length ? array.length - 1 : index;
+}
+export function insertToArrayRight(insert, to, array, after = false) {
+    const inserts = castArray(insert);
+    let index = to;
+    if (isFunction(to)) {
+        index = findIndexRight(to, array);
+        if (index === -1) {
+            return -1;
+        }
+    }
+    after && index++;
+    array.splice(index, 0, ...inserts);
+    return index;
+}
+export function arrayRemoveItem(item, array) {
+    const index = array.indexOf(item);
+    if (index === -1)
+        return;
+    return array.splice(index, 1)[0];
+}
+export function arrayRemoveItemsBy(by, array) {
+    const removedItems = [];
+    forEachRight((v, k, a) => {
+        if (!by(v, k, a))
+            return;
+        const item = array.splice(k, 1)[0];
+        removedItems.unshift(item);
+    }, array);
+    return removedItems;
 }
 export function unique(target, callbackFn) {
     if (!target.length)

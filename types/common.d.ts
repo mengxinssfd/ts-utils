@@ -115,3 +115,4 @@ export declare function createEnumByObj<T extends object, K extends keyof T, O e
     [k: string]: K;
 };
 export declare function promiseAny<T>(list: Promise<T>[]): Promise<T>;
+export declare const root: any;
