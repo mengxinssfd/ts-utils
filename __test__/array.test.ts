@@ -310,24 +310,24 @@ test("insertToArray", () => {
     const arr4 = [1, 2, 3, 4];
     const arr5 = [1, 2, 4, 5];
     const arr6 = [1, 2, 4, 5];
-    expect(fn(5, 1, arr1)).toBe(5);
+    expect(fn(5, 1, arr1)).toBe(1);
     expect(arr1).toEqual([1, 5, 2, 3, 4]);
-    expect(fn(5, 1, arr2, true)).toBe(5);
+    expect(fn(5, 1, arr2, true)).toBe(2);
     expect(arr2).toEqual([1, 2, 5, 3, 4]);
-    expect(fn(5, 0, arr3)).toBe(5);
+    expect(fn(5, 0, arr3)).toBe(0);
     expect(arr3).toEqual([5, 1, 2, 3, 4]);
-    expect(fn(5, 100, arr4)).toBe(5);
+    expect(fn(5, 100, arr4)).toBe(4);
     expect(arr4).toEqual([1, 2, 3, 4, 5]);
 
     expect(fn(3, (v, k) => {
         return v === 2;
-    }, arr5)).toBe(5);
+    }, arr5)).toBe(1);
     expect(arr5).toEqual([1, 3, 2, 4, 5]);
     expect(fn(3, (v, k) => {
         return v > 2;
-    }, arr6)).toBe(5);
+    }, arr6)).toBe(2);
     expect(arr6).toEqual([1, 2, 3, 4, 5]);
-    expect(fn(6, (v) => v === 1000, arr6)).toBe(5);
+    expect(fn(6, (v) => v === 1000, arr6)).toBe(-1);
     expect(arr6).toEqual([1, 2, 3, 4, 5]);
 });
 test("unique", () => {
