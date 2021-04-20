@@ -229,7 +229,7 @@ export function createElement<K extends keyof HTMLElementTagNameMap,
         const isObjValue = typeof v === "object";
         el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
     });
-    const {parent,children} = params;
+    const {parent, children} = params;
     if (parent !== false) {
         if (isDom(parent)) {
             parent.appendChild(el);
@@ -237,8 +237,8 @@ export function createElement<K extends keyof HTMLElementTagNameMap,
             document.body.appendChild(el);
         }
     }
-    if(isArray(children)){
-        children.forEach(child=>el.appendChild(child))
+    if (isArray(children)) {
+        children.forEach(child => el.appendChild(child));
     }
     return el as any;
 }
