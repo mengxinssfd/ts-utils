@@ -303,13 +303,32 @@ test("binaryFindIndex", () => {
     expect(arr.binaryFindIndex(list, i => 55 - i.id)).toBe(-1);
 });
 test("insertToArray", () => {
+    const fn = arr.insertToArray;
     const arr1 = [1, 2, 3, 4];
-    const arr2 = arr.insertToArray(5, 1, arr1);
-    expect(arr2).toEqual([1, 5, 2, 3, 4]);
-    const arr3 = arr.insertToArray(5, 0, arr1);
+    const arr2 = [1, 2, 3, 4];
+    const arr3 = [1, 2, 3, 4];
+    const arr4 = [1, 2, 3, 4];
+    const arr5 = [1, 2, 4, 5];
+    const arr6 = [1, 2, 4, 5];
+    expect(fn(5, 1, arr1)).toBe(5);
+    expect(arr1).toEqual([1, 5, 2, 3, 4]);
+    expect(fn(5, 1, arr2, true)).toBe(5);
+    expect(arr2).toEqual([1, 2, 5, 3, 4]);
+    expect(fn(5, 0, arr3)).toBe(5);
     expect(arr3).toEqual([5, 1, 2, 3, 4]);
-    const arr4 = arr.insertToArray(5, 100, arr1);
+    expect(fn(5, 100, arr4)).toBe(5);
     expect(arr4).toEqual([1, 2, 3, 4, 5]);
+
+    expect(fn(3, (v, k) => {
+        return v === 2;
+    }, arr5)).toBe(5);
+    expect(arr5).toEqual([1, 3, 2, 4, 5]);
+    expect(fn(3, (v, k) => {
+        return v > 2;
+    }, arr6)).toBe(5);
+    expect(arr6).toEqual([1, 2, 3, 4, 5]);
+    expect(fn(6, (v) => v === 1000, arr6)).toBe(5);
+    expect(arr6).toEqual([1, 2, 3, 4, 5]);
 });
 test("unique", () => {
     const fn = arr.unique;
@@ -395,4 +414,22 @@ test("chunk", () => {
     expect(() => {
         fn(null as any, 3);
     }).toThrowError();
+});
+test("arrayRemoveItem", () => {
+    const fn = arr.arrayRemoveItem;
+    const a1 = [1, 2, 3, 4, 5];
+
+    expect(fn(100, a1)).toBe(undefined);
+    expect(a1).toEqual([1, 2, 3, 4, 5]);
+    expect(fn(1, a1)).toBe(1);
+    expect(a1).toEqual([2, 3, 4, 5]);
+});
+test("arrayRemoveItemsBy", () => {
+    const fn = arr.arrayRemoveItemsBy;
+    const a1 = [1, 2, 3, 4, 5];
+
+    expect(fn(v => v === 100, a1)).toEqual([]);
+    expect(a1).toEqual([1, 2, 3, 4, 5]);
+    expect(fn(v => v === 1, a1)).toEqual([1]);
+    expect(a1).toEqual([2, 3, 4, 5]);
 });
