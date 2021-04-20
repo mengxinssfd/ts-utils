@@ -538,3 +538,4 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
     }));
 }
 
+export const root = Function("return this")();
