@@ -53,5 +53,5 @@ export class SetCache<T> extends CacheSup<T> {
     }
 }
 
-export const Stack = isNative(Map) ? SetCache : ListCache;
+export const Stack = isNative(window.Set) ? SetCache : ListCache;
 
