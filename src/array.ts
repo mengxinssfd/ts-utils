@@ -202,7 +202,7 @@ export function findIndexRight(
 
 export function flat<T>(target: readonly T[], depth: number = 1): T[] {
     function innerFlat(innerArr: readonly any[], innerDepth: number = 0): any {
-        if (!isArray(innerArr)||innerDepth++ === depth) return innerArr;
+        if (!isArray(innerArr) || innerDepth++ === depth) return innerArr;
         const result: any[] = [];
         for (let i = 0; i < innerArr.length; i++) {
             const newItem = innerFlat(innerArr[i], innerDepth);
@@ -288,20 +288,60 @@ export function binaryFindIndex<T>(arr: T[], handler: (item: T, index: number, s
     return -1;
 }
 
+export function insertToArray<T>(insert: T, to: number, array: T[], after?: boolean): number
+export function insertToArray<T>(insert: T, findIndexCB: ((v: T, k: number, a: T[]) => boolean), array: T[], after?: boolean): number
+export function insertToArray<T>(inserts: T[], to: number, array: T[], after?: boolean): number
+export function insertToArray<T>(inserts: T[], findIndexCB: ((v: T, k: number, a: T[]) => boolean), array: T[], after?: boolean): number
 /**
  * item插入到数组，返回一个新数组
- * @param insert {any} 插入的item
- * @param to {number} index 要插入的位置
- * @param array {Array} 要插入item的数组
+ * @param insert 插入的item
+ * @param to 要插入的位置
+ * @param array 要插入item的数组
+ * @param after 默认插到前面去
  * @returns Array
  */
-export function insertToArray<T>(insert: T, to: number, array: T[]): T[] {
-    const newArray = array.slice();
-    const end = newArray.splice(to);
-    end.unshift(insert);
-    Array.prototype.push.apply(newArray, end);
-    // newArray.push(...end);
-    return newArray;
+export function insertToArray<T>(insert, to, array: T[], after = false): number {
+    const inserts = castArray(insert);
+    let index = to as number;
+    if (isFunction(to)) {
+        index = findIndex(to as any, array);
+        if (index === -1) {
+            return -1;
+        }
+    }
+    after && index++;
+    array.splice(index, 0, ...inserts);
+    return index;
+}
+
+export function insertToArrayRight<T>(insert, to, array: T[], after = false): number {
+    const inserts = castArray(insert);
+    let index = to as number;
+    if (isFunction(to)) {
+        index = findIndexRight(to as any, array);
+        if (index === -1) {
+            return -1;
+        }
+    }
+    after && index++;
+    array.splice(index, 0, ...inserts);
+    return index;
+}
+
+export function arrayRemoveItem<T>(item: T, array: T[]): void | T {
+    const index = array.indexOf(item);
+    if (index === -1) return;
+    return array.splice(index, 1)[0];
+}
+
+export function arrayRemoveItemsBy<T>(by: (v: T, k: number, a: T[]) => boolean, array: T[]): T[] {
+    const removedItems: T[] = [];
+    forEachRight<T>((v, k, a) => {
+        if (!by(v, k, a as T[])) return;
+        const item = array.splice(k, 1)[0];
+        removedItems.unshift(item);
+    }, array);
+    return removedItems;
 }
 
 export function unique<T>(target: T[], callbackFn?: (value: T, value2: T) => boolean) {
