@@ -168,3 +168,8 @@ export function isIterable(target: any): target is Iterable<any> {
         return false;
     }
 }
+
+export function isPercent(value: string): boolean {
+    const reg = /^\d+(\.\d+)?%$/;
+    return reg.test(value.trim());
+}

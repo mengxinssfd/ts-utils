@@ -257,3 +257,17 @@ test("isNative", function () {
     };
     expect(fn(forEach)).toBeFalsy();
 });
+test("isPercent", function () {
+    const fn = type.isPercent;
+    expect(fn("123$%")).toBeFalsy();
+    expect(fn("3%")).toBeTruthy();
+    expect(fn("3.0%")).toBeTruthy();
+    expect(fn("3.1%")).toBeTruthy();
+    expect(fn("100%")).toBeTruthy();
+    expect(fn("100%")).toBeTruthy();
+    expect(fn("100%1")).toBeFalsy();
+    expect(fn("100% ")).toBeTruthy();
+    expect(fn("10..0% ")).toBeFalsy();
+    expect(fn("10.0.0% ")).toBeFalsy();
+    expect(fn(".1% ")).toBeFalsy();
+});
