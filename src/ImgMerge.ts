@@ -1,16 +1,20 @@
 import {arrayRemoveItem, insertToArrayRight} from "./array";
+import {isImgElement} from "./domType";
 import {assign} from "./object";
 import {isNumber, isPromiseLike} from "./type";
 import {loadImg} from "./dom";
 
+// TODO 加上百分比
 type Style = {
     left?: number;
     right?: number;
     top?: number;
     bottom?: number;
-    width?: number;
-    height?: number;
+    width?: number | "auto";
+    height?: number | "auto";
     zIndex?: number;
+    verticalAlign?: "top" | "middle" | "bottom";
+    horizontalAlign?: "left" | "middle" | "right";
 }
 let id = 0;
 
@@ -99,20 +103,21 @@ export class MergeImg {
             bottom,
             width,
             height,
+            horizontalAlign,
+            verticalAlign,
         } = item.style;
         let dw: number;
         let dh: number;
         let x: number = 0;
         let y: number = 0;
-        dw = width || img.width;
-        dh = height || img.height;
+        dw = width as number || img.width;
+        dh = height as number || img.height;
 
         // 1.如果设定了宽高，则以设定的宽高为准
         // 2.如果设定了left和right，宽=canvas宽 - left - right
         // 3.如果设定了top和bottom，高=canvas高 - top - bottom
         // 5.如果设定了left和right，没有设定top和bottom，也没设定size，则高按比例
         // 6.如果设定了top和bottom，没有设定left和right，也没设定size，则宽按比例
-        // TODO 缺少了自动居中
 
         if (left !== undefined && right !== undefined) {
             x = left;
@@ -138,7 +143,39 @@ export class MergeImg {
             y = this.height - bottom - dh;
         }
 
-        ctx.drawImage(img, x, y, width ?? dw, height ?? dh);
+        if (width === "auto") {
+            dw = ((dh / img.height) || 1) * img.width;
+        }
+        if (height === "auto") {
+            dh = ((dw / img.width) || 1) * img.height;
+        }
+
+        if ((left === undefined || right === undefined) && horizontalAlign) {
+            switch (horizontalAlign) {
+                case "left":
+                    x = 0;
+                    break;
+                case "middle":
+                    x = ~~((this.width - dw) / 2);
+                    break;
+                case "right":
+                    x = this.width - dw;
+            }
+        }
+        if ((top === undefined || bottom === undefined) && verticalAlign) {
+            switch (verticalAlign) {
+                case "top":
+                    y = 0;
+                    break;
+                case "middle":
+                    y = ~~((this.height - dh) / 2);
+                    break;
+                case "bottom":
+                    y = this.height - dh;
+            }
+        }
+
+        ctx.drawImage(img, x, y, dw, dh);
     }
 
     reRender() {
@@ -151,11 +188,14 @@ export class MergeImg {
         this._ctx!.clearRect(0, 0, this.width, this.height);
     }
 
+    async addImg(img: HTMLImageElement, style?: Style): Promise<HTMLImageElement>
     async addImg(url: string, style?: Style): Promise<HTMLImageElement>
     async addImg(promiseImg: Promise<HTMLImageElement>, style?: Style): Promise<HTMLImageElement>
     async addImg(urlOrPromiseImg, style: Style = {}) {
         let img: HTMLImageElement;
-        if (isPromiseLike(urlOrPromiseImg as Promise<HTMLImageElement>)) {
+        if (isImgElement(urlOrPromiseImg)) {
+            img = urlOrPromiseImg;
+        } else if (isPromiseLike(urlOrPromiseImg as Promise<HTMLImageElement>)) {
             img = await urlOrPromiseImg;
         } else {
             img = await loadImg(urlOrPromiseImg);

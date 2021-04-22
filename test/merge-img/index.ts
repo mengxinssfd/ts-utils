@@ -53,3 +53,132 @@ import {MergeImg} from "../../src/ImgMerge";
         }
     });
 })();
+// auto
+(async function () {
+    const mi = await MergeImg.createWithBg("./static/img.png");
+    await mi.addImg("./static/img2.png", {
+        left: 0,
+        top: 0,
+        width: 120,
+        height: "auto",
+        zIndex: 120,
+    });
+    await mi.addImg("./static/img2.png", {
+        left: 0,
+        top: 0,
+        zIndex: 0,
+    });
+    await mi.addImg("./static/img2.png", {
+        left: 0,
+        top: 0,
+        width: "auto",
+        height: "auto",
+        zIndex: 0,
+    });
+    createElement("img", {
+            props: {src: mi.toDataURL()},
+            parent: document.body,
+        },
+    );
+})();
+(async function () {
+    const mi = await MergeImg.createWithBg("./static/img.png");
+    await mi.addImg("./static/img2.png", {
+        left: 0,
+        top: 0,
+        width: "auto",
+        height: 200,
+        zIndex: 0,
+    });
+    createElement("img", {
+            props: {src: mi.toDataURL()},
+            parent: document.body,
+        },
+    );
+})();
+// align
+(async function () {
+    const mi = await MergeImg.createWithBg("https://cn.bing.com/th?id=OHR.MississippiRiver_ZH-CN5718433026_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp");
+    // verticalAlign
+    const img = await mi.addImg("./static/img2.png", {
+        width: "auto",
+        height: 60,
+        verticalAlign: "top",
+        zIndex: 0,
+    });
+    mi.addImg(img, {
+        width: "auto",
+        height: 60,
+        verticalAlign: "middle",
+        zIndex: 0,
+    });
+    mi.addImg(img, {
+        width: "auto",
+        height: 60,
+        verticalAlign: "bottom",
+        zIndex: 0,
+    });
+    // horizontalAlign
+    mi.addImg(img, {
+        width: "auto",
+        height: 50,
+        horizontalAlign: "left",
+        zIndex: 10,
+    });
+    mi.addImg(img, {
+        width: "auto",
+        height: 60,
+        horizontalAlign: "middle",
+        zIndex: 0,
+    });
+    mi.addImg(img, {
+        width: "auto",
+        height: 60,
+        horizontalAlign: "right",
+        zIndex: 0,
+    });
+    // horizontalAlign & verticalAlign
+    mi.addImg(img, {
+        width: "auto",
+        height: 300,
+        horizontalAlign: "middle",
+        verticalAlign: "middle",
+        zIndex: 10,
+    });
+    mi.addImg(img, {
+        width: "auto",
+        height: 50,
+        horizontalAlign: "middle",
+        verticalAlign: "bottom",
+        zIndex: 10,
+    });
+    mi.addImg(img, {
+        width: "auto",
+        height: 50,
+        horizontalAlign: "right",
+        verticalAlign: "middle",
+        zIndex: 10,
+    });
+    mi.addImg(img, {
+        width: "auto",
+        height: 50,
+        horizontalAlign: "right",
+        verticalAlign: "bottom",
+        zIndex: 10,
+    });
+    createElement("img", {
+            props: {
+                src: mi.toDataURL(),
+                style: {
+                    display: "block",
+                },
+            },
+            parent: createElement("div", {
+                props: {
+                    innerText: "align",
+                },
+                parent: document.body,
+            }),
+        },
+    );
+})();
