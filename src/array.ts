@@ -344,11 +344,11 @@ export function arrayRemoveItemsBy<T>(by: (v: T, k: number, a: T[]) => boolean, 
     return removedItems;
 }
 
-export function unique<T>(target: T[], callbackFn?: (value: T, value2: T) => boolean) {
+export function unique<T>(target: T[], isRepeatFn?: (value: T, value2: T) => boolean) {
     if (!target.length) return target;
-    const fn = callbackFn || ((v1, v2) => v1 === v2);
-    const result: T[] = [];
-    for (let i = 0; i < target.length; i++) {
+    const fn = isRepeatFn || ((v1, v2) => v1 === v2);
+    const result: T[] = [target[0]];
+    for (let i = 1; i < target.length; i++) {
         const item = target[i];
         if (result.some(resItem => fn(resItem, item))) continue;
         result.push(item);

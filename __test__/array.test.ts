@@ -333,6 +333,13 @@ test("insertToArray", () => {
 test("unique", () => {
     const fn = arr.unique;
     expect(fn([1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1])).toEqual([1, 2, 3, 4]);
+    expect(fn([1, 2, 3, 4])).toEqual([1, 2, 3, 4]);
+    expect(fn([NaN, null, undefined, ""])).toEqual([NaN, null, undefined, ""]);
+    expect(fn([undefined, undefined, ""])).toEqual([undefined, ""]);
+    expect(fn([NaN, NaN])).toEqual([NaN, NaN]);
+    expect(fn([NaN, NaN], (a, b) => {
+        return Number.isNaN(a) && Number.isNaN(b);
+    })).toEqual([NaN]);
     const a = {value: 1};
     const b = {value: 2};
     const c = {value: 3};

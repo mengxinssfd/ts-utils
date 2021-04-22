@@ -303,6 +303,7 @@ export function createObj(entries: Array<[string, any]>): { [k: string]: any } {
  * @param obj
  */
 export function objKeys<T extends object, K extends keyof T>(obj: T): K[] {
+    // Object.keys es5可以使用
     return reduceObj(obj, (init, v, k) => {
         init.push(k as K);
         return init;
@@ -319,8 +320,6 @@ export function objValues<T extends object, K extends keyof T, V extends T[K]>(o
         return init;
     }, [] as V[]);
 }
-
-objKeys({a: 123, b: "", c: 111});
 
 /**
  * Object.entries
