@@ -232,6 +232,7 @@ export function createObj(entries) {
  * @param obj
  */
 export function objKeys(obj) {
+    // Object.keys es5可以使用
     return reduceObj(obj, (init, v, k) => {
         init.push(k);
         return init;
@@ -247,7 +248,6 @@ export function objValues(obj) {
         return init;
     }, []);
 }
-objKeys({ a: 123, b: "", c: 111 });
 /**
  * Object.entries
  * @param obj

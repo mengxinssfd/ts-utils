@@ -306,12 +306,12 @@ export function arrayRemoveItemsBy(by, array) {
     }, array);
     return removedItems;
 }
-export function unique(target, callbackFn) {
+export function unique(target, isRepeatFn) {
     if (!target.length)
         return target;
-    const fn = callbackFn || ((v1, v2) => v1 === v2);
-    const result = [];
-    for (let i = 0; i < target.length; i++) {
+    const fn = isRepeatFn || ((v1, v2) => v1 === v2);
+    const result = [target[0]];
+    for (let i = 1; i < target.length; i++) {
         const item = target[i];
         if (result.some(resItem => fn(resItem, item)))
             continue;

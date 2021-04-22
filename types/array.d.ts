@@ -53,7 +53,7 @@ export declare function insertToArray<T>(inserts: T[], findIndexCB: ((v: T, k: n
 export declare function insertToArrayRight<T>(insert: any, to: any, array: T[], after?: boolean): number;
 export declare function arrayRemoveItem<T>(item: T, array: T[]): void | T;
 export declare function arrayRemoveItemsBy<T>(by: (v: T, k: number, a: T[]) => boolean, array: T[]): T[];
-export declare function unique<T>(target: T[], callbackFn?: (value: T, value2: T) => boolean): T[];
+export declare function unique<T>(target: T[], isRepeatFn?: (value: T, value2: T) => boolean): T[];
 /**
  * @example
  * castArray([1]); // [1]

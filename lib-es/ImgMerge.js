@@ -1,5 +1,6 @@
 import { __awaiter } from "tslib";
 import { arrayRemoveItem, insertToArrayRight } from "./array";
+import { isImgElement } from "./domType";
 import { assign } from "./object";
 import { isNumber, isPromiseLike } from "./type";
 import { loadImg } from "./dom";
@@ -76,7 +77,7 @@ export class MergeImg {
             throw new Error();
         const ctx = this._ctx;
         const img = item.content;
-        const { left, top, right, bottom, width, height, } = item.style;
+        const { left, top, right, bottom, width, height, horizontalAlign, verticalAlign, } = item.style;
         let dw;
         let dh;
         let x = 0;
@@ -88,7 +89,6 @@ export class MergeImg {
         // 3.如果设定了top和bottom，高=canvas高 - top - bottom
         // 5.如果设定了left和right，没有设定top和bottom，也没设定size，则高按比例
         // 6.如果设定了top和bottom，没有设定left和right，也没设定size，则宽按比例
-        // TODO 缺少了自动居中
         if (left !== undefined && right !== undefined) {
             x = left;
             if (width === undefined) {
@@ -115,7 +115,37 @@ export class MergeImg {
         else if (bottom !== undefined) {
             y = this.height - bottom - dh;
         }
-        ctx.drawImage(img, x, y, width !== null && width !== void 0 ? width : dw, height !== null && height !== void 0 ? height : dh);
+        if (width === "auto") {
+            dw = ((dh / img.height) || 1) * img.width;
+        }
+        if (height === "auto") {
+            dh = ((dw / img.width) || 1) * img.height;
+        }
+        if ((left === undefined || right === undefined) && horizontalAlign) {
+            switch (horizontalAlign) {
+                case "left":
+                    x = 0;
+                    break;
+                case "middle":
+                    x = ~~((this.width - dw) / 2);
+                    break;
+                case "right":
+                    x = this.width - dw;
+            }
+        }
+        if ((top === undefined || bottom === undefined) && verticalAlign) {
+            switch (verticalAlign) {
+                case "top":
+                    y = 0;
+                    break;
+                case "middle":
+                    y = ~~((this.height - dh) / 2);
+                    break;
+                case "bottom":
+                    y = this.height - dh;
+            }
+        }
+        ctx.drawImage(img, x, y, dw, dh);
     }
     reRender() {
         console.count();
@@ -128,7 +158,10 @@ export class MergeImg {
     addImg(urlOrPromiseImg, style = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             let img;
-            if (isPromiseLike(urlOrPromiseImg)) {
+            if (isImgElement(urlOrPromiseImg)) {
+                img = urlOrPromiseImg;
+            }
+            else if (isPromiseLike(urlOrPromiseImg)) {
                 img = yield urlOrPromiseImg;
             }
             else {

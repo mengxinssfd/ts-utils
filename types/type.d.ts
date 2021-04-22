@@ -24,3 +24,4 @@ export declare function isEqual(a: any, b: any): boolean;
 export declare function objectIsEqual(obj1: object, obj2: object): boolean;
 export declare function isSameType(a: any, b: any): boolean;
 export declare function isIterable(target: any): target is Iterable<any>;
+export declare function isPercent(value: string): boolean;

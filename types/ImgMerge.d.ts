@@ -3,9 +3,11 @@ declare type Style = {
     right?: number;
     top?: number;
     bottom?: number;
-    width?: number;
-    height?: number;
+    width?: number | "auto";
+    height?: number | "auto";
     zIndex?: number;
+    verticalAlign?: "top" | "middle" | "bottom";
+    horizontalAlign?: "left" | "middle" | "right";
 };
 declare class LayerElement {
     style: Style;
@@ -26,6 +28,7 @@ export declare class MergeImg {
     render(item: LayerElement): void;
     reRender(): void;
     clear(): void;
+    addImg(img: HTMLImageElement, style?: Style): Promise<HTMLImageElement>;
     addImg(url: string, style?: Style): Promise<HTMLImageElement>;
     addImg(promiseImg: Promise<HTMLImageElement>, style?: Style): Promise<HTMLImageElement>;
     toDataURL(type?: string, quality?: any): string;
