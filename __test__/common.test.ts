@@ -420,3 +420,9 @@ test("throttle", async () => {
     th();
     expect(interval).toBe(0);
 });*/
+test("removeSlashByNum", () => {
+    const fn = cm.removeStrByNum;
+    expect(fn("123/456/78", 2, "\/")).toBe("123/45678");
+    expect(fn("123,456,,78", 2, ",")).toBe("123,456,78");
+    expect(fn("hello thank you i m fine", 4, " ")).toBe("hello thank you im fine");
+});
