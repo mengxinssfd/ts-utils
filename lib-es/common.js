@@ -487,3 +487,15 @@ export function promiseAny(list) {
     }));
 }
 export const root = Function("return this")();
+/**
+ * 从字符串中删除指定字符串(from)中重复的第n(num)个字符串(str)
+ * @example
+ * removeSlashByNum("123/456/78", 2, "\/"); // "123/45678"
+ * @param from
+ * @param num
+ * @param removeStr
+ */
+export function removeStrByNum(from, num, removeStr) {
+    let times = 1;
+    return String(from).replace(new RegExp(removeStr, "g"), v => times++ === num ? "" : v);
+}

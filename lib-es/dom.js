@@ -142,13 +142,16 @@ export function loadImg(url) {
  */
 export function loadScript(url) {
     return new Promise(function (resolve, reject) {
-        const script = document.createElement("script");
-        script.onload = () => resolve();
-        script.onabort = script.onerror = (ev) => {
-            reject(ev);
-        };
-        script.src = url;
-        document.body.appendChild(script);
+        const errorFn = (ev) => reject(ev);
+        const script = createElement("script", {
+            props: {
+                onload: () => resolve(script),
+                onabort: errorFn,
+                onerror: errorFn,
+                src: url,
+            },
+            parent: document.body,
+        });
     });
 }
 /**
@@ -186,9 +189,9 @@ export function noScroll(el) {
  * @param tagName
  * @param params
  */
-export function createElement(tagName, params = {}) {
+export function createHtmlElement(tagName, params = {}) {
     const el = document.createElement(tagName);
-    const { attrs = {}, props = {} } = params;
+    const { attrs = {}, props = {}, parent, children } = params;
     forEachObj(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
@@ -203,8 +206,7 @@ export function createElement(tagName, params = {}) {
         const isObjValue = typeof v === "object";
         el.setAttribute(k, isObjValue ? JSON.stringify(v) : v);
     });
-    const { parent, children } = params;
-    if (parent !== false) {
+    if (parent !== null) {
         if (isDom(parent)) {
             parent.appendChild(el);
         }
@@ -217,6 +219,7 @@ export function createElement(tagName, params = {}) {
     }
     return el;
 }
+export const createElement = createHtmlElement;
 /**
  * 获取文字缩放大小
  * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效
@@ -225,9 +228,9 @@ export function createElement(tagName, params = {}) {
  */
 export function getFontScale(reverse = false) {
     const fontSize = 10;
-    const div = document.createElement("div");
-    document.body.appendChild(div);
-    div.style.fontSize = 10 + "px";
+    const div = createElement("div", {
+        props: { style: { fontSize: fontSize + "px" } },
+    });
     const realFontSize = getComputedStyle(div).fontSize;
     document.body.removeChild(div);
     if (reverse) {

@@ -1,9 +1,8 @@
 import { __awaiter } from "tslib";
 import { arrayRemoveItem, insertToArrayRight } from "./array";
 import { isImgElement } from "./domType";
-import { assign } from "./object";
 import { isNumber, isPromiseLike } from "./type";
-import { loadImg } from "./dom";
+import { loadImg, createElement } from "./dom";
 let id = 0;
 class LayerElement {
     constructor(style, content) {
@@ -45,17 +44,21 @@ export class MergeImg {
         this.height = height;
         this.layer = new Layer();
         const parent = document.body;
-        const canvas = document.createElement("canvas");
+        const canvas = createElement("canvas", {
+            props: {
+                style: {
+                    height: height + "px",
+                    width: width + "px",
+                    position: "fixed",
+                    left: "-10000px",
+                },
+                width,
+                height,
+            },
+            parent,
+        });
         this.canvas = canvas;
         this.parent = parent;
-        assign(canvas.style, {
-            height: height + "px",
-            width: width + "px",
-            position: "fixed",
-            left: "-10000px",
-        });
-        canvas.width = width;
-        canvas.height = height;
         this._ctx = canvas.getContext("2d");
         parent.appendChild(canvas);
     }

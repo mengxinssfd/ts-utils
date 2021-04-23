@@ -35,7 +35,7 @@ export declare function loadImg(url: string): Promise<HTMLImageElement>;
  * 手动添加script
  * @param url
  */
-export declare function loadScript(url: string): Promise<void>;
+export declare function loadScript(url: string): Promise<HTMLScriptElement>;
 /**
  * @param el
  * @return {}
@@ -47,16 +47,17 @@ export declare function noScroll(el: Window | HTMLElement | string): () => void;
  * @param tagName
  * @param params
  */
-export declare function createElement<K extends keyof HTMLElementTagNameMap, R extends HTMLElementTagNameMap[K]>(tagName: K, params?: {
+export declare function createHtmlElement<K extends keyof HTMLElementTagNameMap, R extends HTMLElementTagNameMap[K]>(tagName: K, params?: {
     attrs?: {
         [k: string]: any;
     };
     props?: {
         style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>>;
     } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
-    parent?: HTMLElement | false;
+    parent?: HTMLElement | null;
     children?: HTMLElement[];
 }): R;
+export declare const createElement: typeof createHtmlElement;
 /**
  * 获取文字缩放大小
  * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效

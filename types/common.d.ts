@@ -116,3 +116,12 @@ export declare function createEnumByObj<T extends object, K extends keyof T, O e
 };
 export declare function promiseAny<T>(list: Promise<T>[]): Promise<T>;
 export declare const root: any;
+/**
+ * 从字符串中删除指定字符串(from)中重复的第n(num)个字符串(str)
+ * @example
+ * removeSlashByNum("123/456/78", 2, "\/"); // "123/45678"
+ * @param from
+ * @param num
+ * @param removeStr
+ */
+export declare function removeStrByNum(from: string, num: number, removeStr: string): string;
