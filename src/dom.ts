@@ -157,15 +157,18 @@ export function loadImg(url: string): Promise<HTMLImageElement> {
  * 手动添加script
  * @param url
  */
-export function loadScript(url: string): Promise<void> {
+export function loadScript(url: string): Promise<HTMLScriptElement> {
     return new Promise(function (resolve, reject) {
-        const script = document.createElement("script");
-        script.onload = () => resolve();
-        script.onabort = script.onerror = (ev) => {
-            reject(ev);
-        };
-        script.src = url;
-        document.body.appendChild(script);
+        const errorFn = (ev) => reject(ev);
+        const script = createElement("script", {
+            props: {
+                onload: () => resolve(script),
+                onabort: errorFn,
+                onerror: errorFn,
+                src: url,
+            },
+            parent: document.body,
+        });
     });
 }
 
@@ -203,18 +206,18 @@ export function noScroll(el: Window | HTMLElement | string) {
  * @param tagName
  * @param params
  */
-export function createElement<K extends keyof HTMLElementTagNameMap,
+export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
     R extends HTMLElementTagNameMap[K]>(
     tagName: K,
     params: {
         attrs?: { [k: string]: any };
         props?: { style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>> } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
-        parent?: HTMLElement | false;
+        parent?: HTMLElement | null;
         children?: HTMLElement[]
     } = {},
 ): R {
     const el = document.createElement(tagName);
-    const {attrs = {}, props = {}} = params;
+    const {attrs = {}, props = {}, parent, children} = params;
     forEachObj(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
@@ -229,8 +232,7 @@ export function createElement<K extends keyof HTMLElementTagNameMap,
         const isObjValue = typeof v === "object";
         el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
     });
-    const {parent, children} = params;
-    if (parent !== false) {
+    if (parent !== null) {
         if (isDom(parent)) {
             parent.appendChild(el);
         } else {
@@ -243,6 +245,8 @@ export function createElement<K extends keyof HTMLElementTagNameMap,
     return el as any;
 }
 
+export const createElement = createHtmlElement;
+
 /**
  * 获取文字缩放大小
  * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效
@@ -251,9 +255,9 @@ export function createElement<K extends keyof HTMLElementTagNameMap,
  */
 export function getFontScale(reverse = false) {
     const fontSize = 10;
-    const div = document.createElement("div");
-    document.body.appendChild(div);
-    div.style.fontSize = 10 + "px";
+    const div = createElement("div", {
+        props: {style: {fontSize: fontSize + "px"}},
+    });
     const realFontSize = getComputedStyle(div).fontSize;
     document.body.removeChild(div);
     if (reverse) {

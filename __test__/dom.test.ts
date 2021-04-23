@@ -157,4 +157,19 @@ test("createElement", () => {
     });
     expect(child.parentNode).toBe(parent);
     expect(parent.getElementsByTagName("div")[1]).toBe(child);
+    const d = fn("div", {
+        props: {
+            className: "body-child",
+            id: "body-child",
+        },
+    });
+    expect(d.parentNode).toBe(document.body);
+    const d2 = fn("div", {
+        props: {
+            className: "not-body-child",
+            id: "not-body-child",
+        },
+        parent: null,
+    });
+    expect(d2.parentNode).toBe(null);
 });

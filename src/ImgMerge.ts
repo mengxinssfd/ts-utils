@@ -1,10 +1,9 @@
 import {arrayRemoveItem, insertToArrayRight} from "./array";
 import {isImgElement} from "./domType";
-import {assign} from "./object";
 import {isNumber, isPromiseLike} from "./type";
-import {loadImg} from "./dom";
+import {loadImg, createElement} from "./dom";
 
-// TODO 加上百分比
+// TODO 加上百分比和rem
 type Style = {
     left?: number;
     right?: number;
@@ -64,17 +63,21 @@ export class MergeImg {
 
     constructor(readonly width = 0, readonly height = 0) {
         const parent = document.body;
-        const canvas = document.createElement("canvas");
+        const canvas = createElement("canvas", {
+            props: {
+                style: {
+                    height: height + "px",
+                    width: width + "px",
+                    position: "fixed",
+                    left: "-10000px",
+                },
+                width,
+                height,
+            },
+            parent,
+        });
         this.canvas = canvas;
         this.parent = parent;
-        assign(canvas.style, {
-            height: height + "px",
-            width: width + "px",
-            position: "fixed",
-            left: "-10000px",
-        });
-        canvas.width = width;
-        canvas.height = height;
         this._ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
         parent.appendChild(canvas);
     }

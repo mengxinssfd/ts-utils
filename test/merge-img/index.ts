@@ -1,6 +1,11 @@
-import {createElement} from "../../src/dom";
+import {createElement, loadScript} from "../../src/dom";
 import {MergeImg} from "../../src/ImgMerge";
 
+declare const Vue: any;
+(async function () {
+    const script = await loadScript("https://cdn.bootcdn.net/ajax/libs/vue/3.0.11/vue.global.js");
+    console.log(script, Vue);
+})();
 /*(async function () {
     const mi = await MergeImg.createWithBg("./static/img.png");
     console.log(mi);
