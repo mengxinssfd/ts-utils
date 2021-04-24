@@ -69,9 +69,6 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(call
     } as CB;
 }
 
-export function timeDown() {
-
-}
 
 /**
  * 节流函数
