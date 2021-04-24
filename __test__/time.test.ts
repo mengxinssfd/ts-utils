@@ -203,3 +203,56 @@ test("getMonthTheLastWeekDay", async () => {
     expect(fn(new Date("2021-5"), 5).getDate()).toBe(28);
     expect(fn(new Date("2021-8"), 4).getDate()).toBe(26);
 });
+test("getMonthTheNthWeekday", async () => {
+    const fn = t.getMonthTheNthWeekday;
+    // +
+    expect(fn(new Date("2021-4"), 1, 4)!.getDate()).toBe(1);
+    expect(fn(new Date("2021-4"), 1, 5)!.getDate()).toBe(2);
+    expect(fn(new Date("2021-4"), 1, 6)!.getDate()).toBe(3);
+    expect(fn(new Date("2021-4"), 1, 0)!.getDate()).toBe(4);
+    expect(fn(new Date("2021-4"), 1, 7)!.getDate()).toBe(4);
+    expect(fn(new Date("2021-4"), 1, 7)!.getDate()).toBe(4);
+    expect(fn(new Date("2021-4"), 1, 1)!.getDate()).toBe(5);
+    expect(fn(new Date("2021-4"), 1, 2)!.getDate()).toBe(6);
+    expect(fn(new Date("2021-4"), 1, 3)!.getDate()).toBe(7);
+    expect(fn(new Date("2021-4"), 2, 4)!.getDate()).toBe(8);
+    expect(fn(new Date("2021-4"), 2, 5)!.getDate()).toBe(9);
+    expect(fn(new Date("2021-4"), 2, 7)!.getDate()).toBe(11);
+    expect(fn(new Date("2021-4"), 4, 3)!.getDate()).toBe(28);
+    expect(fn(new Date("2021-3"), 1, 1)!.getDate()).toBe(1);
+    expect(fn(new Date("2021-3"), 4, 7)!.getDate()).toBe(28);
+
+    // -
+    // 周日
+    expect(fn(new Date("2021-1"), -1)!.getDate()).toBe(31);
+    expect(fn(new Date("2021-2"), -1)!.getDate()).toBe(28);
+    expect(fn(new Date("2021-3"), -1)!.getDate()).toBe(28);
+    expect(fn(new Date("2021-4"), -1)!.getDate()).toBe(25);
+    expect(fn(new Date("2021-5"), -1)!.getDate()).toBe(30);
+    expect(fn(new Date("2021-6"), -1)!.getDate()).toBe(27);
+    expect(fn(new Date("2021-7"), -1)!.getDate()).toBe(25);
+    expect(fn(new Date("2021-8"), -1)!.getDate()).toBe(29);
+    expect(fn(new Date("2021-9"), -1)!.getDate()).toBe(26);
+    expect(fn(new Date("2021-10"), -1)!.getDate()).toBe(31);
+    expect(fn(new Date("2021-11"), -1)!.getDate()).toBe(28);
+    expect(fn(new Date("2021-12"), -1)!.getDate()).toBe(26);
+
+    expect(fn(new Date("2021-4"), 1 - 6, 4)!.getDate()).toBe(1);
+    expect(fn(new Date("2021-4"), 1 - 6, 5)!.getDate()).toBe(2);
+    expect(fn(new Date("2021-4"), 1 - 6, 6)).toBe(null);
+    expect(fn(new Date("2021-4"), -4, 6)!.getDate()).toBe(3);
+    expect(fn(new Date("2021-4"), 1 - 6, 7)).toBe(null);
+    expect(fn(new Date("2021-4"), 1 - 6, 0)).toBe(null);
+    expect(fn(new Date("2021-4"), -4, 7)!.getDate()).toBe(4);
+    expect(fn(new Date("2021-4"), -4, 0)!.getDate()).toBe(4);
+    expect(fn(new Date("2021-4"), 1 - 5, 1)!.getDate()).toBe(5);
+    expect(fn(new Date("2021-4"), 1 - 5, 2)!.getDate()).toBe(6);
+    expect(fn(new Date("2021-4"), 1 - 5, 3)!.getDate()).toBe(7);
+    expect(fn(new Date("2021-4"), 2 - 6, 4)!.getDate()).toBe(8);
+    expect(fn(new Date("2021-4"), 2 - 6, 5)!.getDate()).toBe(9);
+    expect(fn(new Date("2021-4"), 2 - 5, 7)!.getDate()).toBe(11);
+    expect(fn(new Date("2021-4"), 4 - 5, 3)!.getDate()).toBe(28);
+    expect(fn(new Date("2021-3"), 1 - 6, 1)!.getDate()).toBe(1);
+    expect(fn(new Date("2021-3"), 4 - 5, 7)!.getDate()).toBe(28);
+    expect(fn(new Date("2021-4"), 4 - 5, 5)!.getDate()).toBe(30);
+});
