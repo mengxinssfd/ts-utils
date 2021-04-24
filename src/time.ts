@@ -203,6 +203,17 @@ export function createTimeCountDown(countDown: number): () => number {
 }
 
 /**
+ * 获取某月最后一天的date
+ * @param month
+ */
+export function getTheLastDayOfAMonth(month: Date): Date {
+    const lastDate = new Date(month.getTime());
+    lastDate.setMonth(month.getMonth() + 1);
+    lastDate.setDate(0);
+    return lastDate;
+}
+
+/**
  * 获取指定某年月份(month)第n(nth)个星期几(weekday)的Date
  * @param month
  * @param nth nth为负的时候从月末开始倒数
