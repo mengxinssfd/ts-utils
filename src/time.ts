@@ -222,9 +222,7 @@ export function getTheLastDayOfAMonth(month: Date): Date {
 export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
     if (!nth || weekday < 0 || weekday > 7) return null;
     const monthTime = month.getTime();
-    const lastDate = new Date(monthTime);
-    lastDate.setMonth(month.getMonth() + 1);
-    lastDate.setDate(0);
+    const lastDate = getTheLastDayOfAMonth(month);
 
     let date: Date;
     if (nth > 0) {
