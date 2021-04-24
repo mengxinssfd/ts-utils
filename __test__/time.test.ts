@@ -161,47 +161,15 @@ test("createTimeCountDown", async () => {
     expect(t1).toBeLessThanOrEqual(down - 200);
     expect(t1).toBeGreaterThanOrEqual(down - 300);
 });
-test("getMonthTheLastSundayDate", async () => {
-    const fn = t.getMonthTheLastSundayDate;
-    // 周日
-    expect(fn(new Date("2021-1")).getDate()).toBe(31);
-    expect(fn(new Date("2021-2")).getDate()).toBe(28);
-    expect(fn(new Date("2021-3")).getDate()).toBe(28);
-    expect(fn(new Date("2021-4")).getDate()).toBe(25);
-    expect(fn(new Date("2021-5")).getDate()).toBe(30);
-    expect(fn(new Date("2021-6")).getDate()).toBe(27);
-    expect(fn(new Date("2021-7")).getDate()).toBe(25);
-    expect(fn(new Date("2021-8")).getDate()).toBe(29);
-    expect(fn(new Date("2021-9")).getDate()).toBe(26);
-    expect(fn(new Date("2021-10")).getDate()).toBe(31);
-    expect(fn(new Date("2021-11")).getDate()).toBe(28);
-    expect(fn(new Date("2021-12")).getDate()).toBe(26);
-    // 周1
-    /* expect(fn(new Date(), 1).getDate()).toBe(26);
-     expect(fn(new Date("2021-2"), 1).getDate()).toBe(22);
-     expect(fn(new Date("2021-5"), 1).getDate()).toBe(31);*/
-});
-test("getMonthTheLastWeekDay", async () => {
-    const fn = t.getMonthTheLastWeekDay;
-    // 周日
-    expect(fn(new Date("2021-1")).getDate()).toBe(31);
-    expect(fn(new Date("2021-2")).getDate()).toBe(28);
-    expect(fn(new Date("2021-3")).getDate()).toBe(28);
-    expect(fn(new Date("2021-4")).getDate()).toBe(25);
-    expect(fn(new Date("2021-5")).getDate()).toBe(30);
-    expect(fn(new Date("2021-6")).getDate()).toBe(27);
-    expect(fn(new Date("2021-7")).getDate()).toBe(25);
-    expect(fn(new Date("2021-8")).getDate()).toBe(29);
-    expect(fn(new Date("2021-9")).getDate()).toBe(26);
-    expect(fn(new Date("2021-10")).getDate()).toBe(31);
-    expect(fn(new Date("2021-11")).getDate()).toBe(28);
-    expect(fn(new Date("2021-12")).getDate()).toBe(26);
-    // 周1
-    expect(fn(new Date(), 1).getDate()).toBe(26);
-    expect(fn(new Date("2021-2"), 1).getDate()).toBe(22);
-    expect(fn(new Date("2021-5"), 1).getDate()).toBe(31);
-    expect(fn(new Date("2021-5"), 5).getDate()).toBe(28);
-    expect(fn(new Date("2021-8"), 4).getDate()).toBe(26);
+test("getMonthTheNthWeekday", async () => {
+    // const fn = t.getMonthTheLastWeekDay;
+    const fn = t.getMonthTheNthWeekday;
+
+    expect(fn(new Date(), -1,1)!.getDate()).toBe(26);
+    expect(fn(new Date("2021-2"), -1,1)!.getDate()).toBe(22);
+    expect(fn(new Date("2021-5"), -1,1)!.getDate()).toBe(31);
+    expect(fn(new Date("2021-5"), -1,5)!.getDate()).toBe(28);
+    expect(fn(new Date("2021-8"), -1,4)!.getDate()).toBe(26);
 });
 test("getMonthTheNthWeekday", async () => {
     const fn = t.getMonthTheNthWeekday;
@@ -221,6 +189,10 @@ test("getMonthTheNthWeekday", async () => {
     expect(fn(new Date("2021-4"), 4, 3)!.getDate()).toBe(28);
     expect(fn(new Date("2021-3"), 1, 1)!.getDate()).toBe(1);
     expect(fn(new Date("2021-3"), 4, 7)!.getDate()).toBe(28);
+    expect(fn(new Date("2021-3"), 5, 7)).toBe(null);
+    expect(fn(new Date("2021-3"), 4, 8)).toBe(null);
+    expect(fn(new Date("2021-3"), 4, -1)).toBe(null);
+    expect(fn(new Date("2021-3"), 4, -1)).toBe(null);
 
     // -
     // 周日
