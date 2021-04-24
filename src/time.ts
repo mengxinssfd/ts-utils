@@ -233,3 +233,47 @@ export function getMonthTheLastWeekDay(month: Date, weekDay = 0) {
     date.setDate(date.getDate() + dis);
     return date;
 }
+
+/**
+ * 获取指定某年月份(month)第n(nth)个星期几(weekday)的Date
+ * @param month
+ * @param nth
+ * @param weekday
+ */
+export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
+    if (!nth || weekday < 0 || weekday > 7) return null;
+    const monthTime = month.getTime();
+    const lastDate = new Date(monthTime);
+    lastDate.setMonth(month.getMonth() + 1);
+    lastDate.setDate(0);
+
+    let date: Date;
+    if (nth > 0) {
+        date = new Date(monthTime);
+        date.setDate(1);
+    } else {
+        date = new Date(lastDate.getTime());
+    }
+    const day = date.getDay();
+    weekday = weekday === 0 ? 7 : weekday;
+    const dis = weekday - day;
+    let dayDate: number;
+    if (nth > 0) {
+        if (dis >= 0) {
+            nth--;
+        }
+        dayDate = nth * 7 + 1 + dis;
+    } else {
+        if (dis <= 0) {
+            nth++;
+        }
+        dayDate = nth * 7 + date.getDate() + dis;
+    }
+
+    if (dayDate > lastDate.getDate() || dayDate < 0) {
+        return null;
+    }
+    date.setDate(dayDate);
+    return date;
+
+}
