@@ -57,6 +57,22 @@ test("str2Date", () => {
     expect(fn("2020-02-02 12:11:10", "mm")).toBe("11");
     expect(fn("2020-02-02 12:11:10")).toBe("2020-02-02 12:11:10");
 });
+test("getDateFromStr", () => {
+    const fn = t.getDateFromStr;
+    [
+        "2020-02-02 10:10:10",
+        "2020/02/02 10:10:10",
+        "2020/02-02-10-10-10",
+        "2020/02/02 10/10/10",
+        "2020/02/02/10/10/10",
+    ].forEach((time: string) => {
+        expect(t.formatDate.call(fn(time))).toBe("2020-02-02 10:10:10");
+    });
+    expect(fn("")).toBe(null);
+    expect(fn("123cvsd213")).toBe(null);
+    expect(fn("2020l02/02/10/10/10")).toBe(null);
+    expect(fn(undefined as any)).toBe(null);
+});
 test("formatDate", () => {
     const date1 = t.getDateFromStr("2020-02-02 10:10:10");
     expect(t.formatDate.call(date1, "yyyy-MM-dd")).toBe("2020-02-02");
