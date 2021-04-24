@@ -155,7 +155,7 @@ Date.prototype.format = formatDate;
  */
 export function getDateFromStr(date: string): Date | null {
     // 检测非数字、非/、非:、非-
-    if (/[^\/^\d^:^ ^-]/.test(date)) return null; // 去除不符合规范的字符串
+    if (!date || /[^\/\d: -]/.test(date)) return null; // 去除不符合规范的字符串
     const arr: number[] = date.split(/[- :\/]/).map(item => Number(item));
     if (arr.length < 6) {
         for (let i = arr.length; i < 6; i++) {
@@ -217,7 +217,7 @@ export function getMonthTheLastSundayDate(month: Date) {
 export function getMonthTheLastWeekDay(month: Date, weekDay = 0) {
     const date = new Date(month);
     date.setMonth(month.getMonth() + 1); // 下个月
-    date.setDate(-6); // 月份最后一天
+    date.setDate(-6); // 月份最后7天
     const day = date.getDay();
     if (day === weekDay) {
         return date;
