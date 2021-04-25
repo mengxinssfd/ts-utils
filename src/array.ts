@@ -373,20 +373,6 @@ export function insertToArray<T>(
     return index;
 }
 
-export function insertToArrayRight<T>(insert, to, array: T[], after = false): number {
-    const inserts = castArray(insert);
-    let index = to as number;
-    if (isFunction(to)) {
-        index = findIndexRight(to as any, array);
-        if (index === -1) {
-            return -1;
-        }
-    }
-    after && index++;
-    array.splice(index, 0, ...inserts);
-    return index;
-}
-
 export function arrayRemoveItem<T>(item: T, array: T[]): void | T {
     const index = array.indexOf(item);
     if (index === -1) return;
