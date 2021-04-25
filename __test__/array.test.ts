@@ -85,6 +85,8 @@ test("mapAsync", async () => {
     ];
     const res = await fn((v) => v(), asyncList);
     expect(res).toEqual([1, 2, 3]);
+    const res2 = await fn.call(asyncList, (v: any) => v());
+    expect(res2).toEqual([1, 2, 3]);
 });
 test("forEachRight", () => {
     const fn = arr.forEachRight;
@@ -108,7 +110,7 @@ test("forEachRight", () => {
         if (k === 10) return false;
         return;
     }, arr.createArray({len: 20}));
-    expect(result).toEqual(arr.createArray({start: 10, end: 20}).reduce((obj, v, k) => {
+    expect(result).toEqual(arr.createArray({start: 10, end: 20}).reduce((obj, v) => {
         obj[v] = v;
         return obj;
     }, {}));
@@ -171,7 +173,7 @@ test("createArray", () => {
 });
 test("filter", () => {
     // 未找到
-    expect(arr.filter((v, k, arr) => {
+    expect(arr.filter((v) => {
         return v > 10;
     }, [1, 2, 3, 4, 5, 6, 7, 8])).toEqual([]);
     // 找到
@@ -358,7 +360,7 @@ test("binaryFindIndex", () => {
     expect(res.index).toBe(maxIndex);
 
     // cover
-    expect(arr.binaryFindIndex([1], (item, index, start, end) => {
+    expect(arr.binaryFindIndex([1], (item) => {
         // console.log(index, start, end);
         return 0 - item;
     })).toBe(-1);
@@ -373,25 +375,54 @@ test("insertToArray", () => {
     const arr4 = [1, 2, 3, 4];
     const arr5 = [1, 2, 4, 5];
     const arr6 = [1, 2, 4, 5];
+    const arr7 = [1, 2, 4, 5];
     expect(fn(5, 1, arr1)).toBe(1);
     expect(arr1).toEqual([1, 5, 2, 3, 4]);
-    expect(fn(5, 1, arr2, true)).toBe(2);
+    expect(fn([6, 7], 100, arr1)).toBe(5);
+    expect(arr1).toEqual([1, 5, 2, 3, 4, 6, 7]);
+
+    expect(fn(5, 1, arr2, {after: true})).toBe(2);
     expect(arr2).toEqual([1, 2, 5, 3, 4]);
+    expect(fn(0, -1, arr2)).toBe(0);
+    expect(arr2).toEqual([0, 1, 2, 5, 3, 4]);
+    expect(fn(6, 100, arr2, {after: true})).toBe(6);
+    expect(arr2).toEqual([0, 1, 2, 5, 3, 4, 6]);
+    expect(fn(6, (v) => v === 100, arr2)).toBe(-1);
+    expect(arr2).toEqual([0, 1, 2, 5, 3, 4, 6]);
+
     expect(fn(5, 0, arr3)).toBe(0);
     expect(arr3).toEqual([5, 1, 2, 3, 4]);
     expect(fn(5, 100, arr4)).toBe(4);
-    expect(arr4).toEqual([1, 2, 3, 4, 5]);
+    expect(fn(6, 100, arr4)).toBe(5);
+    expect(arr4).toEqual([1, 2, 3, 4, 5, 6]);
 
-    expect(fn(3, (v, k) => {
+    expect(fn(3, (v) => {
         return v === 2;
     }, arr5)).toBe(1);
     expect(arr5).toEqual([1, 3, 2, 4, 5]);
-    expect(fn(3, (v, k) => {
+    expect(fn(3, (v) => {
         return v > 2;
     }, arr6)).toBe(2);
     expect(arr6).toEqual([1, 2, 3, 4, 5]);
     expect(fn(6, (v) => v === 1000, arr6)).toBe(-1);
     expect(arr6).toEqual([1, 2, 3, 4, 5]);
+
+    const a2: number[] = [];
+    expect(fn(3, (v, k, a, inset) => {
+        a2.push(v);
+        return v < inset;
+    }, arr7, {reverse: true, after: true})).toBe(2);
+    expect(a2).toEqual([5, 4, 2]);
+    expect(arr7).toEqual([1, 2, 3, 4, 5]);
+
+    const arr8 = [1, 2, 4, 5];
+    const a3: number[] = [];
+    expect(fn([3, 3], (v, k, a, insets) => {
+        a3.push(v);
+        return v > insets[0];
+    }, arr8)).toBe(2);
+    expect(a3).toEqual([1, 2, 4]);
+    expect(arr8).toEqual([1, 2, 3, 3, 4, 5]);
 });
 test("unique", () => {
     const fn = arr.unique;
