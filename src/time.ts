@@ -217,7 +217,7 @@ export function getTheLastDayOfAMonth(month: Date): Date {
  * 获取指定某年月份(month)第n(nth)个星期几(weekday)的Date
  * @param month
  * @param nth nth为负的时候从月末开始倒数
- * @param weekday
+ * @param weekday 0和7都是周日
  */
 export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
     if (!nth || weekday < 0 || weekday > 7) return null;
@@ -231,23 +231,16 @@ export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
     } else {
         date = new Date(lastDate.getTime());
     }
-    const day = date.getDay();
     weekday = weekday === 0 ? 7 : weekday;
-    const dis = weekday - day;
+    const diff = weekday - date.getDay();
     let dayDate: number;
     if (nth > 0) {
-        if (dis >= 0) {
-            nth--;
-        }
-        dayDate = nth * 7 + 1 + dis;
+        diff >= 0 && nth--;
     } else {
-        if (dis <= 0) {
-            nth++;
-        }
-        dayDate = nth * 7 + date.getDate() + dis;
+        diff <= 0 && nth++;
     }
-
-    if (dayDate > lastDate.getDate() || dayDate < 0) {
+    dayDate = nth * 7 + date.getDate() + diff;
+    if (dayDate > lastDate.getDate() || dayDate < 1) {
         return null;
     }
     date.setDate(dayDate);
