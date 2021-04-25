@@ -1,4 +1,3 @@
-import { __awaiter } from "tslib";
 import { isDom, isInputElement, isSelectElement, isTextAreaElement } from "./domType";
 import { onceEvent } from "./event";
 import { createElement } from "./dom";
@@ -121,16 +120,14 @@ export function supportCopySetData2Clipboard() {
  * @desc notice - 只有在https或者localhost上可以用
  * @param contentList
  */
-export function write2Clipboard(contentList) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!supportClipboardWrite())
-            throw new Error("unsupported navigator.clipboard.write");
-        const clipboardItems = contentList.map(item => {
-            const blob = item instanceof Blob ? item : new Blob([item], { type: 'text/plain' });
-            return new ClipboardItem({
-                [blob.type]: blob,
-            });
+export async function write2Clipboard(contentList) {
+    if (!supportClipboardWrite())
+        throw new Error("unsupported navigator.clipboard.write");
+    const clipboardItems = contentList.map(item => {
+        const blob = item instanceof Blob ? item : new Blob([item], { type: 'text/plain' });
+        return new ClipboardItem({
+            [blob.type]: blob,
         });
-        yield cb.write(clipboardItems);
     });
+    await cb.write(clipboardItems);
 }

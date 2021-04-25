@@ -14,7 +14,6 @@ export declare function debounce<CB extends (...args: any[]) => any>(callback: C
  * @param delay
  */
 export declare function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(callback: CB, delay: number): CB;
-export declare function timeDown(): void;
 /**
  * 节流函数
  * @param callback

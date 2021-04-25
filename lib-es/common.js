@@ -1,4 +1,3 @@
-import { __awaiter } from "tslib";
 import { createTimeCountDown } from "./time";
 import { isArray, isString, isPromiseLike } from "./type";
 import { assign, getReverseObj } from "./object";
@@ -57,15 +56,13 @@ export function debounceAsync(callback, delay) {
                 rej("debounceAsync reject");
             }
             rej = reject;
-            timer = setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+            timer = setTimeout(async () => {
                 timer = null;
-                const result = yield callback.apply(this, args);
+                const result = await callback.apply(this, args);
                 resolve(result);
-            }), delay);
+            }, delay);
         });
     };
-}
-export function timeDown() {
 }
 /**
  * 节流函数
@@ -153,11 +150,11 @@ export function debounceByPromise(callback) {
     let rejectFn;
     return function (...args) {
         rejectFn && rejectFn();
-        return new Promise((res, rej) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (res, rej) => {
             rejectFn = rej;
-            const result = yield callback.apply(this, args);
+            const result = await callback.apply(this, args);
             res(result);
-        }));
+        });
     };
 }
 /**
@@ -336,7 +333,7 @@ export const chinese2Number = function (chineseNumber) {
                 res += number * unit;
             }
             let unitIndex = chinese2Number.units.indexOf(item);
-            unit = unitIndex > 0 ? Math.pow(10, unitIndex) : unit;
+            unit = unitIndex > 0 ? 10 ** unitIndex : unit;
         }
         // 以十开头的要单独列出来 例如十一完全体是一十一
         if (it[0] === chinese2Number.units[1]) {
@@ -346,7 +343,7 @@ export const chinese2Number = function (chineseNumber) {
     });
     // 把分割开的数字拼接回去
     return numberArr.reverse().reduce((res, item, index) => {
-        return res + Math.pow(10000, index) * item;
+        return res + 10000 ** index * item;
     }, 0);
 };
 chinese2Number.units = [...units];

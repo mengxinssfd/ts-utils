@@ -57,6 +57,26 @@ export function forEach(callbackfn, thisArg) {
             break;
     }
 }
+export async function forEachAsync(callbackfn, thisArg) {
+    const arr = thisArg || this;
+    // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
+    const len = arr.length;
+    // if (!isArrayLike(arr)) throw new TypeError();
+    for (let i = 0; i < len; i++) {
+        const v = await callbackfn(arr[i], i, arr);
+        if (v === false)
+            break;
+    }
+}
+export async function mapAsync(callbackfn, thisArg) {
+    const arr = thisArg || this;
+    const result = [];
+    await forEachAsync(async (v, k, a) => {
+        const item = await callbackfn(v, k, a);
+        result.push(item);
+    }, arr);
+    return result;
+}
 export function forEachRight(callbackfn, thisArg) {
     const arr = thisArg || this;
     if (!isArray(arr))
@@ -257,33 +277,30 @@ export function binaryFindIndex(arr, handler) {
     return -1;
 }
 /**
- * item插入到数组，返回一个新数组
+ * item插入到数组，在原数组中改变
  * @param insert 插入的item
- * @param to 要插入的位置
+ * @param to 要插入的位置 如果to是函数的话没有找到则不会插进数组
  * @param array 要插入item的数组
  * @param after 默认插到前面去
- * @returns Array
+ * @param reverse 是否反向遍历
  */
-export function insertToArray(insert, to, array, after = false) {
+export function insertToArray(insert, to, array, { after = false, reverse = false } = {}) {
     const inserts = castArray(insert);
     let index = to;
     if (isFunction(to)) {
-        index = findIndex(to, array);
+        index = (reverse ? findIndexRight : findIndex)((v, k, a) => {
+            return to(v, k, a, insert);
+        }, array);
         if (index === -1) {
             return -1;
         }
     }
-    after && index++;
-    array.splice(index, 0, ...inserts);
-    return index > array.length ? array.length - 1 : index;
-}
-export function insertToArrayRight(insert, to, array, after = false) {
-    const inserts = castArray(insert);
-    let index = to;
-    if (isFunction(to)) {
-        index = findIndexRight(to, array);
-        if (index === -1) {
-            return -1;
+    else {
+        if (to < 0) {
+            index = 0;
+        }
+        else if (to > array.length) {
+            index = array.length - (after ? 1 : 0);
         }
     }
     after && index++;

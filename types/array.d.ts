@@ -20,6 +20,8 @@ export declare function createArray<T = number>({ start, end, len, fill }: {
     fill?: T | ((item: number, index: number) => T);
 }): T[];
 export declare function forEach<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): void;
+export declare function forEachAsync<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): Promise<void>;
+export declare function mapAsync<T, R, A extends ArrayLike<T>>(callbackfn: (value: T, index: number, array: A) => Promise<R>, thisArg?: A | Iterable<T>): Promise<R[]>;
 export declare function forEachRight<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): void;
 export declare function from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapFn?: (v: T, k: number) => U): U[];
 export declare function filter<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => boolean, thisArg?: ArrayLike<T>): T[];
@@ -46,11 +48,14 @@ export declare function binaryFind<T>(arr: T[], handler: (item: T, index: number
  * @param handler 判断条件 item => target - item 返回值为0时为要找的值，小于0则往前找，大于0往后找
  */
 export declare function binaryFindIndex<T>(arr: T[], handler: (item: T, index: number, start: number, end: number) => number): number;
-export declare function insertToArray<T>(insert: T, to: number, array: T[], after?: boolean): number;
-export declare function insertToArray<T>(insert: T, findIndexCB: ((v: T, k: number, a: T[]) => boolean), array: T[], after?: boolean): number;
-export declare function insertToArray<T>(inserts: T[], to: number, array: T[], after?: boolean): number;
-export declare function insertToArray<T>(inserts: T[], findIndexCB: ((v: T, k: number, a: T[]) => boolean), array: T[], after?: boolean): number;
-export declare function insertToArrayRight<T>(insert: any, to: any, array: T[], after?: boolean): number;
+declare type Param = {
+    after?: boolean;
+    reverse?: boolean;
+};
+export declare function insertToArray<T>(insert: T, to: number, array: T[], param?: Param): number;
+export declare function insertToArray<T>(inserts: T[], to: number, array: T[], param?: Param): number;
+export declare function insertToArray<T>(insert: T, to: (value: T, index: number, array: T[], insert: T) => boolean, array: T[], param?: Param): number;
+export declare function insertToArray<T>(inserts: T[], to: (value: T, index: number, array: T[], inserts: T[]) => boolean, array: T[], param?: Param): number;
 export declare function arrayRemoveItem<T>(item: T, array: T[]): void | T;
 export declare function arrayRemoveItemsBy<T>(by: (v: T, k: number, a: T[]) => boolean, array: T[]): T[];
 export declare function unique<T>(target: T[], isRepeatFn?: (value: T, value2: T) => boolean): T[];
@@ -74,3 +79,4 @@ export declare function castArray<T>(value: T): T[];
  * @param chunkLen
  */
 export declare function chunk(arr: any[], chunkLen: number): any[];
+export {};

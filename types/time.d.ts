@@ -30,8 +30,14 @@ export declare function createTimeCountUp(): () => number;
  */
 export declare function createTimeCountDown(countDown: number): () => number;
 /**
- * 获取指定月份最后一个周日
+ * 获取某月最后一天的date
  * @param month
  */
-export declare function getMonthTheLastSundayDate(month: Date): Date;
-export declare function getMonthTheLastWeekDay(month: Date, weekDay?: number): Date;
+export declare function getTheLastDayOfAMonth(month: Date): Date;
+/**
+ * 获取指定某年月份(month)第n(nth)个星期几(weekday)的Date
+ * @param month
+ * @param nth nth为负的时候从月末开始倒数
+ * @param weekday 0和7都是周日
+ */
+export declare function getMonthTheNthWeekday(month: Date, nth: number, weekday?: number): Date | null;

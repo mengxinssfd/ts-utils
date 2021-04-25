@@ -1,5 +1,4 @@
-import { __awaiter } from "tslib";
-import { arrayRemoveItem, insertToArrayRight } from "./array";
+import { arrayRemoveItem, insertToArray } from "./array";
 import { isImgElement } from "./domType";
 import { isNumber, isPromiseLike } from "./type";
 import { loadImg, createElement } from "./dom";
@@ -23,9 +22,9 @@ class Layer {
             return this.list.push(el);
         }
         else {
-            return insertToArrayRight(el, (v, k) => {
+            return insertToArray(el, (v, k) => {
                 return v.style.zIndex <= el.style.zIndex || k === 0;
-            }, list, true);
+            }, list, { after: true, reverse: true });
         }
     }
     remove(value) {
@@ -66,14 +65,12 @@ export class MergeImg {
         return this._ctx;
     }
     // 根据背景图创建一个MergeImg类 好处是可以根据背景图宽高设置canvas宽高，不用再额外设置
-    static createWithBg(url) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const promise = loadImg(url);
-            const img = yield promise;
-            const mi = new MergeImg(img.width, img.height);
-            yield mi.addImg(promise);
-            return mi;
-        });
+    static async createWithBg(url) {
+        const promise = loadImg(url);
+        const img = await promise;
+        const mi = new MergeImg(img.width, img.height);
+        await mi.addImg(promise);
+        return mi;
     }
     render(item) {
         if (!this._ctx)
@@ -158,27 +155,25 @@ export class MergeImg {
     clear() {
         this._ctx.clearRect(0, 0, this.width, this.height);
     }
-    addImg(urlOrPromiseImg, style = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let img;
-            if (isImgElement(urlOrPromiseImg)) {
-                img = urlOrPromiseImg;
-            }
-            else if (isPromiseLike(urlOrPromiseImg)) {
-                img = yield urlOrPromiseImg;
-            }
-            else {
-                img = yield loadImg(urlOrPromiseImg);
-            }
-            const item = new LayerElement(style, img);
-            if (this.layer.add(item) !== this.layer.list.length - 1) {
-                this.reRender();
-            }
-            else {
-                this.render(item);
-            }
-            return img;
-        });
+    async addImg(urlOrPromiseImg, style = {}) {
+        let img;
+        if (isImgElement(urlOrPromiseImg)) {
+            img = urlOrPromiseImg;
+        }
+        else if (isPromiseLike(urlOrPromiseImg)) {
+            img = await urlOrPromiseImg;
+        }
+        else {
+            img = await loadImg(urlOrPromiseImg);
+        }
+        const item = new LayerElement(style, img);
+        if (this.layer.add(item) !== this.layer.list.length - 1) {
+            this.reRender();
+        }
+        else {
+            this.render(item);
+        }
+        return img;
     }
     toDataURL(type = "image/png", quality) {
         if (!this.canvas)

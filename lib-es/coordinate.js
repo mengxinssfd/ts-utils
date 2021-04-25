@@ -117,7 +117,7 @@ export function twoBezier(t, startPos, endPos, controlPoint) {
 export function getBorderWidthByCos(a, b, angle) {
     // 角度化弧度
     const C = angle * Math.PI / 180;
-    const c2 = Math.pow(a, 2) + Math.pow(b, 2) - 2 * a * b * Math.cos(C);
+    const c2 = a ** 2 + b ** 2 - 2 * a * b * Math.cos(C);
     return Math.sqrt(c2);
 }
 /**

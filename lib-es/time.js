@@ -117,7 +117,7 @@ Date.prototype.format = formatDate;
  */
 export function getDateFromStr(date) {
     // 检测非数字、非/、非:、非-
-    if (/[^\/^\d^:^ ^-]/.test(date))
+    if (!date || /[^\/\d: -]/.test(date))
         return null; // 去除不符合规范的字符串
     const arr = date.split(/[- :\/]/).map(item => Number(item));
     if (arr.length < 6) {
@@ -160,32 +160,47 @@ export function createTimeCountDown(countDown) {
     };
 }
 /**
- * 获取指定月份最后一个周日
+ * 获取某月最后一天的date
  * @param month
  */
-export function getMonthTheLastSundayDate(month) {
-    const date = new Date(month);
-    date.setMonth(month.getMonth() + 1); // 下个月
-    date.setDate(0); // 月份最后一天
-    date.setDate(date.getDate() - date.getDay());
-    return date;
+export function getTheLastDayOfAMonth(month) {
+    const lastDate = new Date(month.getTime());
+    lastDate.setMonth(month.getMonth() + 1);
+    lastDate.setDate(0);
+    return lastDate;
 }
-export function getMonthTheLastWeekDay(month, weekDay = 0) {
-    const date = new Date(month);
-    date.setMonth(month.getMonth() + 1); // 下个月
-    date.setDate(-6); // 月份最后一天
-    const day = date.getDay();
-    if (day === weekDay) {
-        return date;
+/**
+ * 获取指定某年月份(month)第n(nth)个星期几(weekday)的Date
+ * @param month
+ * @param nth nth为负的时候从月末开始倒数
+ * @param weekday 0和7都是周日
+ */
+export function getMonthTheNthWeekday(month, nth, weekday = 0) {
+    if (!nth || weekday < 0 || weekday > 7)
+        return null;
+    const monthTime = month.getTime();
+    const lastDate = getTheLastDayOfAMonth(month);
+    let date;
+    if (nth > 0) {
+        date = new Date(monthTime);
+        date.setDate(1);
     }
-    // fixme 这里有点硬代码
-    let dis = weekDay - day;
-    if (day === 0) {
-        dis = weekDay;
+    else {
+        date = new Date(lastDate.getTime());
     }
-    else if (weekDay < day) {
-        dis = 6 - day + weekDay + 1;
+    weekday = weekday === 0 ? 7 : weekday;
+    const diff = weekday - date.getDay();
+    let dayDate;
+    if (nth > 0) {
+        diff >= 0 && nth--;
     }
-    date.setDate(date.getDate() + dis);
+    else {
+        diff <= 0 && nth++;
+    }
+    dayDate = nth * 7 + date.getDate() + diff;
+    if (dayDate > lastDate.getDate() || dayDate < 1) {
+        return null;
+    }
+    date.setDate(dayDate);
     return date;
 }
