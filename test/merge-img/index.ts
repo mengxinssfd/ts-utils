@@ -1,3 +1,4 @@
+/*
 import {createElement, loadScript} from "../../src/dom";
 import {MergeImg} from "../../src/ImgMerge";
 
@@ -6,7 +7,7 @@ declare const Vue: any;
     const script = await loadScript("https://cdn.bootcdn.net/ajax/libs/vue/3.0.11/vue.global.js");
     console.log(script, Vue);
 })();
-/*(async function () {
+/!*(async function () {
     const mi = await MergeImg.createWithBg("./static/img.png");
     console.log(mi);
     // await mi.addImg("./static/img2.png", {left: 20, top: 20});
@@ -26,7 +27,7 @@ declare const Vue: any;
         },
         parent: document.body,
     });
-})();*/
+})();*!/
 (async function () {
     const mi = await MergeImg.createWithBg("./static/img.png");
 
@@ -187,3 +188,4 @@ declare const Vue: any;
         },
     );
 })();
+*/
