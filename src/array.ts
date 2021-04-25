@@ -312,30 +312,65 @@ export function binaryFindIndex<T>(arr: T[], handler: (item: T, index: number, s
     return -1;
 }
 
-export function insertToArray<T>(insert: T, to: number, array: T[], after?: boolean): number
-export function insertToArray<T>(insert: T, findIndexCB: ((v: T, k: number, a: T[]) => boolean), array: T[], after?: boolean): number
-export function insertToArray<T>(inserts: T[], to: number, array: T[], after?: boolean): number
-export function insertToArray<T>(inserts: T[], findIndexCB: ((v: T, k: number, a: T[]) => boolean), array: T[], after?: boolean): number
+type Param = { after?: boolean; reverse?: boolean }
+
+export function insertToArray<T>(
+    insert: T,
+    to: number,
+    array: T[],
+    param?: Param,
+): number;
+export function insertToArray<T>(
+    inserts: T[],
+    to: number,
+    array: T[],
+    param?: Param,
+): number;
+export function insertToArray<T>(
+    insert: T,
+    to: (value: T, index: number, array: T[], insert: T) => boolean,
+    array: T[],
+    param?: Param,
+): number;
+export function insertToArray<T>(
+    inserts: T[],
+    to: (value: T, index: number, array: T[], inserts: T[]) => boolean,
+    array: T[],
+    param?: Param,
+): number;
 /**
- * item插入到数组，返回一个新数组
+ * item插入到数组，在原数组中改变
  * @param insert 插入的item
- * @param to 要插入的位置
+ * @param to 要插入的位置 如果to是函数的话没有找到则不会插进数组
  * @param array 要插入item的数组
  * @param after 默认插到前面去
- * @returns Array
+ * @param reverse 是否反向遍历
  */
-export function insertToArray<T>(insert, to, array: T[], after = false): number {
-    const inserts = castArray(insert);
+export function insertToArray<T>(
+    insert,
+    to,
+    array,
+    {after = false, reverse = false} = {},
+): number {
+    const inserts = castArray(insert) as T[];
     let index = to as number;
     if (isFunction(to)) {
-        index = findIndex(to as any, array);
+        index = (reverse ? findIndexRight : findIndex)((v, k, a) => {
+            return to(v, k, a as T[], insert);
+        }, array);
         if (index === -1) {
             return -1;
+        }
+    } else {
+        if (to < 0) {
+            index = 0;
+        } else if (to > array.length) {
+            index = array.length - (after ? 1 : 0);
         }
     }
     after && index++;
     array.splice(index, 0, ...inserts);
-    return index > array.length ? array.length - 1 : index;
+    return index;
 }
 
 export function insertToArrayRight<T>(insert, to, array: T[], after = false): number {
