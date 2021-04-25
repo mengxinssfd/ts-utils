@@ -65,6 +65,30 @@ export function forEach<T>(callbackfn: (value: T, index: number, array: ArrayLik
     }
 }
 
+export async function forEachAsync<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>) {
+    const arr = thisArg || this;
+    // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
+    const len = arr.length;
+    // if (!isArrayLike(arr)) throw new TypeError();
+    for (let i = 0; i < len; i++) {
+        const v = await callbackfn(arr[i], i, arr);
+        if (v === false) break;
+    }
+}
+
+export async function mapAsync<T, R>(
+    callbackfn: (value: T, index: number, array: ArrayLike<T>) => Promise<R>,
+    thisArg?: ArrayLike<T> | Iterable<T>
+): Promise<R[]> {
+    const arr = thisArg || this;
+    const result: any[] = [];
+    await forEachAsync<T>(async (v, k, a) => {
+        const item = await callbackfn(v, k, a);
+        result.push(item);
+    }, arr);
+    return result;
+}
+
 export function forEachRight<T>(
     callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false),
     thisArg?: ArrayLike<T> | Iterable<T>) {
