@@ -1,4 +1,5 @@
 import * as arr from "../src/array";
+import {sleep} from "../src/time";
 
 test("forEach", () => {
     const arr1: any[] = [1, 2, 3];
@@ -22,6 +23,68 @@ test("forEach", () => {
     expect(arr2).toEqual(["a2", "a3", "a4"]);
     arr.forEach((v, k) => arr2[k] = "a" + k, arr2);
     expect(arr2).toEqual(["a0", "a1", "a2"]);
+});
+test("forEachAsync", async () => {
+    const fn = arr.forEachAsync;
+    const arr1: any[] = [1, 2, 3];
+    await fn((v, k) => arr1[k] = k, arr1);
+    expect(arr1).toEqual([0, 1, 2]);
+    // ArrayLike
+    await fn((v, k) => arr1[k] = k + k, {0: 1, 1: 2, length: 2});
+    expect(arr1).toEqual([0, 2, 2]);
+    // const arr = thisArg || this;
+    await fn.call(arr1, (v, k) => arr1[k] = k + 2);
+    expect(arr1).toEqual([2, 3, 4]);
+    // if (callbackfn(arr[i], i, arr) === false) break;
+    await fn((v, k) => {
+        arr1[k] = k + 1;
+        return k !== 1;
+    }, arr1);
+    expect(arr1).toEqual([1, 2, 4]);
+
+    const arr2: (number | string)[] = [2, 3, 4];
+    await fn((v, k) => arr2[k] = "a" + v, arr2);
+    expect(arr2).toEqual(["a2", "a3", "a4"]);
+    await fn((v, k) => arr2[k] = "a" + k, arr2);
+    expect(arr2).toEqual(["a0", "a1", "a2"]);
+
+    const res: any = [];
+    const asyncList = [
+        async () => {
+            await sleep(200);
+            res.push(1);
+        },
+        async () => {
+            await sleep(300);
+            res.push(2);
+        },
+        async () => {
+            await sleep(10);
+            res.push(3);
+        },
+    ];
+    await fn((v) => v(), asyncList);
+    expect(res).toEqual([1, 2, 3]);
+});
+test("mapAsync", async () => {
+    const fn = arr.mapAsync;
+
+    const asyncList = [
+        async () => {
+            await sleep(200);
+            return 1;
+        },
+        async () => {
+            await sleep(300);
+            return 2;
+        },
+        async () => {
+            await sleep(10);
+            return 3;
+        },
+    ];
+    const res = await fn((v) => v(), asyncList);
+    expect(res).toEqual([1, 2, 3]);
 });
 test("forEachRight", () => {
     const fn = arr.forEachRight;
