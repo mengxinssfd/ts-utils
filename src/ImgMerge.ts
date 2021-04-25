@@ -1,4 +1,4 @@
-import {arrayRemoveItem, insertToArrayRight} from "./array";
+import {arrayRemoveItem, insertToArray} from "./array";
 import {isImgElement} from "./domType";
 import {isNumber, isPromiseLike} from "./type";
 import {loadImg, createElement} from "./dom";
@@ -34,9 +34,9 @@ class Layer {
         if (!list.length) {
             return this.list.push(el);
         } else {
-            return insertToArrayRight(el, (v, k) => {
+            return insertToArray(el, (v, k) => {
                 return v.style.zIndex! <= el.style.zIndex! || k === 0;
-            }, list, true);
+            }, list, {after: true, reverse: true});
         }
     }
 
