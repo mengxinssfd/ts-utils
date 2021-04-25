@@ -76,14 +76,14 @@ export async function forEachAsync<T>(callbackfn: (value: T, index: number, arra
     }
 }
 
-export async function mapAsync<T, R>(
-    callbackfn: (value: T, index: number, array: ArrayLike<T>) => Promise<R>,
-    thisArg?: ArrayLike<T> | Iterable<T>
+export async function mapAsync<T, R, A extends ArrayLike<T>>(
+    callbackfn: (value: T, index: number, array: A) => Promise<R>,
+    thisArg?: A | Iterable<T>,
 ): Promise<R[]> {
     const arr = thisArg || this;
     const result: any[] = [];
     await forEachAsync<T>(async (v, k, a) => {
-        const item = await callbackfn(v, k, a);
+        const item = await callbackfn(v, k, a as any);
         result.push(item);
     }, arr);
     return result;
