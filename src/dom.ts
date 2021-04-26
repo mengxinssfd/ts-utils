@@ -142,6 +142,8 @@ export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSSty
 export function loadImg(url: string): Promise<HTMLImageElement> {
     return new Promise<HTMLImageElement>(function (resolve, reject) {
         const img = new Image();
+        // 不支持crossOrigin的浏览器（IE 10及以下版本不支持，Android 4.3 及以下版本不支持）
+        // 可以使用 XMLHttprequest 和 URL.createObjectURL() 来做兼容
         img.setAttribute("crossOrigin", "anonymous");
         img.onload = () => {
             resolve(img);
@@ -153,22 +155,32 @@ export function loadImg(url: string): Promise<HTMLImageElement> {
     });
 }
 
+export function loadScript(url: string): Promise<HTMLScriptElement>;
+export function loadScript<T extends (script: HTMLScriptElement) => void>(url: string, successFn: T, errorFn?: Function): void;
 /**
  * 手动添加script
  * @param url
+ * @param successFn {function?}
+ * @param errorFn {function?}
  */
-export function loadScript(url: string): Promise<HTMLScriptElement> {
-    return new Promise(function (resolve, reject) {
-        const errorFn = (ev) => reject(ev);
+export function loadScript(url, successFn?, errorFn?) {
+    const cb = (successFn, errorFn) => {
         const script = createElement("script", {
             props: {
-                onload: () => resolve(script),
+                onload: () => successFn(script),
                 onabort: errorFn,
                 onerror: errorFn,
                 src: url,
             },
             parent: document.body,
         });
+    };
+    if (successFn) {
+        cb(successFn!, errorFn);
+        return;
+    }
+    return new Promise(function (resolve, reject) {
+        cb(resolve as any, reject);
     });
 }
 
