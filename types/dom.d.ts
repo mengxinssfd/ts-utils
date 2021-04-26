@@ -31,11 +31,8 @@ export declare function cssSupport<K extends keyof CSSStyleDeclaration, V extend
  * @param url
  */
 export declare function loadImg(url: string): Promise<HTMLImageElement>;
-/**
- * 手动添加script
- * @param url
- */
 export declare function loadScript(url: string): Promise<HTMLScriptElement>;
+export declare function loadScript<T extends (script: HTMLScriptElement) => void>(url: string, successFn: T, errorFn?: Function): void;
 /**
  * @param el
  * @return {}

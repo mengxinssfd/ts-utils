@@ -24,3 +24,4 @@ export * from "./domType";
 export * from "./event";
 export * from "./RGB";
 export * from "./Stack";
+export * from "./blob";
