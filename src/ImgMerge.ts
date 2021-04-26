@@ -15,15 +15,27 @@ type Style = {
     zIndex?: number;
     verticalAlign?: "top" | "middle" | "bottom";
     horizontalAlign?: "left" | "middle" | "right";
+    background?: string;
 }
 
 let id = 0;
 
-/*abstract class Node {
-    computedStyle!: { width: number; height: number } & Required<Omit<Style, "verticalAlign" | "horizontalAlign" | "right" | "bottom">>;
+type ComputedStyleExclude = "verticalAlign" | "horizontalAlign" | "right" | "bottom" | "background"
 
-    constructor(public parent: Node, public style: Style) {
-        this.setStyle(style);
+abstract class Node {
+    computedStyle!: { width: number; height: number } & Required<Omit<Style, ComputedStyleExclude>>;
+    auto!: {
+        width: number;
+        height: number;
+    };
+    public style: Style = {};
+
+    protected constructor(public parent: Node | MergeImg) {
+        const style = parent instanceof MergeImg ? parent : parent.computedStyle;
+        this.auto = {
+            width: style.width,
+            height: style.height,
+        };
     }
 
     setStyle(style: Style) {
@@ -31,30 +43,32 @@ let id = 0;
         this.computeStyle();
     }
 
-    abstract computeStyle();
-}*/
-
-class ImgElement {
-    public style!: Style;
-    computedStyle!: { width: number; height: number } & Required<Omit<Style, "verticalAlign" | "horizontalAlign" | "bottom" | "right">>
-    id!: number;
-
-    constructor(public parent: Layer, style: Style, public content: HTMLImageElement) {
-        this.setStyle(style)
-        this.id = id++;
-    }
-
-    setStyle(style: Style) {
-        this.style = style;
-        this.computeStyle();
+    get root(): MergeImg {
+        const parent = this.parent;
+        if (parent instanceof MergeImg) {
+            return parent;
+        }
+        return (this.parent as Node).root;
     }
 
     get ctx() {
         return this.parent.ctx;
     }
 
-    computeStyle() {
-        const img = this.content;
+    render() {
+        this.renderBackGround();
+        this._render();
+    }
+
+    protected renderBackGround() {
+        const {background} = this.style;
+        if (!background) return;
+        this.ctx.fillStyle = background;
+        const {left, top, width, height} = this.computedStyle;
+        this.ctx.fillRect(left, top, width, height);
+    }
+
+    protected computeStyle() {
         const {
             left,
             top,
@@ -64,15 +78,18 @@ class ImgElement {
             height,
             horizontalAlign,
             verticalAlign,
-            zIndex
+            zIndex,
         } = this.style;
         let dw: number;
         let dh: number;
         let x: number = 0;
         let y: number = 0;
-        dw = width as number || img.width;
-        dh = height as number || img.height;
-        const {width: w, height: h} = this.parent.computedStyle;
+
+        const parent = this.parent;
+        const {width: w, height: h} = parent instanceof MergeImg ? parent : parent.computedStyle;
+
+        dw = width as number || w;
+        dh = height as number || h;
 
         // 1.如果设定了宽高，则以设定的宽高为准
         // 2.如果设定了left和right，宽=canvas宽 - left - right
@@ -105,10 +122,10 @@ class ImgElement {
         }
 
         if (width === "auto") {
-            dw = ((dh / img.height) || 1) * img.width;
+            dw = this.auto.width;
         }
         if (height === "auto") {
-            dh = ((dw / img.width) || 1) * img.height;
+            dh = this.auto.height;
         }
 
         if ((left === undefined || right === undefined) && horizontalAlign) {
@@ -123,6 +140,7 @@ class ImgElement {
                     x = w - dw;
             }
         }
+
         if ((top === undefined || bottom === undefined) && verticalAlign) {
             switch (verticalAlign) {
                 case "top":
@@ -136,16 +154,54 @@ class ImgElement {
             }
         }
 
+        if (!(parent instanceof MergeImg)) {
+            const parentStyle = parent.computedStyle;
+            x += parentStyle.left;
+            y += parentStyle.top;
+        }
+
         this.computedStyle = {
             width: dw,
             height: dh,
             zIndex: zIndex || 0,
             left: x,
             top: y,
-        }
+        };
     }
 
-    render() {
+    protected abstract _render();
+}
+
+class ImgElement extends Node {
+    public style!: Style;
+    id!: number;
+
+    constructor(parent: Node, style: Style, public content: HTMLImageElement) {
+        super(parent);
+        this.id = id++;
+        const img = content;
+        const {
+            width,
+            height,
+        } = style;
+        let dw = width as number || img.width;
+        let dh = height as number || img.height;
+
+        if (width === "auto") {
+            dw = ((dh / img.height) || 1) * img.width;
+        }
+        if (height === "auto") {
+            dh = ((dw / img.width) || 1) * img.height;
+        }
+
+        this.auto = {
+            width: dw,
+            height: dh,
+        };
+        this.setStyle(style);
+    }
+
+    protected _render() {
         if (!this.ctx) throw new Error();
         const ctx = this.ctx;
         const s = this.computedStyle;
@@ -153,20 +209,13 @@ class ImgElement {
     }
 }
 
-class Layer {
-    computedStyle!: { width: number; height: number } & Required<Omit<Style, "verticalAlign" | "horizontalAlign" | "right" | "bottom">>;
-    children: ImgElement[] = [];
+class Layer extends Node {
+    parent!: MergeImg;
+    children: Node[] = [];
 
-    constructor(private parent: MergeImg, public style: Style) {
+    constructor(parent: MergeImg, public style: Style) {
+        super(parent);
         this.setStyle(style);
-    }
-
-    setStyle(style: Style) {
-        this.computeStyle();
-    }
-
-    get ctx() {
-        return this.parent.ctx;
     }
 
     add(el: ImgElement) {
@@ -181,9 +230,9 @@ class Layer {
         }
     }
 
-    async addImg(img: HTMLImageElement, style?: Style): Promise<HTMLImageElement>
-    async addImg(url: string, style?: Style): Promise<HTMLImageElement>
-    async addImg(promiseImg: Promise<HTMLImageElement>, style?: Style): Promise<HTMLImageElement>
+    async addImg(img: HTMLImageElement, style?: Style): Promise<ImgElement>
+    async addImg(url: string, style?: Style): Promise<ImgElement>
+    async addImg(promiseImg: Promise<HTMLImageElement>, style?: Style): Promise<ImgElement>
     async addImg(urlOrPromiseImg, style: Style = {}) {
         let img: HTMLImageElement;
         if (isImgElement(urlOrPromiseImg)) {
@@ -195,109 +244,21 @@ class Layer {
         }
         const item = new ImgElement(this, style, img);
         const layer = this;
-        if (layer.add(item) !== layer.children.length - 1) {
-            this.parent.render();
+        const index = layer.add(item);
+        if (layer.children.length === 1) {
+            this.render();
+        } else if (index !== layer.children.length - 1) {
+            this.root.render();
         } else {
             item.render();
         }
 
-        return img;
+        return item;
     }
 
-    renderAll() {
-        this.renderLayer();
+    protected _render() {
         this.children.forEach(child => child.render());
     }
-
-    renderLayer() {
-
-    }
-
-    computeStyle() {
-        const {
-            left,
-            top,
-            right,
-            bottom,
-            width,
-            height,
-            horizontalAlign,
-            verticalAlign,
-            zIndex
-        } = this.style;
-        let dw: number;
-        let dh: number;
-        let x: number = 0;
-        let y: number = 0;
-        dw = width as number;
-        dh = height as number;
-        const {width: w, height: h} = this.parent;
-
-        // 1.如果设定了宽高，则以设定的宽高为准
-        // 2.如果设定了left和right，宽=canvas宽 - left - right
-        // 3.如果设定了top和bottom，高=canvas高 - top - bottom
-        // 5.如果设定了left和right，没有设定top和bottom，也没设定size，则高按比例
-        // 6.如果设定了top和bottom，没有设定left和right，也没设定size，则宽按比例
-
-        if (left !== undefined && right !== undefined) {
-            x = left;
-            if (width === undefined) {
-                dw = w - right - left;
-            }
-        } else {
-            if (left !== undefined) {
-                x = left;
-            } else if (right !== undefined) {
-                x = w - right - dw;
-            }
-        }
-
-        if (top !== undefined && bottom !== undefined) {
-            y = top;
-            if (height === undefined) {
-                dh = h - top - bottom;
-            }
-        } else if (top !== undefined) {
-            y = top;
-        } else if (bottom !== undefined) {
-            y = h - bottom - dh;
-        }
-
-
-        if ((left === undefined || right === undefined) && horizontalAlign) {
-            switch (horizontalAlign) {
-                case "left":
-                    x = 0;
-                    break;
-                case "middle":
-                    x = ~~((w - dw) / 2);
-                    break;
-                case "right":
-                    x = w - dw;
-            }
-        }
-        if ((top === undefined || bottom === undefined) && verticalAlign) {
-            switch (verticalAlign) {
-                case "top":
-                    y = 0;
-                    break;
-                case "middle":
-                    y = ~~((h - dh) / 2);
-                    break;
-                case "bottom":
-                    y = h - dh;
-            }
-        }
-
-        this.computedStyle = {
-            width: dw,
-            height: dh,
-            zIndex: zIndex || 0,
-            left: x,
-            top: y,
-        }
-    }
-
 
     remove(el: ImgElement): ImgElement | void
     remove(index: number): ImgElement | void
@@ -357,10 +318,6 @@ export class MergeImg {
         return layer;
     }
 
-    get mainLayer() {
-        return this.layers[0];
-    }
-
     get ctx(): CanvasRenderingContext2D | void {
         return this._ctx;
     }
@@ -370,15 +327,15 @@ export class MergeImg {
         const promise = loadImg(url);
         const img = await promise;
         const mi = new MergeImg(img.width, img.height);
-        await mi.mainLayer.addImg(promise);
+        await mi.addLayer().addImg(promise);
         return mi;
     }
 
     render() {
-        console.count();
+        console.count("render count");
         this.clear();
         this.layers.forEach(layer => {
-            layer.renderAll();
+            layer.render();
         });
     }
 
@@ -417,6 +374,7 @@ export class MergeImg {
     destroy() {
         if (!this.canvas) throw new Error("destroyed");
         this.parent.removeChild(this.canvas);
+        this.layers = [];
         this.canvas = undefined;
         this._ctx = undefined;
     }
