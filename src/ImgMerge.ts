@@ -343,11 +343,13 @@ export class MergeImg {
         this._ctx!.clearRect(0, 0, this.width, this.height);
     }
 
+    // base64
     toDataURL(type = "image/png", quality?: any): string {
         if (!this.canvas) throw new Error();
         return this.canvas.toDataURL(type, quality);
     }
 
+    // ie10不支持canvas.toBlob
     toBlob(type = "image/png", quality?: any): Promise<Blob> {
         const canvas = this.canvas;
         if (!canvas) throw new Error();
@@ -357,18 +359,6 @@ export class MergeImg {
                 blob ? resolve(blob) : reject(blob);
             }, type, quality);
         });
-    }
-
-    dataURLToBlob(dataURL: string): Blob {
-        const arr: string[] = dataURL.split(",");
-        const mime = (arr[0].match(/:(.*?);/) ?? [])[1];
-        const atob1 = window.atob(arr[1]);
-        let n = atob1.length;
-        const u8arr = new Uint8Array(n);
-        while (n--) {
-            u8arr[n] = atob1.charCodeAt(n);
-        }
-        return new Blob([u8arr], {type: mime});
     }
 
     destroy() {
