@@ -22,7 +22,13 @@ import {MergeImg} from "../../src/ImgMerge";
         verticalAlign: "bottom",
         zIndex: 0,
     });
-    const layer = mi.addLayer({zIndex: 1000});
+    const layer = mi.addLayer({
+        width: 600,
+        height: 500,
+        verticalAlign: "middle",
+        horizontalAlign: "middle",
+        zIndex: 1000
+    });
 
     layer.addImg(img, {
         width: "auto",
