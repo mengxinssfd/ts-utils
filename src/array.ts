@@ -89,6 +89,24 @@ export async function mapAsync<T, R, A extends ArrayLike<T>>(
     return result;
 }
 
+/**
+ * reduce promise 跟 promiseQueue差不多，此函数多了callbackFn
+ * @param callbackfn
+ * @param initValue
+ * @param thisArg
+ */
+export async function reduceAsync<T, R, A extends ArrayLike<T>, I>(
+    callbackfn: (initValue: I, value: T, index: number, array: A) => Promise<I>,
+    initValue: I,
+    thisArg?: A | Iterable<T>,
+): Promise<I> {
+    const arr = thisArg || this;
+    await forEachAsync<T>(async (v, k, a) => {
+        initValue = await callbackfn(initValue, v, k, a as any);
+    }, arr);
+    return initValue;
+}
+
 export function forEachRight<T>(
     callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false),
     thisArg?: ArrayLike<T> | Iterable<T>) {
