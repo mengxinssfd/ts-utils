@@ -65,6 +65,17 @@ test("forEachAsync", async () => {
     ];
     await fn((v) => v(), asyncList);
     expect(res).toEqual([1, 2, 3]);
+
+    const list = [
+        () => Promise.resolve("hello"),
+        () => Promise.reject("im fine")
+    ]
+
+    try {
+        await fn((v) => v(), list)
+    } catch (e) {
+        expect(e).toBe("im fine")
+    }
 });
 test("mapAsync", async () => {
     const fn = arr.mapAsync;
@@ -87,6 +98,46 @@ test("mapAsync", async () => {
     expect(res).toEqual([1, 2, 3]);
     const res2 = await fn.call(asyncList, (v: any) => v());
     expect(res2).toEqual([1, 2, 3]);
+});
+test("reduceAsync", async () => {
+    const fn = arr.reduceAsync;
+
+    const v = await fn((initValue, value) => {
+        return value(initValue);
+    }, "hello", [
+        (v) => Promise.resolve(`${v} thank you`),
+        (v) => Promise.resolve(`${v} im fine`),
+    ] as Array<(v: any) => Promise<string>>)
+
+    expect(v).toBe("hello thank you im fine");
+    try {
+        await fn((initValue, value) => {
+            return value(initValue);
+        }, "hello", [
+            (v) => Promise.resolve(`${v} thank you`),
+            (v) => Promise.reject(`${v} im fine`),
+        ] as Array<(v: any) => Promise<string>>)
+    } catch (e) {
+        expect(e).toBe("hello thank you im fine");
+    }
+
+    const v2 = await fn((initValue, value) => {
+        return value(initValue);
+    }, "hello", [
+        (v) => `${v} thank you`,
+        (v) => `${v} im fine`,
+    ] as Array<(v: any) => any>)
+
+    expect(v2).toBe("hello thank you im fine");
+
+    const v3 = await fn.call([
+        (v) => `${v} thank you`,
+        (v) => `${v} im fine`,
+    ] as Array<(v: any) => any>, (initValue, value: any) => {
+        return value(initValue);
+    }, "hello")
+
+    expect(v3).toBe("hello thank you im fine");
 });
 test("forEachRight", () => {
     const fn = arr.forEachRight;
