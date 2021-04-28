@@ -24,7 +24,7 @@ export function base64ToBlob(dataURL: string): Blob {
     return new Blob([u8arr], {type: mime});
 }
 
-export function imgToBlob(url): Promise<Blob> {
+export function imgToBlob(url: string): Promise<Blob> {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open("get", url, true);

@@ -167,6 +167,7 @@ export function includes(thisArg, searchElement, fromIndex = 0) {
     return false;
 }
 
+// TODO 已经有objKeys了 而且Object.keys在es6以下可以使用
 // 也可以给object用
 // Object.keys()
 export function keys<T>(target: T): (keyof T)[] {

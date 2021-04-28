@@ -263,7 +263,7 @@ export function eventProxy<K extends keyof HTMLElementEventMap>(
  * @param el
  * @param eventType
  * @param callback
- * @param capture 捕获还是冒泡，默认冒泡
+ * @param [capture=false] 捕获还是冒泡，默认冒泡
  */
 export function onceEvent<K extends keyof HTMLElementEventMap>(
     el: Window | HTMLElement | string | null | void,
@@ -320,6 +320,12 @@ export function isVisible(target: HTMLElement, container: HTMLElement | typeof w
     return top >= -targetWh.h && top <= wh.h;
 }
 
+/**
+ * 判断dom是否滚动到底了
+ * @param el
+ * @param [direct="vertical"]
+ * @param [offset=10]
+ */
 export function isScrollEnd(el: HTMLElement, direct: "vertical" | "horizontal" = "vertical", offset = 10) {
     if (direct === "vertical") {
         return el.scrollTop >= el.scrollHeight - el.clientHeight - offset;
@@ -328,6 +334,12 @@ export function isScrollEnd(el: HTMLElement, direct: "vertical" | "horizontal" =
     }
 }
 
+/**
+ * 判断dom是否滚动到顶了
+ * @param el
+ * @param [direct="vertical"]
+ * @param [offset=10]
+ */
 export function isScrollStart(el: HTMLElement, direct: "vertical" | "horizontal" = "vertical", offset = 10) {
     if (direct === "vertical") {
         return el.scrollTop >= offset;

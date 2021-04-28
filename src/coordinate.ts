@@ -54,7 +54,7 @@ export enum Direct {
  * 注意：在屏幕里角度是顺时针的与数学中的逆时针坐标不一样 45度是右下而不是右上方
  * @param origin 原点
  * @param target
- * @param direct 需要上下左右哪个方向指向目标
+ * @param [direct=Direct.top] 需要上下左右哪个方向指向目标
  */
 export function getAngle(origin: Point, target: Point, direct = Direct.top): number {
     const [x1, y1] = origin;

@@ -281,6 +281,10 @@ export class MergeImg {
     private readonly parent: Element;
     private layers: Layer[] = [];
 
+    /**
+     * @param [width=0]
+     * @param [height=0]
+     */
     constructor(readonly width = 0, readonly height = 0) {
         const parent = document.body;
         const canvas = createElement("canvas", {

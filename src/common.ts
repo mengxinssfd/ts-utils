@@ -39,11 +39,6 @@ export function debounce<CB extends (...args: any[]) => any>(callback: CB, delay
     return debounced as any;
 }
 
-const db = debounce((a: number, b: string) => {
-}, 1000);
-db(100, "");
-db.cancel();
-
 /**
  * 如果callback执行了的话，那么不论是否resolved都不会再被reject
  * @param callback
@@ -69,7 +64,6 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(call
         });
     } as CB;
 }
-
 
 /**
  * 节流函数
@@ -178,7 +172,7 @@ export function debounceByPromise<T, CB extends (...args: any[]) => Promise<T>>(
  * 轮询函数
  * @param callback
  * @param interval  间隔
- * @param immediate 是否马上执行第一次
+ * @param [immediate=true] 是否马上执行第一次
  */
 export function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate = true): () => void {
     enum state {running, stopped}
@@ -247,7 +241,7 @@ export function strTemplate(str, ...params) {
  * 给长度不满足要求的字符串添加前缀 strFillPrefix
  * @param target
  * @param maxLen
- * @param fill
+ * @param [fill=' '] 默认fill=" "
  */
 export function strPadStart(target: string, maxLen: number, fill = " "): string {
     if (target.length >= maxLen || fill === "") return target;
@@ -263,7 +257,7 @@ export function strPadStart(target: string, maxLen: number, fill = " "): string 
  * 给长度不满足要求的字符串添加后缀 strFillPrefix
  * @param target
  * @param maxLen
- * @param fill
+ * @param [fill=" "] 默认fill=" "
  */
 export function strPadEnd(target: string, maxLen: number, fill = " "): string {
     if (target.length >= maxLen || fill === "") return target;
@@ -430,7 +424,7 @@ export function createUUID(length: number): string {
 /**
  * 格式化json
  * @param json
- * @param indent tab空格占位
+ * @param [indent=2] tab空格占位
  */
 export function formatJSON(json: object | string, indent = 2): string {
     if (typeof json === "string") {
@@ -536,7 +530,6 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
     }));
 }
 
-
 /**
  * promise队列  任何一个reject都会中断队列 (跟reduceAsync类似)
  * 队列第一个会接收initValue作为参数，其余会接收上一个promise返回值作为参数
@@ -547,7 +540,7 @@ export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promi
     let lastValue: unknown = initValue;
     await forEachAsync(async (promise) => {
         lastValue = await promise(lastValue);
-    }, queue)
+    }, queue);
     return lastValue;
 }
 

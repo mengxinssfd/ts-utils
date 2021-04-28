@@ -30,7 +30,12 @@ export function number2Date(millisecond: number, format = "d天hh时mm分ss秒")
     return result;
 }
 
-// 比较两个日期相差年天时分秒  用于倒计时等
+/**
+ * 比较两个日期相差年天时分秒  用于倒计时等
+ * @param start
+ * @param end
+ * @param [format="y年d天 hh时mm分ss秒"]
+ */
 export function dateDiff(start: Date, end: Date, format = "y年d天 hh时mm分ss秒"): string {
     let result = format;
     if (start.getTime() > end.getTime()) {
@@ -100,7 +105,7 @@ export interface formatDateInterface {
 
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
- * @param format
+ * @param [format="yyyy-MM-dd hh:mm:ss"]
  * @returns String
  */
 export const formatDate: formatDateInterface = function (this: Date, format = "yyyy-MM-dd hh:mm:ss") {
@@ -217,7 +222,7 @@ export function getTheLastDayOfAMonth(month: Date): Date {
  * 获取指定某年月份(month)第n(nth)个星期几(weekday)的Date
  * @param month
  * @param nth nth为负的时候从月末开始倒数
- * @param weekday 0和7都是周日
+ * @param [weekday=0] 0和7都是周日
  */
 export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
     if (!nth || weekday < 0 || weekday > 7) return null;

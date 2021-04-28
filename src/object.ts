@@ -66,7 +66,7 @@ export function forEachObj<T extends object>(obj: T, callbackFn: (value: T[keyof
     }
 }
 
-export const objForEach = forEachObj
+export const objForEach = forEachObj;
 
 /**
  * object key-value翻转
@@ -280,7 +280,7 @@ type V = A[K]
 type B = Pick2<A, keyof A>*/
 
 /**
- * 创建一个object 代替es6的动态key object
+ * 创建一个object 代替es6的动态key object 与Object.fromEntries一样
  * @example
  * const k1 = "a",k2 = "b"
  * createObj([[k1, 1], [k2, 2]]); // {a:1, b:2}
@@ -297,6 +297,8 @@ export function createObj(entries: Array<[string, any]>): { [k: string]: any } {
         return initValue;
     }, {});
 }
+
+export const ObjFromEntries = createObj;
 
 /**
  * Object.keys
