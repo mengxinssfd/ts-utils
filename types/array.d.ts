@@ -22,6 +22,13 @@ export declare function createArray<T = number>({ start, end, len, fill }: {
 export declare function forEach<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): void;
 export declare function forEachAsync<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): Promise<void>;
 export declare function mapAsync<T, R, A extends ArrayLike<T>>(callbackfn: (value: T, index: number, array: A) => Promise<R>, thisArg?: A | Iterable<T>): Promise<R[]>;
+/**
+ * reduce promise 跟 promiseQueue差不多，此函数多了callbackFn
+ * @param callbackfn
+ * @param initValue
+ * @param thisArg
+ */
+export declare function reduceAsync<T, R, A extends ArrayLike<T>, I>(callbackfn: (initValue: I, value: T, index: number, array: A) => Promise<I>, initValue: I, thisArg?: A | Iterable<T>): Promise<I>;
 export declare function forEachRight<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): void;
 export declare function from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapFn?: (v: T, k: number) => U): U[];
 export declare function filter<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => boolean, thisArg?: ArrayLike<T>): T[];

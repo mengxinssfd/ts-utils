@@ -114,6 +114,13 @@ export declare function createEnumByObj<T extends object, K extends keyof T, O e
     [k: string]: K;
 };
 export declare function promiseAny<T>(list: Promise<T>[]): Promise<T>;
+/**
+ * promise队列  任何一个reject都会中断队列 (跟reduceAsync类似)
+ * 队列第一个会接收initValue作为参数，其余会接收上一个promise返回值作为参数
+ * @param queue
+ * @param initValue
+ */
+export declare function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T): Promise<unknown>;
 export declare const root: any;
 /**
  * 从字符串中删除指定字符串(from)中重复的第n(num)个字符串(str)

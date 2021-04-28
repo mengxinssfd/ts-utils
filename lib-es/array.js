@@ -77,6 +77,19 @@ export async function mapAsync(callbackfn, thisArg) {
     }, arr);
     return result;
 }
+/**
+ * reduce promise 跟 promiseQueue差不多，此函数多了callbackFn
+ * @param callbackfn
+ * @param initValue
+ * @param thisArg
+ */
+export async function reduceAsync(callbackfn, initValue, thisArg) {
+    const arr = thisArg || this;
+    await forEachAsync(async (v, k, a) => {
+        initValue = await callbackfn(initValue, v, k, a);
+    }, arr);
+    return initValue;
+}
 export function forEachRight(callbackfn, thisArg) {
     const arr = thisArg || this;
     if (!isArray(arr))
