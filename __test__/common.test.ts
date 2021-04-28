@@ -426,3 +426,26 @@ test("removeSlashByNum", () => {
     expect(fn("123,456,,78", 2, ",")).toBe("123,456,78");
     expect(fn("hello thank you i m fine", 4, " ")).toBe("hello thank you im fine");
 });
+test("promiseQueue", async () => {
+    const fn = cm.promiseQueue;
+    const v = await fn([
+        (v) => Promise.resolve(`${v} thank you`),
+        (v) => Promise.resolve(`${v} im fine`),
+    ], "hello");
+    expect(v).toBe("hello thank you im fine");
+
+    try {
+        await fn([
+            (v) => Promise.resolve(`${v} thank you`),
+            (v) => Promise.reject(`${v} im fine`),
+        ], "hello");
+    } catch (e) {
+        expect(e).toBe("hello thank you im fine")
+    }
+
+    const v2 = await fn([
+        (v) => `${v} thank you`,
+        (v) => `${v} im fine`,
+    ] as any, "hello");
+    expect(v2).toBe("hello thank you im fine");
+});
