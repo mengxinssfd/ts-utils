@@ -1,6 +1,7 @@
 import {createTimeCountDown} from "./time";
 import {isArray, isString, isPromiseLike} from "./type";
 import {assign, getReverseObj} from "./object";
+import {forEachAsync} from "./array";
 
 /**
  * 防抖函数
@@ -533,6 +534,21 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
         }
 
     }));
+}
+
+
+/**
+ * promise队列  任何一个reject都会中断队列 (跟reduceAsync类似)
+ * 队列第一个会接收initValue作为参数，其余会接收上一个promise返回值作为参数
+ * @param queue
+ * @param initValue
+ */
+export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T) {
+    let lastValue: unknown = initValue;
+    await forEachAsync(async (promise) => {
+        lastValue = await promise(lastValue);
+    }, queue)
+    return lastValue;
 }
 
 export const root = Function("return this")();
