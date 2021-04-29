@@ -1,3 +1,12 @@
 import * as all from "./export";
-declare const tsUtils: typeof all;
-export default tsUtils;
+export * from "./export"
+
+declare global {
+    interface Window {
+        tsUtils: typeof all;
+    }
+}
+export as namespace tsUtils;
+declare module 'tsUtils' {
+    export = all
+}
