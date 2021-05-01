@@ -182,7 +182,7 @@ test("getMonthTheNthWeekday", async () => {
     // const fn = t.getMonthTheLastWeekDay;
     const fn = t.getMonthTheNthWeekday;
 
-    expect(fn(new Date(), -1, 1)!.getDate()).toBe(26);
+    expect(fn(new Date("2021-4-25"), -1, 1)!.getDate()).toBe(26);
     expect(fn(new Date("2021-2"), -1, 1)!.getDate()).toBe(22);
     expect(fn(new Date("2021-5"), -1, 1)!.getDate()).toBe(31);
     expect(fn(new Date("2021-5"), -1, 5)!.getDate()).toBe(28);
