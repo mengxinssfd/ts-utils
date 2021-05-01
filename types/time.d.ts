@@ -3,6 +3,12 @@
  * @param {string} [format=d天hh时mm分ss秒] - 格式化模板
  */
 export declare function number2Date(millisecond: number, format?: string): string;
+/**
+ * 比较两个日期相差年天时分秒  用于倒计时等
+ * @param start
+ * @param end
+ * @param [format="y年d天 hh时mm分ss秒"]
+ */
 export declare function dateDiff(start: Date, end: Date, format?: string): string;
 export interface formatDateInterface {
     (format?: string): string;
@@ -11,7 +17,7 @@ export interface formatDateInterface {
 }
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
- * @param format
+ * @param [format="yyyy-MM-dd hh:mm:ss"]
  * @returns String
  */
 export declare const formatDate: formatDateInterface;
@@ -38,6 +44,6 @@ export declare function getTheLastDayOfAMonth(month: Date): Date;
  * 获取指定某年月份(month)第n(nth)个星期几(weekday)的Date
  * @param month
  * @param nth nth为负的时候从月末开始倒数
- * @param weekday 0和7都是周日
+ * @param [weekday=0] 0和7都是周日
  */
 export declare function getMonthTheNthWeekday(month: Date, nth: number, weekday?: number): Date | null;

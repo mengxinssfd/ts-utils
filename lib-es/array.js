@@ -1,4 +1,4 @@
-import { typeOf, isEmpty, isNaN, isArray, isArrayLike, isFunction } from "./type";
+import { typeOf, isNaN, isArray, isArrayLike, isFunction } from "./type";
 /**
  * @description len与end两个都有值时，以小的为准
  * @example
@@ -145,19 +145,6 @@ export function includes(thisArg, searchElement, fromIndex = 0) {
             return true;
     }
     return false;
-}
-// 也可以给object用
-// Object.keys()
-export function keys(target) {
-    if (isEmpty(target))
-        return [];
-    // const type = typeOf(target); // typescript里不需要
-    // if (type !== "object" && type !== "array") return [];
-    const arr = [];
-    for (let key in target) {
-        arr.push(key);
-    }
-    return arr;
 }
 // find<S extends T>(predicate: (this: void, value: T, index: number, obj: T[]) => value is S, thisArg?: any): S | undefined;
 // find(predicate: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): T | undefined;

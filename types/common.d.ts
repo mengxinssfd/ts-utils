@@ -38,7 +38,7 @@ export declare function debounceByPromise<T, CB extends (...args: any[]) => Prom
  * 轮询函数
  * @param callback
  * @param interval  间隔
- * @param immediate 是否马上执行第一次
+ * @param [immediate=true] 是否马上执行第一次
  */
 export declare function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
 export declare function forEachByLen(len: number, callback: (index: number) => (any | false)): void;
@@ -52,14 +52,14 @@ export declare function strTemplate(str: any, ...params: any[]): any;
  * 给长度不满足要求的字符串添加前缀 strFillPrefix
  * @param target
  * @param maxLen
- * @param fill
+ * @param [fill=' '] 默认fill=" "
  */
 export declare function strPadStart(target: string, maxLen: number, fill?: string): string;
 /**
  * 给长度不满足要求的字符串添加后缀 strFillPrefix
  * @param target
  * @param maxLen
- * @param fill
+ * @param [fill=" "] 默认fill=" "
  */
 export declare function strPadEnd(target: string, maxLen: number, fill?: string): string;
 /**
@@ -100,7 +100,7 @@ export declare function createUUID(length: number): string;
 /**
  * 格式化json
  * @param json
- * @param indent tab空格占位
+ * @param [indent=2] tab空格占位
  */
 export declare function formatJSON(json: object | string, indent?: number): string;
 export declare function createEnum<T extends string>(items: T[]): {

@@ -43,10 +43,22 @@ export declare function eventProxy<K extends keyof HTMLElementEventMap>(containe
  * @param el
  * @param eventType
  * @param callback
- * @param capture 捕获还是冒泡，默认冒泡
+ * @param [capture=false] 捕获还是冒泡，默认冒泡
  */
 export declare function onceEvent<K extends keyof HTMLElementEventMap>(el: Window | HTMLElement | string | null | void, eventType: K, callback: (e: Event) => any, capture?: boolean): void;
 export declare function isVisible(target: HTMLElement, container?: HTMLElement | typeof window): boolean;
+/**
+ * 判断dom是否滚动到底了
+ * @param el
+ * @param [direct="vertical"]
+ * @param [offset=10]
+ */
 export declare function isScrollEnd(el: HTMLElement, direct?: "vertical" | "horizontal", offset?: number): boolean;
+/**
+ * 判断dom是否滚动到顶了
+ * @param el
+ * @param [direct="vertical"]
+ * @param [offset=10]
+ */
 export declare function isScrollStart(el: HTMLElement, direct?: "vertical" | "horizontal", offset?: number): boolean;
 export {};

@@ -59,6 +59,10 @@ export declare class MergeImg {
     private canvas?;
     private readonly parent;
     private layers;
+    /**
+     * @param [width=0]
+     * @param [height=0]
+     */
     constructor(width?: number, height?: number);
     addLayer(style?: Style): Layer;
     get ctx(): CanvasRenderingContext2D | void;

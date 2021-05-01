@@ -217,7 +217,7 @@ export function eventProxy(containerEl, eventType, targetEl, callback) {
  * @param el
  * @param eventType
  * @param callback
- * @param capture 捕获还是冒泡，默认冒泡
+ * @param [capture=false] 捕获还是冒泡，默认冒泡
  */
 export function onceEvent(el, eventType, callback, capture = false) {
     let dom;
@@ -267,6 +267,12 @@ export function isVisible(target, container = window) {
     const top = target.offsetTop - scrollTop;
     return top >= -targetWh.h && top <= wh.h;
 }
+/**
+ * 判断dom是否滚动到底了
+ * @param el
+ * @param [direct="vertical"]
+ * @param [offset=10]
+ */
 export function isScrollEnd(el, direct = "vertical", offset = 10) {
     if (direct === "vertical") {
         return el.scrollTop >= el.scrollHeight - el.clientHeight - offset;
@@ -275,6 +281,12 @@ export function isScrollEnd(el, direct = "vertical", offset = 10) {
         return el.scrollLeft >= el.scrollWidth - el.clientWidth - offset;
     }
 }
+/**
+ * 判断dom是否滚动到顶了
+ * @param el
+ * @param [direct="vertical"]
+ * @param [offset=10]
+ */
 export function isScrollStart(el, direct = "vertical", offset = 10) {
     if (direct === "vertical") {
         return el.scrollTop >= offset;

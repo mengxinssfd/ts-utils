@@ -37,10 +37,6 @@ export function debounce(callback, delay) {
     };
     return debounced;
 }
-const db = debounce((a, b) => {
-}, 1000);
-db(100, "");
-db.cancel();
 /**
  * 如果callback执行了的话，那么不论是否resolved都不会再被reject
  * @param callback
@@ -162,7 +158,7 @@ export function debounceByPromise(callback) {
  * 轮询函数
  * @param callback
  * @param interval  间隔
- * @param immediate 是否马上执行第一次
+ * @param [immediate=true] 是否马上执行第一次
  */
 export function polling(callback, interval, immediate = true) {
     let state;
@@ -229,7 +225,7 @@ export function strTemplate(str, ...params) {
  * 给长度不满足要求的字符串添加前缀 strFillPrefix
  * @param target
  * @param maxLen
- * @param fill
+ * @param [fill=' '] 默认fill=" "
  */
 export function strPadStart(target, maxLen, fill = " ") {
     if (target.length >= maxLen || fill === "")
@@ -245,7 +241,7 @@ export function strPadStart(target, maxLen, fill = " ") {
  * 给长度不满足要求的字符串添加后缀 strFillPrefix
  * @param target
  * @param maxLen
- * @param fill
+ * @param [fill=" "] 默认fill=" "
  */
 export function strPadEnd(target, maxLen, fill = " ") {
     if (target.length >= maxLen || fill === "")
@@ -387,7 +383,7 @@ export function createUUID(length) {
 /**
  * 格式化json
  * @param json
- * @param indent tab空格占位
+ * @param [indent=2] tab空格占位
  */
 export function formatJSON(json, indent = 2) {
     if (typeof json === "string") {
