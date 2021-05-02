@@ -47,12 +47,13 @@ export class ResponsibilityChain<T> {
     }
 
     start(value?: T) {
-        if (this._status === State.running) return;
+        if (this._status === State.running) return this;
         this.initValue = value ?? this.initValue;
         this._value = value ?? this.initValue!;
         this.index = 0;
         this._status = State.running;
         this.run();
+        return this;
     }
 
     private run() {
