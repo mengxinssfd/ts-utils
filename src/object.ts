@@ -375,3 +375,5 @@ export function getObjPathEntries(obj: object, objName = ""): [string, any][] {
 
     return getArr(obj, objName);
 }
+
+// TODO 根据路径还原整个object
