@@ -1,4 +1,4 @@
-import {isArray, isObject} from "./type";
+import {isArray, isObject, isBroadlyObj} from "./type";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree: object): number {
@@ -332,4 +332,46 @@ export function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K
         init.push([k, v]);
         return init;
     }, [] as any);
+}
+
+/**
+ * 通过object路径获取值
+ * @example
+ * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
+ * @param obj
+ * @param path
+ * @param [objName = ""]
+ */
+export function getObjValueByPath(obj: object, path: string, objName = ""): unknown {
+    const p = path.replace(/\[([^\]]+)]/g, ".$1")
+        .replace(new RegExp(`^${objName}`), "")
+        .replace(/^\./, "");
+    return p.split(".").reduce((init, v, k) => {
+        if (!isBroadlyObj(init)) return undefined;
+        return init[v];
+    }, obj);
+}
+
+/**
+ * 获取object的路径数组
+ * @example
+ * getObjPathEntries({a: 1}) // => [["[a]", 1]]
+ * getObjPathEntries({a: 1},"obj") // => [["obj[a]", 1]]
+ * @param obj
+ * @param [objName = ""]
+ */
+export function getObjPathEntries(obj: object, objName = ""): [string, any][] {
+    function getArr(obj: object, outKey: string) {
+        return reduceObj(obj, (init, v, k) => {
+            const key = `${outKey}[${k as string}]`;
+            if (isBroadlyObj(v)) {
+                init.push(...getArr(v, key));
+            } else {
+                init.push([key, v]);
+            }
+            return init;
+        }, [] as [string, any][]);
+    }
+
+    return getArr(obj, objName);
 }
