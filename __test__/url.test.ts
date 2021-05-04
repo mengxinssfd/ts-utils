@@ -50,6 +50,7 @@ test("urlParse", () => {
 });
 test("queryStringify", () => {
     expect(queryStringify({a: "1123", b: 1123})).toBe("a=1123&b=1123");
+    expect(queryStringify({a: "1123", b: 1123, c: undefined})).toBe("a=1123&b=1123");
     expect(queryStringify({a: "1123", b: [1, 2, 3]})).toBe("a=1123&b[0]=1&b[1]=2&b[2]=3");
     expect(queryStringify({a: "1123", b: {d: 1, e: 2}})).toBe("a=1123&b[d]=1&b[e]=2");
     expect(queryStringify({a: "1123", b: [1, 2], d: {d: 1, e: 2}})).toBe("a=1123&b[0]=1&b[1]=2&d[d]=1&d[e]=2");
