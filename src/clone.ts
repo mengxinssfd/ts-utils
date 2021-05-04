@@ -1,5 +1,5 @@
 import {Stack} from "./Stack";
-import {isBroadlyObject, typeOf} from "./type";
+import {isBroadlyObj, typeOf} from "./type";
 
 // 如果要复制函数属性的话，使用deepClone
 // 不建议复制函数，因为复制的函数不能访问原函数外面的变量
@@ -44,7 +44,7 @@ export function deepClone<T>(target: T): T {
 
     function _clone(value: any) {
         const type = typeOf(value);
-        const isObject = isBroadlyObject(value as any);
+        const isObject = isBroadlyObj(value as any);
         if (isObject && cache.has(value)) {
             return value;
         }

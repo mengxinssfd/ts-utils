@@ -8,7 +8,7 @@ export function isNative(value: any): boolean {
             .replace(reRegExpChar, "\\$&")
             .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?")
     }$`);
-    return isBroadlyObject(value) && reIsNative.test(value as any);
+    return isBroadlyObj(value) && reIsNative.test(value as any);
 }
 
 // 获取数据类型
@@ -22,7 +22,7 @@ export function isObject(target: any): target is object {
     return typeOf(target) === "object";
 }
 
-export function isBroadlyObject(value: object): value is object {
+export function isBroadlyObj(value: object): value is object {
     const type = typeof value;
     return value != null && (type === "object" || type === "function");
 }
