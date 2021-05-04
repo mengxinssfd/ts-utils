@@ -355,4 +355,48 @@ test("objEntries", () => {
     const result2 = Object.entries(obj);
     expect(result).toEqual(result2);
 });
+test("getObjValueByPath", () => {
+    const fn = cm.getObjValueByPath;
+    expect(fn({a: {b: {c: 123}}}, "a.b.c")).toEqual(123);
+    expect(fn({a: {b: {c: 123}}}, "a[b][c]")).toEqual(123);
+    expect(fn({a: {b: {c: 123}}}, "a[b].c")).toEqual(123);
+
+    expect(fn([[[1]]], "0.0.0")).toEqual(1);
+    expect(fn([[[1]]], "[0][0][0]")).toEqual(1);
+    expect(fn([[[1]]], "[0][0].0")).toEqual(1);
+
+    expect(fn({a: {b: {b_c: 123}}}, "a[b].b_c")).toEqual(123);
+    expect(fn({a: {b: {b_c: 123}}}, "a[b][b_c]")).toEqual(123);
+    expect(fn({a: {b: {"b-c": 123}}}, "a[b][b-c]")).toEqual(123);
+    expect(fn({a: {b: {"123c": 123}}}, "a[b][123c]")).toEqual(123);
+    expect(fn({a: {"123b": {"123c": 123}}}, "a[123b][123c]")).toEqual(123);
+
+    expect(fn({a: {b: {c: [1, 2, 3]}}}, "a.b.c[2]")).toEqual(3);
+    expect(fn({a: {b: {c: [1, 2, 3]}}}, "a[b][c][2]")).toEqual(3);
+    expect(fn({a: {b: {c: [1, 2, 3]}}}, "[a][b][c][2]")).toEqual(3);
+
+    expect(fn({a: {b: {c: 123}}}, "a.d.c")).toEqual(undefined);
+    expect(fn({a: {b: {c: 123}}}, "a[d].c")).toEqual(undefined);
+
+    expect(fn({a: {b: {c: 123}}}, "obj[a][b][c]", "obj")).toEqual(123);
+});
+test("getObjPathEntries", () => {
+    const fn = cm.getObjPathEntries;
+    expect(fn({a: 1})).toEqual([["[a]", 1]]);
+    expect(fn({a: {b: {c: 123}}})).toEqual([["[a][b][c]", 123]]);
+    expect(fn({a: {b: {c: 123, d: 111}}})).toEqual([["[a][b][c]", 123], ["[a][b][d]", 111]]);
+    expect(fn({a: {b: [1, 2]}})).toEqual([["[a][b][0]", 1], ["[a][b][1]", 2]]);
+    expect(fn({a: {b: [1, 2, {c: 3, cc: 5}]}})).toEqual([
+        ["[a][b][0]", 1],
+        ["[a][b][1]", 2],
+        ["[a][b][2][c]", 3],
+        ["[a][b][2][cc]", 5],
+    ]);
+    expect(fn({a: {b: [1, 2, {c: 3, cc: 5}]}}, "obj")).toEqual([
+        ["obj[a][b][0]", 1],
+        ["obj[a][b][1]", 2],
+        ["obj[a][b][2][c]", 3],
+        ["obj[a][b][2][cc]", 5],
+    ]);
+});
 
