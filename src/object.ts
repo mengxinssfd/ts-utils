@@ -5,7 +5,7 @@ export function getTreeMaxDeep(tree: object): number {
     function deeps(obj: object, num: number = 0): number {
         if (typeof tree !== "object" || tree === null) return num;
         let arr: number[] = [++num];
-        forEachObj(obj, (v, k) => {
+        forEachObj(obj, (v) => {
             arr.push(deeps(v, num));
         });
         return Math.max(...arr);
@@ -317,7 +317,7 @@ export function objKeys<T extends object, K extends keyof T>(obj: T): K[] {
  * @param obj
  */
 export function objValues<T extends object, K extends keyof T, V extends T[K]>(obj: T): V[] {
-    return reduceObj(obj, (init, v, k) => {
+    return reduceObj(obj, (init, v) => {
         init.push(v as V);
         return init;
     }, [] as V[]);
@@ -346,7 +346,7 @@ export function getObjValueByPath(obj: object, path: string, objName = ""): unkn
     const p = path.replace(/\[([^\]]+)]/g, ".$1")
         .replace(new RegExp(`^${objName}`), "")
         .replace(/^\./, "");
-    return p.split(".").reduce((init, v, k) => {
+    return p.split(".").reduce((init, v) => {
         if (!isBroadlyObj(init)) return undefined;
         return init[v];
     }, obj);
