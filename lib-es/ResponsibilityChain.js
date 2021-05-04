@@ -38,12 +38,13 @@ export class ResponsibilityChain {
     }
     start(value) {
         if (this._status === State.running)
-            return;
+            return this;
         this.initValue = value !== null && value !== void 0 ? value : this.initValue;
         this._value = value !== null && value !== void 0 ? value : this.initValue;
         this.index = 0;
         this._status = State.running;
         this.run();
+        return this;
     }
     run() {
         const { chain, index, next, done, value, initValue } = this;

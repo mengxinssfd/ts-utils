@@ -2,6 +2,7 @@ import { includes, unique } from "./array";
 import { assign, forEachObj, pickByKeys } from "./object";
 import { isArray, isString } from "./type";
 import { isDom } from "./domType";
+import { root } from "./common";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 const vendor = (() => {
@@ -247,4 +248,22 @@ export function getFontScale(reverse = false) {
         return fontSize / parseInt(realFontSize);
     }
     return parseInt(realFontSize) / fontSize;
+}
+/**
+ * 是否在iframe中
+ */
+export function inIframe() {
+    /* // 方式1
+     if (self.frameElement && self.frameElement.tagName == "IFRAME") {
+         alert('在iframe中');
+     }
+     // 方式2
+     if (window.frames.length != parent.frames.length) {
+         alert('在iframe中');
+     }
+     // 方式3
+     if (window.self != window.top) {
+         alert('在iframe中');
+     } */
+    return Boolean(root.self.frameElement && root.self.frameElement.tagName == "IFRAME");
 }

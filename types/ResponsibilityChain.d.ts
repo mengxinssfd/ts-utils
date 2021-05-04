@@ -26,7 +26,7 @@ export declare class ResponsibilityChain<T> {
     private _status;
     get status(): State;
     constructor(chain: Array<ChainItem<T> | ChainHandler<T>>, initValue?: T | undefined, onDone?: OnDone<T> | undefined);
-    start(value?: T): void;
+    start(value?: T): this;
     private run;
     private next;
     private done;

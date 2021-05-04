@@ -62,3 +62,7 @@ export declare const createElement: typeof createHtmlElement;
  * @return {number}
  */
 export declare function getFontScale(reverse?: boolean): number;
+/**
+ * 是否在iframe中
+ */
+export declare function inIframe(): boolean;
