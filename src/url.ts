@@ -1,5 +1,5 @@
 import {typeOf} from "./type";
-import {reduceObj} from "./object";
+import {forEachObj, reduceObj} from "./object";
 
 export function getUrlProtocol(url: string): string {
     const reg = /^(\w+):\/\//;
@@ -82,14 +82,14 @@ export function getUrlQuery(url: string): { [key: string]: string } {
 
 export function queryStringify(query: { [k: string]: any }): string {
     return reduceObj(query, (initValue, v, k, obj) => {
+        if (v === undefined) return initValue;
         if (typeof v === "object") {
-            for (const key in v) {
-                let val;
-                if (!v.hasOwnProperty(key) || undefined === (val = v[key])) continue;
-                initValue.push(`${k}[${key}]=${encodeURIComponent(val)}`);
-            }
+            forEachObj(v, (val, key) => {
+                if (val === undefined) return;
+                initValue.push(`${k}[${key as string}]=${encodeURIComponent(val)}`);
+            });
         } else {
-            initValue.push(`${k}=${v}`);
+            initValue.push(`${k}=${encodeURIComponent(v)}`);
         }
         return initValue;
     }, [] as string[]).join("&");
