@@ -449,3 +449,6 @@ test("promiseQueue", async () => {
     ] as any, "hello");
     expect(v2).toBe("hello thank you im fine");
 });
+test("root", async () => {
+    expect(cm.root).toBe(window);
+});
