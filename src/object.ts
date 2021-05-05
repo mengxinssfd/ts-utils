@@ -360,20 +360,16 @@ export function getObjValueByPath(obj: object, path: string, objName = ""): unkn
  * @param obj
  * @param [objName = ""]
  */
-export function getObjPathEntries(obj: object, objName = ""): [string, any][] {
-    function getArr(obj: object, outKey: string) {
-        return reduceObj(obj, (init, v, k) => {
-            const key = `${outKey}[${k as string}]`;
-            if (isBroadlyObj(v)) {
-                init.push(...getArr(v, key));
-            } else {
-                init.push([key, v]);
-            }
-            return init;
-        }, [] as [string, any][]);
-    }
-
-    return getArr(obj, objName);
+export function getObjPathEntries(obj: object, objName = ""): Array<[string, any]> {
+    return reduceObj(obj, (init, v, k) => {
+        const key = `${objName}[${k as string}]`;
+        if (isBroadlyObj(v)) {
+            init.push(...getObjPathEntries(v, key));
+        } else {
+            init.push([key, v]);
+        }
+        return init;
+    }, [] as Array<[string, any]>);
 }
 
 // TODO 根据路径还原整个object
