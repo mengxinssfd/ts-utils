@@ -440,3 +440,16 @@ export function chunk(arr: any[], chunkLen: number) {
     }
     return result;
 }
+
+/**
+ *  判断min <= num <= max
+ * @param num
+ * @param [min = Number.MIN_SAFE_INTEGER]
+ * @param [max = Number.MAX_SAFE_INTEGER]
+ */
+export function inRange(
+    num: number,
+    [min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER]: [number?, number?]
+): boolean {
+    return min <= num && num <= max
+}
