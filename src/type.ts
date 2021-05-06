@@ -6,7 +6,7 @@ export function isNative(value: any): boolean {
     const reIsNative = RegExp(`^${
         Function.prototype.toString.call(Object.prototype.hasOwnProperty)
             .replace(reRegExpChar, "\\$&")
-            .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?")
+            .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\])/g, "$1.*?")
     }$`);
     return isBroadlyObj(value) && reIsNative.test(value as any);
 }
@@ -77,8 +77,8 @@ export function isUndefined(target: any): target is undefined {
  * @param types
  */
 export function inTypes(target: any, types: string[]): boolean {
-    if (!isArray(types)) throw TypeError("inTypes param types expected Array<string> but received " + typeOf(types));
     const type = typeOf(target);
+    if (!isArray(types)) throw TypeError("inTypes param types expected Array<string> but received " + type);
     return types.indexOf(type) > -1;
 }
 
