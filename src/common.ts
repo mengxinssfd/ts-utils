@@ -7,13 +7,17 @@ import {forEachAsync, inRange} from "./array";
  * 防抖函数
  * @param callback 回调
  * @param delay 延时
+ * @param [immediate = false] 为true的时候第一次会立即执行callback并禁止立即执行，之后时间间隔内的只会执行一次callback并恢复立即执行，
+ *                            如果只执行了一次立即执行callback，那么会在一次delay延时后恢复可立即执行
+ *
  * @returns {Function}
  */
-export function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number): CB & { cancel(): void; flush: CB } {
+export function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number, immediate = false): CB & { cancel(): void; flush: CB } {
     let lastThis: any;
     let lastArgs: any;
     let lastResult: any;
     let timer: any;
+    let canImmediateRun = true;
     const cancel = () => {
         clearTimeout(timer);
         timer = undefined;
@@ -24,10 +28,20 @@ export function debounce<CB extends (...args: any[]) => any>(callback: CB, delay
         }
         lastThis = this;
         lastArgs = args;
+        if (canImmediateRun && immediate) {
+            debounced.flush();
+            canImmediateRun = false;
+            timer = setTimeout(() => {
+                canImmediateRun = true;
+            }, delay);
+            return lastResult;
+        }
         timer = setTimeout(() => {
             cancel();
             debounced.flush();
+            canImmediateRun = true;
         }, delay);
+
         return lastResult;
     } as ReturnType<typeof debounce>;
     debounced.cancel = cancel;
