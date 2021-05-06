@@ -89,7 +89,32 @@ test("debounce", async (done) => {
         // 异步代码需要调用done()
         done();
     }, 500);
-
+});
+test("debounce immediate", async (done) => {
+    let times = 0;
+    const d = cm.debounce(() => times++, 100, true);
+    d();
+    expect(times).toBe(1);
+    d.flush();
+    expect(times).toBe(2);
+    d();
+    d.cancel();
+    await sleep(500);
+    setTimeout(d, 10);
+    setTimeout(d, 20);
+    setTimeout(d, 30);
+    setTimeout(d, 40);
+    setTimeout(() => {
+        expect(times).toBe(3);
+    }, 500);
+    await sleep(1000);
+    times = 0;
+    d();
+    setTimeout(() => {
+        expect(times).toBe(1);
+        // 异步代码需要调用done()
+        done();
+    }, 500);
 });
 
 test("oneByOne", (done) => {
@@ -440,7 +465,7 @@ test("promiseQueue", async () => {
             (v) => Promise.reject(`${v} im fine`),
         ], "hello");
     } catch (e) {
-        expect(e).toBe("hello thank you im fine")
+        expect(e).toBe("hello thank you im fine");
     }
 
     const v2 = await fn([
@@ -475,16 +500,16 @@ test("numToFixed", async () => {
     expect(fn(0.5 + 0.07, 2)).toBe("0.57");
 
     expect(() => {
-        0.1.toFixed(-1)
+        0.1.toFixed(-1);
     }).toThrowError();
     expect(() => {
-        fn(0.1, -1)
+        fn(0.1, -1);
     }).toThrowError();
     expect(() => {
-        0.1.toFixed(101)
+        0.1.toFixed(101);
     }).toThrowError();
     expect(() => {
-        fn(0.1, 101)
+        fn(0.1, 101);
     }).toThrowError();
 
     // const f = fn(0.1, 100);
