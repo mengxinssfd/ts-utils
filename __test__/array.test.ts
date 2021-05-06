@@ -572,3 +572,10 @@ test("arrayRemoveItemsBy", () => {
     expect(fn(v => v === 1, a1)).toEqual([1]);
     expect(a1).toEqual([2, 3, 4, 5]);
 });
+test("inRange", () => {
+    const fn = arr.inRange;
+    expect(fn(0, [, 100])).toBeTruthy();
+    expect(fn(0, [0])).toBeTruthy();
+    expect(fn(0, [1])).toBeFalsy();
+    expect(fn(0, [1, 2])).toBeFalsy();
+});
