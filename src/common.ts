@@ -1,7 +1,7 @@
 import {createTimeCountDown} from "./time";
-import {isArray, isString, isPromiseLike} from "./type";
+import {isArray, isString, isPromiseLike, isNumber} from "./type";
 import {assign, getReverseObj} from "./object";
-import {forEachAsync} from "./array";
+import {forEachAsync, inRange} from "./array";
 
 /**
  * 防抖函数
@@ -557,4 +557,41 @@ export const root = Function("return this")();
 export function removeStrByNum(from: string, num: number, removeStr: string): string {
     let times = 1;
     return String(from).replace(new RegExp(removeStr, "g"), v => times++ === num ? "" : v);
+}
+
+
+/**
+ * 原来的函数四舍五入不准确
+ * @param num
+ * @param [fractionDigits = 0]
+ * @param [rounding = false] 是否四舍五入
+ */
+export function numToFixed(num: number, fractionDigits = 0, rounding = false): string {
+    if (!isNumber(fractionDigits) || !inRange(fractionDigits, [0, 100])) {
+        throw new TypeError("numToFixed() fractionDigits argument must be between 0 and 100");
+    }
+
+    if (fractionDigits === 0) return String(~~num);
+
+
+    function merge(split: string[], len = 0) {
+        const digits = strPadEnd((split[1] || "").substr(0, len), len, "0");
+        return split[0] + "." + digits;
+    }
+
+    let split = String(num).split(".");
+    const numDigitsLen = split[1]?.length || 0;
+    if (numDigitsLen < fractionDigits) {
+        return merge(split, fractionDigits);
+    }
+
+    const base = 10;
+    // 加1 四舍五入
+    const pow = base ** (fractionDigits + 1);
+    num *= pow;
+    if (rounding) {
+        num = ~~(num + 5);
+    }
+    num /= pow;
+    return merge(String(num).split("."), fractionDigits);
 }
