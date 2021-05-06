@@ -198,15 +198,14 @@ export function polling(callback: (times: number) => void | Promise<any>, interv
     let diff = 0;
 
     function run() {
-        if (status !== state.running) return;
         const back = callback(times++);
         (back instanceof Promise) ? back.then(timeout) : timeout();
     }
 
     function timeout() {
-        if (status !== state.running) return;
         const delay = interval - diff;
         timer = window.setTimeout(() => {
+            if (status !== state.running) return;
             const now = Date.now();
             diff = now - lastTime - delay;
             lastTime = now;
