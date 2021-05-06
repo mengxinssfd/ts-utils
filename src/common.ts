@@ -180,23 +180,29 @@ export function polling(callback: (times: number) => void | Promise<any>, interv
     let timer: number;
     let status: state;
     let times = 0;
+    let lastTime = Date.now();
+    let diff = 0;
 
-    function handle() {
+    function run() {
+        if (status !== state.running) return;
         const back = callback(times++);
-        if (status === state.running) {
-            (back instanceof Promise) ? (back as Promise<any>).then(function () {
-                timeout();
-            }) : timeout();
-        }
+        (back instanceof Promise) ? back.then(timeout) : timeout();
     }
 
     function timeout() {
-        timer = window.setTimeout(handle, interval);
+        if (status !== state.running) return;
+        const delay = interval - diff;
+        timer = window.setTimeout(() => {
+            const now = Date.now();
+            diff = now - lastTime - delay;
+            lastTime = now;
+            run();
+        }, delay);
     }
 
     status = state.running;
     if (immediate) {
-        handle();
+        run();
     } else {
         timeout();
     }
@@ -559,7 +565,6 @@ export function removeStrByNum(from: string, num: number, removeStr: string): st
     return String(from).replace(new RegExp(removeStr, "g"), v => times++ === num ? "" : v);
 }
 
-
 /**
  * 原来的函数四舍五入不准确
  * @param num
@@ -573,8 +578,7 @@ export function numToFixed(num: number, fractionDigits = 0, rounding = false): s
 
     if (fractionDigits === 0) return String(~~num);
 
-
-    function merge(split: string[], len = 0) {
+    function merge(split: string[], len: number) {
         const digits = strPadEnd((split[1] || "").substr(0, len), len, "0");
         return split[0] + "." + digits;
     }
