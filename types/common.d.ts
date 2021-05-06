@@ -2,9 +2,12 @@
  * 防抖函数
  * @param callback 回调
  * @param delay 延时
+ * @param [immediate = false] 为true的时候第一次会立即执行callback并禁止立即执行，之后时间间隔内的只会执行一次callback并恢复立即执行，
+ *                            如果只执行了一次立即执行callback，那么会在一次delay延时后恢复可立即执行
+ *
  * @returns {Function}
  */
-export declare function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number): CB & {
+export declare function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number, immediate?: boolean): CB & {
     cancel(): void;
     flush: CB;
 };
@@ -131,3 +134,10 @@ export declare const root: any;
  * @param removeStr
  */
 export declare function removeStrByNum(from: string, num: number, removeStr: string): string;
+/**
+ * 原来的函数四舍五入不准确
+ * @param num
+ * @param [fractionDigits = 0]
+ * @param [rounding = false] 是否四舍五入
+ */
+export declare function numToFixed(num: number, fractionDigits?: number, rounding?: boolean): string;

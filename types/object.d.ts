@@ -100,3 +100,21 @@ export declare function objValues<T extends object, K extends keyof T, V extends
  * @param obj
  */
 export declare function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K]][];
+/**
+ * 通过object路径获取值
+ * @example
+ * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
+ * @param obj
+ * @param path
+ * @param [objName = ""]
+ */
+export declare function getObjValueByPath(obj: object, path: string, objName?: string): unknown;
+/**
+ * 获取object的路径数组
+ * @example
+ * getObjPathEntries({a: 1}) // => [["[a]", 1]]
+ * getObjPathEntries({a: 1},"obj") // => [["obj[a]", 1]]
+ * @param obj
+ * @param [objName = ""]
+ */
+export declare function getObjPathEntries(obj: object, objName?: string): Array<[string, any]>;

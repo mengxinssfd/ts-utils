@@ -85,4 +85,11 @@ export declare function castArray<T>(value: T): T[];
  * @param chunkLen
  */
 export declare function chunk(arr: any[], chunkLen: number): any[];
+/**
+ *  判断min <= num <= max
+ * @param num
+ * @param [min = Number.MIN_SAFE_INTEGER]
+ * @param [max = Number.MAX_SAFE_INTEGER]
+ */
+export declare function inRange(num: number, [min, max]: [number?, number?]): boolean;
 export {};

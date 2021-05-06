@@ -1,18 +1,22 @@
 import { createTimeCountDown } from "./time";
-import { isArray, isString, isPromiseLike } from "./type";
+import { isArray, isString, isPromiseLike, isNumber } from "./type";
 import { assign, getReverseObj } from "./object";
-import { forEachAsync } from "./array";
+import { forEachAsync, inRange } from "./array";
 /**
  * 防抖函数
  * @param callback 回调
  * @param delay 延时
+ * @param [immediate = false] 为true的时候第一次会立即执行callback并禁止立即执行，之后时间间隔内的只会执行一次callback并恢复立即执行，
+ *                            如果只执行了一次立即执行callback，那么会在一次delay延时后恢复可立即执行
+ *
  * @returns {Function}
  */
-export function debounce(callback, delay) {
+export function debounce(callback, delay, immediate = false) {
     let lastThis;
     let lastArgs;
     let lastResult;
     let timer;
+    let canImmediateRun = true;
     const cancel = () => {
         clearTimeout(timer);
         timer = undefined;
@@ -23,9 +27,18 @@ export function debounce(callback, delay) {
         }
         lastThis = this;
         lastArgs = args;
+        if (canImmediateRun && immediate) {
+            debounced.flush();
+            canImmediateRun = false;
+            timer = setTimeout(() => {
+                canImmediateRun = true;
+            }, delay);
+            return lastResult;
+        }
         timer = setTimeout(() => {
             cancel();
             debounced.flush();
+            canImmediateRun = true;
         }, delay);
         return lastResult;
     };
@@ -169,20 +182,26 @@ export function polling(callback, interval, immediate = true) {
     let timer;
     let status;
     let times = 0;
-    function handle() {
+    let lastTime = Date.now();
+    let diff = 0;
+    function run() {
         const back = callback(times++);
-        if (status === state.running) {
-            (back instanceof Promise) ? back.then(function () {
-                timeout();
-            }) : timeout();
-        }
+        (back instanceof Promise) ? back.then(timeout) : timeout();
     }
     function timeout() {
-        timer = window.setTimeout(handle, interval);
+        const delay = interval - diff;
+        timer = window.setTimeout(() => {
+            if (status !== state.running)
+                return;
+            const now = Date.now();
+            diff = now - lastTime - delay;
+            lastTime = now;
+            run();
+        }, delay);
     }
     status = state.running;
     if (immediate) {
-        handle();
+        run();
     }
     else {
         timeout();
@@ -505,4 +524,36 @@ export const root = Function("return this")();
 export function removeStrByNum(from, num, removeStr) {
     let times = 1;
     return String(from).replace(new RegExp(removeStr, "g"), v => times++ === num ? "" : v);
+}
+/**
+ * 原来的函数四舍五入不准确
+ * @param num
+ * @param [fractionDigits = 0]
+ * @param [rounding = false] 是否四舍五入
+ */
+export function numToFixed(num, fractionDigits = 0, rounding = false) {
+    var _a;
+    if (!isNumber(fractionDigits) || !inRange(fractionDigits, [0, 100])) {
+        throw new TypeError("numToFixed() fractionDigits argument must be between 0 and 100");
+    }
+    if (fractionDigits === 0)
+        return String(~~num);
+    function merge(split, len) {
+        const digits = strPadEnd((split[1] || "").substr(0, len), len, "0");
+        return split[0] + "." + digits;
+    }
+    let split = String(num).split(".");
+    const numDigitsLen = ((_a = split[1]) === null || _a === void 0 ? void 0 : _a.length) || 0;
+    if (numDigitsLen < fractionDigits) {
+        return merge(split, fractionDigits);
+    }
+    const base = 10;
+    // 加1 四舍五入
+    const pow = base ** (fractionDigits + 1);
+    num *= pow;
+    if (rounding) {
+        num = ~~(num + 5);
+    }
+    num /= pow;
+    return merge(String(num).split("."), fractionDigits);
 }

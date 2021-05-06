@@ -3,8 +3,8 @@ export function isNative(value) {
     const reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
     const reIsNative = RegExp(`^${Function.prototype.toString.call(Object.prototype.hasOwnProperty)
         .replace(reRegExpChar, "\\$&")
-        .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?")}$`);
-    return isBroadlyObject(value) && reIsNative.test(value);
+        .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\])/g, "$1.*?")}$`);
+    return isBroadlyObj(value) && reIsNative.test(value);
 }
 // 获取数据类型
 export function typeOf(target) {
@@ -16,7 +16,7 @@ export function typeOf(target) {
 export function isObject(target) {
     return typeOf(target) === "object";
 }
-export function isBroadlyObject(value) {
+export function isBroadlyObj(value) {
     const type = typeof value;
     return value != null && (type === "object" || type === "function");
 }
@@ -64,9 +64,9 @@ export function isUndefined(target) {
  * @param types
  */
 export function inTypes(target, types) {
-    if (!isArray(types))
-        throw TypeError("inTypes param types expected Array<string> but received " + typeOf(types));
     const type = typeOf(target);
+    if (!isArray(types))
+        throw TypeError("inTypes param types expected Array<string> but received " + type);
     return types.indexOf(type) > -1;
 }
 // 参考is-promise
