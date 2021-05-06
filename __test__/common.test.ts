@@ -452,3 +452,41 @@ test("promiseQueue", async () => {
 test("root", async () => {
     expect(cm.root).toBe(window);
 });
+test("numToFixed", async () => {
+    const fn = cm.numToFixed;
+    expect(0.45.toFixed(1)).toBe("0.5");
+    expect(fn(0.45, 1)).toBe("0.4");
+    expect(fn(0.45, 1, true)).toBe("0.5");
+
+    expect(1.45.toFixed(1)).toBe("1.4");
+    expect(fn(1.45, 1, true)).toBe("1.5");
+    expect(fn(1.45, 1)).toBe("1.4");
+
+    expect((1).toFixed(2)).toBe("1.00");
+    expect(fn(1, 2)).toBe("1.00");
+    expect(fn(1, 2, true)).toBe("1.00");
+
+    expect((1.45).toFixed()).toBe("1");
+    expect(fn(1.45)).toBe("1");
+    expect(fn(1.45, undefined, true)).toBe("1");
+
+    expect(0.5 + 0.07).not.toBe(0.57);
+    expect((0.5 + 0.07).toFixed(2)).toBe("0.57");
+    expect(fn(0.5 + 0.07, 2)).toBe("0.57");
+
+    expect(() => {
+        0.1.toFixed(-1)
+    }).toThrowError();
+    expect(() => {
+        fn(0.1, -1)
+    }).toThrowError();
+    expect(() => {
+        0.1.toFixed(101)
+    }).toThrowError();
+    expect(() => {
+        fn(0.1, 101)
+    }).toThrowError();
+
+    // const f = fn(0.1, 100);
+    // expect(0.1.toFixed(100)).toBe(f)
+});
