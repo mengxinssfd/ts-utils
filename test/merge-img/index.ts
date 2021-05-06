@@ -189,3 +189,11 @@ declare const Vue: any;
     );
 })();
 */
+import {debounce} from "../../src";
+
+let time = Date.now();
+addEventListener("keyup", debounce(() => {
+    const now = Date.now();
+    console.log(now - time);
+    time = now;
+}, 1000));
