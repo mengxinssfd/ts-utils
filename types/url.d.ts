@@ -17,3 +17,5 @@ export declare function queryStringify(query: {
  * @param [noDecode=false]
  */
 export declare function getUrlParam(name: string, url?: string, noDecode?: boolean): string;
+export declare const UrlRegExp: RegExp;
+export declare function isUrl(url: string): boolean;
