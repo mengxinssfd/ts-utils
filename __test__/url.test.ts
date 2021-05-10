@@ -1,3 +1,4 @@
+import {subString} from "../src";
 import {UrlModel} from "../src/UrlModel";
 import {
     getUrlHash,
@@ -8,6 +9,8 @@ import {
     getUrlQuery,
     queryStringify,
     getUrlParam,
+    UrlRegExp,
+    isUrl,
 } from "../src/url";
 
 const url = "http://www.baidu.com:112332/index.php/admin/MonitorResultManager/monitorData?a%5B%5D=123&a%5B%5D=on&b%5B0%5D=on&b%5B1%5D=on&c=1&c=2&c=3&d=1,2,3,4,5&pid=19&pname=%E7%8E%AF%E7%90%83%E8%B4%B8%E6%98%93%E9%A1%B9%E7%9B%AE%E5%9F%BA%E5%9D%91%E5%9C%B0%E9%93%812%E5%8F%B7%E7%BA%BF%E9%9A%A7%E9%81%93%E7%BB%93%E6%9E%84%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9B%91%E6%B5%8B#test";
@@ -87,4 +90,42 @@ test("getUrlParam", () => {
     // expect(fn("d[0]", url2)).toEqual("4");
     // expect(fn("d[1]", url2)).toEqual("5");
     // expect(fn("d", url2)).toEqual([4, 5]);
+});
+test("UrlRegExp", () => {
+    const ure = UrlRegExp;
+    const realUrl = "https://www.haodanku.com/Openapi/api_detail?id=15#api-parameter";
+
+    expect(ure.test(realUrl)).toBeTruthy();
+    expect(
+        "http://test.com,https://hello.cn".match(
+            new RegExp(`${subString(ure.source, 1, -1)}`, "g"),
+        ),
+    ).toEqual(["http://test.com", "https://hello.cn"]);
+    // 不能分割带path的，所以不能用作分割用
+    expect(
+        "http://test.com/test,https://hello.cn".match(
+            new RegExp(`(${subString(ure.source, 1, -1)})`, "g"),
+        ),
+    ).not.toEqual(["http://test.com/12/sdffte/index", "https://hello.cn"]);
+});
+test("isUrl", () => {
+    const fn = isUrl;
+    const realUrl = "https://www.haodanku.com/Openapi/api_detail?id=15";
+
+    expect(fn(realUrl)).toBeTruthy();
+    // 不能识别普通网址的端口号
+    expect(fn("http://www.baidu.com:112332/index.php/admin/MonitorResultManager/monitorData")).toBeFalsy();
+    expect(fn("http://www.baidu.com/index.php/admin/MonitorResultManager/monitorData")).toBeTruthy();
+    // 可以识别localhost的端口号
+    expect(fn("http://localhost:1122/index.php/admin/MonitorResultManager/monitorData")).toBeTruthy();
+    // 端口号范围在2位数到5位数
+    expect(fn("http://localhost:111222/index.php/admin/MonitorResultManager/monitorData")).toBeFalsy();
+    expect(fn("http://localhost:2/index.php/admin/MonitorResultManager/monitorData")).toBeFalsy();
+
+    // 能识别encodeURIComponent转换过的数据
+    expect(fn("http://www.baidu.com/index.php/admin/MonitorResultManager/monitorData?a%5B%5D=123&a%5B%5D=on&b%5B0%5D=on")).toBeTruthy();
+    // 识别hash
+    expect(fn("http://www.baidu.com/index.php/?a%5B%5D=123&a%5B%5D=on&b%5B0%5D=on#api-parameter")).toBeTruthy();
+    // 识别[]
+    expect(fn("http://www.baidu.com/index.php/?a=1123&b[0]=1&b[1]=2&b[2]=3")).toBeTruthy();
 });
