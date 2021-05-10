@@ -612,3 +612,16 @@ export function numToFixed(num: number, fractionDigits = 0, rounding = false): s
     num /= pow;
     return merge(String(num).split("."), fractionDigits);
 }
+
+/**
+ * 切割字符串
+ * @param str
+ * @param start
+ * @param {number?} [end=str.length] end为正数时与String.prototype.substring效果一致，为负数时相当于end+str.length
+ */
+export function subString(str: string, start: number, end = str.length): string {
+    if (end < 0) {
+        end += str.length;
+    }
+    return str.substring(start, end);
+}
