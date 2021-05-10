@@ -515,3 +515,14 @@ test("numToFixed", async () => {
     // const f = fn(0.1, 100);
     // expect(0.1.toFixed(100)).toBe(f)
 });
+test("subString", async () => {
+    const fn = cm.subString;
+    expect(fn("test", 0, -1)).toBe("tes");
+    expect(fn("test", 2, -1)).toBe("s");
+    expect(fn("test", 0, -2)).toBe("te");
+    expect(fn("test", 0, -4)).toBe("");
+    expect(fn("test", 0, -10)).toBe("");
+
+    expect(fn("test", 0, 3)).toBe("tes");
+    expect(fn("test", 0, 2)).toBe("te");
+});
