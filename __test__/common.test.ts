@@ -525,4 +525,5 @@ test("subString", async () => {
 
     expect(fn("test", 0, 3)).toBe("tes");
     expect(fn("test", 0, 2)).toBe("te");
+    expect(fn("test", 1)).toBe("est");
 });
