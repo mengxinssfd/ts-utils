@@ -139,19 +139,28 @@ export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSSty
 /**
  * 手动添加img标签下载图片
  * @param url
+ * @param [props = {}] img标签的属性
  */
-export function loadImg(url: string): Promise<HTMLImageElement> {
+export function loadImg(url: string, props: Partial<HTMLImageElement> = {}): Promise<HTMLImageElement> {
     return new Promise<HTMLImageElement>(function (resolve, reject) {
-        const img = new Image();
-        // 不支持crossOrigin的浏览器（IE 10及以下版本不支持，Android 4.3 及以下版本不支持）
-        // 可以使用 XMLHttprequest 和 URL.createObjectURL() 来做兼容
-        img.setAttribute("crossOrigin", "anonymous");
-        img.onload = () => {
-            resolve(img);
-        };
-        img.onabort = img.onerror = (ev) => {
+        // const img = new Image();
+        const onerror = (ev) => {
             reject(ev);
         };
+        const img = createHtmlElement("img", {
+            props: assign({
+                // 不支持crossOrigin的浏览器（IE 10及以下版本不支持，Android 4.3 及以下版本不支持）
+                // 可以使用 XMLHttprequest 和 URL.createObjectURL() 来做兼容
+                // 不是所有的图片都支持 如http://gchat.qpic.cn/gchatpic_new/0/0-0-58CAD4E2605562E55627B37C15FACB65/0?term=2
+                crossOrigin: "anonymous",
+                onload() {
+                    resolve(img);
+                },
+                onabort: onerror,
+                onerror
+            }, props),
+            parent: null
+        });
         img.src = url;
     });
 }
@@ -296,5 +305,5 @@ export function inIframe(): boolean {
          alert('在iframe中');
      } */
 
-    return Boolean(root.self.frameElement && root.self.frameElement.tagName == "IFRAME");
+    return Boolean(root.self.frameElement && root.self.frameElement.tagName === "IFRAME");
 }
