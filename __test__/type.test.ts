@@ -270,4 +270,20 @@ test("isPercent", function () {
     expect(fn("10..0% ")).toBeFalsy();
     expect(fn("10.0.0% ")).toBeFalsy();
     expect(fn(".1% ")).toBeFalsy();
+    expect(fn("")).toBeFalsy();
+    expect(fn(" ")).toBeFalsy();
+});
+test("isIncludeChinese", function () {
+    const fn = type.isIncludeChinese;
+    expect(fn("哈")).toBeTruthy();
+    expect(fn("哈水电费第三方")).toBeTruthy();
+    expect(fn("哈水电费1第三方")).toBeTruthy();
+    expect(fn("哈水电费.第三方")).toBeTruthy();
+    expect(fn("哈水电费_第三方")).toBeTruthy();
+    expect(fn("哈水电费 第三方")).toBeTruthy();
+    expect(fn("")).toBeFalsy();
+    expect(fn("1231")).toBeFalsy();
+    expect(fn("-=")).toBeFalsy();
+    expect(fn(" ")).toBeFalsy();
+    expect(fn("$$%%")).toBeFalsy();
 });
