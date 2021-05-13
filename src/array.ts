@@ -1,4 +1,4 @@
-import {typeOf, isNaN, isArray, isArrayLike, isFunction} from "./type";
+import {typeOf, isNaN, isArray, isArrayLike, isFunction} from "./dataType";
 
 /**
  * @description len与end两个都有值时，以小的为准

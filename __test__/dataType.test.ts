@@ -1,4 +1,4 @@
-import * as type from "../src/type";
+import * as type from "../src/dataType";
 import * as cm from "../src/common";
 
 test("typeOf", () => {

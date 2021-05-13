@@ -1,4 +1,4 @@
-import {isFunction} from "./type";
+import {isFunction} from "./dataType";
 
 type Next<T> = (value: T) => void;
 type Done<T> = (value?: T | unknown) => void;

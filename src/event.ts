@@ -1,6 +1,6 @@
 import {includes} from "./array";
 import {isDom} from "./domType";
-import {isFunction, isString} from "./type";
+import {isFunction, isString} from "./dataType";
 
 type xy = { x: number, y: number }
 type OnDown = (e: MouseEvent | TouchEvent, currentXY: xy) => any

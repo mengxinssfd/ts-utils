@@ -2,7 +2,7 @@ import {isHEXColor, isRGBColor} from "../src/color";
 import * as cm from "../src/random";
 import {forEachByLen} from "../src/common";
 import {createArray, unique} from "../src/array";
-import {isArrayLike} from "../src/type";
+import {isArrayLike} from "../src/dataType";
 import {omit} from "../src/object";
 
 test("randomFloat", () => {

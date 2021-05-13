@@ -1,4 +1,4 @@
-import {isUndefined} from "./type";
+import {isUndefined} from "./dataType";
 
 export function isDomIe8(target: any): target is HTMLElement {
     // 节点类型常用的有3种，元素节点Node.ELEMENT_NODE(1)；属性节点Node.ATTRIBUTE_NODE(2)以及文本节点Node.TEXT_NODE(3)

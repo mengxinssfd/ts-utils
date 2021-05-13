@@ -1,5 +1,5 @@
 // 数字计算
-import {isArray} from "./type";
+import {isArray} from "./dataType";
 
 /**
  * 把错误的数据转正  from number-precision

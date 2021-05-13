@@ -1,5 +1,5 @@
 import {root} from "./common";
-import {isNative, isNaN} from "./type";
+import {isNative, isNaN} from "./dataType";
 
 abstract class CacheSup<T> {
     abstract set(value: T): this;

@@ -1,6 +1,6 @@
 import {isRGBColor} from "./color";
 import {randomInt} from "./random";
-import {isArray} from "./type";
+import {isArray} from "./dataType";
 
 function getLimitValue(value: number) {
     return Math.max(0, Math.min(value, 255));

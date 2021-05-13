@@ -1,7 +1,7 @@
 import {includes, unique} from "./array";
 import {assign, forEachObj, pickByKeys} from "./object";
 import {ReadonlyKeys} from "./TsTypes";
-import {isArray, isString} from "./type";
+import {isArray, isString} from "./dataType";
 import {isDom} from "./domType";
 import {root} from "./common";
 // 所有主要浏览器都支持 createElement() 方法

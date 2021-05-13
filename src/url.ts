@@ -1,4 +1,4 @@
-import {typeOf} from "./type";
+import {typeOf} from "./dataType";
 import {forEachObj, reduceObj} from "./object";
 
 export function getUrlProtocol(url: string): string {

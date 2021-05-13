@@ -1,7 +1,7 @@
 import {createArray} from "./array";
 import {deepCloneBfs} from "./clone";
 import {strPadStart} from "./common";
-import {isArrayLike, isNumber} from "./type";
+import {isArrayLike, isNumber} from "./dataType";
 
 // min end都不传  return Math.random()
 export function randomFloat(): number
