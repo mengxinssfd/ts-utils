@@ -1,7 +1,7 @@
 import { createArray } from "./array";
 import { deepCloneBfs } from "./clone";
 import { strPadStart } from "./common";
-import { isArrayLike, isNumber } from "./type";
+import { isArrayLike, isNumber } from "./dataType";
 export function randomFloat(min, max, len) {
     // randomFloat()
     if (!arguments.length)

@@ -158,3 +158,10 @@ export function isPercent(value) {
     const reg = /^\d+(\.\d+)?%$/;
     return reg.test(value.trim());
 }
+/**
+ * 是否包含中文
+ * @param value
+ */
+export function isIncludeChinese(value) {
+    return /[\u4e00-\u9fa5]/.test(value);
+}

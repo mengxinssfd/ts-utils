@@ -1,4 +1,4 @@
-import { isArray, isObject, isBroadlyObj } from "./type";
+import { isArray, isObject, isBroadlyObj } from "./dataType";
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree) {
     function deeps(obj, num = 0) {

@@ -29,15 +29,16 @@ export declare function cssSupport<K extends keyof CSSStyleDeclaration, V extend
 /**
  * 手动添加img标签下载图片
  * @param url
+ * @param [props = {}] img标签的属性
  */
-export declare function loadImg(url: string): Promise<HTMLImageElement>;
+export declare function loadImg(url: string, props?: Partial<HTMLImageElement>): Promise<HTMLImageElement>;
 export declare function loadScript(url: string): Promise<HTMLScriptElement>;
 export declare function loadScript<T extends (script: HTMLScriptElement) => void>(url: string, successFn: T, errorFn?: Function): void;
 /**
- * @param el
+ * @param [el = window]
  * @return {}
  */
-export declare function noScroll(el: Window | HTMLElement | string): () => void;
+export declare function noScroll(el?: Window | HTMLElement | string): () => void;
 /**
  * 通过object来生成html元素
  * @tips: attribute（特性），是我们赋予某个事物的特质或对象。property（属性），是早已存在的不需要外界赋予的特质。

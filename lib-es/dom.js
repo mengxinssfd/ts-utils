@@ -1,6 +1,6 @@
 import { includes, unique } from "./array";
 import { assign, forEachObj, pickByKeys } from "./object";
-import { isArray, isString } from "./type";
+import { isArray, isString } from "./dataType";
 import { isDom } from "./domType";
 import { root } from "./common";
 // 所有主要浏览器都支持 createElement() 方法
@@ -123,19 +123,28 @@ export function cssSupport(key, value) {
 /**
  * 手动添加img标签下载图片
  * @param url
+ * @param [props = {}] img标签的属性
  */
-export function loadImg(url) {
+export function loadImg(url, props = {}) {
     return new Promise(function (resolve, reject) {
-        const img = new Image();
-        // 不支持crossOrigin的浏览器（IE 10及以下版本不支持，Android 4.3 及以下版本不支持）
-        // 可以使用 XMLHttprequest 和 URL.createObjectURL() 来做兼容
-        img.setAttribute("crossOrigin", "anonymous");
-        img.onload = () => {
-            resolve(img);
-        };
-        img.onabort = img.onerror = (ev) => {
+        // const img = new Image();
+        const onerror = (ev) => {
             reject(ev);
         };
+        const img = createHtmlElement("img", {
+            props: assign({
+                // 不支持crossOrigin的浏览器（IE 10及以下版本不支持，Android 4.3 及以下版本不支持）
+                // 可以使用 XMLHttprequest 和 URL.createObjectURL() 来做兼容
+                // 不是所有的图片都支持 如http://gchat.qpic.cn/gchatpic_new/0/0-0-58CAD4E2605562E55627B37C15FACB65/0?term=2
+                crossOrigin: "anonymous",
+                onload() {
+                    resolve(img);
+                },
+                onabort: onerror,
+                onerror,
+            }, props),
+            parent: null,
+        });
         img.src = url;
     });
 }
@@ -166,32 +175,32 @@ export function loadScript(url, successFn, errorFn) {
     });
 }
 /**
- * @param el
+ * @param [el = window]
  * @return {}
  */
-export function noScroll(el) {
-    let target = el;
+export function noScroll(el = window) {
+    let scroller = el;
     if (isString(el)) {
-        target = document.querySelector(el);
-        if (!target)
+        scroller = document.querySelector(el);
+        if (!scroller)
             throw new Error(`el not found`);
     }
     else if (el === window) {
-        if (document.documentElement.scrollTop) {
-            target = document.documentElement;
+        if (document.body.scrollTop) {
+            scroller = document.body;
         }
         else {
-            target = document.body;
+            scroller = document.documentElement;
         }
     }
-    const last = pickByKeys(target.style, ["marginTop", "overflow"]);
-    const scrollTop = target.scrollTop;
-    target.scrollTop = 0;
-    target.style.overflow = "hidden";
-    target.style.marginTop = -scrollTop + "px";
+    const last = pickByKeys(scroller.style, ["marginTop", "overflow"]);
+    const scrollTop = scroller.scrollTop;
+    scroller.scrollTop = 0;
+    scroller.style.overflow = "hidden";
+    scroller.style.marginTop = (-scrollTop + scroller.style.marginTop) + "px";
     return function () {
-        target.scrollTop = scrollTop;
-        assign(target.style, last);
+        scroller.scrollTop = scrollTop;
+        assign(scroller.style, last);
     };
 }
 /**
@@ -265,5 +274,7 @@ export function inIframe() {
      if (window.self != window.top) {
          alert('在iframe中');
      } */
-    return Boolean(root.self.frameElement && root.self.frameElement.tagName == "IFRAME");
+    return Boolean(root.self.frameElement && root.self.frameElement.tagName === "IFRAME"
+        || root.frames.length !== parent.frames.length
+        || root.self !== root.top);
 }

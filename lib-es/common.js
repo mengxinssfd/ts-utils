@@ -1,5 +1,5 @@
 import { createTimeCountDown } from "./time";
-import { isArray, isString, isPromiseLike, isNumber } from "./type";
+import { isArray, isString, isPromiseLike, isNumber } from "./dataType";
 import { assign, getReverseObj } from "./object";
 import { forEachAsync, inRange } from "./array";
 /**

@@ -1,5 +1,5 @@
 import { root } from "./common";
-import { isNative, isNaN } from "./type";
+import { isNative, isNaN } from "./dataType";
 class CacheSup {
 }
 export class ListCache extends CacheSup {

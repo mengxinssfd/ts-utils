@@ -1,4 +1,4 @@
-import { isFunction } from "./type";
+import { isFunction } from "./dataType";
 var State;
 (function (State) {
     State["ready"] = "ready";

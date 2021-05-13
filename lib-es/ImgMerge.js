@@ -1,7 +1,7 @@
 import { arrayRemoveItem, insertToArray } from "./array";
 import { isImgElement } from "./domType";
 import { assign } from "./object";
-import { isNumber, isPromiseLike } from "./type";
+import { isNumber, isPromiseLike } from "./dataType";
 import { loadImg, createElement } from "./dom";
 let id = 0;
 class Node {

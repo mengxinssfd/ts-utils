@@ -12,7 +12,7 @@ export * from "./eventBus";
 export * from "./ImgMerge";
 export * from "./numberCalc";
 export * from "./OneByOne";
-export * from "./type";
+export * from "./dataType";
 export * from "./url";
 export * from "./UrlModel";
 export * from "./object";

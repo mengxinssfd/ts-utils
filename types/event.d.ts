@@ -25,6 +25,17 @@ export declare function addDragEventListener({ el, onDown, onMove, onUp, capture
     };
 }): () => void;
 /**
+ * 缩放
+ * @param el
+ * @param onScale
+ * @param capture
+ */
+export declare function addScaleEventListener(el: HTMLElement | string, onScale: (scale: number) => void, capture?: {
+    down?: boolean;
+    up?: boolean;
+    move?: boolean;
+}): () => void;
+/**
  * dom resize event
  * @param el
  * @param handler
