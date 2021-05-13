@@ -1,4 +1,5 @@
 import {includes} from "./array";
+import {getDistance} from "./coordinate";
 import {isDom} from "./domType";
 import {isFunction, isString} from "./dataType";
 
@@ -142,6 +143,76 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
     // 返回取消全部事件函数
     return removeAllEventListener;
 }
+
+/**
+ * 缩放
+ * @param el
+ * @param onScale
+ * @param capture
+ */
+export function addScaleEventListener(el: HTMLElement | string, onScale: (scale: number) => void, capture: {
+    down?: boolean;
+    up?: boolean;
+    move?: boolean;
+} = {down: false, up: true, move: false}) {
+    let dom: HTMLElement | Window = el as HTMLElement;
+    if (!isDom(el)) {
+        if (isString(el)) {
+            dom = document.querySelector(<string>el) as HTMLElement;
+            if (!dom) {
+                throw new Error("element not found!");
+            }
+        } else {
+            dom = window;
+        }
+    }
+
+    let startDistance = 0;
+    const show = document.querySelector(".test") as HTMLDivElement;
+
+    function getDis(touches: TouchList) {
+        const t1 = touches[0];
+        const t2 = touches[1];
+        return getDistance([t1.pageX, t1.pageY], [t2.pageX, t2.pageY]);
+    }
+
+    function move(e: TouchEvent) {
+        if (e.touches.length < 2) return;
+        show.innerText += 1;
+        const rate = +(getDis(e.touches) / startDistance).toFixed(2);
+        onScale(rate);
+    }
+
+    function up(e: TouchEvent) {
+        removeEvent();
+    }
+
+    function touchStart(e: TouchEvent) {
+        if (e.touches.length < 2) return;
+        window.addEventListener("touchmove", move, capture.move);
+        window.addEventListener("touchend", up, capture.up);
+        window.addEventListener("touchcancel", up, capture.up);
+        startDistance = getDis(e.touches);
+        show.innerText += startDistance;
+    }
+
+    function removeEvent() {
+        window.removeEventListener("touchmove", move, capture.move);
+        window.removeEventListener("touchend", up, capture.up);
+        window.removeEventListener("touchcancel", up, capture.up);
+    }
+
+    // 移除全部事件
+    function removeAllEventListener() {
+        dom.removeEventListener("touchstart", touchStart as any, capture.down);
+        removeEvent();
+    }
+
+    dom.addEventListener("touchstart", touchStart as any, capture.down);
+    show.innerText += "init";
+    return removeAllEventListener;
+}
+
 
 // from => https://blog.crimx.com/2017/07/15/element-onresize/
 // TODO 未测
