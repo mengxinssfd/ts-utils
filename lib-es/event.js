@@ -46,8 +46,10 @@ export function addDragEventListener({ el, onDown, onMove, onUp, capture = { dow
     // touch与mouse通用按下事件处理
     function down(e, mouseOrTouch) {
         // 大于1个触点就不是拖动事件，而是缩放事件了
-        if (e.touches && e.touches.length > 1)
+        if (e.touches && e.touches.length > 1) {
+            removeMoveAndUpEventListener();
             return;
+        }
         getXY = mouseOrTouch === "mouse" ? getXYWithMouse : getXYWithTouch;
         downXY = getXY(e);
         lastXY = downXY;
@@ -59,9 +61,6 @@ export function addDragEventListener({ el, onDown, onMove, onUp, capture = { dow
     }
     // touch与mouse通用移动事件处理
     function move(e) {
-        // 大于1个触点就不是拖动事件，而是缩放事件了
-        if (e.touches && e.touches.length > 1)
-            return;
         const moveXY = getXY(e);
         let backVal = void 0;
         if (onMove && isFunction(onMove)) {
@@ -72,10 +71,6 @@ export function addDragEventListener({ el, onDown, onMove, onUp, capture = { dow
     }
     // touch与mouse通用移开事件处理
     function up(e) {
-        var _a;
-        // 如果多触摸点释放的时候，不移除事件,单手时释放为0个触点
-        if (e.touches && ((_a = e.touches) === null || _a === void 0 ? void 0 : _a.length))
-            return;
         // console.log("up", e);
         const upXY = getXY(e);
         let backVal = void 0;
@@ -140,7 +135,6 @@ export function addScaleEventListener(el, onScale, capture = { down: false, up: 
         }
     }
     let startDistance = 0;
-    const show = document.querySelector(".test");
     function getDis(touches) {
         const t1 = touches[0];
         const t2 = touches[1];
@@ -149,7 +143,6 @@ export function addScaleEventListener(el, onScale, capture = { down: false, up: 
     function move(e) {
         if (e.touches.length < 2)
             return;
-        show.innerText += 1;
         const rate = +(getDis(e.touches) / startDistance).toFixed(2);
         onScale(rate);
     }
@@ -163,7 +156,6 @@ export function addScaleEventListener(el, onScale, capture = { down: false, up: 
         window.addEventListener("touchend", up, capture.up);
         window.addEventListener("touchcancel", up, capture.up);
         startDistance = getDis(e.touches);
-        show.innerText += startDistance;
     }
     function removeEvent() {
         window.removeEventListener("touchmove", move, capture.move);
@@ -176,7 +168,6 @@ export function addScaleEventListener(el, onScale, capture = { down: false, up: 
         removeEvent();
     }
     dom.addEventListener("touchstart", touchStart, capture.down);
-    show.innerText += "init";
     return removeAllEventListener;
 }
 // from => https://blog.crimx.com/2017/07/15/element-onresize/
