@@ -16,14 +16,14 @@ type OnUp = (e: MouseEvent | TouchEvent, currentXY: xy, downXY: xy) => any
  * @param capture
  */
 export function addDragEventListener({el, onDown, onMove, onUp, capture = {down: false, up: true, move: false}}: {
-    el?: string | HTMLElement,
-    onDown?: OnDown,
-    onMove?: OnMove,
-    onUp?: OnUp,
+    el?: string | HTMLElement;
+    onDown?: OnDown;
+    onMove?: OnMove;
+    onUp?: OnUp;
     capture?: {
-        down?: boolean,
-        up?: boolean,
-        move?: boolean
+        down?: boolean;
+        up?: boolean;
+        move?: boolean;
     },
 }): () => void {
     let dom: HTMLElement | Window = el as HTMLElement;
@@ -51,7 +51,7 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
 
     // touch获取xy
     function getXYWithTouch(e: TouchEvent): xy {
-        const touches: TouchList = e.changedTouches;
+        const touches: TouchList = ["touchcancel", "touchend"].indexOf(e.type) > -1 ? e.changedTouches : e.touches;
         const touch: Touch = touches[0];
         const xY = {x: touch.clientX, y: touch.clientY};
         xY.x = ~~xY.x;
@@ -62,19 +62,23 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
     let getXY: typeof getXYWithMouse | typeof getXYWithTouch;
 
     // touch与mouse通用按下事件处理
-    function down(event: MouseEvent | TouchEvent, mouseOrTouch: "mouse" | "touch") {
+    function down(e: MouseEvent | TouchEvent, mouseOrTouch: "mouse" | "touch") {
+        // 大于1个触点就不是拖动事件，而是缩放事件了
+        if ((e as TouchEvent).touches && (e as TouchEvent).touches.length > 1) return;
         getXY = mouseOrTouch === "mouse" ? getXYWithMouse : getXYWithTouch;
-        downXY = getXY(event as any);
+        downXY = getXY(e as any);
         lastXY = downXY;
         let backVal: any = void 0;
         if (onDown && isFunction(onDown)) {
-            backVal = onDown.call(this, event, downXY);
+            backVal = onDown.call(this, e, downXY);
         }
         return backVal;
     }
 
     // touch与mouse通用移动事件处理
     function move(e: MouseEvent | TouchEvent) {
+        // 大于1个触点就不是拖动事件，而是缩放事件了
+        if ((e as TouchEvent).touches && (e as TouchEvent).touches.length > 1) return;
         const moveXY = getXY(e as any);
         let backVal: any = void 0;
         if (onMove && isFunction(onMove)) {
@@ -86,6 +90,8 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
 
     // touch与mouse通用移开事件处理
     function up(e: MouseEvent | TouchEvent) {
+        // 如果多触摸点释放的时候，不移除事件,单手时释放为0个触点
+        if ((e as TouchEvent).touches && (e as TouchEvent).touches?.length) return;
         // console.log("up", e);
         const upXY = getXY(e as any);
         let backVal: any = void 0;
