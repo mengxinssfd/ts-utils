@@ -157,9 +157,9 @@ export function loadImg(url: string, props: Partial<HTMLImageElement> = {}): Pro
                     resolve(img);
                 },
                 onabort: onerror,
-                onerror
+                onerror,
             }, props),
-            parent: null
+            parent: null,
         });
         img.src = url;
     });
@@ -195,30 +195,30 @@ export function loadScript(url, successFn?, errorFn?) {
 }
 
 /**
- * @param el
+ * @param [el = window]
  * @return {}
  */
-export function noScroll(el: Window | HTMLElement | string) {
-    let target: HTMLElement = el as HTMLElement;
+export function noScroll(el: Window | HTMLElement | string = window) {
+    let scroller: HTMLElement = el as HTMLElement;
     if (isString(el)) {
-        target = document.querySelector(el) as HTMLElement;
-        if (!target) throw new Error(`el not found`);
+        scroller = document.querySelector(el) as HTMLElement;
+        if (!scroller) throw new Error(`el not found`);
     } else if (el === window) {
-        if (document.documentElement.scrollTop) {
-            target = document.documentElement;
+        if (document.body.scrollTop) {
+            scroller = document.body;
         } else {
-            target = document.body;
+            scroller = document.documentElement;
         }
     }
 
-    const last = pickByKeys(target.style, ["marginTop", "overflow"]);
-    const scrollTop = target.scrollTop;
-    target.scrollTop = 0;
-    target.style.overflow = "hidden";
-    target.style.marginTop = -scrollTop + "px";
+    const last = pickByKeys(scroller.style, ["marginTop", "overflow"]);
+    const scrollTop = scroller.scrollTop;
+    scroller.scrollTop = 0;
+    scroller.style.overflow = "hidden";
+    scroller.style.marginTop = (-scrollTop + scroller.style.marginTop) + "px";
     return function () {
-        target.scrollTop = scrollTop;
-        assign(target.style, last);
+        scroller.scrollTop = scrollTop;
+        assign(scroller.style, last);
     };
 }
 
@@ -308,6 +308,6 @@ export function inIframe(): boolean {
     return Boolean(
         root.self.frameElement && root.self.frameElement.tagName === "IFRAME"
         || root.frames.length !== parent.frames.length
-        || root.self !== root.top
+        || root.self !== root.top,
     );
 }
