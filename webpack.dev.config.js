@@ -20,7 +20,7 @@ const config = {
           {
             loader: "ts-loader",
             options: {
-              configFile: "tsconfig.webpack.json",
+              configFile: "tsconfig.webpack.dev.json",
             },
           },
         ],
