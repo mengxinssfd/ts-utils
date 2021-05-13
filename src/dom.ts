@@ -305,5 +305,9 @@ export function inIframe(): boolean {
          alert('在iframe中');
      } */
 
-    return Boolean(root.self.frameElement && root.self.frameElement.tagName === "IFRAME");
+    return Boolean(
+        root.self.frameElement && root.self.frameElement.tagName === "IFRAME"
+        || root.frames.length !== parent.frames.length
+        || root.self !== root.top
+    );
 }
