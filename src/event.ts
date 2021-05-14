@@ -149,7 +149,7 @@ export function addDragEventListener({el, onDown, onMove, onUp, capture = {down:
  * @param onScale
  * @param capture
  */
-export function addScaleEventListener(el: HTMLElement | string, onScale: (scale: number) => void, capture: {
+export function addScaleEventListener(el: HTMLElement | string, onScale: (distance: number, startDistance: number) => void, capture: {
     down?: boolean;
     up?: boolean;
     move?: boolean;
@@ -176,8 +176,7 @@ export function addScaleEventListener(el: HTMLElement | string, onScale: (scale:
 
     function move(e: TouchEvent) {
         if (e.touches.length < 2) return;
-        const rate = +(getDis(e.touches) / startDistance).toFixed(2);
-        onScale(rate);
+        onScale(+getDis(e.touches).toFixed(2), startDistance);
     }
 
     function up(e: TouchEvent) {
@@ -189,7 +188,7 @@ export function addScaleEventListener(el: HTMLElement | string, onScale: (scale:
         window.addEventListener("touchmove", move, capture.move);
         window.addEventListener("touchend", up, capture.up);
         window.addEventListener("touchcancel", up, capture.up);
-        startDistance = getDis(e.touches);
+        startDistance = +getDis(e.touches).toFixed(2);
     }
 
     function removeEvent() {
