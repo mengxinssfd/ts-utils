@@ -17,7 +17,7 @@ export function getUrlHost(url: string): string {
         return host;
     }
 
-    if (/(?:https?\:\/\/)?(((\w-?)+\.?)+)/.test(url)) {
+    if (/(?:https?:\/\/)?(((\w-?)+\.?)+)/.test(url)) {
         host = RegExp.$1;
     }
     return host;
@@ -33,7 +33,7 @@ export function getUrlPort(url: string): string {
 
 export function getUrlPath(url: string): string {
     // 去掉query、hash
-    url = url.split(/[\?#]/)[0];
+    url = url.split(/[?#]/)[0];
     if (/^\//.test(url)) {
         return url.substr(1);
     }
