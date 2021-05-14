@@ -30,6 +30,7 @@ test("urlParse", () => {
     expect(urlParse.query.d).toBe("1,2,3,4,5");
     expect(urlParse.hash).toBe("test");
     expect(urlParse.path).toBe("index.php/admin/MonitorResultManager/monitorData");
+
     expect(getUrlHost("/")).toBe("");
     expect(getUrlPort("/")).toBe("");
 
@@ -48,8 +49,9 @@ test("urlParse", () => {
     expect(real.host).toEqual("www.haodanku.com");
     expect(real.path).toEqual("Openapi/api_detail");
     expect(real.hash).toEqual("api-parameter");
-
+    expect(real.toString()).toBe(realUrl);
     expect(getUrlProtocol("file://test.com")).toEqual("file");
+
 });
 test("queryStringify", () => {
     expect(queryStringify({a: "1123", b: 1123})).toBe("a=1123&b=1123");
