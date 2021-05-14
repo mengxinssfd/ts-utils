@@ -11,7 +11,10 @@ export declare class UrlModel {
     path: string;
     href: string;
     hash: string;
-    query: any;
+    query: {
+        [key: string]: string;
+    };
     constructor(url: string);
     private parseAll;
+    toString(): string;
 }

@@ -30,7 +30,7 @@ export declare function addDragEventListener({ el, onDown, onMove, onUp, capture
  * @param onScale
  * @param capture
  */
-export declare function addScaleEventListener(el: HTMLElement | string, onScale: (scale: number) => void, capture?: {
+export declare function addScaleEventListener(el: HTMLElement | string, onScale: (distance: number, startDistance: number) => void, capture?: {
     down?: boolean;
     up?: boolean;
     move?: boolean;

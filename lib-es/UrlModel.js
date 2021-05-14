@@ -1,4 +1,5 @@
 import * as urlUtils from "./url";
+import { isEmptyObject } from "./dataType";
 /**
  * 解析url
  * @Author: dyh
@@ -14,7 +15,7 @@ export class UrlModel {
         this.path = "";
         this.href = "";
         this.hash = "";
-        this.query = "";
+        this.query = {};
         this.href = url;
         this.parseAll(url);
     }
@@ -25,5 +26,24 @@ export class UrlModel {
         this.path = urlUtils.getUrlPath(url);
         this.hash = urlUtils.getUrlHash(url);
         this.query = urlUtils.getUrlQuery(url);
+    }
+    toString() {
+        let url = this.host;
+        if (this.protocol) {
+            url = `${this.protocol}://${url}`;
+        }
+        if (this.port) {
+            url += ":" + this.port;
+        }
+        if (this.path) {
+            url += "/" + this.path;
+        }
+        if (!isEmptyObject(this.query)) {
+            url += "?" + urlUtils.queryStringify(this.query);
+        }
+        if (this.hash) {
+            url += "#" + this.hash;
+        }
+        return url;
     }
 }

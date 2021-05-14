@@ -143,8 +143,7 @@ export function addScaleEventListener(el, onScale, capture = { down: false, up: 
     function move(e) {
         if (e.touches.length < 2)
             return;
-        const rate = +(getDis(e.touches) / startDistance).toFixed(2);
-        onScale(rate);
+        onScale(+getDis(e.touches).toFixed(2), startDistance);
     }
     function up(e) {
         removeEvent();
@@ -155,7 +154,7 @@ export function addScaleEventListener(el, onScale, capture = { down: false, up: 
         window.addEventListener("touchmove", move, capture.move);
         window.addEventListener("touchend", up, capture.up);
         window.addEventListener("touchcancel", up, capture.up);
-        startDistance = getDis(e.touches);
+        startDistance = +getDis(e.touches).toFixed(2);
     }
     function removeEvent() {
         window.removeEventListener("touchmove", move, capture.move);
