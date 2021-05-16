@@ -267,6 +267,9 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
     return el as any;
 }
 
+/**
+ * @alias createHtmlElement
+ */
 export const createElement = createHtmlElement;
 
 /**

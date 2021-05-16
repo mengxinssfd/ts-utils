@@ -66,6 +66,10 @@ export function forEachObj<T extends object>(obj: T, callbackFn: (value: T[keyof
     }
 }
 
+
+/**
+ * @alias forEachObj
+ */
 export const objForEach = forEachObj;
 
 /**
@@ -97,6 +101,9 @@ export function reduceObj<T extends object, R>(
     return result;
 }
 
+/**
+ * @alias reduceObj
+ */
 export const objReduce = reduceObj;
 
 /**
@@ -298,6 +305,9 @@ export function createObj(entries: Array<[string, any]>): { [k: string]: any } {
     }, {});
 }
 
+/**
+ * @alias createObj
+ */
 export const ObjFromEntries = createObj;
 
 /**
