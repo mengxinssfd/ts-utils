@@ -479,7 +479,7 @@ test("root", async () => {
 });
 test("numToFixed", async () => {
     const fn = cm.numToFixed;
-    expect(0.45.toFixed(1)).toBe("0.5");
+    expect(0.45.toFixed(1)).toEqual("0.5");
     expect(fn(0.45, 1)).toBe("0.4");
     expect(fn(0.45, 1, true)).toBe("0.5");
 
@@ -498,6 +498,7 @@ test("numToFixed", async () => {
     expect(0.5 + 0.07).not.toBe(0.57);
     expect((0.5 + 0.07).toFixed(2)).toBe("0.57");
     expect(fn(0.5 + 0.07, 2)).toBe("0.57");
+    expect(fn(0.5 + 0.07, 5)).toBe("0.57000");
 
     expect(() => {
         0.1.toFixed(-1);
