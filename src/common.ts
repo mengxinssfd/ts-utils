@@ -591,26 +591,18 @@ export function numToFixed(num: number, fractionDigits = 0, rounding = false): s
 
     if (fractionDigits === 0) return String(~~num);
 
-    function merge(split: string[], len: number) {
-        const digits = strPadEnd((split[1] || "").substr(0, len), len, "0");
-        return split[0] + "." + digits;
-    }
-
-    let split = String(num).split(".");
-    const numDigitsLen = split[1]?.length || 0;
-    if (numDigitsLen < fractionDigits) {
-        return merge(split, fractionDigits);
-    }
-
     const base = 10;
     // 加1 四舍五入
     const pow = base ** (fractionDigits + 1);
-    num *= pow;
+    num = ~~(num * pow);
     if (rounding) {
-        num = ~~(num + 5);
+        num += 5;
     }
     num /= pow;
-    return merge(String(num).split("."), fractionDigits);
+
+    const split = String(num).split(".");
+    const digits = strPadEnd((split[1] || "").substr(0, fractionDigits), fractionDigits, "0");
+    return split[0] + "." + digits;
 }
 
 /**
