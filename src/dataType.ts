@@ -181,3 +181,11 @@ export function isPercent(value: string): boolean {
 export function isIncludeChinese(value: string): boolean {
     return /[\u4e00-\u9fa5]/.test(value);
 }
+
+/**
+ * 是否正数
+ * @param value
+ */
+export function isInteger(value: number): boolean {
+    return value % 1 === 0;
+}
