@@ -287,3 +287,14 @@ test("isIncludeChinese", function () {
     expect(fn(" ")).toBeFalsy();
     expect(fn("$$%%")).toBeFalsy();
 });
+test("isInteger", function () {
+    const fn = type.isInteger;
+    expect(fn(1)).toBeTruthy();
+    expect(fn(Number.MAX_SAFE_INTEGER)).toBeTruthy();
+    expect(fn(Number.MIN_SAFE_INTEGER)).toBeTruthy();
+    expect(fn(0)).toBeTruthy();
+    expect(fn(-0)).toBeTruthy();
+    expect(fn(0.1)).toBeFalsy();
+    expect(fn(-0.1)).toBeFalsy();
+    expect(fn(-1.1)).toBeFalsy();
+});
