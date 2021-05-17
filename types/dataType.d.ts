@@ -30,3 +30,8 @@ export declare function isPercent(value: string): boolean;
  * @param value
  */
 export declare function isIncludeChinese(value: string): boolean;
+/**
+ * 是否正数
+ * @param value
+ */
+export declare function isInteger(value: number): boolean;

@@ -239,6 +239,9 @@ export function createHtmlElement(tagName, params = {}) {
     }
     return el;
 }
+/**
+ * @alias createHtmlElement
+ */
 export const createElement = createHtmlElement;
 /**
  * 获取文字缩放大小

@@ -532,30 +532,22 @@ export function removeStrByNum(from, num, removeStr) {
  * @param [rounding = false] 是否四舍五入
  */
 export function numToFixed(num, fractionDigits = 0, rounding = false) {
-    var _a;
     if (!isNumber(fractionDigits) || !inRange(fractionDigits, [0, 100])) {
         throw new TypeError("numToFixed() fractionDigits argument must be between 0 and 100");
     }
     if (fractionDigits === 0)
         return String(~~num);
-    function merge(split, len) {
-        const digits = strPadEnd((split[1] || "").substr(0, len), len, "0");
-        return split[0] + "." + digits;
-    }
-    let split = String(num).split(".");
-    const numDigitsLen = ((_a = split[1]) === null || _a === void 0 ? void 0 : _a.length) || 0;
-    if (numDigitsLen < fractionDigits) {
-        return merge(split, fractionDigits);
-    }
     const base = 10;
     // 加1 四舍五入
     const pow = base ** (fractionDigits + 1);
-    num *= pow;
+    num = ~~(num * pow);
     if (rounding) {
-        num = ~~(num + 5);
+        num += 5;
     }
     num /= pow;
-    return merge(String(num).split("."), fractionDigits);
+    const split = String(num).split(".");
+    const digits = strPadEnd((split[1] || "").substr(0, fractionDigits), fractionDigits, "0");
+    return split[0] + "." + digits;
 }
 /**
  * 切割字符串

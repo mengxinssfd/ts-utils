@@ -55,6 +55,9 @@ export declare function createHtmlElement<K extends keyof HTMLElementTagNameMap,
     parent?: HTMLElement | null;
     children?: HTMLElement[];
 }): R;
+/**
+ * @alias createHtmlElement
+ */
 export declare const createElement: typeof createHtmlElement;
 /**
  * 获取文字缩放大小

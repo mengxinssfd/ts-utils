@@ -7,6 +7,9 @@ export declare function deepMerge<T extends object, U extends object>(first: T, 
  * @param callbackFn 返回false的时候中断
  */
 export declare function forEachObj<T extends object>(obj: T, callbackFn: (value: T[keyof T], key: keyof T, obj: T) => (void | false)): void;
+/**
+ * @alias forEachObj
+ */
 export declare const objForEach: typeof forEachObj;
 /**
  * object key-value翻转
@@ -24,6 +27,9 @@ export declare function getReverseObj(obj: {
  * @param initialValue 初始值
  */
 export declare function reduceObj<T extends object, R>(obj: T, callbackFn: (previousValue: R, value: T[keyof T], key: keyof T, obj: T) => R, initialValue: R): R;
+/**
+ * @alias reduceObj
+ */
 export declare const objReduce: typeof reduceObj;
 /**
  * @param originObj
@@ -84,6 +90,9 @@ export declare function defaults(target: object, ...args: object[]): any;
 export declare function createObj(entries: Array<[string, any]>): {
     [k: string]: any;
 };
+/**
+ * @alias createObj
+ */
 export declare const ObjFromEntries: typeof createObj;
 /**
  * Object.keys

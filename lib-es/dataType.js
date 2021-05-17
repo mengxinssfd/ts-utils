@@ -165,3 +165,10 @@ export function isPercent(value) {
 export function isIncludeChinese(value) {
     return /[\u4e00-\u9fa5]/.test(value);
 }
+/**
+ * 是否正数
+ * @param value
+ */
+export function isInteger(value) {
+    return value % 1 === 0;
+}

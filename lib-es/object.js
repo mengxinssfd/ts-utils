@@ -63,6 +63,9 @@ export function forEachObj(obj, callbackFn) {
             return;
     }
 }
+/**
+ * @alias forEachObj
+ */
 export const objForEach = forEachObj;
 /**
  * object key-value翻转
@@ -87,6 +90,9 @@ export function reduceObj(obj, callbackFn, initialValue) {
     });
     return result;
 }
+/**
+ * @alias reduceObj
+ */
 export const objReduce = reduceObj;
 /**
  * @param originObj
@@ -227,6 +233,9 @@ export function createObj(entries) {
         return initValue;
     }, {});
 }
+/**
+ * @alias createObj
+ */
 export const ObjFromEntries = createObj;
 /**
  * Object.keys
