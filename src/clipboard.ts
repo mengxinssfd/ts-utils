@@ -49,6 +49,8 @@ export function isSupportedClipboardCommand<T extends "cut" | "copy">(
 
 /**
  * 复制文字或html
+ * 如果copy2Clipboard的this是一个html元素的话，
+ * 不会马上执行，而是在该html元素被点击之后执行
  * @param target {HTMLElement | string}
  * @return {Promise}
  */
