@@ -134,7 +134,7 @@ export function supportClipboardWrite() {
     return Boolean((cb as any)?.write);
 }
 
-export function supportCopySetData2Clipboard() {
+export function setData2Clipboard() {
     const source = document.querySelector(".source") as HTMLDivElement;
     source.addEventListener("copy", (event: ClipboardEvent) => {
         // event.clipboardData.setData('text/plain',);
