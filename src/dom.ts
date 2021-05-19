@@ -314,3 +314,35 @@ export function inIframe(): boolean {
         || root.self !== root.top,
     );
 }
+
+/**
+ * 判断是否固定在顶部的条件
+ * @param target {HTMLElement}
+ * @param {Function} cb
+ * @param {number?} [top=0]
+ * @param {HTMLElement|window} [container=window]
+ * @return {function(): void}
+ */
+export function scrollFixedWatcher(
+    target: HTMLElement,
+    cb: (reach: boolean) => void,
+    top = 0,
+    container: HTMLElement | Window = window
+): () => void {
+    const getScrollTop = container === window
+        ? () => document.documentElement.scrollTop || document.body.scrollTop
+        : () => (container as HTMLElement).scrollTop;
+
+    const rect = target.getBoundingClientRect();
+    const distanceTop = rect.top + getScrollTop() - top;
+    let handler;
+    // 立即判断一次
+    cb(getScrollTop() >= distanceTop);
+    container.addEventListener("scroll", handler = function () {
+        // 当滑动距离大于等于分类距离顶部位置时，则固定定位
+        cb(getScrollTop() >= distanceTop);
+    });
+    return function () {
+        container.removeEventListener("scroll", handler);
+    };
+}
