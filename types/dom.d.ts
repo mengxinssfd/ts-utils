@@ -70,3 +70,12 @@ export declare function getFontScale(reverse?: boolean): number;
  * 是否在iframe中
  */
 export declare function inIframe(): boolean;
+/**
+ * 判断是否固定在顶部的条件
+ * @param target {HTMLElement}
+ * @param {Function} cb
+ * @param {number?} [top=0]
+ * @param {HTMLElement|window} [container=window]
+ * @return {function(): void}
+ */
+export declare function scrollFixedWatcher(target: HTMLElement, cb: (reach: boolean) => void, top?: number, container?: HTMLElement | Window): () => void;
