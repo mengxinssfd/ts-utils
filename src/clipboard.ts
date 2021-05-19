@@ -1,6 +1,7 @@
 import {isInputElement, isSelectElement, isTextAreaElement} from "./domType";
 import {createElement} from "./dom";
 import {castArray} from "./array";
+import {onceEvent} from "./event";
 
 /**
  * @param element
@@ -99,6 +100,15 @@ export function copy2Clipboard(target: HTMLElement | string): Promise<void> {
     return p;
 }
 
+
+// 原来通过绑定this的方式实际使用时获取不到准确的target值
+copy2Clipboard.async = function (el: HTMLElement, target: () => HTMLElement | string) {
+    return new Promise(((resolve, reject) => {
+        onceEvent(el, "click", () => {
+            copy2Clipboard(target()).then(resolve, reject);
+        });
+    }));
+};
 
 const cb = window.navigator.clipboard;
 
