@@ -1,5 +1,4 @@
-import {isDom, isInputElement, isSelectElement, isTextAreaElement} from "./domType";
-import {onceEvent} from "./event";
+import {isInputElement, isSelectElement, isTextAreaElement} from "./domType";
 import {createElement} from "./dom";
 import {castArray} from "./array";
 
@@ -54,17 +53,10 @@ export function isSupportedClipboardCommand<T extends "cut" | "copy">(
  * @param target {HTMLElement | string}
  * @return {Promise}
  */
-export function copy2Clipboard(this: HTMLElement | void, target: HTMLElement | string): Promise<void> {
+export function copy2Clipboard(target: HTMLElement | string): Promise<void> {
     let el: HTMLElement;
     const isText = typeof target === "string";
-    const isBindThis = isDom(this)
     const p = new Promise<void>((resolve, reject) => {
-        if (isBindThis) {
-            onceEvent((this as HTMLElement).parentNode as HTMLElement, "click", () => {
-                copy2Clipboard(target).then(resolve, reject)
-            })
-            return;
-        }
         let el: HTMLElement;
         const isText = typeof target === "string";
         if (isText) {
@@ -78,7 +70,7 @@ export function copy2Clipboard(this: HTMLElement | void, target: HTMLElement | s
                     }
                 },
                 parent: document.body
-            })
+            });
         } else {
             el = target as HTMLElement;
         }
@@ -99,7 +91,6 @@ export function copy2Clipboard(this: HTMLElement | void, target: HTMLElement | s
         reject(error);
     });
     p.finally(function () {
-        if (isBindThis) return;
         (window.getSelection() as Selection).removeAllRanges();
         if (isText) {
             document.body.removeChild(el);
@@ -107,6 +98,7 @@ export function copy2Clipboard(this: HTMLElement | void, target: HTMLElement | s
     });
     return p;
 }
+
 
 const cb = window.navigator.clipboard;
 
