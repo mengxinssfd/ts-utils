@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "umd",
+    "target": "es5",
+    "declaration": false,
+    "isolatedModules": true,
+    "outDir": "lib-umd"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "src/index.ts"
+  ]
+}
