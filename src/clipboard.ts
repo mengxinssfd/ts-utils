@@ -134,12 +134,19 @@ export function supportClipboardWrite() {
     return Boolean((cb as any)?.write);
 }
 
-export function setData2Clipboard() {
-    const source = document.querySelector(".source") as HTMLDivElement;
-    source.addEventListener("copy", (event: ClipboardEvent) => {
-        // event.clipboardData.setData('text/plain',);
+export function setData2Clipboard(
+    data: any,
+    el: HTMLElement = document.documentElement,
+    format: string = 'text/plain',
+): boolean {
+    function cb(event: ClipboardEvent) {
+        event.clipboardData?.setData(format, data);
         event.preventDefault();
-    });
+        el.removeEventListener("copy", cb);
+    }
+
+    el.addEventListener("copy", cb);
+    return document.execCommand("copy");
 }
 
 declare const ClipboardItem: any;
