@@ -1,7 +1,10 @@
 import {typeOf} from "./dataType";
 import {forEachObj, reduceObj} from "./object";
 
-export function getUrlProtocol(url: string): string {
+/**
+ * @param {string} [url = location.href]
+ */
+export function getUrlProtocol(url: string = location.href): string {
     const reg = /^(\w+):\/\//;
     let schema = "";
     if (reg.test(url)) {
@@ -10,7 +13,11 @@ export function getUrlProtocol(url: string): string {
     return schema;
 }
 
-export function getUrlHost(url: string): string {
+
+/**
+ * @param {string} [url = location.href]
+ */
+export function getUrlHost(url: string = location.href): string {
     url = url.split("?")[0];
     let host = "";
     if (/^\//.test(url)) {
@@ -23,7 +30,11 @@ export function getUrlHost(url: string): string {
     return host;
 }
 
-export function getUrlPort(url: string): string {
+
+/**
+ * @param {string} [url = location.href]
+ */
+export function getUrlPort(url: string = location.href): string {
     url = url.split("?")[0];
     if (/:(\d+)/.test(url)) {
         return RegExp.$1;
@@ -31,7 +42,10 @@ export function getUrlPort(url: string): string {
     return "";
 }
 
-export function getUrlPath(url: string): string {
+/**
+ * @param {string} [url = location.href]
+ */
+export function getUrlPath(url: string = location.href): string {
     // 去掉query、hash
     url = url.split(/[?#]/)[0];
     if (/^\//.test(url)) {
@@ -41,13 +55,19 @@ export function getUrlPath(url: string): string {
     return url.replace(/(https?:\/\/)?((\w-?)+\.?)+(:\d+)?\/?/, "");
 }
 
-export function getUrlHash(url: string): string {
+/**
+ * @param {string} [url = location.href]
+ */
+export function getUrlHash(url: string = location.href): string {
     let hash = "";
     if (/#((\w+-?)+)/.test(url)) hash = RegExp.$1;
     return hash;
 }
 
-export function getUrlQuery(url: string): { [key: string]: string } {
+/**
+ * @param {string} [url = location.href]
+ */
+export function getUrlQuery(url: string = location.href): { [key: string]: string } {
     let result: any = {};
     const sp = url.split("?");
     // 去除?号前的
@@ -109,7 +129,7 @@ export function getUrlParam(name: string, url = location.href/* node也有 */, n
     const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i");
     const m = re.exec(url);
     const ret = m ? m[1] : "";
-    return !noDecode ? decodeURIComponent(ret) : ret;
+    return noDecode ? ret : decodeURIComponent(ret);
 }
 
 // 参考async-validator
