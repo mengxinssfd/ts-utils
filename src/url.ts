@@ -13,7 +13,6 @@ export function getUrlProtocol(url: string = location.href): string {
     return schema;
 }
 
-
 /**
  * @param {string} [url = location.href]
  */
@@ -29,7 +28,6 @@ export function getUrlHost(url: string = location.href): string {
     }
     return host;
 }
-
 
 /**
  * @param {string} [url = location.href]
@@ -65,9 +63,10 @@ export function getUrlHash(url: string = location.href): string {
 }
 
 /**
+ * @alias getUrlQuery
  * @param {string} [url = location.href]
  */
-export function getUrlParamObj(url: string = location.href): { [key: string]: string } {
+export function getUrlParamObj(url: string = location.href): { [key: string]: string | string[] } {
     let result: any = {};
     const params = url.match(/[^&#?/]+=[^&#?/]+/g);
 
@@ -108,6 +107,8 @@ export function getUrlParamObj(url: string = location.href): { [key: string]: st
 
     return result;
 }
+
+export const getUrlQuery = getUrlParamObj;
 
 export function queryStringify(query: { [k: string]: any }): string {
     return reduceObj(query, (initValue, v, k, obj) => {
