@@ -67,33 +67,45 @@ export function getUrlHash(url: string = location.href): string {
 /**
  * @param {string} [url = location.href]
  */
-export function getUrlQuery(url: string = location.href): { [key: string]: string } {
+export function getUrlParamObj(url: string = location.href): { [key: string]: string } {
     let result: any = {};
-    const sp = url.split("?");
-    // 去除?号前的
-    url = sp.length > 1 ? sp[1] : sp[0];
-    // 去掉hash
-    url = url.split("#")[0];
-    // this.queryStr = url;
-    let params = url.split("&");
+    const params = url.match(/[^&#?/]+=[^&#?/]+/g);
+
+    if (!params) return result;
 
     for (const k in params) {
         const v = params[k];
         let [key, value] = v.split("=").map(item => decodeURIComponent(item));
         // fixme a[1]=0&a[0]=1 顺序会不对
         // a[]=0&a[]=1 || a[0]=0&a[1]=1 转成 a=0&a=1 TODO 看看vue的路由参数是怎么解析的
-        key = key.replace(/\[\w*\]/g, "");
-
+        let innerKey = "";
+        const reg = /\[(\w*)]/g;
+        if (reg.test(key)) {
+            innerKey = RegExp.$1;
+            key = key.replace(reg, "");
+        }
+        key = key.replace(/\[(\w*)\]/g, "");
         const resultValue = result[key];
+
+
         switch (typeOf(resultValue)) {
             case "undefined":
-                result[key] = value;
+                if (!innerKey) {
+                    result[key] = value;
+                } else {
+                    const arr = [];
+                    arr[innerKey] = value;
+                    result[key] = arr;
+                }
                 break;
+            case "string":
+                result[key] = [resultValue];
             case "array":
-                result[key].push(value);
-                break;
-            default:
-                result[key] = [resultValue, value];
+                if (!innerKey) {
+                    result[key].push(value);
+                } else {
+                    result[key][innerKey] = value;
+                }
         }
     }
 

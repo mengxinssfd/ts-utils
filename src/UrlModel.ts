@@ -29,7 +29,7 @@ export class UrlModel {
         this.port = urlUtils.getUrlPort(url);
         this.path = urlUtils.getUrlPath(url);
         this.hash = urlUtils.getUrlHash(url);
-        this.query = urlUtils.getUrlQuery(url);
+        this.query = urlUtils.getUrlParamObj(url);
     }
 
     toString() {
