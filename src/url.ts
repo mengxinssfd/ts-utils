@@ -76,8 +76,6 @@ export function getUrlParamObj(url: string = location.href): { [key: string]: st
     for (const k in params) {
         const v = params[k];
         let [key, value] = v.split("=").map(item => decodeURIComponent(item));
-        // fixme a[1]=0&a[0]=1 顺序会不对
-        // a[]=0&a[]=1 || a[0]=0&a[1]=1 转成 a=0&a=1 TODO 看看vue的路由参数是怎么解析的
         let innerKey = "";
         const reg = /\[(\w*)]/g;
         if (reg.test(key)) {
@@ -86,7 +84,6 @@ export function getUrlParamObj(url: string = location.href): { [key: string]: st
         }
         key = key.replace(/\[(\w*)\]/g, "");
         const resultValue = result[key];
-
 
         switch (typeOf(resultValue)) {
             case "undefined":
