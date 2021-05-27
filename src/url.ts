@@ -3,11 +3,13 @@ import {forEachObj, reduceObj} from "./object";
 
 // url规则文档：https://datatracker.ietf.org/doc/html/rfc3986
 
+const protocolReg = /^(\w+):\/\//;
+
 /**
  * @param {string} [url = location.href]
  */
 export function getUrlProtocol(url: string = location.href): string {
-    const reg = /^(\w+):\/\//;
+    const reg = new RegExp(protocolReg);
     let schema = "";
     if (reg.test(url)) {
         schema = RegExp.$1;
@@ -15,11 +17,13 @@ export function getUrlProtocol(url: string = location.href): string {
     return schema;
 }
 
+const hostReg = /(?:(?:\w+):\/\/|\/\/)((?:(?:[\w\-\u4e00-\u9fa5])+\.?)+\w+)/;
+
 /**
  * @param {string} [url = location.href]
  */
 export function getUrlHost(url: string = location.href): string {
-    const exec = /(?:(?:https?|ftp):\/\/|\/\/)((?:(?:[\w\-\u4e00-\u9fa5])+\.)+\w+)/.exec(url);
+    const exec = new RegExp(hostReg).exec(url);
     return exec ? exec[1] : "";
 }
 
@@ -40,11 +44,8 @@ export function getUrlPort(url: string = location.href): string {
 export function getUrlPath(url: string = location.href): string {
     // 去掉query、hash
     url = url.split(/[?#]/)[0];
-    if (/^\//.test(url)) {
-        return url.substr(1);
-    }
     // 去掉schema
-    return url.replace(/(https?:\/\/)?((\w-?)+\.?)+(:\d+)?\/?/, "");
+    return url.replace(new RegExp(`(${hostReg.source}(?::\\d+)?)|${protocolReg.source}`), "");
 }
 
 /**
@@ -56,7 +57,16 @@ export function getUrlHash(url: string = location.href): string {
     return url.substring(index);
 }
 
-export function getUrlHashParam(name: string, url = location.href, noDecode = false) {
+/**
+ * 获取hash中的param
+ * @example
+ * getUrlHashParam("a", "test.com/index?a=param/#/test?a=hash") // returns "hash"
+ * getUrlHashParam("a", "test.com/index?a=param") // returns ""
+ * @param name
+ * @param {string} [url = location.href]
+ * @param noDecode
+ */
+export function getUrlHashParam(name: string, url = location.href, noDecode = false): string {
     return getUrlParam(name, getUrlHash(url), noDecode);
 }
 
@@ -108,7 +118,7 @@ export function getUrlParamObj(url: string = location.href): { [key: string]: st
 
 export const getUrlQuery = getUrlParamObj;
 
-export function queryStringify(query: { [k: string]: any }): string {
+export function stringifyUrlSearch(query: { [k: string]: any }): string {
     return reduceObj(query, (initValue, v, k, obj) => {
         if (v === undefined) return initValue;
         if (typeof v === "object") {
