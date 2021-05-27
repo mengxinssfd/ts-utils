@@ -19,16 +19,8 @@ export function getUrlProtocol(url: string = location.href): string {
  * @param {string} [url = location.href]
  */
 export function getUrlHost(url: string = location.href): string {
-    url = url.split("?")[0];
-    let host = "";
-    if (/^\//.test(url)) {
-        return host;
-    }
-
-    if (/(?:https?:\/\/)?(((\w-?)+\.?)+)/.test(url)) {
-        host = RegExp.$1;
-    }
-    return host;
+    const exec = /(?:(?:https?|ftp):\/\/|\/\/)((?:(?:\w)+\.)+\w+)/.exec(url);
+    return exec ? exec[1] : "";
 }
 
 /**
