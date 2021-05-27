@@ -443,13 +443,13 @@ export function chunk(arr: any[], chunkLen: number) {
 
 /**
  *  判断min <= num <= max
- * @param num
+ * @param value
  * @param [min = Number.MIN_SAFE_INTEGER]
  * @param [max = Number.MAX_SAFE_INTEGER]
  */
 export function inRange(
-    num: number,
-    [min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER]: [number?, number?]
+    value: number,
+    [min = -Infinity, max = Infinity]: [number?, number?]
 ): boolean {
-    return min <= num && num <= max
+    return min <= value && value <= max
 }
