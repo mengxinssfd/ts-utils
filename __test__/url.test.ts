@@ -31,6 +31,23 @@ test("getUrlParamObj", () => {
     });
     expect(obj.pname).toEqual("环球贸易项目基坑地铁2号线隧道结构自动化监测");
 });
+test("getUrlHash", () => {
+    expect(getUrlHash("/index.php#index/admin")).toBe("#index/admin");
+    expect(getUrlHash("/index.php/#/index/admin#test")).toBe("#/index/admin#test");
+    expect(getUrlHash("/index.php")).toBe("");
+});
+test("getUrlProtocol", () => {
+    expect(getUrlProtocol("file:///E:/wechatCache")).toBe("file");
+    expect(getUrlProtocol("https://www.baidu.com/index")).toBe("https");
+    expect(getUrlProtocol("http://www.baidu.com/index")).toBe("http");
+    expect(getUrlProtocol("/index.php")).toBe("");
+});
+test("getUrlHost", () => {
+    expect(getUrlHost("https://www.baidu.com/index")).toBe("www.baidu.com");
+    expect(getUrlHost("http://www.baidu.com/index")).toBe("www.baidu.com");
+    expect(getUrlHost("file:///E:/wechatCache")).toBe("");
+    expect(getUrlHost("/index.php")).toBe("");
+});
 test("urlParse", () => {
     //  a[]=123&a[]=on&b[0]=on&b[1]=on&c=1&c=2&d=1,2,3,4,5&pid=19&pname=环球贸易项目基坑地铁2号线隧道结构自动化监测
     const urlParse = new UrlModel(url);
@@ -146,4 +163,5 @@ test("isUrl", () => {
     expect(fn("http://www.baidu.com/index.php/?a%5B%5D=123&a%5B%5D=on&b%5B0%5D=on#api-parameter")).toBeTruthy();
     // 识别[]
     expect(fn("http://www.baidu.com/index.php/?a=1123&b[0]=1&b[1]=2&b[2]=3")).toBeTruthy();
+    expect(fn("file://E:/wechatCache")).toBeFalsy();
 });
