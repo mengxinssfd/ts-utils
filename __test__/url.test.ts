@@ -44,6 +44,12 @@ test("getUrlProtocol", () => {
 });
 test("getUrlHost", () => {
     expect(getUrlHost("https://www.baidu.com/index")).toBe("www.baidu.com");
+    expect(getUrlHost("https://www.1223-tewre.com/index")).toBe("www.1223-tewre.com");
+    expect(getUrlHost("https://www.1223_tewre.com/index")).toBe("www.1223_tewre.com");
+    expect(getUrlHost("https://www.测试_tewre.com/index")).toBe("www.测试_tewre.com");
+    expect(getUrlHost("https://www.测试-tewre.com/index")).toBe("www.测试-tewre.com");
+    expect(getUrlHost("https://www.-tewre测试.com/index")).toBe("www.-tewre测试.com");
+    expect(getUrlHost("https://www.测试.test.com/index")).toBe("www.测试.test.com");
     expect(getUrlHost("http://www.baidu.com/index")).toBe("www.baidu.com");
     expect(getUrlHost("file:///E:/wechatCache")).toBe("");
     expect(getUrlHost("/index.php")).toBe("");
