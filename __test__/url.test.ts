@@ -1,4 +1,4 @@
-import {subString} from "../src";
+import {subString} from "../src/common";
 import {UrlModel} from "../src/UrlModel";
 import {
     getUrlHash,
@@ -7,9 +7,10 @@ import {
     getUrlPort,
     getUrlProtocol,
     getUrlParamObj,
-    queryStringify,
+    stringifyUrlSearch,
     getUrlParam,
     UrlRegExp,
+    getUrlHashParam,
     isUrl,
 } from "../src/url";
 
@@ -30,17 +31,26 @@ test("getUrlParamObj", () => {
         pname: "环球贸易项目基坑地铁2号线隧道结构自动化监测"
     });
     expect(obj.pname).toEqual("环球贸易项目基坑地铁2号线隧道结构自动化监测");
+    expect(getUrlParamObj()).toEqual({});
+});
+test("getUrlHashParam", () => {
+    const url = "test.com/index?a=param/#/test?a=hash";
+    expect(getUrlHashParam("a", url)).toEqual("hash");
+    expect(getUrlHashParam("a", "test.com/index?a=param")).toEqual("");
+    expect(getUrlHashParam("a")).toEqual("");
 });
 test("getUrlHash", () => {
     expect(getUrlHash("/index.php#index/admin")).toBe("#index/admin");
     expect(getUrlHash("/index.php/#/index/admin#test")).toBe("#/index/admin#test");
     expect(getUrlHash("/index.php")).toBe("");
+    expect(getUrlHash()).toBe("");
 });
 test("getUrlProtocol", () => {
     expect(getUrlProtocol("file:///E:/wechatCache")).toBe("file");
     expect(getUrlProtocol("https://www.baidu.com/index")).toBe("https");
     expect(getUrlProtocol("http://www.baidu.com/index")).toBe("http");
     expect(getUrlProtocol("/index.php")).toBe("");
+    expect(getUrlProtocol()).toBe("http");
 });
 test("getUrlHost", () => {
     expect(getUrlHost("https://www.baidu.com/index")).toBe("www.baidu.com");
@@ -51,8 +61,21 @@ test("getUrlHost", () => {
     expect(getUrlHost("https://www.-tewre测试.com/index")).toBe("www.-tewre测试.com");
     expect(getUrlHost("https://www.测试.test.com/index")).toBe("www.测试.test.com");
     expect(getUrlHost("http://www.baidu.com/index")).toBe("www.baidu.com");
-    expect(getUrlHost("file:///E:/wechatCache")).toBe("");
+    expect(getUrlHost("http://www.baidu.com:8080/index")).toBe("www.baidu.com");
+    expect(getUrlHost("file://E:/wechatCache")).toBe("");
     expect(getUrlHost("/index.php")).toBe("");
+    expect(getUrlHost()).toBe("localhost");
+});
+test("getUrlPath", () => {
+    expect(getUrlPath("https://www.baidu.com/index")).toBe("/index");
+    expect(getUrlPath("https://www.1223-tewre.com/index")).toBe("/index");
+    expect(getUrlPath("https://www.测试.test.com/对方是否")).toBe("/对方是否");
+    expect(getUrlPath("https://www.测试.test.com/index?test=123")).toBe("/index");
+    expect(getUrlPath("https://www.测试.test.com/index/test#test")).toBe("/index/test");
+    expect(getUrlPath("https://www.测试.test.com:8080/index/test#test")).toBe("/index/test");
+    expect(getUrlPath("file:///E:/wechatCache")).toBe("/E:/wechatCache");
+    expect(getUrlPath("/index.php")).toBe("/index.php");
+    expect(getUrlPath()).toBe("/");
 });
 test("urlParse", () => {
     //  a[]=123&a[]=on&b[0]=on&b[1]=on&c=1&c=2&d=1,2,3,4,5&pid=19&pname=环球贸易项目基坑地铁2号线隧道结构自动化监测
@@ -67,38 +90,48 @@ test("urlParse", () => {
     expect(urlParse.query.b).toEqual(["on", "on"]);
     expect(urlParse.query.c).toEqual(["1", "2", "3"]);
     expect(urlParse.query.d).toBe("1,2,3,4,5");
-    expect(urlParse.hash).toBe("test");
-    expect(urlParse.path).toBe("index.php/admin/MonitorResultManager/monitorData");
+    expect(urlParse.hash).toBe("#test");
+    expect(urlParse.path).toBe("/index.php/admin/MonitorResultManager/monitorData");
 
     expect(getUrlHost("/")).toBe("");
     expect(getUrlPort("/")).toBe("");
+    expect(getUrlPort()).toBe("");
 
-    expect(getUrlPath("/index.php/admin/MonitorResultManager")).toBe("index.php/admin/MonitorResultManager");
+    expect(getUrlPath("/index.php/admin/MonitorResultManager")).toBe("/index.php/admin/MonitorResultManager");
     expect(getUrlProtocol("")).toBe("");
     expect(getUrlHost("/index.php/admin#absdf-23_123")).toBe("");
     expect(getUrlHost("")).toBe("");
-    expect(getUrlHash("/index.php/admin#absdf-23_123")).toBe("absdf-23_123");
+    expect(getUrlHash("/index.php/admin#absdf-23_123")).toBe("#absdf-23_123");
     expect(getUrlHash("/index.php/admin")).toBe("");
 
-    const realUrl = "https://www.haodanku.com/Openapi/api_detail?id=15#api-parameter";
+    const realUrl = "https://www.haodanku.com:80/Openapi/api_detail?id=15#api-parameter";
     const real = new UrlModel(realUrl);
 
     expect(real.query).toEqual({id: "15"});
     expect(real.protocol).toEqual("https");
     expect(real.host).toEqual("www.haodanku.com");
-    expect(real.path).toEqual("Openapi/api_detail");
-    expect(real.hash).toEqual("api-parameter");
+    expect(real.path).toEqual("/Openapi/api_detail");
+    expect(real.hash).toEqual("#api-parameter");
+    expect(real.port).toEqual("80");
     expect(real.toString()).toBe(realUrl);
     expect(getUrlProtocol("file://test.com")).toEqual("file");
 
+    const empty = new UrlModel("");
+    expect(empty.query).toEqual({});
+    expect(empty.protocol).toEqual("");
+    expect(empty.host).toEqual("");
+    expect(empty.path).toEqual("");
+    expect(empty.hash).toEqual("");
+    expect(empty.port).toEqual("");
+    expect(empty.toString()).toBe("");
 });
 test("queryStringify", () => {
-    expect(queryStringify({a: "1123", b: 1123})).toBe("a=1123&b=1123");
-    expect(queryStringify({a: "1123", b: 1123, c: undefined})).toBe("a=1123&b=1123");
-    expect(queryStringify({a: "1123", b: [1, 2, 3]})).toBe("a=1123&b[0]=1&b[1]=2&b[2]=3");
-    expect(queryStringify({a: "1123", b: {d: 1, e: 2}})).toBe("a=1123&b[d]=1&b[e]=2");
-    expect(queryStringify({a: "1123", b: [1, 2], d: {d: 1, e: 2}})).toBe("a=1123&b[0]=1&b[1]=2&d[d]=1&d[e]=2");
-    expect(queryStringify({a: "1123", b: [1, 2], d: {d: 1, e: undefined}})).toBe("a=1123&b[0]=1&b[1]=2&d[d]=1");
+    expect(stringifyUrlSearch({a: "1123", b: 1123})).toBe("a=1123&b=1123");
+    expect(stringifyUrlSearch({a: "1123", b: 1123, c: undefined})).toBe("a=1123&b=1123");
+    expect(stringifyUrlSearch({a: "1123", b: [1, 2, 3]})).toBe("a=1123&b[0]=1&b[1]=2&b[2]=3");
+    expect(stringifyUrlSearch({a: "1123", b: {d: 1, e: 2}})).toBe("a=1123&b[d]=1&b[e]=2");
+    expect(stringifyUrlSearch({a: "1123", b: [1, 2], d: {d: 1, e: 2}})).toBe("a=1123&b[0]=1&b[1]=2&d[d]=1&d[e]=2");
+    expect(stringifyUrlSearch({a: "1123", b: [1, 2], d: {d: 1, e: undefined}})).toBe("a=1123&b[0]=1&b[1]=2&d[d]=1");
 
     function A() {
         this.a = 1;
@@ -107,7 +140,7 @@ test("queryStringify", () => {
 
     A.prototype.c = 3;
     A.prototype.d = 4;
-    expect(queryStringify(new A())).toBe("a=1&b=2");
+    expect(stringifyUrlSearch(new A())).toBe("a=1&b=2");
 
     // TODO parseQuery不能解析成object
     console.log(getUrlParamObj("a=1123&b[0]=1&b[1]=2&d[d]=1&d[e]=2"));
