@@ -14,7 +14,7 @@ export class UrlModel {
     path: string = "";
     href: string = "";
     hash: string = "";
-    query: { [key: string]: string } = {};
+    query: { [key: string]: string[] | string } = {};
 
     // queryStr: string = "";
 
@@ -41,13 +41,13 @@ export class UrlModel {
             url += ":" + this.port;
         }
         if (this.path) {
-            url += "/" + this.path;
+            url += this.path;
         }
         if (!isEmptyObject(this.query)) {
-            url += "?" + urlUtils.queryStringify(this.query);
+            url += "?" + urlUtils.stringifyUrlSearch(this.query);
         }
         if (this.hash) {
-            url += "#" + this.hash;
+            url += this.hash;
         }
         return url;
     }
