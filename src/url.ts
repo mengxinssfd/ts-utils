@@ -1,6 +1,8 @@
 import {typeOf} from "./dataType";
 import {forEachObj, reduceObj} from "./object";
 
+// url规则文档：https://datatracker.ietf.org/doc/html/rfc3986
+
 /**
  * @param {string} [url = location.href]
  */
@@ -57,9 +59,13 @@ export function getUrlPath(url: string = location.href): string {
  * @param {string} [url = location.href]
  */
 export function getUrlHash(url: string = location.href): string {
-    let hash = "";
-    if (/#((\w+-?)+)/.test(url)) hash = RegExp.$1;
-    return hash;
+    const index = url.indexOf("#");
+    if (index < 0) return "";
+    return url.substring(index);
+}
+
+export function getUrlHashParam(name: string, url = location.href, noDecode = false) {
+    return getUrlParam(name, getUrlHash(url), noDecode);
 }
 
 /**
