@@ -1,5 +1,5 @@
 import {number2Chinese, strPadStart} from "./common";
-import {createArray} from "./array";
+import {createArray, inRange} from "./array";
 
 /**
  * @param millisecond
@@ -225,16 +225,17 @@ export function getTheLastDayOfAMonth(month: Date): Date {
  * @param [weekday=0] 0和7都是周日
  */
 export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
-    if (!nth || weekday < 0 || weekday > 7) return null;
+    // if (!nth || weekday < 0 || weekday > 7) return null;
+    if (!nth || !inRange(weekday, [0, 7])) return null;
     const monthTime = month.getTime();
-    const lastDate = getTheLastDayOfAMonth(month);
+    const endDate = getTheLastDayOfAMonth(month);
 
     let date: Date;
     if (nth > 0) {
         date = new Date(monthTime);
         date.setDate(1);
     } else {
-        date = new Date(lastDate.getTime());
+        date = new Date(endDate.getTime());
     }
     weekday = weekday === 0 ? 7 : weekday;
     const diff = weekday - date.getDay();
@@ -245,7 +246,7 @@ export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
         diff <= 0 && nth++;
     }
     dayDate = nth * 7 + date.getDate() + diff;
-    if (dayDate > lastDate.getDate() || dayDate < 1) {
+    if (dayDate > endDate.getDate() || dayDate < 1) {
         return null;
     }
     date.setDate(dayDate);
