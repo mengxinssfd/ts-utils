@@ -69,12 +69,12 @@ test("forEachAsync", async () => {
     const list = [
         () => Promise.resolve("hello"),
         () => Promise.reject("im fine")
-    ]
+    ];
 
     try {
-        await fn((v) => v(), list)
+        await fn((v) => v(), list);
     } catch (e) {
-        expect(e).toBe("im fine")
+        expect(e).toBe("im fine");
     }
 });
 test("mapAsync", async () => {
@@ -107,7 +107,7 @@ test("reduceAsync", async () => {
     }, "hello", [
         (v) => Promise.resolve(`${v} thank you`),
         (v) => Promise.resolve(`${v} im fine`),
-    ] as Array<(v: any) => Promise<string>>)
+    ] as Array<(v: any) => Promise<string>>);
 
     expect(v).toBe("hello thank you im fine");
     try {
@@ -116,7 +116,7 @@ test("reduceAsync", async () => {
         }, "hello", [
             (v) => Promise.resolve(`${v} thank you`),
             (v) => Promise.reject(`${v} im fine`),
-        ] as Array<(v: any) => Promise<string>>)
+        ] as Array<(v: any) => Promise<string>>);
     } catch (e) {
         expect(e).toBe("hello thank you im fine");
     }
@@ -126,7 +126,7 @@ test("reduceAsync", async () => {
     }, "hello", [
         (v) => `${v} thank you`,
         (v) => `${v} im fine`,
-    ] as Array<(v: any) => any>)
+    ] as Array<(v: any) => any>);
 
     expect(v2).toBe("hello thank you im fine");
 
@@ -135,7 +135,7 @@ test("reduceAsync", async () => {
         (v) => `${v} im fine`,
     ] as Array<(v: any) => any>, (initValue, value: any) => {
         return value(initValue);
-    }, "hello")
+    }, "hello");
 
     expect(v3).toBe("hello thank you im fine");
 });
@@ -578,4 +578,36 @@ test("inRange", () => {
     expect(fn(0, [0])).toBeTruthy();
     expect(fn(0, [1])).toBeFalsy();
     expect(fn(0, [1, 2])).toBeFalsy();
+});
+test("groupBy", () => {
+    const fn = arr.groupBy;
+    expect(fn([{type: 1}, {type: 2}], "type")).toEqual({
+        1: [{type: 1}],
+        2: [{type: 2}],
+    });
+    expect(fn([
+            {type: 1, value: 111},
+            {type: 2, value: 222},
+            {type: 1, value: 222},
+            {type: 2, value: 33344},
+            {type: 1, value: 333},
+            {type: 1, value: 444}
+        ],
+        "type")).toEqual({
+        1: [
+            {type: 1, value: 111},
+            {type: 1, value: 222},
+            {type: 1, value: 333},
+            {type: 1, value: 444}
+        ],
+        2: [
+            {type: 2, value: 222},
+            {type: 2, value: 33344},
+        ],
+    });
+    expect(fn([], "")).toEqual({});
+    expect(fn(undefined as any, undefined as any)).toEqual({});
+    expect(fn([], undefined as any)).toEqual({});
+    expect(fn([{type: 1}, {type: 2}], undefined as any)).toEqual({undefined: [{type: 1}, {type: 2}]});
+    expect(fn([{type: 1}, {value: 2}], "type")).toEqual({undefined: [{value: 2}], 1: [{type: 1}]});
 });
