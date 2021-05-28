@@ -167,7 +167,6 @@ export function includes(thisArg, searchElement, fromIndex = 0) {
     return false;
 }
 
-
 // find<S extends T>(predicate: (this: void, value: T, index: number, obj: T[]) => value is S, thisArg?: any): S | undefined;
 // find(predicate: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): T | undefined;
 export function find<T>(
@@ -449,7 +448,7 @@ export function chunk(arr: any[], chunkLen: number) {
  */
 export function inRange(
     value: number,
-    [min = -Infinity, max = Infinity]: [number?, number?]
+    [min = -Infinity, max = Infinity]: [number?, number?],
 ): boolean {
     return min <= value && value <= max;
 }
@@ -458,20 +457,22 @@ export function inRange(
  * 数组分组
  * @example
  * groupBy([{type: 1}, {type: 2}], "type") // returns {1: [{type: 1}], 2: [{type: 2}]}
- * groupBy([{type: 1}, {value: 2}], "type") // returns {undefined: [{value: 2}], 1: [{type: 1}]}
+ * groupBy([{type: 1}, {value: 2}], "type") // returns {"*": [{value: 2}], 1: [{type: 1}]}
  * @param arr
  * @param key 如果item中不存在该key，那么该item会归类到undefined
+ * @param defaultKey 如果item中不存在该key，那么该item会归类到defaultKey
  */
-export function groupBy<T extends { [k: string]: any }, K extends keyof T>(arr: T[], key: K): { [k: string]: T[] } {
-    const result: any = {};
-    if (!isArray(arr)) return result;
-    arr.forEach((item) => {
-        const k = item[key];
+export function groupBy<T extends { [k: string]: any }, K extends keyof T>(arr: T[], key: K, defaultKey?: number | string): { [k: string]: T[] };
+export function groupBy<T extends { [k: string]: any }>(arr: T[], by: (it: T) => string | void, defaultKey?: number | string): { [k: string]: T[] };
+export function groupBy(arr, key, defaultKey: number | string = "*") {
+    const cb = isFunction(key) ? key : item => item[key];
+    return arr.reduce((result, item) => {
+        const k = cb(item) ?? defaultKey;
         if (!result.hasOwnProperty(k)) {
             result[k] = [item];
         } else {
             result[k].push(item);
         }
-    });
-    return result;
+        return result;
+    }, {});
 }
