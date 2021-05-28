@@ -68,7 +68,7 @@ test("forEachAsync", async () => {
 
     const list = [
         () => Promise.resolve("hello"),
-        () => Promise.reject("im fine")
+        () => Promise.reject("im fine"),
     ];
 
     try {
@@ -591,14 +591,14 @@ test("groupBy", () => {
             {type: 1, value: 222},
             {type: 2, value: 33344},
             {type: 1, value: 333},
-            {type: 1, value: 444}
+            {type: 1, value: 444},
         ],
         "type")).toEqual({
         1: [
             {type: 1, value: 111},
             {type: 1, value: 222},
             {type: 1, value: 333},
-            {type: 1, value: 444}
+            {type: 1, value: 444},
         ],
         2: [
             {type: 2, value: 222},
@@ -606,8 +606,38 @@ test("groupBy", () => {
         ],
     });
     expect(fn([], "")).toEqual({});
-    expect(fn(undefined as any, undefined as any)).toEqual({});
+    expect(() => {
+        fn(undefined as any, undefined as any);
+    }).toThrowError();
     expect(fn([], undefined as any)).toEqual({});
-    expect(fn([{type: 1}, {type: 2}], undefined as any)).toEqual({undefined: [{type: 1}, {type: 2}]});
-    expect(fn([{type: 1}, {value: 2}], "type")).toEqual({undefined: [{value: 2}], 1: [{type: 1}]});
+    expect(fn([{type: 1}, {type: 2}], undefined as any)).toEqual({"*": [{type: 1}, {type: 2}]});
+    expect(fn([{type: 1}, {value: 2}], "type")).toEqual({"*": [{value: 2}], 1: [{type: 1}]});
+    expect(fn([{type: 1}, {value: 2}], "type", "other")).toEqual({other: [{value: 2}], 1: [{type: 1}]});
+    // cb
+    expect(fn([
+            {name: "a", score: 50},
+            {name: "b", score: 90},
+            {name: "c", score: 70},
+            {name: "d", score: 10},
+            {name: "e", score: 100},
+        ],
+        (item) => {
+            const score = item.score;
+            if (score >= 90) return "A";
+            if (score >= 60) return "B";
+            return "C";
+        })).toEqual({
+        A: [
+            {name: "b", score: 90},
+            {name: "e", score: 100},
+        ],
+        B: [
+            {name: "c", score: 70},
+        ],
+        C: [
+            {name: "a", score: 50},
+            {name: "d", score: 10},
+        ],
+
+    });
 });
