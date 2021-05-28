@@ -451,5 +451,27 @@ export function inRange(
     value: number,
     [min = -Infinity, max = Infinity]: [number?, number?]
 ): boolean {
-    return min <= value && value <= max
+    return min <= value && value <= max;
+}
+
+/**
+ * 数组分组
+ * @example
+ * groupBy([{type: 1}, {type: 2}], "type") // returns {1: [{type: 1}], 2: [{type: 2}]}
+ * groupBy([{type: 1}, {value: 2}], "type") // returns {undefined: [{value: 2}], 1: [{type: 1}]}
+ * @param arr
+ * @param key 如果item中不存在该key，那么该item会归类到undefined
+ */
+export function groupBy<T extends { [k: string]: any }, K extends keyof T>(arr: T[], key: K): { [k: string]: T[] } {
+    const result: any = {};
+    if (!isArray(arr)) return result;
+    arr.forEach((item) => {
+        const k = item[key];
+        if (!result.hasOwnProperty(k)) {
+            result[k] = [item];
+        } else {
+            result[k].push(item);
+        }
+    });
+    return result;
 }
