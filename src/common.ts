@@ -618,6 +618,12 @@ export function subString(str: string, start: number, end = str.length): string 
     return str.substring(start, end);
 }
 
+/**
+ * 与String.prototype.repeat相同
+ * String.prototype.repeat支持到ie11
+ * @param value
+ * @param repeatCount
+ */
 export function strRepeat(value: string, repeatCount: number): string {
     if (repeatCount < 0 || repeatCount * value.length > strRepeat.MAX_STR_LENGTH) throw new RangeError("strRepeat Invalid repeatCount value");
     let result = "";
