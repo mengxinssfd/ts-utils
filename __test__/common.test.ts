@@ -528,3 +528,18 @@ test("subString", async () => {
     expect(fn("test", 0, 2)).toBe("te");
     expect(fn("test", 1)).toBe("est");
 });
+test("strRepeat", async () => {
+    const fn = cm.strRepeat;
+    expect(fn("a", 1)).toBe("a");
+    expect(fn("a", "1" as any)).toBe("a");
+    expect(fn("a", "sfsdf" as any)).toBe("");
+    expect(fn("a", 2)).toBe("aa");
+    expect(fn("ab", 3)).toBe("ababab");
+
+    expect(fn("ab", 0)).toBe("");
+    expect("ab".repeat(0)).toBe("");
+
+    expect(() => fn("1", -1)).toThrowError();
+    expect(() => "1".repeat(-1)).toThrowError();
+    expect(() => fn("1", fn.MAX_STR_LENGTH + 1)).toThrowError();
+});
