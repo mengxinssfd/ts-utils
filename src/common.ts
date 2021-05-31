@@ -636,11 +636,22 @@ export function strRepeat(value: string, repeatCount: number): string {
 
 strRepeat.MAX_STR_LENGTH = 512 * 1024 * 1024;
 
+/**
+ * 根据模板创建出字符串  除了面试题找不到应用场景的函数
+ * @example
+ * smartRepeat("2[2[a]2[b]]") // returns "aabbaabb"
+ * @param format
+ */
 export function smartRepeat(format: string): string {
-    const reg = /^(\d+)\[(.+)]$/;
-    if (reg.test(format)) {
-        const num = Number(RegExp.$1);
-        return smartRepeat(RegExp.$2).repeat(num);
+    let exec;
+
+    const re = /(\d+)\[([^\[\]]+)](?!\d+\[)/;
+    while (exec = re.exec(format)) {
+        const [, count, repeatValue] = exec;
+        // const repeatRE = new RegExp(re);
+        // repeatRE.lastIndex = re.lastIndex;
+        // fixme 同一个字符串找一次 替换的时候又找一次
+        format = format.replace(re, strRepeat(repeatValue, count));
     }
     return format;
 }
