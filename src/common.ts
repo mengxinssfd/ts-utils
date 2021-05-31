@@ -617,3 +617,15 @@ export function subString(str: string, start: number, end = str.length): string 
     }
     return str.substring(start, end);
 }
+
+export function strRepeat(value: string, repeatCount: number): string {
+    if (repeatCount < 0 || repeatCount * value.length > strRepeat.MAX_STR_LENGTH) throw new RangeError("strRepeat Invalid repeatCount value");
+    let result = "";
+    if (value === "") return "";
+    while ((repeatCount as number)-- > 0) {
+        result += value;
+    }
+    return result;
+}
+
+strRepeat.MAX_STR_LENGTH = 512 * 1024 * 1024;
