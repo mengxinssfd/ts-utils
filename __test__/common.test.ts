@@ -535,6 +535,7 @@ test("strRepeat", async () => {
     expect(fn("a", "sfsdf" as any)).toBe("");
     expect(fn("a", 2)).toBe("aa");
     expect(fn("ab", 3)).toBe("ababab");
+    expect(fn("ab", undefined as any)).toBe("");
 
     expect(fn("ab", 0)).toBe("");
     expect("ab".repeat(0)).toBe("");
