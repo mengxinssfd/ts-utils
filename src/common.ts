@@ -648,10 +648,12 @@ export function smartRepeat(format: string): string {
     const re = /(\d+)\[([^\[\]]+)](?!\d+\[)/;
     while (exec = re.exec(format)) {
         const [, count, repeatValue] = exec;
-        // const repeatRE = new RegExp(re);
-        // repeatRE.lastIndex = re.lastIndex;
-        // fixme 同一个字符串找一次 替换的时候又找一次
+        // 第一次方式
         format = format.replace(re, strRepeat(repeatValue, count));
+        // 第二种方式
+        // const start = format.substring(0, exec.index);
+        // const end = format.substring(exec.index + exec[0].length);
+        // format = start + strRepeat(repeatValue, count) + end;
     }
     return format;
 }
