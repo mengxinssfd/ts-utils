@@ -648,7 +648,7 @@ export function smartRepeat(format: string): string {
     const re = /(\d+)\[([^\[\]]+)](?!\d+\[)/;
     while (exec = re.exec(format)) {
         const [, count, repeatValue] = exec;
-        // 第一次方式
+        // 第一种方式
         format = format.replace(re, strRepeat(repeatValue, count));
         // 第二种方式
         // const start = format.substring(0, exec.index);
