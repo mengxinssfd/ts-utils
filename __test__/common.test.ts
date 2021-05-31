@@ -528,7 +528,7 @@ test("subString", async () => {
     expect(fn("test", 0, 2)).toBe("te");
     expect(fn("test", 1)).toBe("est");
 });
-test("strRepeat", async () => {
+test("strRepeat", () => {
     const fn = cm.strRepeat;
     expect(fn("a", 1)).toBe("a");
     expect(fn("a", "1" as any)).toBe("a");
@@ -543,4 +543,22 @@ test("strRepeat", async () => {
     expect(() => fn("1", -1)).toThrowError();
     expect(() => "1".repeat(-1)).toThrowError();
     expect(() => fn("1", fn.MAX_STR_LENGTH + 1)).toThrowError();
+});
+test("smartRepeat", () => {
+    const fn = cm.smartRepeat;
+    expect(fn("2[a]")).toBe("aa");
+    expect(fn("1[a]")).toBe("a");
+    expect(fn("[a]")).toBe("[a]");
+    expect(fn("[a]")).toBe("[a]");
+    expect(fn("2[2[a]2[b]]")).toBe("aabbaabb");
+    expect(fn("2[2[a]2[b]2[c]]")).toBe("aabbccaabbcc");
+    expect(fn("2[2[a]2[bc]]")).toBe("aabcbcaabcbc");
+    expect(fn("2[2]]")).toBe("22]");
+    expect(fn("2[2[a]77]")).toBe("aa77aa77");
+    // 不能重复有非对称[]的字符串
+    // expect(fn("2[2\]]")).toBe("2]2]");
+    expect(fn("2[1[1]2[2]3[2[5]2[6]]]")).toBe("122556655665566122556655665566");
+    expect(fn("2[1[a]3[b]2[3[c]4[d]]]")).toBe("abbbcccddddcccddddabbbcccddddcccdddd");
+
+    expect(fn("2[1[1]3[b]2[1[1]4[d]]]")).toBe("1bbb1dddd1dddd1bbb1dddd1dddd");
 });
