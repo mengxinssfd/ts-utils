@@ -629,3 +629,12 @@ export function strRepeat(value: string, repeatCount: number): string {
 }
 
 strRepeat.MAX_STR_LENGTH = 512 * 1024 * 1024;
+
+export function smartRepeat(format: string): string {
+    const reg = /^(\d+)\[(.+)]$/;
+    if (reg.test(format)) {
+        const num = Number(RegExp.$1);
+        return smartRepeat(RegExp.$2).repeat(num);
+    }
+    return format;
+}
