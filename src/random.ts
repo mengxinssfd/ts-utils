@@ -1,6 +1,6 @@
 import {createArray} from "./array";
 import {deepCloneBfs} from "./clone";
-import {strPadStart} from "./common";
+import {strPadStart} from "./string";
 import {isArrayLike, isNumber} from "./dataType";
 
 // min end都不传  return Math.random()

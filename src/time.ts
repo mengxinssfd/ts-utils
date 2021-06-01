@@ -1,4 +1,4 @@
-import {number2Chinese, strPadStart} from "./common";
+import {number2Chinese, strPadStart} from "./string";
 import {createArray, inRange} from "./array";
 
 /**

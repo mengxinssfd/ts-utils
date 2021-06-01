@@ -1,4 +1,4 @@
-import {subString} from "../src/common";
+import {subString} from "../src/string";
 import {UrlModel} from "../src/UrlModel";
 import {
     getUrlHash,

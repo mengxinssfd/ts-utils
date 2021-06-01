@@ -26,3 +26,4 @@ export * from "./RGB";
 export * from "./Stack";
 export * from "./blob";
 export * from "./ResponsibilityChain";
+export * from "./string";
