@@ -308,6 +308,23 @@ export function defaults(target, ...args) {
     return target;
 }
 
+/**
+ * 使用target里面的key去查找其他的对象，如果其他对象里有该key，则把该值复制给target,如果多个对象都有同一个值，则以最后的为准
+ * @param target
+ * @param args
+ */
+export function objUpdate<T extends object>(target: T, ...args: T[]): T {
+    forEachObj(target, (v, k) => {
+        forEachRight(function (item): void | false {
+            if (item.hasOwnProperty(k)) {
+                target[k] = item[k];
+                return false;
+            }
+        }, args);
+    });
+    return target;
+}
+
 // TODO 需要去除掉前面object里的undefined
 /*
 type A = { a: undefined, b: number }
