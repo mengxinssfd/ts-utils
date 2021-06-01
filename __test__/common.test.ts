@@ -530,6 +530,7 @@ test("subString", async () => {
 });
 test("strRepeat", () => {
     const fn = cm.strRepeat;
+    expect(fn("", 100)).toBe("");
     expect(fn("a", 1)).toBe("a");
     expect(fn("a", "1" as any)).toBe("a");
     expect(fn("a", "sfsdf" as any)).toBe("");
