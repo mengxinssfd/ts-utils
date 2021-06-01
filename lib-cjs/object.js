@@ -1,7 +1,10 @@
-import { isArray, isObject, isBroadlyObj } from "./dataType";
-import { forEachRight } from "./array";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getObjPathEntries = exports.getObjValueByPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
+const dataType_1 = require("./dataType");
+const array_1 = require("./array");
 // 获取object树的最大层数 tree是object的话，tree就是层数1
-export function getTreeMaxDeep(tree) {
+function getTreeMaxDeep(tree) {
     function deeps(obj, num = 0) {
         if (typeof tree !== "object" || tree === null)
             return num;
@@ -13,8 +16,9 @@ export function getTreeMaxDeep(tree) {
     }
     return deeps(tree);
 }
+exports.getTreeMaxDeep = getTreeMaxDeep;
 // 获取树某层的节点数 0是tree本身
-export function getTreeNodeLen(tree, nodeNumber = 1) {
+function getTreeNodeLen(tree, nodeNumber = 1) {
     let result = 0;
     if (typeof tree !== "object" || tree === null || nodeNumber < 0)
         return result;
@@ -30,8 +34,9 @@ export function getTreeNodeLen(tree, nodeNumber = 1) {
     deeps(tree);
     return result;
 }
+exports.getTreeNodeLen = getTreeNodeLen;
 // 合并两个object TODO 可优化
-export function deepMerge(first, second) {
+function deepMerge(first, second) {
     function assign(receive, obj) {
         for (const k in obj) {
             if (!obj.hasOwnProperty(k))
@@ -50,12 +55,13 @@ export function deepMerge(first, second) {
     assign(result, second);
     return result;
 }
+exports.deepMerge = deepMerge;
 /**
  * 代替Object.keys(obj).forEach，减少循环次数
  * @param obj
  * @param callbackFn 返回false的时候中断
  */
-export function forEachObj(obj, callbackFn) {
+function forEachObj(obj, callbackFn) {
     for (const k in obj) {
         if (!obj.hasOwnProperty(k))
             continue;
@@ -64,43 +70,46 @@ export function forEachObj(obj, callbackFn) {
             return;
     }
 }
+exports.forEachObj = forEachObj;
 /**
  * @alias forEachObj
  */
-export const objForEach = forEachObj;
+exports.objForEach = forEachObj;
 /**
  * object key-value翻转
  * @param obj
  */
-export function getReverseObj(obj) {
+function getReverseObj(obj) {
     return reduceObj(obj, (res, v, k) => {
         res[v] = k;
         return res;
     }, {});
 }
+exports.getReverseObj = getReverseObj;
 /**
  * 代替Object.keys(obj).reduce，减少循环次数
  * @param obj
  * @param callbackFn
  * @param initialValue 初始值
  */
-export function reduceObj(obj, callbackFn, initialValue) {
+function reduceObj(obj, callbackFn, initialValue) {
     let result = initialValue;
     forEachObj(obj, (v, k, o) => {
         result = callbackFn(result, v, k, o);
     });
     return result;
 }
+exports.reduceObj = reduceObj;
 /**
  * @alias reduceObj
  */
-export const objReduce = reduceObj;
+exports.objReduce = reduceObj;
 /**
  * @param originObj
  * @param pickKeys
  * @param cb
  */
-export function pickByKeys(originObj, pickKeys, cb) {
+function pickByKeys(originObj, pickKeys, cb) {
     const callback = cb || (v => v);
     return pickKeys.reduce((res, key) => {
         if (originObj.hasOwnProperty(key))
@@ -108,6 +117,7 @@ export function pickByKeys(originObj, pickKeys, cb) {
         return res;
     }, {});
 }
+exports.pickByKeys = pickByKeys;
 // TODO 不完美的地方：k === "a"时应该限定返回值类型为number
 /*pickByKeys({a: 123, b: "111", c: false}, ["a", "b"], (v, k, o) => {
     if(k === "a"){
@@ -116,7 +126,7 @@ export function pickByKeys(originObj, pickKeys, cb) {
     return v;
 });*/
 // 新属性名作为键名的好处是可以多个属性对应一个值
-export function pickRename(originObj, pickKeyMap, cb) {
+function pickRename(originObj, pickKeyMap, cb) {
     const callback = cb || (v => v);
     /* const renames = Object.keys(renamePickObj) as (keyof O)[];
      return renames.reduce((result, rename) => {
@@ -133,11 +143,12 @@ export function pickRename(originObj, pickKeyMap, cb) {
         return result;
     }, {});
 }
+exports.pickRename = pickRename;
 /**
  * 合并pickByKeys与pickRename两者的功能
  */
-export function pick(originObj, picks, cb) {
-    const isObj = isObject(picks);
+function pick(originObj, picks, cb) {
+    const isObj = dataType_1.isObject(picks);
     // ------- 第一种写法 -------
     // const callback = cb || (v => v);
     // const pickKeys = isObj ? Object.keys(picks) : picks;
@@ -154,13 +165,14 @@ export function pick(originObj, picks, cb) {
     // TODO 需要判断返回值类型是否改变了  改变则抛出异常
     return isObj ? pickRename(originObj, picks, cb) : pickByKeys(originObj, picks, cb);
 }
+exports.pick = pick;
 // pick({a: 132, b: "123123"}, ["a", "b"]);
 /**
  * 根据新键值对重命名对象的key，并生成一个新的对象
  * @param originObj
  * @param keyMap
  */
-export function renameObjKey(originObj, keyMap) {
+function renameObjKey(originObj, keyMap) {
     const result = assign({}, originObj);
     let delKeys = [];
     const newKeys = [];
@@ -180,6 +192,7 @@ export function renameObjKey(originObj, keyMap) {
     });
     return result;
 }
+exports.renameObjKey = renameObjKey;
 /**
  * Omit 省略
  * @example
@@ -188,7 +201,7 @@ export function renameObjKey(originObj, keyMap) {
  * @param target
  * @param keys
  */
-export function omit(target, keys) {
+function omit(target, keys) {
     const newKeys = keys.slice();
     return reduceObj(target, (initValue, v, k) => {
         const index = newKeys.indexOf(k);
@@ -201,7 +214,8 @@ export function omit(target, keys) {
         return initValue;
     }, {});
 }
-export function assign(target, ...args) {
+exports.omit = omit;
+function assign(target, ...args) {
     args.forEach(arg => {
         // forEachObj(arg, (v, k) => target[k] = v);  // 不能返回“target[k] = v”值，v可能会为false，为false会中断循环
         forEachObj(arg, (v, k) => {
@@ -210,6 +224,7 @@ export function assign(target, ...args) {
     });
     return target;
 }
+exports.assign = assign;
 /**
  * 与lodash defaults一样 只替换target里面的值为undefined的属性
  * 类型推导会以前面的为准
@@ -219,7 +234,7 @@ export function assign(target, ...args) {
  * @param target
  * @param args
  */
-export function defaults(target, ...args) {
+function defaults(target, ...args) {
     args.forEach(arg => {
         forEachObj(arg, (v, k) => {
             if (v === undefined || target[k] !== undefined)
@@ -229,14 +244,15 @@ export function defaults(target, ...args) {
     });
     return target;
 }
+exports.defaults = defaults;
 /**
  * 使用target里面的key去查找其他的对象，如果其他对象里有该key，则把该值复制给target,如果多个对象都有同一个值，则以最后的为准
  * @param target
  * @param args
  */
-export function objUpdate(target, ...args) {
+function objUpdate(target, ...args) {
     forEachObj(target, (v, k) => {
-        forEachRight(function (item) {
+        array_1.forEachRight(function (item) {
             if (item.hasOwnProperty(k)) {
                 target[k] = item[k];
                 return false;
@@ -245,6 +261,7 @@ export function objUpdate(target, ...args) {
     });
     return target;
 }
+exports.objUpdate = objUpdate;
 // TODO 需要去除掉前面object里的undefined
 /*
 type A = { a: undefined, b: number }
@@ -262,9 +279,9 @@ type B = Pick2<A, keyof A>*/
  * @param entries
  * @return {{}}
  */
-export function createObj(entries) {
+function createObj(entries) {
     return entries.reduce((initValue, item) => {
-        if (!isArray(item) || item.length < 1)
+        if (!dataType_1.isArray(item) || item.length < 1)
             throw new TypeError("createObj args type error");
         const [key, value] = item;
         if (key !== void 0) {
@@ -273,41 +290,45 @@ export function createObj(entries) {
         return initValue;
     }, {});
 }
+exports.createObj = createObj;
 /**
  * @alias createObj
  */
-export const ObjFromEntries = createObj;
+exports.ObjFromEntries = createObj;
 /**
  * Object.keys
  * @param obj
  */
-export function objKeys(obj) {
+function objKeys(obj) {
     // Object.keys es5可以使用
     return reduceObj(obj, (init, v, k) => {
         init.push(k);
         return init;
     }, []);
 }
+exports.objKeys = objKeys;
 /**
  * Object.values
  * @param obj
  */
-export function objValues(obj) {
+function objValues(obj) {
     return reduceObj(obj, (init, v) => {
         init.push(v);
         return init;
     }, []);
 }
+exports.objValues = objValues;
 /**
  * Object.entries
  * @param obj
  */
-export function objEntries(obj) {
+function objEntries(obj) {
     return reduceObj(obj, (init, v, k) => {
         init.push([k, v]);
         return init;
     }, []);
 }
+exports.objEntries = objEntries;
 /**
  * 通过object路径获取值
  * @example
@@ -316,16 +337,17 @@ export function objEntries(obj) {
  * @param path
  * @param [objName = ""]
  */
-export function getObjValueByPath(obj, path, objName = "") {
+function getObjValueByPath(obj, path, objName = "") {
     const p = path.replace(/\[([^\]]+)]/g, ".$1")
         .replace(new RegExp(`^${objName}`), "")
         .replace(/^\./, "");
     return p.split(".").reduce((init, v) => {
-        if (!isBroadlyObj(init))
+        if (!dataType_1.isBroadlyObj(init))
             return undefined;
         return init[v];
     }, obj);
 }
+exports.getObjValueByPath = getObjValueByPath;
 /**
  * 获取object的路径数组
  * @example
@@ -334,10 +356,10 @@ export function getObjValueByPath(obj, path, objName = "") {
  * @param obj
  * @param [objName = ""]
  */
-export function getObjPathEntries(obj, objName = "") {
+function getObjPathEntries(obj, objName = "") {
     return reduceObj(obj, (init, v, k) => {
         const key = `${objName}[${k}]`;
-        if (isBroadlyObj(v)) {
+        if (dataType_1.isBroadlyObj(v)) {
             init.push(...getObjPathEntries(v, key));
         }
         else {
@@ -346,4 +368,5 @@ export function getObjPathEntries(obj, objName = "") {
         return init;
     }, []);
 }
+exports.getObjPathEntries = getObjPathEntries;
 // TODO 根据路径还原整个object

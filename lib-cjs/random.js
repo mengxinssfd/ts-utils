@@ -1,8 +1,11 @@
-import { createArray } from "./array";
-import { deepCloneBfs } from "./clone";
-import { strPadStart } from "./string";
-import { isArrayLike, isNumber } from "./dataType";
-export function randomFloat(min, max, len) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.randomColor = exports.randomHEX = exports.randomRGBA = exports.randomRGB = exports.shuffle = exports.randomItem = exports.randomInt = exports.randomFloat = void 0;
+const array_1 = require("./array");
+const clone_1 = require("./clone");
+const string_1 = require("./string");
+const dataType_1 = require("./dataType");
+function randomFloat(min, max, len) {
     // randomFloat()
     if (!arguments.length)
         return Math.random();
@@ -17,10 +20,11 @@ export function randomFloat(min, max, len) {
         return (Math.random() * dif) + min;
     }
     else {
-        return createArray({ len, fill: () => randomFloat(min, max) });
+        return array_1.createArray({ len, fill: () => randomFloat(min, max) });
     }
 }
-export function randomInt(min, max, len) {
+exports.randomFloat = randomFloat;
+function randomInt(min, max, len) {
     // randomInt()
     if (!arguments.length)
         return Math.random();
@@ -35,25 +39,27 @@ export function randomInt(min, max, len) {
         return ~~(Math.random() * dif) + min;
     }
     else {
-        return createArray({ len, fill: () => randomInt(min, max) });
+        return array_1.createArray({ len, fill: () => randomInt(min, max) });
     }
 }
+exports.randomInt = randomInt;
 /**
  * 随机获取数组中的一个
  * @param arr
  */
-export function randomItem(arr) {
+function randomItem(arr) {
     const index = randomInt(arr.length);
     return arr[index];
 }
+exports.randomItem = randomItem;
 /**
  * 洗牌
  * @param arr
  */
-export function shuffle(arr) {
-    if (!isArrayLike(arr))
+function shuffle(arr) {
+    if (!dataType_1.isArrayLike(arr))
         throw new TypeError();
-    const newArr = deepCloneBfs(arr);
+    const newArr = clone_1.deepCloneBfs(arr);
     let m = newArr.length;
     while (m) {
         const i = randomInt(m--);
@@ -61,6 +67,7 @@ export function shuffle(arr) {
     }
     return newArr;
 }
+exports.shuffle = shuffle;
 /*
 export function shuffle<T>(arr: ArrayLike<T>): T[] {
     if (!isArrayLike(arr)) throw new TypeError();
@@ -74,21 +81,24 @@ export function shuffle<T>(arr: ArrayLike<T>): T[] {
     return result;
 }
 */
-export function randomRGB() {
+function randomRGB() {
     const num = randomInt(0, 255, 3);
     return `rgb(${num[0]},${num[1]},${num[2]})`;
 }
-export function randomRGBA() {
+exports.randomRGB = randomRGB;
+function randomRGBA() {
     const num = randomInt(0, 255, 3);
     const opacity = +randomFloat().toFixed(2);
     return `rgba(${num[0]},${num[1]},${num[2]},${opacity})`;
 }
-export function randomHEX() {
+exports.randomRGBA = randomRGBA;
+function randomHEX() {
     const num = randomInt(0xffffff).toString(16);
-    return "#" + strPadStart(num, 6, "0");
+    return "#" + string_1.strPadStart(num, 6, "0");
 }
-export function randomColor(type, len) {
-    if (isNumber(type)) {
+exports.randomHEX = randomHEX;
+function randomColor(type, len) {
+    if (dataType_1.isNumber(type)) {
         len = type;
         type = "HEX";
     }
@@ -105,6 +115,7 @@ export function randomColor(type, len) {
         return (map[type] || map.HEX)();
     }
     else {
-        return createArray({ len, fill: () => randomColor(type) });
+        return array_1.createArray({ len, fill: () => randomColor(type) });
     }
 }
+exports.randomColor = randomColor;

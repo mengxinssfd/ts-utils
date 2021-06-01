@@ -57,10 +57,9 @@ export function copy2Clipboard(target) {
         let el;
         const isText = typeof target === "string";
         if (isText) {
-            const text = target;
             el = createElement("div", {
                 props: {
-                    innerText: text,
+                    innerText: target,
                     style: {
                         position: "fixed",
                         left: "-100000px",
@@ -90,7 +89,7 @@ export function copy2Clipboard(target) {
     });
     p.finally(function () {
         window.getSelection().removeAllRanges();
-        if (isText) {
+        if (isText && el) {
             document.body.removeChild(el);
         }
     });

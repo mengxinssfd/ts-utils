@@ -39,7 +39,7 @@ export declare const objReduce: typeof reduceObj;
 export declare function pickByKeys<T extends object, K extends keyof T, O extends Pick<T, K>>(originObj: T, pickKeys: K[], cb?: (value: T[K], key: K, originObj: T) => Pick<T, K>[K]): Pick<T, K>;
 export declare function pickRename<T extends object, K extends keyof T, O extends {
     [k: string]: K;
-}>(originObj: T, renamePickObj: O, cb?: (value: T[O[keyof O]], key: O[keyof O], originObj: T) => T[O[keyof O]]): {
+}>(originObj: T, pickKeyMap: O, cb?: (value: T[O[keyof O]], key: O[keyof O], originObj: T) => T[O[keyof O]]): {
     [k in keyof O]: T[O[k]];
 };
 /**
@@ -54,14 +54,24 @@ export declare function pick<T extends object, K extends keyof T, KS extends K[]
 /**
  * 功能与pickRename函数一致
  * @param originObj
- * @param renamePickObj
+ * @param pickKeyMap
  * @param cb
  */
 export declare function pick<T extends object, K extends keyof T, O extends {
     [k: string]: K;
-}>(originObj: T, renamePickObj: O, cb?: (value: T[O[keyof O]], key: O[keyof O], fromObj: T) => T[O[keyof O]]): {
+}>(originObj: T, pickKeyMap: O, cb?: (value: T[O[keyof O]], key: O[keyof O], fromObj: T) => T[O[keyof O]]): {
     [k in keyof O]: T[O[k]];
 };
+/**
+ * 根据新键值对重命名对象的key，并生成一个新的对象
+ * @param originObj
+ * @param keyMap
+ */
+export declare function renameObjKey<T extends object, K extends keyof T, O extends {
+    [k: string]: K;
+}, R extends Omit<T, O[keyof O]>>(originObj: T, keyMap: O): {
+    [k in keyof O]: T[O[k]];
+} & R;
 /**
  * Omit 省略
  * @example
@@ -79,6 +89,12 @@ export declare function defaults<T, U>(target: T, source: U): T & U;
 export declare function defaults<T, U, V>(target: T, source1: U, source2: V): T & U & V;
 export declare function defaults<T, U, V, W>(target: T, source1: U, source2: V, source3: W): T & U & V & W;
 export declare function defaults(target: object, ...args: object[]): any;
+/**
+ * 使用target里面的key去查找其他的对象，如果其他对象里有该key，则把该值复制给target,如果多个对象都有同一个值，则以最后的为准
+ * @param target
+ * @param args
+ */
+export declare function objUpdate<T extends object>(target: T, ...args: T[]): T;
 /**
  * 创建一个object 代替es6的动态key object 与Object.fromEntries一样
  * @example

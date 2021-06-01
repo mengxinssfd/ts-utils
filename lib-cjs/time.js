@@ -1,10 +1,13 @@
-import { number2Chinese, strPadStart } from "./string";
-import { createArray, inRange } from "./array";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getMonthTheNthWeekday = exports.getTheLastDayOfAMonth = exports.createTimeCountDown = exports.createTimeCountUp = exports.sleep = exports.str2Date = exports.getDateFromStr = exports.formatDate = exports.dateDiff = exports.number2Date = void 0;
+const string_1 = require("./string");
+const array_1 = require("./array");
 /**
  * @param millisecond
  * @param {string} [format=d天hh时mm分ss秒] - 格式化模板
  */
-export function number2Date(millisecond, format = "d天hh时mm分ss秒") {
+function number2Date(millisecond, format = "d天hh时mm分ss秒") {
     let result = format;
     const seconds = millisecond / 1000;
     const obj = {
@@ -28,13 +31,14 @@ export function number2Date(millisecond, format = "d天hh时mm分ss秒") {
     }
     return result;
 }
+exports.number2Date = number2Date;
 /**
  * 比较两个日期相差年天时分秒  用于倒计时等
  * @param start
  * @param end
  * @param [format="y年d天 hh时mm分ss秒"]
  */
-export function dateDiff(start, end, format = "y年d天 hh时mm分ss秒") {
+function dateDiff(start, end, format = "y年d天 hh时mm分ss秒") {
     let result = format;
     if (start.getTime() > end.getTime()) {
         [start, end] = [end, start];
@@ -59,7 +63,7 @@ export function dateDiff(start, end, format = "y年d天 hh时mm分ss秒") {
             // 奇怪的bug 本地调试的时候RegExp.$1不准确,"s+"的时候$1是空字符串; 非调试的时候又没问题
             const s1 = RegExp.$1;
             const v = obj[k];
-            let value = strPadStart(String(v), s1.length, "0");
+            let value = string_1.strPadStart(String(v), s1.length, "0");
             // substring(start,end) start小于0的时候为0  substr(from,len)from小于0的时候为字符串的长度+from
             value = value.substring(value.length - s1.length); //手动切割00:00 m:s "00".length - "s".length，因为strPadStart当字符串长度大于length的话不会切割
             result = result.replace(s1, value);
@@ -67,12 +71,13 @@ export function dateDiff(start, end, format = "y年d天 hh时mm分ss秒") {
     }
     return result;
 }
+exports.dateDiff = dateDiff;
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
  * @param [format="yyyy-MM-dd hh:mm:ss"]
  * @returns String
  */
-export const formatDate = function (format = "yyyy-MM-dd hh:mm:ss") {
+const formatDate = function (format = "yyyy-MM-dd hh:mm:ss") {
     let o = {
         "M+": this.getMonth() + 1,
         "d+": this.getDate(),
@@ -81,21 +86,21 @@ export const formatDate = function (format = "yyyy-MM-dd hh:mm:ss") {
         "s+": this.getSeconds(),
         "q": (function (__this) {
             const q = Math.floor((__this.getMonth() + 3) / 3) - 1;
-            return formatDate.seasonText[q];
+            return exports.formatDate.seasonText[q];
         })(this),
         "S+": this.getMilliseconds(),
         "w": (function (__this) {
             const d = __this.getDay();
             // 星期
-            if (!formatDate.weekText || !formatDate.weekText.length) {
-                formatDate.weekText = createArray({
+            if (!exports.formatDate.weekText || !exports.formatDate.weekText.length) {
+                exports.formatDate.weekText = array_1.createArray({
                     end: 7,
                     fill(item, index) {
-                        return index === 0 ? "日" : number2Chinese(index);
+                        return index === 0 ? "日" : string_1.number2Chinese(index);
                     },
                 });
             }
-            return formatDate.weekText[d];
+            return exports.formatDate.weekText[d];
         })(this),
     };
     if (/(y+)/.test(format)) {
@@ -111,16 +116,17 @@ export const formatDate = function (format = "yyyy-MM-dd hh:mm:ss") {
     }
     return format;
 };
-formatDate.weekText = [];
-formatDate.seasonText = ["春", "夏", "秋", "冬"];
+exports.formatDate = formatDate;
+exports.formatDate.weekText = [];
+exports.formatDate.seasonText = ["春", "夏", "秋", "冬"];
 // 可能会影响打包tree shaking
-Date.prototype.format = formatDate;
+Date.prototype.format = exports.formatDate;
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
  * @param date 格式：yyyy-MM-dd hh:mm:ss
  * @returns {Date}
  */
-export function getDateFromStr(date) {
+function getDateFromStr(date) {
     // 检测非数字、非/、非:、非-
     if (!date || /[^\/\d: -]/.test(date))
         return null; // 去除不符合规范的字符串
@@ -132,16 +138,19 @@ export function getDateFromStr(date) {
     }
     return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
 }
-export const str2Date = getDateFromStr;
-export function sleep(ms) {
+exports.getDateFromStr = getDateFromStr;
+exports.str2Date = getDateFromStr;
+function sleep(ms) {
     return new Promise(res => setTimeout(res, ms));
 }
-export function createTimeCountUp() {
+exports.sleep = sleep;
+function createTimeCountUp() {
     const startTime = Date.now();
     return function () {
         return Date.now() - startTime;
     };
 }
+exports.createTimeCountUp = createTimeCountUp;
 /*
 /!**
  * 创建一个倒计时函数
@@ -158,31 +167,33 @@ export function createTimeCountDown(countDown: number): () => number {
  * 创建一个倒计时函数
  * @param countDown 目标毫秒
  */
-export function createTimeCountDown(countDown) {
+function createTimeCountDown(countDown) {
     const timeCountUp = createTimeCountUp();
     return function () {
         return countDown - timeCountUp();
     };
 }
+exports.createTimeCountDown = createTimeCountDown;
 /**
  * 获取某月最后一天的date
  * @param month
  */
-export function getTheLastDayOfAMonth(month) {
+function getTheLastDayOfAMonth(month) {
     const lastDate = new Date(month.getTime());
     lastDate.setMonth(month.getMonth() + 1);
     lastDate.setDate(0);
     return lastDate;
 }
+exports.getTheLastDayOfAMonth = getTheLastDayOfAMonth;
 /**
  * 获取指定某年月份(month)第n(nth)个星期几(weekday)的Date
  * @param month
  * @param nth nth为负的时候从月末开始倒数
  * @param [weekday=0] 0和7都是周日
  */
-export function getMonthTheNthWeekday(month, nth, weekday = 0) {
+function getMonthTheNthWeekday(month, nth, weekday = 0) {
     // if (!nth || weekday < 0 || weekday > 7) return null;
-    if (!nth || !inRange(weekday, [0, 7]))
+    if (!nth || !array_1.inRange(weekday, [0, 7]))
         return null;
     const monthTime = month.getTime();
     const endDate = getTheLastDayOfAMonth(month);
@@ -210,3 +221,4 @@ export function getMonthTheNthWeekday(month, nth, weekday = 0) {
     date.setDate(dayDate);
     return date;
 }
+exports.getMonthTheNthWeekday = getMonthTheNthWeekday;

@@ -1,8 +1,11 @@
-import { strPadEnd } from "./string";
-import { createTimeCountDown } from "./time";
-import { isArray, isString, isPromiseLike, isNumber } from "./dataType";
-import { assign, getReverseObj } from "./object";
-import { forEachAsync, inRange } from "./array";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.numToFixed = exports.root = exports.promiseQueue = exports.promiseAny = exports.createEnumByObj = exports.createEnum = exports.formatJSON = exports.createUUID = exports.functionApply = exports.generateFunctionCode = exports.oneByOne = exports.forEachByLen = exports.polling = exports.debounceByPromise = exports.debounceCancelable = exports.throttle = exports.debounceAsync = exports.debounce = void 0;
+const string_1 = require("./string");
+const time_1 = require("./time");
+const dataType_1 = require("./dataType");
+const object_1 = require("./object");
+const array_1 = require("./array");
 /**
  * 防抖函数
  * @param callback 回调
@@ -12,7 +15,7 @@ import { forEachAsync, inRange } from "./array";
  *
  * @returns {Function}
  */
-export function debounce(callback, delay, immediate = false) {
+function debounce(callback, delay, immediate = false) {
     let lastThis;
     let lastArgs;
     let lastResult;
@@ -51,12 +54,13 @@ export function debounce(callback, delay, immediate = false) {
     };
     return debounced;
 }
+exports.debounce = debounce;
 /**
  * 如果callback执行了的话，那么不论是否resolved都不会再被reject
  * @param callback
  * @param delay
  */
-export function debounceAsync(callback, delay) {
+function debounceAsync(callback, delay) {
     let timer = null;
     let rej;
     return function (...args) {
@@ -75,13 +79,14 @@ export function debounceAsync(callback, delay) {
         });
     };
 }
+exports.debounceAsync = debounceAsync;
 /**
  * 节流函数
  * @param callback
  * @param delay
  * @param invalidCB {function}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
  */
-export function throttle(callback, delay, invalidCB) {
+function throttle(callback, delay, invalidCB) {
     let countDown = () => 0;
     return function (...args) {
         const interval = countDown();
@@ -89,10 +94,11 @@ export function throttle(callback, delay, invalidCB) {
             invalidCB && invalidCB(interval);
             return;
         }
-        countDown = createTimeCountDown(delay);
+        countDown = time_1.createTimeCountDown(delay);
         return callback.apply(this, args);
     };
 }
+exports.throttle = throttle;
 // 第1种实现方式
 /*export function throttle<CB extends (...args: any[]) => (void | any)>(
     callback: CB,
@@ -135,7 +141,7 @@ export function throttle(callback, delay, invalidCB) {
  * @param delay 延时
  * @returns {Function}
  */
-export function debounceCancelable(callback, delay) {
+function debounceCancelable(callback, delay) {
     let timer = null;
     function cancel() {
         if (!timer)
@@ -152,12 +158,13 @@ export function debounceCancelable(callback, delay) {
         return cancel;
     };
 }
+exports.debounceCancelable = debounceCancelable;
 /**
  * 前一个promise未完成即reject，最后一个或者中断前调用的才会执行
  * 无法阻止cb被调用 不推荐使用
  * @param callback
  */
-export function debounceByPromise(callback) {
+function debounceByPromise(callback) {
     let rejectFn;
     return function (...args) {
         rejectFn && rejectFn();
@@ -168,13 +175,14 @@ export function debounceByPromise(callback) {
         });
     };
 }
+exports.debounceByPromise = debounceByPromise;
 /**
  * 轮询函数
  * @param callback
  * @param interval  间隔
  * @param [immediate=true] 是否马上执行第一次
  */
-export function polling(callback, interval, immediate = true) {
+function polling(callback, interval, immediate = true) {
     let state;
     (function (state) {
         state[state["running"] = 0] = "running";
@@ -212,21 +220,23 @@ export function polling(callback, interval, immediate = true) {
         clearTimeout(timer);
     };
 }
+exports.polling = polling;
 // 代替for循环
-export function forEachByLen(len, callback) {
+function forEachByLen(len, callback) {
     for (let i = 0; i < len; i++) {
         if (callback(i) !== false)
             continue;
         break;
     }
 }
+exports.forEachByLen = forEachByLen;
 /**
  * 每隔一段事件返回字符串中的一个单词
  * @param words
  * @param delay
  * @param callback
  */
-export function oneByOne(words, delay, callback) {
+function oneByOne(words, delay, callback) {
     let cancel;
     const wordArr = words.split("");
     cancel = polling((index) => {
@@ -244,8 +254,9 @@ export function oneByOne(words, delay, callback) {
     }, delay);
     return cancel;
 }
+exports.oneByOne = oneByOne;
 // 代替扩展符"...", 实现apply的时候可以使用此方法
-export function generateFunctionCode(argsArrayLength) {
+function generateFunctionCode(argsArrayLength) {
     let code = "return arguments[0][arguments[1]](";
     // 拼接args
     for (let i = 0; i < argsArrayLength; i++) {
@@ -259,17 +270,19 @@ export function generateFunctionCode(argsArrayLength) {
     // return arguments[0][arguments[1]](arg1, arg2, arg3...)
     return code;
 }
+exports.generateFunctionCode = generateFunctionCode;
 // const args = [1, 2, 3];
 // (new Function(generateFunctionCode(args.length)))(object, property, args);
-export function functionApply(obj, property, args) {
+function functionApply(obj, property, args) {
     return (new Function(generateFunctionCode(args.length)))(obj, property, args);
 }
+exports.functionApply = functionApply;
 /**
  * 生成不重复的字符串
  * @param length
  * @returns {string}
  */
-export function createUUID(length) {
+function createUUID(length) {
     const uuidArr = [];
     const hexDigits = "0123456789abcdef";
     for (let i = 0; i < length; i++) {
@@ -279,12 +292,13 @@ export function createUUID(length) {
     // uuidArr[19] = hexDigits.substr(((uuidArr[19] as any) & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
     return uuidArr.join("");
 }
+exports.createUUID = createUUID;
 /**
  * 格式化json
  * @param json
  * @param [indent=2] tab空格占位
  */
-export function formatJSON(json, indent = 2) {
+function formatJSON(json, indent = 2) {
     if (typeof json === "string") {
         try {
             json = JSON.parse(json);
@@ -296,7 +310,7 @@ export function formatJSON(json, indent = 2) {
     function foreach(js, floor = 0) {
         switch (typeof js) {
             case "object":
-                const isArr = isArray(js);
+                const isArr = dataType_1.isArray(js);
                 let space = " ".repeat(indent * floor);
                 const start = isArr ? "[\r\n" : "{\r\n";
                 const end = "\r\n" + space + (isArr ? "]" : "}");
@@ -325,13 +339,14 @@ export function formatJSON(json, indent = 2) {
                 // 函数的}位置有点对不上
                 return `"${js.toString()}"`;
             default:
-                return isString(js) ? ("\"" + js + "\"") : js;
+                return dataType_1.isString(js) ? ("\"" + js + "\"") : js;
         }
     }
     return foreach(json);
 }
+exports.formatJSON = formatJSON;
 // TODO 暂时无法手动设置值 未添加测试用例
-export function createEnum(items) {
+function createEnum(items) {
     const result = {};
     items.forEach((item, index) => {
         result[item] = index;
@@ -341,7 +356,8 @@ export function createEnum(items) {
     // Object.seal(result); // seal值可以变
     return result;
 }
-export function createEnumByObj(obj) {
+exports.createEnum = createEnum;
+function createEnumByObj(obj) {
     /* const res: any = {};
      for (let k in obj) {
          if (res.hasOwnProperty(k)) throw new Error("key multiple");
@@ -351,16 +367,17 @@ export function createEnumByObj(obj) {
      Object.freeze(res); // freeze值不可变
      // Object.seal(result); // seal值可以变
      return res;*/
-    return assign({}, obj, getReverseObj(obj));
+    return object_1.assign({}, obj, object_1.getReverseObj(obj));
 }
+exports.createEnumByObj = createEnumByObj;
 // omit({a: 123, b: "bbb", c: true}, ["a", "b", "d"]);
 // type O = Omit<{ a: 123, b: "bbb", c: true }, "a" | "c">
-export function promiseAny(list) {
+function promiseAny(list) {
     return new Promise(((resolve, reject) => {
         let rejectTimes = 0;
         try {
             for (const p of list) {
-                if (isPromiseLike(p)) {
+                if (dataType_1.isPromiseLike(p)) {
                     p.then(res => resolve(res), () => {
                         rejectTimes++;
                         if (rejectTimes === list.length) {
@@ -379,28 +396,30 @@ export function promiseAny(list) {
         }
     }));
 }
+exports.promiseAny = promiseAny;
 /**
  * promise队列  任何一个reject都会中断队列 (跟reduceAsync类似)
  * 队列第一个会接收initValue作为参数，其余会接收上一个promise返回值作为参数
  * @param queue
  * @param initValue
  */
-export async function promiseQueue(queue, initValue) {
+async function promiseQueue(queue, initValue) {
     let lastValue = initValue;
-    await forEachAsync(async (promise) => {
+    await array_1.forEachAsync(async (promise) => {
         lastValue = await promise(lastValue);
     }, queue);
     return lastValue;
 }
-export const root = Function("return this")();
+exports.promiseQueue = promiseQueue;
+exports.root = Function("return this")();
 /**
  * 原来的函数四舍五入不准确
  * @param num
  * @param [fractionDigits = 0]
  * @param [rounding = false] 是否四舍五入
  */
-export function numToFixed(num, fractionDigits = 0, rounding = false) {
-    if (!isNumber(fractionDigits) || !inRange(fractionDigits, [0, 100])) {
+function numToFixed(num, fractionDigits = 0, rounding = false) {
+    if (!dataType_1.isNumber(fractionDigits) || !array_1.inRange(fractionDigits, [0, 100])) {
         throw new TypeError("numToFixed() fractionDigits argument must be between 0 and 100");
     }
     if (fractionDigits === 0)
@@ -414,6 +433,7 @@ export function numToFixed(num, fractionDigits = 0, rounding = false) {
     }
     num /= pow;
     const split = String(num).split(".");
-    const digits = strPadEnd((split[1] || "").substr(0, fractionDigits), fractionDigits, "0");
+    const digits = string_1.strPadEnd((split[1] || "").substr(0, fractionDigits), fractionDigits, "0");
     return split[0] + "." + digits;
 }
+exports.numToFixed = numToFixed;
