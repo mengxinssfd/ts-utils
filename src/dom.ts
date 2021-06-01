@@ -207,7 +207,7 @@ export function noScroll(el: Window | HTMLElement | string = window) {
         if (document.body.scrollTop) {
             scroller = document.body;
         } else {
-            scroller = document.documentElement;
+            scroller = document.documentElement;``
         }
     }
 
@@ -215,7 +215,7 @@ export function noScroll(el: Window | HTMLElement | string = window) {
     const scrollTop = scroller.scrollTop;
     scroller.scrollTop = 0;
     scroller.style.overflow = "hidden";
-    scroller.style.marginTop = (-scrollTop + scroller.style.marginTop) + "px";
+    scroller.style.marginTop = (-scrollTop + parseInt(last.marginTop)) + "px";
     return function () {
         assign(scroller.style, last);
         // scrollTop必须最后传 否则可能不能回到原位
