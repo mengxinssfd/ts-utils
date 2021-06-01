@@ -1,4 +1,5 @@
 import {isArray, isObject, isBroadlyObj} from "./dataType";
+import {forEachRight} from "./array";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree: object): number {
@@ -134,7 +135,7 @@ export function pickByKeys<T extends object, K extends keyof T, O extends Pick<T
 // 新属性名作为键名的好处是可以多个属性对应一个值
 export function pickRename<T extends object, K extends keyof T, O extends { [k: string]: K }>(
     originObj: T,
-    renamePickObj: O,
+    pickKeyMap: O,
     cb?: (value: T[O[keyof O]], key: O[keyof O], originObj: T) => T[O[keyof O]],
 ): { [k in keyof O]: T[O[k]] } {
     const callback = cb || (v => v);
@@ -146,7 +147,7 @@ export function pickRename<T extends object, K extends keyof T, O extends { [k: 
          }
          return result;
      }, {} as any);*/
-    return reduceObj(renamePickObj, (result, pick, rename) => {
+    return reduceObj(pickKeyMap, (result, pick, rename) => {
         if (originObj.hasOwnProperty(pick)) {
             result[rename] = callback(originObj[pick], pick, originObj);
         }
@@ -184,12 +185,12 @@ export function pick<T extends object, K extends keyof T, KS extends K[]>(
 /**
  * 功能与pickRename函数一致
  * @param originObj
- * @param renamePickObj
+ * @param pickKeyMap
  * @param cb
  */
 export function pick<T extends object, K extends keyof T, O extends { [k: string]: K }>(
     originObj: T,
-    renamePickObj: O,
+    pickKeyMap: O,
     cb?: (value: T[O[keyof O]], key: O[keyof O], fromObj: T) => T[O[keyof O]],
 ): { [k in keyof O]: T[O[k]] }
 /**
@@ -215,6 +216,39 @@ export function pick(originObj, picks, cb) {
 }
 
 // pick({a: 132, b: "123123"}, ["a", "b"]);
+
+
+/**
+ * 根据新键值对重命名对象的key，并生成一个新的对象
+ * @param originObj
+ * @param keyMap
+ */
+export function renameObjKey<T extends object, K extends keyof T, O extends { [k: string]: K }, R extends Omit<T, O[keyof O]>>(
+    originObj: T,
+    keyMap: O
+): { [k in keyof O]: T[O[k]] } & R {
+    const result: any = assign({}, originObj);
+    let delKeys: K[] = [];
+    const newKeys: string[] = [];
+
+    forEachObj(keyMap, (originKey, k) => {
+        if (result.hasOwnProperty(originKey)) {
+            result[k] = result[originKey];
+            delKeys.push(originKey);
+            newKeys.push(k as string);
+        }
+    });
+
+    // 可能新key会与旧key同名，如果是同名则把该key从要删除的key数组中移除
+    // delKeys = delKeys.filter(k => newKeys.indexOf(k as string) === -1);
+
+    delKeys.forEach(k => {
+        if (newKeys.indexOf(k as string) > -1) return;
+        delete result[k];
+    });
+    return result;
+}
+
 
 /**
  * Omit 省略
@@ -259,10 +293,8 @@ export function defaults(target: object, ...args: object[]);
  * 与lodash defaults一样 只替换target里面的值为undefined的属性
  * 类型推导会以前面的为准
  * @example
- * // {a: 12, b: 2, c: 3, d: 4}
- * defaults({a: 12, b: undefined, c: 3}, {a: 1}, {b: 2}, {d: 4});
- * // {a: 12, b: 2, c: 3}
- * defaults({a:12,b:undefined,c:3},{a:1},{b:2},{c:undefined})
+ * defaults({a: 12, b: undefined, c: 3}, {a: 1}, {b: 2}, {d: 4}); // returns {a: 12, b: 2, c: 3, d: 4}
+ * defaults({a:12,b:undefined,c:3},{a:1},{b:2},{c:undefined}); // returns {a: 12, b: 2, c: 3}
  * @param target
  * @param args
  */
