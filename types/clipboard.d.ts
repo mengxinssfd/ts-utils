@@ -16,7 +16,7 @@ export declare namespace copy2Clipboard {
     var once: (el: HTMLElement, target: () => string | HTMLElement, eventType?: keyof HTMLElementEventMap, capture?: boolean) => Promise<void>;
 }
 export declare function supportClipboardWrite(): boolean;
-export declare function setData2Clipboard(): void;
+export declare function setData2Clipboard(data: any, el?: HTMLElement, format?: string): boolean;
 /**
  * 写进剪贴板
  * @desc notice - 只有在https或者localhost上可以用

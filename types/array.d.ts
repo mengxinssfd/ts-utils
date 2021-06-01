@@ -87,9 +87,28 @@ export declare function castArray<T>(value: T): T[];
 export declare function chunk(arr: any[], chunkLen: number): any[];
 /**
  *  判断min <= num <= max
- * @param num
+ * @param value
  * @param [min = Number.MIN_SAFE_INTEGER]
  * @param [max = Number.MAX_SAFE_INTEGER]
  */
-export declare function inRange(num: number, [min, max]: [number?, number?]): boolean;
+export declare function inRange(value: number, [min, max]: [number?, number?]): boolean;
+/**
+ * 数组分组
+ * @example
+ * groupBy([{type: 1}, {type: 2}], "type") // returns {1: [{type: 1}], 2: [{type: 2}]}
+ * groupBy([{type: 1}, {value: 2}], "type") // returns {"*": [{value: 2}], 1: [{type: 1}]}
+ * @param arr
+ * @param key 如果item中不存在该key，那么该item会归类到undefined
+ * @param defaultKey 如果item中不存在该key，那么该item会归类到defaultKey
+ */
+export declare function groupBy<T extends {
+    [k: string]: any;
+}, K extends keyof T>(arr: T[], key: K, defaultKey?: number | string): {
+    [k: string]: T[];
+};
+export declare function groupBy<T extends {
+    [k: string]: any;
+}>(arr: T[], by: (it: T) => string | void, defaultKey?: number | string): {
+    [k: string]: T[];
+};
 export {};

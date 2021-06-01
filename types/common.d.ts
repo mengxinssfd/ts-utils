@@ -148,3 +148,20 @@ export declare function numToFixed(num: number, fractionDigits?: number, roundin
  * @param {number?} [end=str.length] end为正数时与String.prototype.substring效果一致，为负数时相当于end+str.length
  */
 export declare function subString(str: string, start: number, end?: number): string;
+/**
+ * 与String.prototype.repeat相同
+ * String.prototype.repeat支持到ie11
+ * @param value
+ * @param repeatCount
+ */
+export declare function strRepeat(value: string, repeatCount: number): string;
+export declare namespace strRepeat {
+    var MAX_STR_LENGTH: number;
+}
+/**
+ * 根据模板创建出字符串  除了面试题找不到应用场景的函数
+ * @example
+ * smartRepeat("2[2[a]2[b]]") // returns "aabbaabb"
+ * @param format
+ */
+export declare function smartRepeat(format: string): string;

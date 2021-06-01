@@ -193,14 +193,15 @@ export function noScroll(el = window) {
             scroller = document.documentElement;
         }
     }
-    const last = pickByKeys(scroller.style, ["marginTop", "overflow"]);
+    const last = pickByKeys(getComputedStyle(scroller), ["marginTop", "overflow"]);
     const scrollTop = scroller.scrollTop;
     scroller.scrollTop = 0;
     scroller.style.overflow = "hidden";
     scroller.style.marginTop = (-scrollTop + scroller.style.marginTop) + "px";
     return function () {
-        scroller.scrollTop = scrollTop;
         assign(scroller.style, last);
+        // scrollTop必须最后传 否则可能不能回到原位
+        scroller.scrollTop = scrollTop;
     };
 }
 /**

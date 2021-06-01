@@ -561,3 +561,41 @@ export function subString(str, start, end = str.length) {
     }
     return str.substring(start, end);
 }
+/**
+ * 与String.prototype.repeat相同
+ * String.prototype.repeat支持到ie11
+ * @param value
+ * @param repeatCount
+ */
+export function strRepeat(value, repeatCount) {
+    if (repeatCount < 0 || repeatCount * value.length > strRepeat.MAX_STR_LENGTH)
+        throw new RangeError("strRepeat Invalid repeatCount value");
+    let result = "";
+    if (value === "")
+        return "";
+    while (repeatCount-- > 0) {
+        result += value;
+    }
+    return result;
+}
+strRepeat.MAX_STR_LENGTH = 512 * 1024 * 1024;
+/**
+ * 根据模板创建出字符串  除了面试题找不到应用场景的函数
+ * @example
+ * smartRepeat("2[2[a]2[b]]") // returns "aabbaabb"
+ * @param format
+ */
+export function smartRepeat(format) {
+    let exec;
+    const re = /(\d+)\[([^\[\]]+)](?!\d+\[)/;
+    while (exec = re.exec(format)) {
+        const [, count, repeatValue] = exec;
+        // 第一种方式
+        format = format.replace(re, strRepeat(repeatValue, count));
+        // 第二种方式
+        // const start = format.substring(0, exec.index);
+        // const end = format.substring(exec.index + exec[0].length);
+        // format = start + strRepeat(repeatValue, count) + end;
+    }
+    return format;
+}

@@ -12,7 +12,7 @@ export declare class UrlModel {
     href: string;
     hash: string;
     query: {
-        [key: string]: string;
+        [key: string]: string[] | string;
     };
     constructor(url: string);
     private parseAll;

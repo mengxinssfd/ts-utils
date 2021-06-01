@@ -123,12 +123,15 @@ export function supportClipboardWrite() {
     var _a;
     return Boolean((_a = cb) === null || _a === void 0 ? void 0 : _a.write);
 }
-export function setData2Clipboard() {
-    const source = document.querySelector(".source");
-    source.addEventListener("copy", (event) => {
-        // event.clipboardData.setData('text/plain',);
+export function setData2Clipboard(data, el = document.documentElement, format = 'text/plain') {
+    function cb(event) {
+        var _a;
+        (_a = event.clipboardData) === null || _a === void 0 ? void 0 : _a.setData(format, data);
         event.preventDefault();
-    });
+        el.removeEventListener("copy", cb);
+    }
+    el.addEventListener("copy", cb);
+    return document.execCommand("copy");
 }
 /**
  * 写进剪贴板

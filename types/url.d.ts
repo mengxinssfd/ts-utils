@@ -1,12 +1,42 @@
-export declare function getUrlProtocol(url: string): string;
-export declare function getUrlHost(url: string): string;
-export declare function getUrlPort(url: string): string;
-export declare function getUrlPath(url: string): string;
-export declare function getUrlHash(url: string): string;
-export declare function getUrlQuery(url: string): {
-    [key: string]: string;
+/**
+ * @param {string} [url = location.href]
+ */
+export declare function getUrlProtocol(url?: string): string;
+/**
+ * @param {string} [url = location.href]
+ */
+export declare function getUrlHost(url?: string): string;
+/**
+ * @param {string} [url = location.href]
+ */
+export declare function getUrlPort(url?: string): string;
+/**
+ * @param {string} [url = location.href]
+ */
+export declare function getUrlPath(url?: string): string;
+/**
+ * @param {string} [url = location.href]
+ */
+export declare function getUrlHash(url?: string): string;
+/**
+ * 获取hash中的param
+ * @example
+ * getUrlHashParam("a", "test.com/index?a=param/#/test?a=hash") // returns "hash"
+ * getUrlHashParam("a", "test.com/index?a=param") // returns ""
+ * @param name
+ * @param {string} [url = location.href]
+ * @param noDecode
+ */
+export declare function getUrlHashParam(name: string, url?: string, noDecode?: boolean): string;
+/**
+ * @alias getUrlQuery
+ * @param {string} [url = location.href]
+ */
+export declare function getUrlParamObj(url?: string): {
+    [key: string]: string | string[];
 };
-export declare function queryStringify(query: {
+export declare const getUrlQuery: typeof getUrlParamObj;
+export declare function stringifyUrlSearch(query: {
     [k: string]: any;
 }): string;
 /**

@@ -25,7 +25,7 @@ export class UrlModel {
         this.port = urlUtils.getUrlPort(url);
         this.path = urlUtils.getUrlPath(url);
         this.hash = urlUtils.getUrlHash(url);
-        this.query = urlUtils.getUrlQuery(url);
+        this.query = urlUtils.getUrlParamObj(url);
     }
     toString() {
         let url = this.host;
@@ -36,13 +36,13 @@ export class UrlModel {
             url += ":" + this.port;
         }
         if (this.path) {
-            url += "/" + this.path;
+            url += this.path;
         }
         if (!isEmptyObject(this.query)) {
-            url += "?" + urlUtils.queryStringify(this.query);
+            url += "?" + urlUtils.stringifyUrlSearch(this.query);
         }
         if (this.hash) {
-            url += "#" + this.hash;
+            url += this.hash;
         }
         return url;
     }

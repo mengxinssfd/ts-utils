@@ -360,10 +360,24 @@ export function chunk(arr, chunkLen) {
 }
 /**
  *  判断min <= num <= max
- * @param num
+ * @param value
  * @param [min = Number.MIN_SAFE_INTEGER]
  * @param [max = Number.MAX_SAFE_INTEGER]
  */
-export function inRange(num, [min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER]) {
-    return min <= num && num <= max;
+export function inRange(value, [min = -Infinity, max = Infinity]) {
+    return min <= value && value <= max;
+}
+export function groupBy(arr, key, defaultKey = "*") {
+    const cb = isFunction(key) ? key : item => item[key];
+    return arr.reduce((result, item) => {
+        var _a;
+        const k = (_a = cb(item)) !== null && _a !== void 0 ? _a : defaultKey;
+        if (!result.hasOwnProperty(k)) {
+            result[k] = [item];
+        }
+        else {
+            result[k].push(item);
+        }
+        return result;
+    }, {});
 }
