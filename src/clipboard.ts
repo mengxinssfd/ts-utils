@@ -93,7 +93,7 @@ export function copy2Clipboard(target: HTMLElement | string): Promise<void> {
     });
     p.finally(function () {
         (window.getSelection() as Selection).removeAllRanges();
-        if (isText) {
+        if (isText && el) {
             document.body.removeChild(el);
         }
     });
