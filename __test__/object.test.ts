@@ -311,6 +311,12 @@ test("defaults", () => {
     expect(fn({a: 12, b: undefined, c: 3}, {a: 1}, {b: 2}, {d: 4})).toEqual({a: 12, b: 2, c: 3, d: 4});
     expect(fn({a: 12, b: undefined, c: 3}, {a: 1}, {b: 2}, {c: undefined})).toEqual({a: 12, b: 2, c: 3});
 });
+test("renameObjKey", () => {
+    const fn = cm.renameObjKey;
+    expect(fn({a: 12, b: undefined, c: 3}, {test: "a", bb: "b"})).toEqual({test: 12, bb: undefined, c: 3});
+    expect(fn({a: 12, b: undefined, c: 3}, {test: "aa" as any, bb: "b"})).toEqual({a: 12, bb: undefined, c: 3});
+    expect(fn({a: 1, b: 2}, {a: "a", aa: "a", aaa: "a"})).toEqual({a: 1, aa: 1, aaa: 1, b: 2});
+});
 test("objKeys", () => {
     const fn = cm.objKeys;
     const obj: any = {a: 1, b: 2, c: 3};
