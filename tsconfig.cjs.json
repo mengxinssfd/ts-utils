@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "CommonJS",
-    "target": "es5",
+    "target": "es2017",
     "declaration": false,
     "isolatedModules": true,
     "outDir": "lib-cjs"
@@ -11,6 +11,5 @@
     "src"
   ],
   "exclude": [
-    "src/index.ts"
   ]
 }

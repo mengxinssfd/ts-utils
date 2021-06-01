@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/ts-utils",
-  "version": "2.11.13",
+  "version": "2.11.15",
   "description": "utils工具函数ts/js库",
   "main": "./lib-umd/index.js",
   "module": "./lib-es/index.js",
@@ -16,7 +16,7 @@
   "scripts": {
     "ru": "rollup -c",
     "clean": "rimraf lib-* types coverage",
-    "build-all": "run-p lib:es ru",
+    "build-all": "run-p lib:es lib:cjs ru",
     "build": "run-s clean build-all copy-d",
     "build-que": "cmd-que -cmd=\"npm run clean,npm run lib:es,npm run ru,npm run copy-d\"",
     "lib:umd": "set NODE_ENV=production&webpack --mode production",
