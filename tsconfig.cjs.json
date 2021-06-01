@@ -1,11 +1,11 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "umd",
+    "module": "CommonJS",
     "target": "es5",
     "declaration": false,
     "isolatedModules": true,
-    "outDir": "lib-umd"
+    "outDir": "lib-cjs"
   },
   "include": [
     "src"

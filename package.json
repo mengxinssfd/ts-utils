@@ -10,6 +10,7 @@
   "files": [
     "lib-es/*",
     "lib-umd/*",
+    "lib-cjs/*",
     "types/*.d.ts"
   ],
   "scripts": {
@@ -20,7 +21,7 @@
     "build-que": "cmd-que -cmd=\"npm run clean,npm run lib:es,npm run ru,npm run copy-d\"",
     "lib:umd": "set NODE_ENV=production&webpack --mode production",
     "lib:es": "tsc --build tsconfig.es.json",
-    "lib:umd-single": "tsc --build tsconfig.umd.single.json",
+    "lib:cjs": "tsc --build tsconfig.cjs.json",
     "pub": "npm publish --access=public",
     "copy-d": "copy src\\*.d.ts types\\",
     "rename": "reName lib-umd\\index.umd.d.ts index.d.ts",
