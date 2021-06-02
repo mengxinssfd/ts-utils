@@ -20,3 +20,11 @@ console.log(123);
 utils.addScaleEventListener(document.documentElement, function (scale) {
     dom.innerText = scale + "";
 });
+
+addEventListener("click", () => {
+    // dom.innerText = String(utils.randomInt(100, 10000));
+    utils.copy2Clipboard(String(utils.randomInt(100, 10000))).then((text) => {
+    // utils.copy2Clipboard(dom).then((text) => {
+        console.log(text);
+    });
+});
