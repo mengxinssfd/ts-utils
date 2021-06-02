@@ -53,24 +53,17 @@ export function isSupportedClipboardCommand(action = ["cut", "copy"]) {
 export function copy2Clipboard(target) {
     let el;
     const isText = typeof target === "string";
+    el = isText ? createElement("div", {
+        props: {
+            innerText: target,
+            style: {
+                position: "fixed",
+                left: "-100000px",
+            },
+        },
+        parent: document.body,
+    }) : target;
     const p = new Promise((resolve, reject) => {
-        let el;
-        const isText = typeof target === "string";
-        if (isText) {
-            el = createElement("div", {
-                props: {
-                    innerText: target,
-                    style: {
-                        position: "fixed",
-                        left: "-100000px",
-                    },
-                },
-                parent: document.body,
-            });
-        }
-        else {
-            el = target;
-        }
         select(el);
         let succeeded;
         let error;
@@ -82,19 +75,22 @@ export function copy2Clipboard(target) {
             error = err;
         }
         if (succeeded) {
-            resolve();
+            resolve(target);
             return;
         }
         reject(error);
     });
     p.finally(function () {
-        window.getSelection().removeAllRanges();
-        if (isText && el) {
-            document.body.removeChild(el);
-        }
+        window.getSelection && window.getSelection().removeAllRanges();
+        isText && el && document.body.removeChild(el);
     });
     return p;
 }
+/* if (window.Promise && !window.Promise.prototype.finally) {
+    Promise.prototype.finally = function (cb?: (() => void)) {
+        return this.then().then(cb, cb);
+    };
+}*/
 /**
  * 原来通过绑定this的方式实际使用时获取不到准确的target值
  *
