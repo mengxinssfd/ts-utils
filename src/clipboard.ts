@@ -54,27 +54,20 @@ export function isSupportedClipboardCommand<T extends "cut" | "copy">(
  * @param target {HTMLElement | string}
  * @return {Promise}
  */
-export function copy2Clipboard(target: HTMLElement | string): Promise<void> {
+export function copy2Clipboard<T extends HTMLElement | string>(target: T): Promise<T> {
     let el: HTMLElement;
     const isText = typeof target === "string";
-    const p = new Promise<void>((resolve, reject) => {
-        let el: HTMLElement;
-        const isText = typeof target === "string";
-        if (isText) {
-            el = createElement("div", {
-                props: {
-                    innerText: target as string,
-                    style: {
-                        position: "fixed",
-                        left: "-100000px",
-                    },
-                },
-                parent: document.body,
-            });
-        } else {
-            el = target as HTMLElement;
-        }
-
+    el = isText ? createElement("div", {
+        props: {
+            innerText: target as string,
+            style: {
+                position: "fixed",
+                left: "-100000px",
+            },
+        },
+        parent: document.body,
+    }) : target as HTMLElement;
+    const p = new Promise<T>((resolve, reject) => {
         select(el);
         let succeeded;
         let error: any;
@@ -85,19 +78,23 @@ export function copy2Clipboard(target: HTMLElement | string): Promise<void> {
             error = err;
         }
         if (succeeded) {
-            resolve();
+            resolve(target);
             return;
         }
         reject(error);
     });
     p.finally(function () {
-        (window.getSelection() as Selection).removeAllRanges();
-        if (isText && el) {
-            document.body.removeChild(el);
-        }
+        window.getSelection && (window.getSelection() as Selection).removeAllRanges();
+        isText && el && document.body.removeChild(el);
     });
     return p;
 }
+
+/* if (window.Promise && !window.Promise.prototype.finally) {
+    Promise.prototype.finally = function (cb?: (() => void)) {
+        return this.then().then(cb, cb);
+    };
+}*/
 
 /**
  * 原来通过绑定this的方式实际使用时获取不到准确的target值
