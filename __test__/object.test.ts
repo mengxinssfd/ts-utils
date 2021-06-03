@@ -318,11 +318,11 @@ test("objUpdate", () => {
     expect(fn(
         {a: 12, b: undefined, c: 3},
         {aa: 2, bb: 2, dd: 123},
-        {c: undefined})
+        {c: undefined}),
     ).toEqual({
         a: 12,
         b: undefined,
-        c: undefined
+        c: undefined,
     });
 });
 test("renameObjKey", () => {
@@ -418,5 +418,14 @@ test("getObjPathEntries", () => {
         ["obj[a][b][2][c]", 3],
         ["obj[a][b][2][cc]", 5],
     ]);
+});
+test("pickDiff", () => {
+    const fn = cm.pickDiff;
+    expect(fn({a: 1})).toEqual({});
+    expect(fn({a: 1}, {a: 1})).toEqual({});
+    expect(fn({a: 1}, {a: 2})).toEqual({a: 2});
+    expect(fn({a: 1}, {b: 2})).toEqual({b: 2});
+    expect(fn({a: 1}, {b: 2}, {a: 1, c: 3}, {a: 3})).toEqual({a: 3, b: 2, c: 3});
+    expect(fn({a: NaN}, {a: NaN, b: 1})).toEqual({b: 1});
 });
 
