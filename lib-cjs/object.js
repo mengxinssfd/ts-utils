@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getObjPathEntries = exports.getObjValueByPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
+exports.getObjPathEntries = exports.getObjValueByPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pickDiff = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
 const dataType_1 = require("./dataType");
 const array_1 = require("./array");
 // 获取object树的最大层数 tree是object的话，tree就是层数1
@@ -167,6 +167,26 @@ function pick(originObj, picks, cb) {
 }
 exports.pick = pick;
 // pick({a: 132, b: "123123"}, ["a", "b"]);
+/**
+ * 从其他对象中挑出与原对象值不一样的或原对象中不存在的键值对所组成的新对象
+ * @param origin
+ * @param objs
+ * @param verify
+ */
+function pickDiff(origin, objs, verify) {
+    const verifyFn = verify || ((originV, objV, k, origin, obj) => {
+        return origin.hasOwnProperty(k) && originV === objV || dataType_1.isNaN(originV) && dataType_1.isNaN(objV);
+    });
+    return objs.reduce((result, obj) => {
+        exports.objForEach(obj, (v, k) => {
+            if (verifyFn(origin[k], v, k, origin, obj))
+                return;
+            result[k] = v;
+        });
+        return result;
+    }, {});
+}
+exports.pickDiff = pickDiff;
 /**
  * 根据新键值对重命名对象的key，并生成一个新的对象
  * @param originObj

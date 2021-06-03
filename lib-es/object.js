@@ -1,4 +1,4 @@
-import { isArray, isObject, isBroadlyObj } from "./dataType";
+import { isArray, isObject, isBroadlyObj, isNaN } from "./dataType";
 import { forEachRight } from "./array";
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree) {
@@ -155,6 +155,25 @@ export function pick(originObj, picks, cb) {
     return isObj ? pickRename(originObj, picks, cb) : pickByKeys(originObj, picks, cb);
 }
 // pick({a: 132, b: "123123"}, ["a", "b"]);
+/**
+ * 从其他对象中挑出与原对象值不一样的或原对象中不存在的键值对所组成的新对象
+ * @param origin
+ * @param objs
+ * @param verify
+ */
+export function pickDiff(origin, objs, verify) {
+    const verifyFn = verify || ((originV, objV, k, origin, obj) => {
+        return origin.hasOwnProperty(k) && originV === objV || isNaN(originV) && isNaN(objV);
+    });
+    return objs.reduce((result, obj) => {
+        objForEach(obj, (v, k) => {
+            if (verifyFn(origin[k], v, k, origin, obj))
+                return;
+            result[k] = v;
+        });
+        return result;
+    }, {});
+}
 /**
  * 根据新键值对重命名对象的key，并生成一个新的对象
  * @param originObj

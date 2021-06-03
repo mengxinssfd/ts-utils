@@ -63,6 +63,15 @@ export declare function pick<T extends object, K extends keyof T, O extends {
     [k in keyof O]: T[O[k]];
 };
 /**
+ * 从其他对象中挑出与原对象值不一样的或原对象中不存在的键值对所组成的新对象
+ * @param origin
+ * @param objs
+ * @param verify
+ */
+export declare function pickDiff(origin: object, objs: object[], verify?: (originV: any, objV: any, k: string | number, origin: object, obj: object) => boolean): {
+    [k: string]: any;
+};
+/**
  * 根据新键值对重命名对象的key，并生成一个新的对象
  * @param originObj
  * @param keyMap
