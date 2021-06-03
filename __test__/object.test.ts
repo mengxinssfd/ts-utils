@@ -441,6 +441,9 @@ test("pickDiff", () => {
         expect(obj).toBe(b);
         return v1.id === v2.id;
     })).toEqual({});
+    expect(fn(a, [b, {a: {id: 1}}, {b: {id: 11}}], (v1, v2) => {
+        return v1 && v1.id === v2.id;
+    })).toEqual({a: {id: 1}, b: {id: 11}});
 
 });
 
