@@ -1,4 +1,4 @@
-import {isArray, isObject, isBroadlyObj} from "./dataType";
+import {isArray, isObject, isBroadlyObj, isNaN} from "./dataType";
 import {forEachRight} from "./array";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
@@ -220,12 +220,15 @@ export function pick(originObj, picks, cb) {
  * 从其他对象中挑出与原对象值不一样的或原对象中不存在的键值对所组成的新对象
  * @param origin
  * @param objs
+ * @param verify
  */
-export function pickDiff(origin: object, ...objs: object[]): { [k: string]: any } {
+export function pickDiff(origin: object, objs: object[], verify?: (originV: any, objV: any, k: string | number, origin: object, obj: object) => boolean): { [k: string]: any } {
+    const verifyFn = verify || ((originV, objV, k, origin, obj) => {
+        return origin.hasOwnProperty(k) && originV === objV || isNaN(originV) && isNaN(objV);
+    });
     return objs.reduce((result, obj) => {
         objForEach(obj, (v, k) => {
-            let originV;
-            if (origin.hasOwnProperty(k) && (originV = origin[k]) === v || (isNaN(originV) && isNaN(v))) return;
+            if (verifyFn(origin[k], v, k, origin, obj)) return;
             result[k] = v;
         });
         return result;
