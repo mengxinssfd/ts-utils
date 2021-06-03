@@ -421,11 +421,26 @@ test("getObjPathEntries", () => {
 });
 test("pickDiff", () => {
     const fn = cm.pickDiff;
-    expect(fn({a: 1})).toEqual({});
-    expect(fn({a: 1}, {a: 1})).toEqual({});
-    expect(fn({a: 1}, {a: 2})).toEqual({a: 2});
-    expect(fn({a: 1}, {b: 2})).toEqual({b: 2});
-    expect(fn({a: 1}, {b: 2}, {a: 1, c: 3}, {a: 3})).toEqual({a: 3, b: 2, c: 3});
-    expect(fn({a: NaN}, {a: NaN, b: 1})).toEqual({b: 1});
+    expect(fn({a: 1}, [])).toEqual({});
+    expect(fn({a: 1}, [{a: 1}])).toEqual({});
+    expect(fn({a: 1}, [{a: 2}])).toEqual({a: 2});
+    expect(fn({a: 1}, [{b: 2}])).toEqual({b: 2});
+    expect(fn({a: 1}, [{b: 2}, {a: 1, c: 3}, {a: 3}])).toEqual({a: 3, b: 2, c: 3});
+    expect(fn({a: NaN}, [{a: NaN, b: 1}])).toEqual({b: 1});
+
+    const a = {a: {id: 123}};
+    const b = {a: {id: 123}};
+    expect(fn(a, [b])).toEqual({a: {id: 123}});
+    const r = fn(a, [b]);
+    expect(r).not.toBe(a);
+    expect(r).not.toBe(b);
+
+    expect(fn(a, [b], (v1, v2, k, origin, obj) => {
+        expect(k in origin).toBeTruthy();
+        expect(origin).toBe(a);
+        expect(obj).toBe(b);
+        return v1.id === v2.id;
+    })).toEqual({});
+
 });
 
