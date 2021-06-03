@@ -67,7 +67,6 @@ export function forEachObj<T extends object>(obj: T, callbackFn: (value: T[keyof
     }
 }
 
-
 /**
  * @alias forEachObj
  */
@@ -217,6 +216,21 @@ export function pick(originObj, picks, cb) {
 
 // pick({a: 132, b: "123123"}, ["a", "b"]);
 
+/**
+ * 从其他对象中挑出与原对象值不一样的或原对象中不存在的键值对所组成的新对象
+ * @param origin
+ * @param objs
+ */
+export function pickDiff(origin: object, ...objs: object[]): { [k: string]: any } {
+    return objs.reduce((result, obj) => {
+        objForEach(obj, (v, k) => {
+            let originV;
+            if (origin.hasOwnProperty(k) && (originV = origin[k]) === v || (isNaN(originV) && isNaN(v))) return;
+            result[k] = v;
+        });
+        return result;
+    }, {});
+}
 
 /**
  * 根据新键值对重命名对象的key，并生成一个新的对象
@@ -225,7 +239,7 @@ export function pick(originObj, picks, cb) {
  */
 export function renameObjKey<T extends object, K extends keyof T, O extends { [k: string]: K }, R extends Omit<T, O[keyof O]>>(
     originObj: T,
-    keyMap: O
+    keyMap: O,
 ): { [k in keyof O]: T[O[k]] } & R {
     const result: any = assign({}, originObj);
     let delKeys: K[] = [];
@@ -248,7 +262,6 @@ export function renameObjKey<T extends object, K extends keyof T, O extends { [k
     });
     return result;
 }
-
 
 /**
  * Omit 省略
