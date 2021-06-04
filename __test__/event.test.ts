@@ -25,6 +25,7 @@ test("eventProxy", () => {
             className: "test",
         },
         children: [d],
+        parent: document.body,
     });
 
     let c = 0, c2 = 0, c3 = 0;
@@ -44,7 +45,6 @@ test("eventProxy", () => {
     expect(c).toBe(3);
     expect(c2).toBe(3);
     expect(c3).toBe(3);
-
 
     let cc = 0;
     const d3 = createElement("div", {

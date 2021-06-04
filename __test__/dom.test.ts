@@ -163,13 +163,12 @@ test("createElement", () => {
             id: "body-child",
         },
     });
-    expect(d.parentNode).toBe(document.body);
+    expect(d.parentNode).toBe(null);
     const d2 = fn("div", {
         props: {
             className: "not-body-child",
             id: "not-body-child",
         },
-        parent: null,
     });
     expect(d2.parentNode).toBe(null);
 });

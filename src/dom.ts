@@ -159,7 +159,6 @@ export function loadImg(url: string, props: Partial<HTMLImageElement> = {}): Pro
                 onabort: onerror,
                 onerror,
             }, props),
-            parent: null,
         });
         img.src = url;
     });
@@ -235,7 +234,7 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
     params: {
         attrs?: { [k: string]: any };
         props?: { style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>> } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
-        parent?: HTMLElement | string | null;
+        parent?: HTMLElement | string;
         children?: HTMLElement[]
     } = {},
 ): R {
@@ -262,7 +261,7 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
         children.forEach(child => el.appendChild(child));
     }
     // set parent
-    if (parent !== null) {
+    if (parent) {
         if (isDom(parent)) {
             parent.appendChild(el);
         } else if (isString(parent)) {
@@ -289,6 +288,7 @@ export function getFontScale(reverse = false) {
     const fontSize = 10;
     const div = createElement("div", {
         props: {style: {fontSize: fontSize + "px"}},
+        parent: document.body,
     });
     const realFontSize = getComputedStyle(div).fontSize;
     document.body.removeChild(div);
