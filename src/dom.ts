@@ -2,7 +2,7 @@ import {includes, unique} from "./array";
 import {assign, forEachObj, pickByKeys} from "./object";
 import {ReadonlyKeys} from "./TsTypes";
 import {isArray, isString} from "./dataType";
-import {isDom} from "./domType";
+import {isDom, isNodeList} from "./domType";
 import {root} from "./common";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
@@ -235,7 +235,7 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
         attrs?: { [k: string]: any };
         props?: { style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>> } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
         parent?: HTMLElement | string;
-        children?: HTMLElement[]
+        children?: HTMLElement[] | NodeList
     } = {},
 ): R {
     const el = document.createElement(tagName);
@@ -257,7 +257,7 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
         el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
     });
     // set children
-    if (isArray(children)) {
+    if (isArray(children) || isNodeList(children)) {
         children.forEach(child => el.appendChild(child));
     }
     // set parent
