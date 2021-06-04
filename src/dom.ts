@@ -207,7 +207,7 @@ export function noScroll(el: Window | HTMLElement | string = window) {
         if (document.body.scrollTop) {
             scroller = document.body;
         } else {
-            scroller = document.documentElement;``
+            scroller = document.documentElement;
         }
     }
 
@@ -235,12 +235,13 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
     params: {
         attrs?: { [k: string]: any };
         props?: { style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>> } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
-        parent?: HTMLElement | null;
+        parent?: HTMLElement | string | null;
         children?: HTMLElement[]
     } = {},
 ): R {
     const el = document.createElement(tagName);
     const {attrs = {}, props = {}, parent, children} = params;
+    // set props
     forEachObj(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
@@ -251,19 +252,24 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
         }
         el[k] = v;
     });
+    // set attrs
     forEachObj(attrs, (v, k, o) => {
         const isObjValue = typeof v === "object";
         el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
     });
+    // set children
+    if (isArray(children)) {
+        children.forEach(child => el.appendChild(child));
+    }
+    // set parent
     if (parent !== null) {
         if (isDom(parent)) {
             parent.appendChild(el);
-        } else {
-            document.body.appendChild(el);
+        } else if (isString(parent)) {
+            const pr = document.querySelector(parent);
+            if (!pr) throw new TypeError(`createHtmlElement param 'parent' => "${parent}" not founded`);
+            pr.appendChild(el);
         }
-    }
-    if (isArray(children)) {
-        children.forEach(child => el.appendChild(child));
     }
     return el as any;
 }
@@ -328,7 +334,7 @@ export function scrollFixedWatcher(
     target: HTMLElement,
     cb: (reach: boolean) => void,
     top = 0,
-    container: HTMLElement | Window = window
+    container: HTMLElement | Window = window,
 ): () => void {
     const getScrollTop = container === window
         ? () => document.documentElement.scrollTop || document.body.scrollTop
