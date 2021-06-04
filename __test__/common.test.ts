@@ -306,6 +306,19 @@ test("throttle", async () => {
     await sleep(701);
     th();
     expect(interval).toBe(0);
+
+    let times2 = 0;
+    let interval2 = 0;
+    const th2 = fn(() => {
+        interval2 = 3;
+        return times2++;
+    }, 1000);
+    th2();
+    th2();
+    th2();
+    th2();
+    expect(interval2).toBe(3);
+    expect(times2).toBe(1);
 });
 /*test("throttleByTimeDown", async () => {
     // expect.assertions(4);
