@@ -84,18 +84,18 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(call
  * 节流函数
  * @param callback
  * @param delay
- * @param invalidCB {function}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
+ * @param invalidCB {function?}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
  */
 export function throttle<CB extends (...args: any[]) => (void | any)>(
     callback: CB,
     delay: number,
-    invalidCB?: (interval: number) => void,
+    invalidCB: (interval: number) => void = (v) => void 0,
 ): CB {
     let countDown = () => 0;
     return function (...args: any[]) {
         const interval = countDown();
         if (interval > 0) {
-            invalidCB && invalidCB(interval);
+            invalidCB(interval);
             return;
         }
         countDown = createTimeCountDown(delay);
@@ -421,7 +421,6 @@ export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promi
 }
 
 export const root = Function("return this")();
-
 
 /**
  * 原来的函数四舍五入不准确
