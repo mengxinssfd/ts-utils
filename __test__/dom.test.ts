@@ -171,4 +171,23 @@ test("createElement", () => {
         },
     });
     expect(d2.parentNode).toBe(null);
+
+    fn("div", {
+        props: {
+            className: "pppp bbbb",
+        },
+        parent: document.body,
+    });
+    const d3 = fn("div", {
+        parent: ".pppp",
+    });
+
+    expect((d3.parentNode as HTMLDivElement).className).toBe("pppp bbbb");
+
+    const dd = fn("div", {
+        children: document.querySelectorAll(".pppp"),
+    });
+
+    expect(dd.querySelector(".pppp")!.className).toBe("pppp bbbb");
+
 });
