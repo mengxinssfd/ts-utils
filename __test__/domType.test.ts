@@ -97,3 +97,16 @@ test("supportTouch", () => {
     const fn = domType.supportTouch;
     expect(fn()).toBeFalsy();
 });
+test("isNodeList", () => {
+    const fn = domType.isNodeList;
+    expect(fn(undefined)).toBeFalsy();
+    expect(fn(false)).toBeFalsy();
+    expect(fn("")).toBeFalsy();
+    expect(fn({})).toBeFalsy();
+    expect(fn([])).toBeFalsy();
+    expect(fn(0)).toBeFalsy();
+    expect(fn(null)).toBeFalsy();
+    expect(fn(NaN)).toBeFalsy();
+
+    expect(fn(document.querySelectorAll("div"))).toBeTruthy();
+});
