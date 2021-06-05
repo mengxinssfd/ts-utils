@@ -24,7 +24,19 @@ utils.addScaleEventListener(document.documentElement, function (scale) {
 addEventListener("click", () => {
     // dom.innerText = String(utils.randomInt(100, 10000));
     utils.copy2Clipboard(String(utils.randomInt(100, 10000))).then((text) => {
-    // utils.copy2Clipboard(dom).then((text) => {
+        // utils.copy2Clipboard(dom).then((text) => {
         console.log(text);
     });
 });
+
+utils.forEachAsync((r) => r(), [
+    () => Promise.resolve(100),
+    () => Promise.reject("test"),
+    () => Promise.resolve(200),
+]).catch((res) => {
+    console.log(res);
+});
+
+const div = utils.createHtmlElement("div", {parent: document.body});
+
+utils.setStyle(div, {width: "100px", height: "100px", backgroundColor: "red"});

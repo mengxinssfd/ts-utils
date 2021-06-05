@@ -1,6 +1,6 @@
 import {includes, unique} from "./array";
 import {assign, forEachObj, pickByKeys} from "./object";
-import {ReadonlyKeys} from "./TsTypes";
+import {ReadonlyKeys, SettableStyle} from "./TsTypes";
 import {isArray, isString} from "./dataType";
 import {isDom, isNodeList} from "./domType";
 import {root} from "./common";
@@ -136,6 +136,13 @@ export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSSty
     }
 }
 
+
+
+export function setStyle(el: HTMLElement, style: SettableStyle) {
+    assign(el.style, style);
+    return el.style;
+}
+
 /**
  * 手动添加img标签下载图片
  * @param url
@@ -233,7 +240,7 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
     tagName: K,
     params: {
         attrs?: { [k: string]: any };
-        props?: { style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>> } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
+        props?: { style?: SettableStyle } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
         parent?: HTMLElement | string;
         children?: HTMLElement[] | NodeList
     } = {},

@@ -2,50 +2,57 @@ import * as arr from "../src/array";
 import {sleep} from "../src/time";
 
 test("forEach", () => {
+    const fe = arr.forEach;
     const arr1: any[] = [1, 2, 3];
-    arr.forEach((v, k) => arr1[k] = k, arr1);
+    fe(arr1, (v, k) => arr1[k] = k);
     expect(arr1).toEqual([0, 1, 2]);
     // ArrayLike
-    arr.forEach((v, k) => arr1[k] = k + k, {0: 1, 1: 2, length: 2});
+    fe({0: 1, 1: 2, length: 2}, (v, k) => arr1[k] = k + k);
     expect(arr1).toEqual([0, 2, 2]);
     // const arr = thisArg || this;
-    arr.forEach.call(arr1, (v, k) => arr1[k] = k + 2);
-    expect(arr1).toEqual([2, 3, 4]);
+    // fn.call(arr1, (v, k) => arr1[k] = k + 2);
+    // expect(arr1).toEqual([2, 3, 4]);
     // if (callbackfn(arr[i], i, arr) === false) break;
-    arr.forEach((v, k) => {
+    fe(arr1, (v, k) => {
         arr1[k] = k + 1;
         return k !== 1;
-    }, arr1);
-    expect(arr1).toEqual([1, 2, 4]);
+    },);
+    expect(arr1).toEqual([1, 2, 2]);
 
     const arr2: (number | string)[] = [2, 3, 4];
-    arr.forEach((v, k) => arr2[k] = "a" + v, arr2);
+    fe(arr2, (v, k) => arr2[k] = "a" + v);
     expect(arr2).toEqual(["a2", "a3", "a4"]);
-    arr.forEach((v, k) => arr2[k] = "a" + k, arr2);
+    fe(arr2, (v, k) => arr2[k] = "a" + k);
     expect(arr2).toEqual(["a0", "a1", "a2"]);
+
+    let elseCount = 0;
+    fe(arr2, (v, k) => arr2[k] = "a" + v, () => elseCount++);
+    expect(elseCount).toBe(1);
+    fe(arr2, (v, k) => false, () => elseCount++);
+    expect(elseCount).toBe(1);
 });
 test("forEachAsync", async () => {
     const fn = arr.forEachAsync;
     const arr1: any[] = [1, 2, 3];
-    await fn((v, k) => arr1[k] = k, arr1);
+    await fn(async (v, k) => arr1[k] = k, arr1);
     expect(arr1).toEqual([0, 1, 2]);
     // ArrayLike
-    await fn((v, k) => arr1[k] = k + k, {0: 1, 1: 2, length: 2});
+    await fn(async (v, k) => arr1[k] = k + k, {0: 1, 1: 2, length: 2});
     expect(arr1).toEqual([0, 2, 2]);
     // const arr = thisArg || this;
-    await fn.call(arr1, (v, k) => arr1[k] = k + 2);
+    await fn.call(arr1, async (v, k) => arr1[k] = k + 2);
     expect(arr1).toEqual([2, 3, 4]);
     // if (callbackfn(arr[i], i, arr) === false) break;
-    await fn((v, k) => {
+    await fn(async (v, k) => {
         arr1[k] = k + 1;
         return k !== 1;
     }, arr1);
     expect(arr1).toEqual([1, 2, 4]);
 
     const arr2: (number | string)[] = [2, 3, 4];
-    await fn((v, k) => arr2[k] = "a" + v, arr2);
+    await fn(async (v, k) => arr2[k] = "a" + v, arr2);
     expect(arr2).toEqual(["a2", "a3", "a4"]);
-    await fn((v, k) => arr2[k] = "a" + k, arr2);
+    await fn(async (v, k) => arr2[k] = "a" + k, arr2);
     expect(arr2).toEqual(["a0", "a1", "a2"]);
 
     const res: any = [];

@@ -51,3 +51,6 @@ export type PublicOnly<T> = Pick<T, keyof T>; // seems like a no-op but it works
 //     }
 // }
 // type PublicFoo = PublicOnly<Foo>; // {a: string}
+
+
+export type SettableStyle = Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>>;

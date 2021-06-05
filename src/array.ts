@@ -55,35 +55,49 @@ export function createArray<T = number>(
 
 // ie9支持
 // forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void;
-export function forEach<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>) {
-    const arr = thisArg || this;
+/**
+ * @param arr
+ * @param callbackFn
+ * @param elseCB 类似于Python的for else中的else，
+ *        只会在完整的遍历后执行，任何一个break都不会触发
+ */
+export function forEach<T>(arr: ArrayLike<T>, callbackFn: (value: T, index: number, array: ArrayLike<T>) => (any | false), elseCB?: () => void) {
     // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
-    const len = arr.length;
+    const len = arr.length || 0;
+    let i: number;
     // if (!isArrayLike(arr)) throw new TypeError();
-    for (let i = 0; i < len; i++) {
-        if (callbackfn(arr[i], i, arr) === false) break;
+    for (i = 0; i < len; i++) {
+        if (callbackFn(arr[i], i, arr) === false) break;
+    }
+    if (i === len && elseCB) {
+        elseCB();
     }
 }
 
-export async function forEachAsync<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>) {
+/**
+ * 跟promiseQueue类似，不过此函数是callback异步，重点在callback
+ * @param cbAsync 异步回调
+ * @param thisArg
+ */
+export async function forEachAsync<T>(cbAsync: (value: T, index: number, array: ArrayLike<T>) => Promise<(any | false)>, thisArg?: ArrayLike<T> | Iterable<T>): Promise<void> {
     const arr = thisArg || this;
     // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
     const len = arr.length;
     // if (!isArrayLike(arr)) throw new TypeError();
     for (let i = 0; i < len; i++) {
-        const v = await callbackfn(arr[i], i, arr);
+        const v = await cbAsync(arr[i], i, arr);
         if (v === false) break;
     }
 }
 
 export async function mapAsync<T, R, A extends ArrayLike<T>>(
-    callbackfn: (value: T, index: number, array: A) => Promise<R>,
+    cbAsync: (value: T, index: number, array: A) => Promise<R>,
     thisArg?: A | Iterable<T>,
 ): Promise<R[]> {
     const arr = thisArg || this;
     const result: any[] = [];
     await forEachAsync<T>(async (v, k, a) => {
-        const item = await callbackfn(v, k, a as any);
+        const item = await cbAsync(v, k, a as any);
         result.push(item);
     }, arr);
     return result;
@@ -119,15 +133,20 @@ export function forEachRight<T>(
 }
 
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
-export function from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapFn?: (v: T, k: number) => U): U[] {
+export function from<T, U = T>(
+    iterable: Iterable<T> | ArrayLike<T>,
+    mapFn: (v: T, k?: number) => U = (value, index) => value as any
+): U[] {
     const arr: U[] = [];
-    let callback: (v: T, k: number) => any;
-    callback = mapFn || function (value: T, index: number) {
-        return value;
-    };
-    forEach(((v, k, array) => {
-        arr.push(callback(v, k));
-    }), iterable);
+    if (isArrayLike(iterable)) {
+        forEach(iterable, ((v, k, array) => {
+            arr.push(mapFn(v, k));
+        }));
+    } else {
+        for (const v of iterable) {
+            arr.push(mapFn(v));
+        }
+    }
     return arr;
 }
 
