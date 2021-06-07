@@ -326,11 +326,12 @@ export function defaults(target, ...args) {
 
 /**
  * 使用target里面的key去查找其他的对象，如果其他对象里有该key，则把该值复制给target,如果多个对象都有同一个值，则以最后的为准
+ * 会更新原对象
  * @param target
  * @param args
  */
 export function objUpdate<T extends object>(target: T, ...args: T[]): T {
-    forEachObj(target, (v, k) => {
+    objForEach(target, (v, k) => {
         forEachRight(function (item): void | false {
             if (item.hasOwnProperty(k)) {
                 target[k] = item[k];
@@ -339,6 +340,30 @@ export function objUpdate<T extends object>(target: T, ...args: T[]): T {
         }, args);
     });
     return target;
+}
+
+/**
+ * 根据与target对比，挑出与target同key不同value的key所组成的object
+ * @param target
+ * @param objs  相当于assign(...objs) 同样的key只会取最后一个
+ * @param compareFn
+ */
+export function pickUpdated<T extends object>(
+    target: T,
+    objs: object[],
+    compareFn: (a, b) => boolean = (a, b) => a === b || (isNaN(a) && isNaN(b))
+): Partial<{ [k in keyof T]: any }> {
+    return objReduce(target, (result, v, k) => {
+        forEachRight(function (item: any): void | false {
+            if (item.hasOwnProperty(k)) {
+                if (!compareFn(target[k], item[k])) {
+                    result[k] = item[k];
+                }
+                return false;
+            }
+        }, objs);
+        return result;
+    }, {} as any);
 }
 
 // TODO 需要去除掉前面object里的undefined
