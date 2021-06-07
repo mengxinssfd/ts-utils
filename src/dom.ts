@@ -1,6 +1,6 @@
 import {includes, unique} from "./array";
 import {assign, forEachObj, pickByKeys} from "./object";
-import {ReadonlyKeys, SettableStyle} from "./TsTypes";
+import {SettableStyle, SettableProps} from "./TsTypes";
 import {isArray, isString} from "./dataType";
 import {isDom, isNodeList} from "./domType";
 import {root} from "./common";
@@ -248,7 +248,7 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
     tagName: K,
     params: {
         attrs?: { [k: string]: any };
-        props?: { style?: SettableStyle } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
+        props?: SettableProps<R>;
         parent?: HTMLElement | string;
         children?: HTMLElement[] | NodeList
     } = {},
@@ -292,6 +292,31 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
  * @alias createHtmlElement
  */
 export const createElement = createHtmlElement;
+
+export function createHiddenHtmlElement<E extends HTMLDivElement>(props: SettableProps<E>): E;
+export function createHiddenHtmlElement<K extends keyof HTMLElementTagNameMap, E extends HTMLElementTagNameMap[K]>(
+    props: SettableProps<E>,
+    tagName: K
+): E;
+/**
+ * 创建一个隐藏的html元素
+ * @param props
+ * @param tagName
+ */
+export function createHiddenHtmlElement(props, tagName = "div") {
+    return createHtmlElement(tagName as keyof HTMLElementTagNameMap, {
+        props: {
+            ...props,
+            style: {
+                position: "fixed",
+                left: "-10000px",
+                visibility: "hidden",
+                ...props?.style
+            },
+        },
+        parent: document.body
+    });
+}
 
 /**
  * 获取文字缩放大小
