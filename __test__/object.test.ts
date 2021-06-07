@@ -325,6 +325,16 @@ test("objUpdate", () => {
         c: undefined,
     });
 });
+test("pickUpdated", () => {
+    const fn = cm.pickUpdated;
+    const obj1 = {a: 12, b: undefined, c: 3};
+    expect(fn(obj1, [{a: 1}, {b: 2}, {d: 3}])).toEqual({a: 1, b: 2});
+    expect(fn(obj1, [{a: 1}, {a: 2}, {a: 5}])).toEqual({a: 5});
+    expect(fn(obj1, [{a: 1}, {a: 2}, {a: 12}])).toEqual({});
+    expect(fn(obj1, [{a: 12}, {b: undefined}, {c: 3}])).toEqual({});
+    expect(fn({}, [{a: 1}, {b: 2}, {d: 3}])).toEqual({});
+    expect(fn({a: NaN}, [{a: 1}, {a: NaN}])).toEqual({});
+});
 test("renameObjKey", () => {
     const fn = cm.renameObjKey;
     expect(fn({a: 12, b: undefined, c: 3}, {test: "a", bb: "b"})).toEqual({test: 12, bb: undefined, c: 3});
