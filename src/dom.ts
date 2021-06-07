@@ -136,11 +136,19 @@ export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSSty
     }
 }
 
-
-
-export function setStyle(el: HTMLElement, style: SettableStyle) {
-    assign(el.style, style);
-    return el.style;
+// export function setStyle(this: HTMLElement, style: SettableStyle);
+// export function setStyle(style: SettableStyle, el: HTMLElement | string);
+/**
+ * @param style
+ * @param el
+ * @returns setStyle.bind(el)
+ */
+export function setStyle(this: HTMLElement | any, style: SettableStyle, el?: HTMLElement | string) {
+    if (isString(el)) el = document.querySelector(el) as HTMLDivElement;
+    let target: HTMLElement = el || this;
+    if (!isDom(target)) throw new TypeError("setStyle param el | this is not HTMLElement");
+    assign(target.style, style);
+    return setStyle.bind(target);
 }
 
 /**
