@@ -37,6 +37,22 @@ utils.forEachAsync((r) => r(), [
     console.log(res);
 });
 
-const div = utils.createHtmlElement("div", {parent: document.body});
+const div = utils.createHtmlElement("div", {parent: document.body, props: {style: {color: "red"}}});
+utils.createHiddenHtmlElement({innerText: "hello"});
+utils.createHiddenHtmlElement({innerText: "world", style: {left: "", right: "-10000px"}});
+utils.createHiddenHtmlElement({innerText: "world", style: {left: "", right: "-10000px"}});
+const hd = utils.createHiddenHtmlElement({innerText: "world", style: {position: "static", visibility: ""}});
+hd.addEventListener("click", (e) => {
+    utils.copy2Clipboard(hd);
+    document.body.removeChild(hd);
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+});
+utils.createHiddenHtmlElement({style: {color: "red"}, innerText: "span"}, "span");
 
-utils.setStyle(div, {width: "100px", height: "100px", backgroundColor: "red"});
+utils.setStyle({width: "100px", height: "100px", backgroundColor: "red"}, div);
+const setStyle = utils.setStyle.bind(document.querySelector(".set-style"));
+setStyle({height: "100px"});
+setStyle({backgroundColor: "pink"});
+setStyle({width: "100px"})({marginBottom: "20px"});
