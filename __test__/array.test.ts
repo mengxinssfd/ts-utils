@@ -30,6 +30,10 @@ test("forEach", () => {
     expect(elseCount).toBe(1);
     fe(arr2, (v, k) => false, () => elseCount++);
     expect(elseCount).toBe(1);
+
+    let count = 0;
+    fe({} as any, () => count++);
+    expect(count).toEqual(0);
 });
 test("forEachAsync", async () => {
     const fn = arr.forEachAsync;
