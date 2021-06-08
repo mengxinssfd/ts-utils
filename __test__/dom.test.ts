@@ -191,3 +191,13 @@ test("createElement", () => {
     expect(dd.querySelector(".pppp")!.className).toBe("pppp bbbb");
 
 });
+test("createHiddenHtmlElement", () => {
+    const fn = dom.createHiddenHtmlElement;
+    const div = fn();
+    expect(div.style.visibility).toBe("hidden");
+    expect(div.style.position).toBe("fixed");
+    expect(div.style.left).toBe("-10000px");
+
+    const img = fn({src: "test"}, "img");
+    expect(img.nodeName).toBe("IMG");
+});
