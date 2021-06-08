@@ -321,7 +321,7 @@ export function createHiddenHtmlElement(props?, tagName = "div") {
 
 /**
  * 获取文字缩放大小
- * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效
+ * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效,调整浏览器最小文字大小
  * @param reverse
  * @return {number}
  */
