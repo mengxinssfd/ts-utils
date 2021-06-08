@@ -25,3 +25,7 @@ export declare type OptionalKeys<T> = {
 }[keyof T];
 export declare type ExcludeOptionalProps<T> = Pick<T, RequiredKeys<T>>;
 export declare type PublicOnly<T> = Pick<T, keyof T>;
+export declare type SettableStyle = Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>>;
+export declare type SettableProps<R extends HTMLElement> = ({
+    style?: SettableStyle;
+} & Partial<Omit<R, "style" | ReadonlyKeys<R>>>);

@@ -143,7 +143,7 @@ export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSSty
  * @param el
  * @returns setStyle.bind(el)
  */
-export function setStyle(this: HTMLElement | any, style: SettableStyle, el?: HTMLElement | string) {
+export function setStyle(style: SettableStyle, el?: HTMLElement | string): typeof setStyle {
     if (isString(el)) el = document.querySelector(el) as HTMLDivElement;
     let target: HTMLElement = el || this;
     if (!isDom(target)) throw new TypeError("setStyle param el | this is not HTMLElement");
@@ -297,7 +297,7 @@ export function createHiddenHtmlElement<E extends HTMLDivElement>(): E;
 export function createHiddenHtmlElement<E extends HTMLDivElement>(props: SettableProps<E>): E;
 export function createHiddenHtmlElement<K extends keyof HTMLElementTagNameMap, E extends HTMLElementTagNameMap[K]>(
     props: SettableProps<E>,
-    tagName: K
+    tagName: K,
 ): E;
 /**
  * 创建一个隐藏的html元素
@@ -312,10 +312,10 @@ export function createHiddenHtmlElement(props?, tagName = "div") {
                 position: "fixed",
                 left: "-10000px",
                 visibility: "hidden",
-                ...props?.style
+                ...props?.style,
             },
         },
-        parent: document.body
+        parent: document.body,
     });
 }
 

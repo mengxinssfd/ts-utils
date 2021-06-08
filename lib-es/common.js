@@ -79,14 +79,14 @@ export function debounceAsync(callback, delay) {
  * 节流函数
  * @param callback
  * @param delay
- * @param invalidCB {function}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
+ * @param invalidCB {function?}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
  */
-export function throttle(callback, delay, invalidCB) {
+export function throttle(callback, delay, invalidCB = (v) => void 0) {
     let countDown = () => 0;
     return function (...args) {
         const interval = countDown();
         if (interval > 0) {
-            invalidCB && invalidCB(interval);
+            invalidCB(interval);
             return;
         }
         countDown = createTimeCountDown(delay);

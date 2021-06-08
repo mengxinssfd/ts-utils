@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.supportTouch = exports.isUlElement = exports.isSpanElement = exports.isDivElement = exports.isImgElement = exports.isTextAreaElement = exports.isInputElement = exports.isSelectElement = exports.isElementOf = exports.isDom = exports.isDomStandard = exports.isDomIe8 = void 0;
+exports.isNodeList = exports.supportTouch = exports.isUlElement = exports.isSpanElement = exports.isDivElement = exports.isImgElement = exports.isTextAreaElement = exports.isInputElement = exports.isSelectElement = exports.isElementOf = exports.isDom = exports.isDomStandard = exports.isDomIe8 = void 0;
 const dataType_1 = require("./dataType");
 function isDomIe8(target) {
     // 节点类型常用的有3种，元素节点Node.ELEMENT_NODE(1)；属性节点Node.ATTRIBUTE_NODE(2)以及文本节点Node.TEXT_NODE(3)
@@ -50,3 +50,7 @@ function supportTouch() {
     return "ontouchstart" in window;
 }
 exports.supportTouch = supportTouch;
+function isNodeList(target) {
+    return dataType_1.typeOf(target) === "nodelist";
+}
+exports.isNodeList = isNodeList;

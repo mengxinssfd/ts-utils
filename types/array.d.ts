@@ -19,9 +19,20 @@ export declare function createArray<T = number>({ start, end, len, fill }: {
     len?: number;
     fill?: T | ((item: number, index: number) => T);
 }): T[];
-export declare function forEach<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): void;
-export declare function forEachAsync<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): Promise<void>;
-export declare function mapAsync<T, R, A extends ArrayLike<T>>(callbackfn: (value: T, index: number, array: A) => Promise<R>, thisArg?: A | Iterable<T>): Promise<R[]>;
+/**
+ * @param arr
+ * @param callbackFn
+ * @param elseCB 类似于Python的for else中的else，
+ *        只会在完整的遍历后执行，任何一个break都不会触发
+ */
+export declare function forEach<T>(arr: ArrayLike<T>, callbackFn: (value: T, index: number, array: ArrayLike<T>) => (any | false), elseCB?: () => void): void;
+/**
+ * 跟promiseQueue类似，不过此函数是callback异步，重点在callback
+ * @param cbAsync 异步回调
+ * @param thisArg
+ */
+export declare function forEachAsync<T>(cbAsync: (value: T, index: number, array: ArrayLike<T>) => Promise<(any | false)>, thisArg?: ArrayLike<T> | Iterable<T>): Promise<void>;
+export declare function mapAsync<T, R, A extends ArrayLike<T>>(cbAsync: (value: T, index: number, array: A) => Promise<R>, thisArg?: A | Iterable<T>): Promise<R[]>;
 /**
  * reduce promise 跟 promiseQueue差不多，此函数多了callbackFn
  * @param callbackfn
@@ -30,7 +41,7 @@ export declare function mapAsync<T, R, A extends ArrayLike<T>>(callbackfn: (valu
  */
 export declare function reduceAsync<T, R, A extends ArrayLike<T>, I>(callbackfn: (initValue: I, value: T, index: number, array: A) => Promise<I>, initValue: I, thisArg?: A | Iterable<T>): Promise<I>;
 export declare function forEachRight<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): void;
-export declare function from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapFn?: (v: T, k: number) => U): U[];
+export declare function from<T, U = T>(iterable: Iterable<T> | ArrayLike<T>, mapFn?: (v: T, k?: number) => U): U[];
 export declare function filter<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => boolean, thisArg?: ArrayLike<T>): T[];
 export declare function includes<T>(thisArg: ArrayLike<T>, searchElement: (v: T, index: number, arr: ArrayLike<T>) => boolean, fromIndex?: number): boolean;
 export declare function includes<T>(thisArg: ArrayLike<T>, searchElement: T, fromIndex?: number): boolean;

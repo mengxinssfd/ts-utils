@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getObjPathEntries = exports.getObjValueByPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pickDiff = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
+exports.getObjPathEntries = exports.getObjValueByPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.pickUpdated = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pickDiff = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
 const dataType_1 = require("./dataType");
 const array_1 = require("./array");
 // 获取object树的最大层数 tree是object的话，tree就是层数1
@@ -267,11 +267,12 @@ function defaults(target, ...args) {
 exports.defaults = defaults;
 /**
  * 使用target里面的key去查找其他的对象，如果其他对象里有该key，则把该值复制给target,如果多个对象都有同一个值，则以最后的为准
+ * 会更新原对象
  * @param target
  * @param args
  */
 function objUpdate(target, ...args) {
-    forEachObj(target, (v, k) => {
+    exports.objForEach(target, (v, k) => {
         array_1.forEachRight(function (item) {
             if (item.hasOwnProperty(k)) {
                 target[k] = item[k];
@@ -282,6 +283,26 @@ function objUpdate(target, ...args) {
     return target;
 }
 exports.objUpdate = objUpdate;
+/**
+ * 根据与target对比，挑出与target同key不同value的key所组成的object
+ * @param target
+ * @param objs  相当于assign(...objs) 同样的key只会取最后一个
+ * @param compareFn
+ */
+function pickUpdated(target, objs, compareFn = (a, b) => a === b || (dataType_1.isNaN(a) && dataType_1.isNaN(b))) {
+    return exports.objReduce(target, (result, v, k) => {
+        array_1.forEachRight(function (item) {
+            if (item.hasOwnProperty(k)) {
+                if (!compareFn(target[k], item[k])) {
+                    result[k] = item[k];
+                }
+                return false;
+            }
+        }, objs);
+        return result;
+    }, {});
+}
+exports.pickUpdated = pickUpdated;
 // TODO 需要去除掉前面object里的undefined
 /*
 type A = { a: undefined, b: number }

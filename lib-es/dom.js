@@ -1,7 +1,7 @@
 import { includes, unique } from "./array";
 import { assign, forEachObj, pickByKeys } from "./object";
 import { isArray, isString } from "./dataType";
-import { isDom } from "./domType";
+import { isDom, isNodeList } from "./domType";
 import { root } from "./common";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
@@ -120,6 +120,22 @@ export function cssSupport(key, value) {
         return false;
     }
 }
+// export function setStyle(this: HTMLElement, style: SettableStyle);
+// export function setStyle(style: SettableStyle, el: HTMLElement | string);
+/**
+ * @param style
+ * @param el
+ * @returns setStyle.bind(el)
+ */
+export function setStyle(style, el) {
+    if (isString(el))
+        el = document.querySelector(el);
+    let target = el || this;
+    if (!isDom(target))
+        throw new TypeError("setStyle param el | this is not HTMLElement");
+    assign(target.style, style);
+    return setStyle.bind(target);
+}
 /**
  * 手动添加img标签下载图片
  * @param url
@@ -143,7 +159,6 @@ export function loadImg(url, props = {}) {
                 onabort: onerror,
                 onerror,
             }, props),
-            parent: null,
         });
         img.src = url;
     });
@@ -191,7 +206,6 @@ export function noScroll(el = window) {
         }
         else {
             scroller = document.documentElement;
-            ``;
         }
     }
     const last = pickByKeys(getComputedStyle(scroller), ["marginTop", "overflow"]);
@@ -214,6 +228,7 @@ export function noScroll(el = window) {
 export function createHtmlElement(tagName, params = {}) {
     const el = document.createElement(tagName);
     const { attrs = {}, props = {}, parent, children } = params;
+    // set props
     forEachObj(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
@@ -224,20 +239,26 @@ export function createHtmlElement(tagName, params = {}) {
         }
         el[k] = v;
     });
+    // set attrs
     forEachObj(attrs, (v, k, o) => {
         const isObjValue = typeof v === "object";
         el.setAttribute(k, isObjValue ? JSON.stringify(v) : v);
     });
-    if (parent !== null) {
+    // set children
+    if (isArray(children) || isNodeList(children)) {
+        children.forEach(child => el.appendChild(child));
+    }
+    // set parent
+    if (parent) {
         if (isDom(parent)) {
             parent.appendChild(el);
         }
-        else {
-            document.body.appendChild(el);
+        else if (isString(parent)) {
+            const pr = document.querySelector(parent);
+            if (!pr)
+                throw new TypeError(`createHtmlElement param 'parent' => "${parent}" not founded`);
+            pr.appendChild(el);
         }
-    }
-    if (isArray(children)) {
-        children.forEach(child => el.appendChild(child));
     }
     return el;
 }
@@ -246,8 +267,19 @@ export function createHtmlElement(tagName, params = {}) {
  */
 export const createElement = createHtmlElement;
 /**
+ * 创建一个隐藏的html元素
+ * @param props
+ * @param tagName
+ */
+export function createHiddenHtmlElement(props, tagName = "div") {
+    return createHtmlElement(tagName, {
+        props: Object.assign(Object.assign({}, props), { style: Object.assign({ position: "fixed", left: "-10000px", visibility: "hidden" }, props === null || props === void 0 ? void 0 : props.style) }),
+        parent: document.body,
+    });
+}
+/**
  * 获取文字缩放大小
- * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效
+ * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效,调整浏览器最小文字大小
  * @param reverse
  * @return {number}
  */
@@ -255,6 +287,7 @@ export function getFontScale(reverse = false) {
     const fontSize = 10;
     const div = createElement("div", {
         props: { style: { fontSize: fontSize + "px" } },
+        parent: document.body,
     });
     const realFontSize = getComputedStyle(div).fontSize;
     document.body.removeChild(div);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
+exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createHiddenHtmlElement = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.setStyle = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
 const array_1 = require("./array");
 const object_1 = require("./object");
 const dataType_1 = require("./dataType");
@@ -133,6 +133,23 @@ function cssSupport(key, value) {
     }
 }
 exports.cssSupport = cssSupport;
+// export function setStyle(this: HTMLElement, style: SettableStyle);
+// export function setStyle(style: SettableStyle, el: HTMLElement | string);
+/**
+ * @param style
+ * @param el
+ * @returns setStyle.bind(el)
+ */
+function setStyle(style, el) {
+    if (dataType_1.isString(el))
+        el = document.querySelector(el);
+    let target = el || this;
+    if (!domType_1.isDom(target))
+        throw new TypeError("setStyle param el | this is not HTMLElement");
+    object_1.assign(target.style, style);
+    return setStyle.bind(target);
+}
+exports.setStyle = setStyle;
 /**
  * 手动添加img标签下载图片
  * @param url
@@ -156,7 +173,6 @@ function loadImg(url, props = {}) {
                 onabort: onerror,
                 onerror,
             }, props),
-            parent: null,
         });
         img.src = url;
     });
@@ -206,7 +222,6 @@ function noScroll(el = window) {
         }
         else {
             scroller = document.documentElement;
-            ``;
         }
     }
     const last = object_1.pickByKeys(getComputedStyle(scroller), ["marginTop", "overflow"]);
@@ -230,6 +245,7 @@ exports.noScroll = noScroll;
 function createHtmlElement(tagName, params = {}) {
     const el = document.createElement(tagName);
     const { attrs = {}, props = {}, parent, children } = params;
+    // set props
     object_1.forEachObj(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
@@ -240,20 +256,26 @@ function createHtmlElement(tagName, params = {}) {
         }
         el[k] = v;
     });
+    // set attrs
     object_1.forEachObj(attrs, (v, k, o) => {
         const isObjValue = typeof v === "object";
         el.setAttribute(k, isObjValue ? JSON.stringify(v) : v);
     });
-    if (parent !== null) {
+    // set children
+    if (dataType_1.isArray(children) || domType_1.isNodeList(children)) {
+        children.forEach(child => el.appendChild(child));
+    }
+    // set parent
+    if (parent) {
         if (domType_1.isDom(parent)) {
             parent.appendChild(el);
         }
-        else {
-            document.body.appendChild(el);
+        else if (dataType_1.isString(parent)) {
+            const pr = document.querySelector(parent);
+            if (!pr)
+                throw new TypeError(`createHtmlElement param 'parent' => "${parent}" not founded`);
+            pr.appendChild(el);
         }
-    }
-    if (dataType_1.isArray(children)) {
-        children.forEach(child => el.appendChild(child));
     }
     return el;
 }
@@ -263,8 +285,20 @@ exports.createHtmlElement = createHtmlElement;
  */
 exports.createElement = createHtmlElement;
 /**
+ * 创建一个隐藏的html元素
+ * @param props
+ * @param tagName
+ */
+function createHiddenHtmlElement(props, tagName = "div") {
+    return createHtmlElement(tagName, {
+        props: Object.assign(Object.assign({}, props), { style: Object.assign({ position: "fixed", left: "-10000px", visibility: "hidden" }, props === null || props === void 0 ? void 0 : props.style) }),
+        parent: document.body,
+    });
+}
+exports.createHiddenHtmlElement = createHiddenHtmlElement;
+/**
  * 获取文字缩放大小
- * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效
+ * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效,调整浏览器最小文字大小
  * @param reverse
  * @return {number}
  */
@@ -272,6 +306,7 @@ function getFontScale(reverse = false) {
     const fontSize = 10;
     const div = exports.createElement("div", {
         props: { style: { fontSize: fontSize + "px" } },
+        parent: document.body,
     });
     const realFontSize = getComputedStyle(div).fontSize;
     document.body.removeChild(div);

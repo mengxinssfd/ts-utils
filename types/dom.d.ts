@@ -1,4 +1,4 @@
-import { ReadonlyKeys } from "./TsTypes";
+import { SettableStyle, SettableProps } from "./TsTypes";
 export declare function supportClassList(): boolean;
 export declare function hasClassIe8(target: HTMLElement, className: string[] | string): boolean;
 export declare function hasClassStandard(target: HTMLElement, className: string[] | string): boolean;
@@ -27,6 +27,12 @@ export declare function prefixStyle<T extends keyof CSSStyleDeclaration>(style: 
  */
 export declare function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSStyleDeclaration[K]>(key: K, value: V): boolean;
 /**
+ * @param style
+ * @param el
+ * @returns setStyle.bind(el)
+ */
+export declare function setStyle(style: SettableStyle, el?: HTMLElement | string): typeof setStyle;
+/**
  * 手动添加img标签下载图片
  * @param url
  * @param [props = {}] img标签的属性
@@ -49,19 +55,20 @@ export declare function createHtmlElement<K extends keyof HTMLElementTagNameMap,
     attrs?: {
         [k: string]: any;
     };
-    props?: {
-        style?: Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>>;
-    } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>;
-    parent?: HTMLElement | null;
-    children?: HTMLElement[];
+    props?: SettableProps<R>;
+    parent?: HTMLElement | string;
+    children?: HTMLElement[] | NodeList;
 }): R;
 /**
  * @alias createHtmlElement
  */
 export declare const createElement: typeof createHtmlElement;
+export declare function createHiddenHtmlElement<E extends HTMLDivElement>(): E;
+export declare function createHiddenHtmlElement<E extends HTMLDivElement>(props: SettableProps<E>): E;
+export declare function createHiddenHtmlElement<K extends keyof HTMLElementTagNameMap, E extends HTMLElementTagNameMap[K]>(props: SettableProps<E>, tagName: K): E;
 /**
  * 获取文字缩放大小
- * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效
+ * 使用环境：微信浏览器调整文字大小，普通浏览器"ctr" + "+"无效,调整浏览器最小文字大小
  * @param reverse
  * @return {number}
  */

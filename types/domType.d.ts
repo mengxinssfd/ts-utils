@@ -10,3 +10,4 @@ export declare function isDivElement(el: HTMLElement): el is HTMLDivElement;
 export declare function isSpanElement(el: HTMLElement): el is HTMLSpanElement;
 export declare function isUlElement(el: HTMLElement): el is HTMLUListElement;
 export declare function supportTouch(): boolean;
+export declare function isNodeList(target: any): target is NodeList;

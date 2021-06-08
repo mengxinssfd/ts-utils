@@ -51,34 +51,48 @@ function createArray({ start = 0, end, len, fill }) {
 exports.createArray = createArray;
 // ie9支持
 // forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void;
-function forEach(callbackfn, thisArg) {
-    const arr = thisArg || this;
+/**
+ * @param arr
+ * @param callbackFn
+ * @param elseCB 类似于Python的for else中的else，
+ *        只会在完整的遍历后执行，任何一个break都不会触发
+ */
+function forEach(arr, callbackFn, elseCB) {
     // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
-    const len = arr.length;
+    const len = arr.length || 0;
+    let i;
     // if (!isArrayLike(arr)) throw new TypeError();
-    for (let i = 0; i < len; i++) {
-        if (callbackfn(arr[i], i, arr) === false)
+    for (i = 0; i < len; i++) {
+        if (callbackFn(arr[i], i, arr) === false)
             break;
+    }
+    if (i === len && elseCB) {
+        elseCB();
     }
 }
 exports.forEach = forEach;
-async function forEachAsync(callbackfn, thisArg) {
+/**
+ * 跟promiseQueue类似，不过此函数是callback异步，重点在callback
+ * @param cbAsync 异步回调
+ * @param thisArg
+ */
+async function forEachAsync(cbAsync, thisArg) {
     const arr = thisArg || this;
     // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
     const len = arr.length;
     // if (!isArrayLike(arr)) throw new TypeError();
     for (let i = 0; i < len; i++) {
-        const v = await callbackfn(arr[i], i, arr);
+        const v = await cbAsync(arr[i], i, arr);
         if (v === false)
             break;
     }
 }
 exports.forEachAsync = forEachAsync;
-async function mapAsync(callbackfn, thisArg) {
+async function mapAsync(cbAsync, thisArg) {
     const arr = thisArg || this;
     const result = [];
     await forEachAsync(async (v, k, a) => {
-        const item = await callbackfn(v, k, a);
+        const item = await cbAsync(v, k, a);
         result.push(item);
     }, arr);
     return result;
@@ -110,15 +124,18 @@ function forEachRight(callbackfn, thisArg) {
 }
 exports.forEachRight = forEachRight;
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
-function from(iterable, mapFn) {
+function from(iterable, mapFn = (value, index) => value) {
     const arr = [];
-    let callback;
-    callback = mapFn || function (value, index) {
-        return value;
-    };
-    forEach(((v, k, array) => {
-        arr.push(callback(v, k));
-    }), iterable);
+    if (dataType_1.isArrayLike(iterable)) {
+        forEach(iterable, ((v, k, array) => {
+            arr.push(mapFn(v, k));
+        }));
+    }
+    else {
+        for (const v of iterable) {
+            arr.push(mapFn(v));
+        }
+    }
     return arr;
 }
 exports.from = from;
