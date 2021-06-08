@@ -16,7 +16,7 @@ test("forEach", () => {
     fe(arr1, (v, k) => {
         arr1[k] = k + 1;
         return k !== 1;
-    },);
+    });
     expect(arr1).toEqual([1, 2, 2]);
 
     const arr2: (number | string)[] = [2, 3, 4];
@@ -195,6 +195,8 @@ test("from", () => {
     expect(arr.from({0: 2, 1: 1, length: 2})).toEqual([2, 1]);
     // mapFn
     expect(arr.from([1, 2, 3], (v, k) => v + "" + k)).toEqual(["10", "21", "32"]);
+    expect(Array.from(new Map([["a", 1], ["b", 2]]))).toEqual([["a", 1], ["b", 2]]);
+    expect(arr.from(new Map([["a", 1], ["b", 2]]))).toEqual([["a", 1], ["b", 2]]);
 });
 test("includes", () => {
     const list: any[] = ["", undefined, 0, NaN, null];
