@@ -293,6 +293,7 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
  */
 export const createElement = createHtmlElement;
 
+export function createHiddenHtmlElement<E extends HTMLDivElement>(): E;
 export function createHiddenHtmlElement<E extends HTMLDivElement>(props: SettableProps<E>): E;
 export function createHiddenHtmlElement<K extends keyof HTMLElementTagNameMap, E extends HTMLElementTagNameMap[K]>(
     props: SettableProps<E>,
@@ -303,7 +304,7 @@ export function createHiddenHtmlElement<K extends keyof HTMLElementTagNameMap, E
  * @param props
  * @param tagName
  */
-export function createHiddenHtmlElement(props, tagName = "div") {
+export function createHiddenHtmlElement(props?, tagName = "div") {
     return createHtmlElement(tagName as keyof HTMLElementTagNameMap, {
         props: {
             ...props,
