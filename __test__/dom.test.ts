@@ -201,3 +201,17 @@ test("createHiddenHtmlElement", () => {
     const img = fn({src: "test"}, "img");
     expect(img.nodeName).toBe("IMG");
 });
+test("setStyle", () => {
+    const fn = dom.setStyle;
+    const div = dom.createHiddenHtmlElement();
+    expect(div.style.visibility).toBe("hidden");
+    expect(div.style.position).toBe("fixed");
+    expect(div.style.left).toBe("-10000px");
+
+    const ss = fn({
+        position: "static",
+    }, div);
+    expect(div.style.position).toBe("static");
+    ss({left: 0});
+    expect(div.style.left).toBe("0px");
+});
