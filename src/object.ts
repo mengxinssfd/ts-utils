@@ -1,4 +1,4 @@
-import {isArray, isObject, isBroadlyObj, isNaN} from "./dataType";
+import {isArray, isObject, isBroadlyObj, isNaN, typeOf} from "./dataType";
 import {forEachRight} from "./array";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
@@ -473,6 +473,38 @@ export function getObjPathEntries(obj: object, objName = ""): Array<[string, any
 }
 
 // TODO 根据路径还原整个object
-export function revertObjFromPath(path:string,obj:object = {}){
+export function revertObjFromPath(pathArr: string[], result: object = {}): object {
+    pathArr.forEach(path => {
+        let [key, value] = path.split("=").map(item => decodeURIComponent(item));
+        let innerKey = "";
+        const reg = /\[(\w*)]/g;
+        if (reg.test(key)) {
+            innerKey = RegExp.$1;
+            key = key.replace(reg, "");
+        }
+        key = key.replace(/\[(\w*)\]/g, "");
+        const resultValue = result[key];
 
+        switch (typeOf(resultValue)) {
+            case "undefined":
+                if (!innerKey) {
+                    result[key] = value;
+                } else {
+                    const arr = [];
+                    arr[innerKey] = value;
+                    result[key] = arr;
+                }
+                break;
+            case "string":
+                result[key] = [resultValue];
+            case "array":
+                if (!innerKey) {
+                    result[key].push(value);
+                } else {
+                    result[key][innerKey] = value;
+                }
+        }
+    });
+    return result;
 }
+
