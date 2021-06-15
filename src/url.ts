@@ -1,5 +1,5 @@
-import {typeOf} from "./dataType";
-import {forEachObj, reduceObj} from "./object";
+import {forEachObj, reduceObj, revertObjFromPath} from "./object";
+import {UrlModel} from "./UrlModel";
 
 // url规则文档：https://datatracker.ietf.org/doc/html/rfc3986
 
@@ -75,45 +75,11 @@ export function getUrlHashParam(name: string, url = location.href, noDecode = fa
  * @param {string} [url = location.href]
  */
 export function getUrlParamObj(url: string = location.href): { [key: string]: string | string[] } {
-    let result: any = {};
     const params = url.match(/[^&#?/]+=[^&#?/]+/g);
 
-    if (!params) return result;
+    if (!params) return {};
 
-    for (const k in params) {
-        const v = params[k];
-        let [key, value] = v.split("=").map(item => decodeURIComponent(item));
-        let innerKey = "";
-        const reg = /\[(\w*)]/g;
-        if (reg.test(key)) {
-            innerKey = RegExp.$1;
-            key = key.replace(reg, "");
-        }
-        key = key.replace(/\[(\w*)\]/g, "");
-        const resultValue = result[key];
-
-        switch (typeOf(resultValue)) {
-            case "undefined":
-                if (!innerKey) {
-                    result[key] = value;
-                } else {
-                    const arr = [];
-                    arr[innerKey] = value;
-                    result[key] = arr;
-                }
-                break;
-            case "string":
-                result[key] = [resultValue];
-            case "array":
-                if (!innerKey) {
-                    result[key].push(value);
-                } else {
-                    result[key][innerKey] = value;
-                }
-        }
-    }
-
-    return result;
+    return revertObjFromPath(params,{}) as any;
 }
 
 export const getUrlQuery = getUrlParamObj;
@@ -168,15 +134,16 @@ export function updateUrlParam(name: string, value: string, url = location.href,
 }
 
 /**
- * 修改url参数，可新增或删除参数
+ * 设置url参数，可新增或删除参数
  * @param name
  * @param value
  * @param url
  */
 export function setUrlParam(name: string, value: string | undefined, url = location.href): string {
-    const obj: any = getUrlParamObj(url);
+    const model = new UrlModel(url);
+    const obj: any = model.query;
     obj[name] = value;
-    return stringifyUrlSearch(obj);
+    return model.toString();
 }
 
 
