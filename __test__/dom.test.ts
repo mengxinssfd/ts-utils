@@ -212,6 +212,6 @@ test("setStyle", () => {
         position: "static",
     }, div);
     expect(div.style.position).toBe("static");
-    ss({left: 0});
+    ss({left: "0"});
     expect(div.style.left).toBe("0px");
 });
