@@ -1,5 +1,4 @@
 import {subString} from "../src/string";
-import {UrlModel} from "../src/UrlModel";
 import * as u from "../src/url";
 
 const url = "http://www.baidu.com:112332/index.php/admin/MonitorResultManager/monitorData?a%5B%5D=123&a%5B%5D=on&b%5B0%5D=on&b%5B1%5D=on&c=1&c=2&c=3&d=1,2,3,4,5&pid=19&pname=%E7%8E%AF%E7%90%83%E8%B4%B8%E6%98%93%E9%A1%B9%E7%9B%AE%E5%9F%BA%E5%9D%91%E5%9C%B0%E9%93%812%E5%8F%B7%E7%BA%BF%E9%9A%A7%E9%81%93%E7%BB%93%E6%9E%84%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9B%91%E6%B5%8B#test";
@@ -66,21 +65,6 @@ test("getUrlPath", () => {
     expect(u.getUrlPath()).toBe("/");
 });
 test("urlParse", () => {
-    //  a[]=123&a[]=on&b[0]=on&b[1]=on&c=1&c=2&d=1,2,3,4,5&pid=19&pname=环球贸易项目基坑地铁2号线隧道结构自动化监测
-    const urlParse = new UrlModel(url);
-    // console.log(decodeURIComponent(urlParse.queryStr));
-    expect(urlParse.protocol).toBe("http");
-    expect(urlParse.port).toBe("112332");
-    expect(urlParse.host).toBe("www.baidu.com");
-    expect(urlParse.query.pname).toBe("环球贸易项目基坑地铁2号线隧道结构自动化监测");
-    expect(urlParse.query.pid).toBe("19");
-    expect(urlParse.query.a).toEqual(["123", "on"]);
-    expect(urlParse.query.b).toEqual(["on", "on"]);
-    expect(urlParse.query.c).toEqual(["1", "2", "3"]);
-    expect(urlParse.query.d).toBe("1,2,3,4,5");
-    expect(urlParse.hash).toBe("#test");
-    expect(urlParse.path).toBe("/index.php/admin/MonitorResultManager/monitorData");
-
     expect(u.getUrlHost("/")).toBe("");
     expect(u.getUrlPort("/")).toBe("");
     expect(u.getUrlPort()).toBe("");
@@ -92,26 +76,7 @@ test("urlParse", () => {
     expect(u.getUrlHash("/index.php/admin#absdf-23_123")).toBe("#absdf-23_123");
     expect(u.getUrlHash("/index.php/admin")).toBe("");
 
-    const realUrl = "https://www.haodanku.com:80/Openapi/api_detail?id=15#api-parameter";
-    const real = new UrlModel(realUrl);
-
-    expect(real.query).toEqual({id: "15"});
-    expect(real.protocol).toEqual("https");
-    expect(real.host).toEqual("www.haodanku.com");
-    expect(real.path).toEqual("/Openapi/api_detail");
-    expect(real.hash).toEqual("#api-parameter");
-    expect(real.port).toEqual("80");
-    expect(real.toString()).toBe(realUrl);
     expect(u.getUrlProtocol("file://test.com")).toEqual("file");
-
-    const empty = new UrlModel("");
-    expect(empty.query).toEqual({});
-    expect(empty.protocol).toEqual("");
-    expect(empty.host).toEqual("");
-    expect(empty.path).toEqual("");
-    expect(empty.hash).toEqual("");
-    expect(empty.port).toEqual("");
-    expect(empty.toString()).toBe("");
 });
 test("queryStringify", () => {
     expect(u.stringifyUrlSearch({a: "1123", b: 1123})).toBe("a=1123&b=1123");
@@ -136,12 +101,12 @@ test("queryStringify", () => {
 
 test("getUrlParam", () => {
     const fn = u.getUrlParam;
-    const realUrl = "https://www.haodanku.com/Openapi/api_detail?id=15#api-parameter";
+    const realUrl = "https://www.test.com/Openapi/api_detail?id=15#api-parameter";
 
     expect(fn("id", realUrl)).toEqual("15");
     expect(fn("pname", url, true)).toEqual("%E7%8E%AF%E7%90%83%E8%B4%B8%E6%98%93%E9%A1%B9%E7%9B%AE%E5%9F%BA%E5%9D%91%E5%9C%B0%E9%93%812%E5%8F%B7%E7%BA%BF%E9%9A%A7%E9%81%93%E7%BB%93%E6%9E%84%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9B%91%E6%B5%8B");
     expect(fn("pname", url)).toEqual("环球贸易项目基坑地铁2号线隧道结构自动化监测");
-    const url2 = "www.haodanku.com/?id=15&a=1&b=2&c=3&d[0]=4&d[1]=5";
+    const url2 = "www.test.com/?id=15&a=1&b=2&c=3&d[0]=4&d[1]=5";
     expect(fn("id", url2)).toEqual("15");
     expect(fn("a", url2)).toEqual("1");
     expect(fn("b", url2)).toEqual("2");
@@ -155,14 +120,26 @@ test("getUrlParam", () => {
 });
 test("updateUrlParam", () => {
     const fn = u.updateUrlParam;
-    let url = "https://www.haodanku.com/Openapi/api_detail?id=15#api-parameter";
+    let url = "https://www.test.com/Openapi/api_detail?id=15#api-parameter";
     url = fn("id", "100", url);
-    expect(url).toEqual("https://www.haodanku.com/Openapi/api_detail?id=100#api-parameter");
+    expect(url).toEqual("https://www.test.com/Openapi/api_detail?id=100#api-parameter");
     expect(fn("pid", "15", url)).toEqual(url);
+});
+test("setUrlParam", () => {
+    const fn = u.setUrlParam;
+    let url = "https://www.test.com/Openapi/api_detail?id=15#api-parameter";
+    url = fn("id", "100", url);
+    // update
+    expect(url).toEqual("https://www.test.com/Openapi/api_detail?id=100#api-parameter");
+    // add
+    expect(fn("pid", "15", url)).toEqual("https://www.test.com/Openapi/api_detail?id=100&pid=15#api-parameter");
+    // delete
+    expect(fn("pid", undefined, url)).toEqual("https://www.test.com/Openapi/api_detail?id=100#api-parameter");
+    expect(fn("id", undefined, url)).toEqual("https://www.test.com/Openapi/api_detail#api-parameter");
 });
 test("UrlRegExp", () => {
     const ure = u.UrlRegExp;
-    const realUrl = "https://www.haodanku.com/Openapi/api_detail?id=15#api-parameter";
+    const realUrl = "https://www.test.com/Openapi/api_detail?id=15#api-parameter";
 
     expect(ure.test(realUrl)).toBeTruthy();
     expect(
@@ -179,7 +156,7 @@ test("UrlRegExp", () => {
 });
 test("isUrl", () => {
     const fn = u.isUrl;
-    const realUrl = "https://www.haodanku.com/Openapi/api_detail?id=15";
+    const realUrl = "https://www.test.com/Openapi/api_detail?id=15";
 
     expect(fn(realUrl)).toBeTruthy();
     // 不能识别普通网址的端口号
