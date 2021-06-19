@@ -268,6 +268,12 @@ test("assign", () => {
             default: 1,
         },
     });
+
+    expect(Object.assign({a: 1, b: 2}, null, "", "12", {c: 3})).toEqual({a: 1, b: 2, c: 3, 0: "1", 1: "2"});
+    expect(fn({a: 1, b: 2}, null as any, "" as any, "12" as any, {c: 3})).toEqual({a: 1, b: 2, c: 3, 0: "1", 1: "2"});
+
+    expect(Object.assign([], null, "", "12")).toEqual(["1", "2"]);
+    expect(fn([], null, "", "12")).toEqual(["1", "2"]);
 });
 test("omit", () => {
     const fn = cm.omit;
