@@ -1,5 +1,11 @@
 import * as utils from "../../src";
 
+declare global {
+    interface Window {
+        u: any
+    }
+}
+window.u = utils;
 const dom = document.querySelector(".test") as HTMLDivElement;
 /*
 addEventListener("touchstart", function (e) {

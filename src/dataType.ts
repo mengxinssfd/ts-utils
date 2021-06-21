@@ -1,4 +1,5 @@
 import {includes} from "./array";
+import {objKeys} from "./object";
 
 export function isNative(value: any): boolean {
     const reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
@@ -188,4 +189,16 @@ export function isIncludeChinese(value: string): boolean {
  */
 export function isInteger(value: number): boolean {
     return value % 1 === 0;
+}
+
+/**
+ * @example
+ * isArrayObj(Object.assign([1,2], {b: "1", c: "2"})) // => true
+ * isArrayObj([]) // => false
+ * @param value
+ */
+export function isArrayObj(value: any): boolean {
+    const keys = objKeys(value);
+    const reg = /\d+/;
+    return isArray(value) && keys.some(i => !reg.test(String(i)));
 }
