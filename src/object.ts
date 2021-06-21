@@ -472,17 +472,22 @@ export function getObjPathEntries(obj: object, objName = ""): Array<[string, any
     }, [] as Array<[string, any]>);
 }
 
-// TODO 根据路径还原整个object
-export function revertObjFromPath(pathArr: string[], result: object = {}): object {
-    pathArr.forEach(path => {
+// 根据路径还原整个object
+export function revertObjFromPath(pathArr: string[]): object {
+    function getKV(path: string): { key: string, value: string, innerKey: string } {
         let [key, value] = path.split("=").map(item => decodeURIComponent(item));
         let innerKey = "";
-        const reg = /\[(\w*)]/g;
+        const reg = /(?:\[([^\[\]]*)])|(?:\.\[?([^\[\]]*)]?)/g;
         if (reg.test(key)) {
-            innerKey = RegExp.$1;
+            innerKey = RegExp.$1 || RegExp.$2;
             key = key.replace(reg, "");
         }
-        key = key.replace(/\[(\w*)\]/g, "");
+        // key = key.replace(/\[[^\[\]]*]/g, "");
+        return {key, value, innerKey};
+    }
+
+    return pathArr.reduce((result, path) => {
+        const {key, value, innerKey} = getKV(path);
         const resultValue = result[key];
 
         switch (typeOf(resultValue)) {
@@ -504,7 +509,7 @@ export function revertObjFromPath(pathArr: string[], result: object = {}): objec
                     result[key][innerKey] = value;
                 }
         }
-    });
-    return result;
+        return result;
+    }, {});
 }
 

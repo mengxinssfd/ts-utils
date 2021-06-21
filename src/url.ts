@@ -79,7 +79,7 @@ export function getUrlParamObj(url: string = location.href): { [key: string]: st
 
     if (!params) return {};
 
-    return revertObjFromPath(params,{}) as any;
+    return revertObjFromPath(params) as any;
 }
 
 export const getUrlQuery = getUrlParamObj;
