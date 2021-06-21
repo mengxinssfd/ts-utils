@@ -462,4 +462,20 @@ test("pickDiff", () => {
     })).toEqual({a: {id: 1}, b: {id: 11}});
 
 });
+test("revertObjFromPath", () => {
+    const fn = cm.revertObjFromPath;
+    expect(fn(["a=1", "b=2"])).toEqual({a: "1", b: "2"});
+    expect(fn(["a=1", "a=2"])).toEqual({a: ["1", "2"]});
+    expect(fn(["a[0]=1", "a[1]=2"])).toEqual({a: ["1", "2"]});
+    expect(fn(["a[b]=1", "a[c]=2"])).toEqual({a: Object.assign([], {b: "1", c: "2"})});
+
+    expect(fn(["a.0=1", "a.1=2"])).toEqual({a: ["1", "2"]});
+    expect(fn(["a.[0]=1", "a.[1]=2"])).toEqual({a: ["1", "2"]});
+    expect(fn(["a.[b]=1", "a.[c]=2"])).toEqual({a: Object.assign([], {b: "1", c: "2"})});
+    expect(fn(["a.[b]=1", "a.[c]=2"])).not.toEqual({a: Object.assign([], {b: 1, c: "2"})});
+
+    expect(fn(["a[]=1", "a[]=2"])).toEqual({a: ["1", "2"]});
+    // TODO 暂不支持多层路径
+    // expect(fn(["a[b][c]=1", "a[b][d]=2"])).toEqual({a: {b: {c: 1, d: 2}}});
+});
 
