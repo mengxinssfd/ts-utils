@@ -298,3 +298,9 @@ test("isInteger", function () {
     expect(fn(-0.1)).toBeFalsy();
     expect(fn(-1.1)).toBeFalsy();
 });
+test("isArrayObj", function () {
+    const fn = type.isArrayObj;
+    expect(fn(Object.assign([1, 2], {b: "1", c: "2"}))).toBeTruthy();
+    expect(fn([])).toBeFalsy();
+    expect(fn({0: 1, 1: 2, length: 2, a: 1, b: 2})).toBeFalsy();
+});
