@@ -448,3 +448,18 @@ export function numToFixed(num: number, fractionDigits = 0, rounding = false): s
     const digits = strPadEnd((split[1] || "").substr(0, fractionDigits), fractionDigits, "0");
     return split[0] + "." + digits;
 }
+
+export function at<T,
+    V extends string | Array<T> | ArrayLike<T>,
+    K extends keyof V>(
+    value: V,
+    index: K,
+    def: V[K] | void = undefined
+): V[K] | void {
+    if (index < 0) {
+        index = (value.length + (index as number)) as any;
+    }
+    return value[index] ?? def;
+}
+
+at("12", 0);
