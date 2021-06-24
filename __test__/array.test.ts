@@ -1,5 +1,6 @@
 import * as arr from "../src/array";
 import {sleep} from "../src/time";
+import {objForEach} from "../src/object";
 
 test("forEach", () => {
     const fe = arr.forEach;
@@ -652,5 +653,23 @@ test("groupBy", () => {
             {name: "d", score: 10},
         ],
 
+    });
+
+    const list = [{code: "a"}, {code: "a_a"}, {code: "a_b"}, {code: "a_c"}, {code: "b"}, {code: "b_a"}, {code: "b_b"}];
+
+    const r = arr.groupBy(list, (item, obj) => {
+        let result = "";
+        objForEach(obj, (v, k): false | void => {
+            if (new RegExp((k as string) + "_.+").test(item.code)) {
+                result = k as string;
+                return false;
+            }
+        }, () => result = item.code);
+        return result;
+    });
+
+    expect(r).toEqual({
+        a: [{code: "a"}, {code: "a_a"}, {code: "a_b"}, {code: "a_c"}],
+        b: [{code: "b"}, {code: "b_a"}, {code: "b_b"}]
     });
 });
