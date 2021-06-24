@@ -394,3 +394,17 @@ export function scrollFixedWatcher(
         container.removeEventListener("scroll", handler);
     };
 }
+
+type CSSLenUnit = "rem" | "px" | "%";
+
+export function translateCssLenUnit(
+    from: `${number}${CSSLenUnit}`,
+    to: CSSLenUnit,
+    relativeEl = document.documentElement
+): string {
+    return "";
+}
+
+// translateCssLenUnit("100%", "rem");
+// 管道语法
+// "100px" |> ((_: any) => translateCssLenUnit(_, "rem"));
