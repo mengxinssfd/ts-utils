@@ -60,18 +60,20 @@ export function createArray<T = number>(
  * @param callbackFn
  * @param elseCB 类似于Python的for else中的else，
  *        只会在完整的遍历后执行，任何一个break都不会触发
+ * @returns {boolean|void} isBreak
  */
-export function forEach<T>(arr: ArrayLike<T>, callbackFn: (value: T, index: number, array: ArrayLike<T>) => (any | false), elseCB?: () => void) {
+export function forEach<T>(
+    arr: ArrayLike<T>,
+    callbackFn: (value: T, index: number, array: ArrayLike<T>) => (any | false),
+    elseCB?: () => void
+): true | void {
     // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
     const len = arr.length || 0;
-    let i: number;
     // if (!isArrayLike(arr)) throw new TypeError();
-    for (i = 0; i < len; i++) {
-        if (callbackFn(arr[i], i, arr) === false) break;
+    for (let i = 0; i < len; i++) {
+        if (callbackFn(arr[i], i, arr) === false) return true;
     }
-    if (i === len && elseCB) {
-        elseCB();
-    }
+    elseCB && elseCB();
 }
 
 /**
@@ -131,6 +133,8 @@ export function forEachRight<T>(
         if (callbackfn(arr[i], i, arr) === false) break;
     }
 }
+
+
 
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
 export function from<T, U = T>(
@@ -481,12 +485,12 @@ export function inRange(
  * @param key 如果item中不存在该key，那么该item会归类到undefined
  * @param defaultKey 如果item中不存在该key，那么该item会归类到defaultKey
  */
-export function groupBy<T extends { [k: string]: any }, K extends keyof T>(arr: T[], key: K, defaultKey?: number | string): { [k: string]: T[] };
-export function groupBy<T extends { [k: string]: any }>(arr: T[], by: (it: T) => string | void, defaultKey?: number | string): { [k: string]: T[] };
+export function groupBy<T extends { [k: string]: any }, K extends keyof T, R extends { [k: string]: T[] }>(arr: T[], key: K, defaultKey?: number | string): R;
+export function groupBy<T extends { [k: string]: any }, R extends { [k: string]: T[] }>(arr: T[], by: (it: T, result: any) => string | void, defaultKey?: number | string): R;
 export function groupBy(arr, key, defaultKey: number | string = "*") {
     const cb = isFunction(key) ? key : item => item[key];
     return arr.reduce((result, item) => {
-        const k = cb(item) ?? defaultKey;
+        const k = cb(item, result) ?? defaultKey;
         if (!result.hasOwnProperty(k)) {
             result[k] = [item];
         } else {
