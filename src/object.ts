@@ -59,14 +59,20 @@ export function deepMerge<T extends object, U extends object>(first: T, second: 
  * @param obj
  * @param callbackFn 返回false的时候中断
  * @param elseCB 遍历完后执行
+ * @returns {boolean} isDone
  */
-export function forEachObj<T extends object>(obj: T, callbackFn: (value: T[keyof T], key: keyof T, obj: T) => (void | false), elseCB?: () => any) {
+export function forEachObj<T extends object>(
+    obj: T,
+    callbackFn: (value: T[keyof T], key: keyof T, obj: T) => (void | false),
+    elseCB?: () => any
+): boolean {
     for (const k in obj) {
         if (!obj.hasOwnProperty(k)) continue;
         const v = obj[k];
-        if (callbackFn(v, k, obj) === false) return;
+        if (callbackFn(v, k, obj) === false) return false;
     }
     elseCB && elseCB();
+    return true;
 }
 
 /**
