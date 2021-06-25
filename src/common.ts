@@ -449,17 +449,21 @@ export function numToFixed(num: number, fractionDigits = 0, rounding = false): s
     return split[0] + "." + digits;
 }
 
+/**
+ * 从arr获取index处的item，支持负数
+ * @param arr
+ * @param index
+ * @param def
+ */
 export function at<T,
-    V extends string | Array<T> | ArrayLike<T>,
+    V extends string | ArrayLike<T>,
     K extends keyof V>(
-    value: V,
+    arr: V,
     index: K,
     def: V[K] | void = undefined
 ): V[K] | void {
     if (index < 0) {
-        index = (value.length + (index as number)) as any;
+        index = (arr.length + (index as number)) as any;
     }
-    return value[index] ?? def;
+    return arr[index] ?? def;
 }
-
-at("12", 0);
