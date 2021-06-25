@@ -22,7 +22,7 @@ test("isArrayLike", () => {
     expect(type.isArrayLike([])).toBe(true);
     expect(type.isArrayLike({length: 1, 0: 1})).toBe(true);
     expect(type.isArrayLike({length: 2, 0: 1})).toBe(false);
-    expect(type.isArrayLike("")).toBe(false);
+    expect(type.isArrayLike("1")).toBe(true);
     expect(type.isArrayLike(1)).toBe(false);
     expect(type.isArrayLike(true)).toBe(false);
     expect(type.isArrayLike(undefined)).toBe(false);
