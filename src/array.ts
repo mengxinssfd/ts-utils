@@ -60,20 +60,21 @@ export function createArray<T = number>(
  * @param callbackFn
  * @param elseCB 类似于Python的for else中的else，
  *        只会在完整的遍历后执行，任何一个break都不会触发
- * @returns {boolean|void} isBreak
+ * @returns {boolean} isDone
  */
 export function forEach<T>(
     arr: ArrayLike<T>,
     callbackFn: (value: T, index: number, array: ArrayLike<T>) => (any | false),
     elseCB?: () => void
-): true | void {
+): boolean {
     // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
     const len = arr.length || 0;
     // if (!isArrayLike(arr)) throw new TypeError();
     for (let i = 0; i < len; i++) {
-        if (callbackFn(arr[i], i, arr) === false) return true;
+        if (callbackFn(arr[i], i, arr) === false) return false;
     }
     elseCB && elseCB();
+    return true;
 }
 
 /**
@@ -133,7 +134,6 @@ export function forEachRight<T>(
         if (callbackfn(arr[i], i, arr) === false) break;
     }
 }
-
 
 
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
