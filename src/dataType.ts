@@ -36,7 +36,9 @@ export function isArray(target: any): target is Array<any> {
 export function isArrayLike(target: any): target is ArrayLike<any> {
     // 检测target的类型
     const type = typeOf(target);
-    if (["string", "null", "undefined", "number", "boolean"].indexOf(type) > -1) return false;
+    // string也是ArrayLike，但"length" in target会报错
+    if (type === "string") return true;
+    if ([/*"string",*/ "null", "undefined", "number", "boolean"].indexOf(type) > -1) return false;
     // 如果target非null、undefined等，有length属性，则length等于target.length
     // 否则，length为false
     const length = !!target && "length" in target && target.length;
