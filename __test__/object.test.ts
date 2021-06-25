@@ -185,11 +185,19 @@ test("forEachObj", () => {
     testFn({a: 1, b: "2", c: true});
     testFn({a: 1, b: "2", c: {test: 1231}});
     let times = 0;
-    fn({a: 1, b: 2, c: 3}, () => {
+    let done = fn({a: 1, b: 2, c: 3}, () => {
         times++;
         return times == 2 ? false : void 0;
     });
+    expect(done).toBeFalsy();
     expect(times).toBe(2);
+    expect(fn([], () => {
+    })).toBeTruthy();
+    let ec = 0;
+    expect(fn([1, 2], (i) => i > 0 ? false : undefined,()=>ec = 1)).toBeFalsy();
+    expect(ec).toBe(0)
+    expect(fn([1, 2], (i) => {},()=>ec = 2)).toBeTruthy();
+    expect(ec).toBe(2)
 });
 test("reduceObj", () => {
     const fn = cm.reduceObj;
