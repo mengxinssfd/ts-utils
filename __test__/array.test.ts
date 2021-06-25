@@ -5,35 +5,43 @@ import {objForEach} from "../src/object";
 test("forEach", () => {
     const fe = arr.forEach;
     const arr1: any[] = [1, 2, 3];
-    fe(arr1, (v, k) => arr1[k] = k);
+    let rt = fe(arr1, (v, k) => arr1[k] = k);
     expect(arr1).toEqual([0, 1, 2]);
+    expect(rt).toBeTruthy();
     // ArrayLike
-    fe({0: 1, 1: 2, length: 2}, (v, k) => arr1[k] = k + k);
+    rt = fe({0: 1, 1: 2, length: 2}, (v, k) => arr1[k] = k + k);
     expect(arr1).toEqual([0, 2, 2]);
+    expect(rt).toBeTruthy();
     // const arr = thisArg || this;
     // fn.call(arr1, (v, k) => arr1[k] = k + 2);
     // expect(arr1).toEqual([2, 3, 4]);
     // if (callbackfn(arr[i], i, arr) === false) break;
-    fe(arr1, (v, k) => {
+    rt = fe(arr1, (v, k) => {
         arr1[k] = k + 1;
         return k !== 1;
     });
+    expect(rt).toBeFalsy();
     expect(arr1).toEqual([1, 2, 2]);
 
     const arr2: (number | string)[] = [2, 3, 4];
-    fe(arr2, (v, k) => arr2[k] = "a" + v);
+    rt = fe(arr2, (v, k) => arr2[k] = "a" + v);
+    expect(rt).toBeTruthy();
     expect(arr2).toEqual(["a2", "a3", "a4"]);
-    fe(arr2, (v, k) => arr2[k] = "a" + k);
+    rt = fe(arr2, (v, k) => arr2[k] = "a" + k);
     expect(arr2).toEqual(["a0", "a1", "a2"]);
+    expect(rt).toBeTruthy();
 
     let elseCount = 0;
-    fe(arr2, (v, k) => arr2[k] = "a" + v, () => elseCount++);
+    rt = fe(arr2, (v, k) => arr2[k] = "a" + v, () => elseCount++);
+    expect(rt).toBeTruthy();
     expect(elseCount).toBe(1);
-    fe(arr2, (v, k) => false, () => elseCount++);
+    rt = fe(arr2, (v, k) => false, () => elseCount++);
+    expect(rt).toBeFalsy();
     expect(elseCount).toBe(1);
 
     let count = 0;
-    fe({} as any, () => count++);
+    rt = fe({} as any, () => count++);
+    expect(rt).toBeTruthy();
     expect(count).toEqual(0);
 });
 test("forEachAsync", async () => {
