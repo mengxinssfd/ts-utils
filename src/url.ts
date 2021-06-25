@@ -1,4 +1,4 @@
-import {forEachObj, reduceObj, revertObjFromPath} from "./object";
+import {assign, forEachObj, objForEach, reduceObj, revertObjFromPath} from "./object";
 import {UrlModel} from "./UrlModel";
 
 // url规则文档：https://datatracker.ietf.org/doc/html/rfc3986
@@ -118,34 +118,31 @@ export function getUrlParam(name: string, url = location.href/* node也有 */, n
 
 /**
  * 修改url参数，不能新增或删除参数
- * @param name
- * @param value
+ * @param param
  * @param url
  * @param noDecode
  */
-export function updateUrlParam(name: string, value: string, url = location.href, noDecode = false): string {
-    // 修改后不会获取到hash
-    const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i");
-    if (re.test(url)) {
-        const s = noDecode ? value : encodeURIComponent(value);
-        url = url.replace(`${name}=${RegExp.$1}`, `${name}=${s}`);
-    }
+export function updateUrlParam(param: { [k: string]: any }, url = location.href, noDecode = false): string {
+    objForEach(param, (value, name) => {
+        const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i");
+        if (re.test(url)) {
+            const s = noDecode ? value : encodeURIComponent(value);
+            url = url.replace(`${name}=${RegExp.$1}`, `${name}=${s}`);
+        }
+    });
     return url;
 }
 
 /**
  * 设置url参数，可新增或删除参数
- * @param name
- * @param value
+ * @param param
  * @param url
  */
-export function setUrlParam(name: string, value: string | undefined, url = location.href): string {
+export function setUrlParam(param: { [k: string]: any }, url = location.href): string {
     const model = new UrlModel(url);
-    const obj: any = model.query;
-    obj[name] = value;
+    assign(model.query, param);
     return model.toString();
 }
-
 
 // 参考async-validator
 export const UrlRegExp = new RegExp("^(?!mailto:)(?:(?:http|https|ftp)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$", "i");
