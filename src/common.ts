@@ -455,13 +455,7 @@ export function numToFixed(num: number, fractionDigits = 0, rounding = false): s
  * @param index
  * @param def
  */
-export function at<T,
-    V extends string | ArrayLike<T>,
-    K extends keyof V>(
-    arr: V,
-    index: K,
-    def: V[K] | void = undefined
-): V[K] | void {
+export function at<T, V extends ArrayLike<T>, K extends keyof V>(arr: V, index: K, def: V[K] | void = undefined): V[K] | void {
     if (index < 0) {
         index = (arr.length + (index as number)) as any;
     }
