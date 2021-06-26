@@ -455,9 +455,24 @@ export function numToFixed(num: number, fractionDigits = 0, rounding = false): s
  * @param index
  * @param def
  */
-export function at<T, V extends ArrayLike<T>, K extends keyof V>(arr: V, index: K, def: V[K] | void = undefined): V[K] | void {
+export function at<V extends ArrayLike<any>,
+    K extends (keyof V | number),
+    T extends ArrayLikeType<V>,
+    D extends any | void>(
+    arr: V,
+    index: K,
+    def: D = undefined as never,
+): In<V, K, D extends never ? T | void : T | D> {
     if (index < 0) {
         index = (arr.length + (index as number)) as any;
     }
-    return arr[index] ?? def;
+    return (index in arr ? arr[index] : def) as any;
 }
+
+type In<A, K, D> = K extends keyof A ? A[K] extends void ? D : A[K] : D;
+type ArrayLikeType<T> = T extends ArrayLike<infer R> ? R : never
+
+// type A = In<[1, 2, 3], 7, 1>
+// type B = In<[1, 2, 3], (-1), 1>
+// const a = [1,2,3]
+// type A = In<typeof a, 5, unknown>

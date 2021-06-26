@@ -442,7 +442,8 @@ test("numToFixed", async () => {
 });
 test("at", async () => {
     const fn = cm.at;
-    const arr = [1, 2, 3, 4, 5, 6, 7];
+    // const arr = [1, 2, 3, 4, 5, 6, 7];
+    const arr:[1, 2, 3, 4, 5, 6, 7] = [1, 2, 3, 4, 5, 6, 7];
     expect(fn(arr, 0)).toBe(1);
     expect(fn(arr, -1)).toBe(7);
     expect(fn(arr, -7)).toBe(1);
@@ -453,12 +454,12 @@ test("at", async () => {
 
     const obj = {0: 1, 1: 2, 2: 3, 3: 4, 4: 5, 5: 6, length: 6};
     expect(fn(obj, 0)).toBe(1);
-    expect(fn(obj, -1 as any)).toBe(6);
-    expect(fn(obj, -6 as any)).toBe(1);
-    expect(fn(obj, -8 as any)).toBe(undefined);
-    expect(fn(obj, -9 as any, 20)).toBe(20);
-    expect(fn(obj, 7 as any)).toBe(undefined);
-    expect(fn(obj, 7 as any, 20)).toBe(20);
+    expect(fn(obj, -1)).toBe(6);
+    expect(fn(obj, -6)).toBe(1);
+    expect(fn(obj, -8)).toBe(undefined);
+    expect(fn(obj, -9, 20)).toBe(20);
+    expect(fn(obj, 7)).toBe(undefined);
+    expect(fn(obj, 7, 20)).toBe(20);
 
     const str = "123456";
     expect(fn(str, 0)).toBe("1");
