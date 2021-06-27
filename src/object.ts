@@ -1,5 +1,5 @@
-import {isArray, isObject, isBroadlyObj, isNaN, typeOf} from "./dataType";
 import {forEachRight} from "./array";
+import {isArray, isBroadlyObj, isNaN, isObject, typeOf} from "./dataType";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree: object): number {
@@ -470,6 +470,35 @@ export function getObjValueByPath(obj: object, path: string, objName = ""): unkn
         return init[v];
     }, obj);
 }
+
+/**
+ * 通过object路径设置值 如果路径中不存在则会自动创建对应的对象
+ * @example
+ * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
+ * @param obj
+ * @param path
+ * @param value
+ * @param [objName = ""]
+ */
+export function setObjValueByPath<T extends object>(obj: T, path: string, value: any, objName = ""): T {
+    const p = translateObjPath(path, objName);
+    const split = p.split(".");
+    const end = split.length - 1;
+    split.reduce((init, key, index) => {
+        if (index === end) {
+            init[key] = value;
+            return init;
+        }
+
+        if (!isBroadlyObj(init[key]) || !init.hasOwnProperty(key)) {
+            init[key] = {};
+        }
+        return init[key];
+    }, obj);
+    return obj;
+}
+
+setObjValueByPath({a: 1}, "a", 2);
 
 /**
  * 获取object的路径数组
