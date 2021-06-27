@@ -464,10 +464,7 @@ export function translateObjPath(path: string, objName = ""): string {
  * @param [objName = ""]
  */
 export function getObjValueByPath(obj: object, path: string, objName = ""): unknown {
-    // obj[a] => obj.a
-    const p = path.replace(/\[([^\]]+)]/g, ".$1")
-        .replace(new RegExp(`^${objName}`), "")
-        .replace(/^\./, "");
+    const p = translateObjPath(path, objName);
     return p.split(".").reduce((init, v) => {
         if (!isBroadlyObj(init)) return undefined;
         return init[v];
