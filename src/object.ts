@@ -451,7 +451,7 @@ export function translateObjPath(path: string, objName = ""): string {
     // obj[a] => obj.a
     path = path.replace(new RegExp(`^${objName}`), "");
     path = path.replace(/\[([^\]]+)]/g, ".$1");
-    path = path.replace(/^\./, "");
+    path = path.replace(/^\.|\[]/g, "");
     return path;
 }
 
@@ -471,6 +471,8 @@ export function getObjValueByPath(obj: object, path: string, objName = ""): unkn
     }, obj);
 }
 
+type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) => any
+
 /**
  * 通过object路径设置值 如果路径中不存在则会自动创建对应的对象
  * @example
@@ -478,27 +480,36 @@ export function getObjValueByPath(obj: object, path: string, objName = ""): unkn
  * @param obj
  * @param path
  * @param value
+ * @param onExist 当要改动位置已经有值时的回调
  * @param [objName = ""]
  */
-export function setObjValueByPath<T extends object>(obj: T, path: string, value: any, objName = ""): T {
+export function setObjValueByPath<T extends object>(
+    obj: T,
+    path: string,
+    value: any,
+    onExist: SetObjValueByPathOnExist = (a, b): any => b,
+    objName = "",
+): T {
     const p = translateObjPath(path, objName);
     const split = p.split(".");
     const end = split.length - 1;
-    split.reduce((init, key, index) => {
+    split.reduce(([init, currentPath], key, index) => {
+        currentPath = currentPath + (currentPath ? "." + key : key);
         if (index === end) {
+            if (init.hasOwnProperty(key)) {
+                value = onExist(init[key], value, true, currentPath);
+            }
             init[key] = value;
-            return init;
+            return [init[key], currentPath] as any;
         }
 
-        if (!isBroadlyObj(init[key]) || !init.hasOwnProperty(key)) {
-            init[key] = {};
+        if (!isBroadlyObj(init[key])) {
+            init[key] = init.hasOwnProperty(key) ? onExist(init[key], {}, false, currentPath) : {};
         }
-        return init[key];
-    }, obj);
+        return [init[key], currentPath] as any;
+    }, [obj, ""]);
     return obj;
 }
-
-setObjValueByPath({a: 1}, "a", 2);
 
 /**
  * 获取object的路径数组
