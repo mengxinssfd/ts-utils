@@ -23,10 +23,12 @@ export function isObject(target: any): target is object {
     return typeOf(target) === "object";
 }
 
-export function isBroadlyObj(value: object): value is object {
+export function isObjectLike(value: object): value is object {
     const type = typeof value;
     return value != null && (type === "object" || type === "function");
 }
+
+export const isBroadlyObj = isObjectLike;
 
 export function isArray(target: any): target is Array<any> {
     return typeOf(target) === "array";
