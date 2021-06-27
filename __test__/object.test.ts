@@ -404,9 +404,9 @@ test("translateObjPath", () => {
     const fn = cm.translateObjPath;
     expect(fn("a[b][c].d[e][f]")).toBe("a.b.c.d.e.f");
     expect(fn("a.b.c.d.e.f")).toBe("a.b.c.d.e.f");
-    expect(fn("a.b.c.d.e.f","a")).toBe("b.c.d.e.f");
-    expect(fn("a[b][c].d.e.f","a\\[b\\]\\[c\\]")).toBe("d.e.f");
-    expect(fn("a.b.c.d.e.f","a.b.c")).toBe("d.e.f");
+    expect(fn("a.b.c.d.e.f", "a")).toBe("b.c.d.e.f");
+    expect(fn("a[b][c].d.e.f", "a\\[b\\]\\[c\\]")).toBe("d.e.f");
+    expect(fn("a.b.c.d.e.f", "a.b.c")).toBe("d.e.f");
 });
 test("getObjValueByPath", () => {
     const fn = cm.getObjValueByPath;
@@ -432,6 +432,14 @@ test("getObjValueByPath", () => {
     expect(fn({a: {b: {c: 123}}}, "a[d].c")).toEqual(undefined);
 
     expect(fn({a: {b: {c: 123}}}, "obj[a][b][c]", "obj")).toEqual(123);
+});
+test("setObjValueByPath", () => {
+    const fn = cm.setObjValueByPath;
+    expect(fn({a: {b: {c: 123}}}, "obj[a][b][c]", true, "obj")).toEqual({a: {b: {c: true}}});
+    expect(fn({a: {b: {c: 123}}}, "b", true)).toEqual({b: true, a: {b: {c: 123}}});
+    expect(fn({a: {b: {c: 123}}}, "b.c", true)).toEqual({b: {c: true}, a: {b: {c: 123}}});
+    expect(fn({a: "hello"}, "a[0]", true)).toEqual({a: {0: true}});
+    expect(fn({a: 0}, "a[0][b][c]", true)).toEqual({a: {0: {b: {c: true}}}});
 });
 test("getObjPathEntries", () => {
     const fn = cm.getObjPathEntries;
