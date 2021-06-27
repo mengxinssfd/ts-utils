@@ -407,6 +407,8 @@ test("translateObjPath", () => {
     expect(fn("a.b.c.d.e.f", "a")).toBe("b.c.d.e.f");
     expect(fn("a[b][c].d.e.f", "a\\[b\\]\\[c\\]")).toBe("d.e.f");
     expect(fn("a.b.c.d.e.f", "a.b.c")).toBe("d.e.f");
+    expect(fn("a[][][]")).toBe("a");
+    // expect(fn("a%5B%5D", )).toBe("a");
 });
 test("getObjValueByPath", () => {
     const fn = cm.getObjValueByPath;
@@ -435,11 +437,41 @@ test("getObjValueByPath", () => {
 });
 test("setObjValueByPath", () => {
     const fn = cm.setObjValueByPath;
-    expect(fn({a: {b: {c: 123}}}, "obj[a][b][c]", true, "obj")).toEqual({a: {b: {c: true}}});
+    expect(fn({a: {b: {c: 123}}}, "obj[a][b][c]", true, undefined, "obj")).toEqual({a: {b: {c: true}}});
     expect(fn({a: {b: {c: 123}}}, "b", true)).toEqual({b: true, a: {b: {c: 123}}});
     expect(fn({a: {b: {c: 123}}}, "b.c", true)).toEqual({b: {c: true}, a: {b: {c: 123}}});
     expect(fn({a: "hello"}, "a[0]", true)).toEqual({a: {0: true}});
     expect(fn({a: 0}, "a[0][b][c]", true)).toEqual({a: {0: {b: {c: true}}}});
+    expect(fn({a: 0}, "a", true, (a, b) => [a, b])).toEqual({a: [0, true]});
+    expect(fn({}, "a", true, (a, b) => [a, b])).toEqual({a: true});
+    expect(fn({a: "123"}, "a[3]", "insert to string")).toEqual({a: {3: "insert to string"}});
+    expect(() => fn({a: "123"}, "a[3]", "insert to string", (a, b, isEnd) => isEnd ? [a, b] : a)).toThrowError();
+
+    fn({a: "123"}, "a[3]", "i", (a, b, isEnd, path) => {
+        expect(path).toBe("a");
+        return {};
+    });
+
+    function cb(a, b, isEnd, path) {
+        expect(path).toBe("a.b.c");
+        expect(a).toBe(123);
+        expect(b).toBe("test");
+        return b;
+    }
+
+    expect(fn({a: {b: {c: 123}}}, "obj[a][b][c]", "test", cb, "obj")).toEqual({a: {b: {c: "test"}}});
+
+    expect(fn({a: 1}, "a[]", 2, (a, b) => [a, b])).toEqual({a: [1, 2]});
+
+    const obj = {};
+    fn(obj, "a", 1);
+    fn(obj, "a[1]", 2, (a, b, isEnd) => {
+        if (isEnd) {
+            return b;
+        }
+        return [a];
+    });
+    expect(obj).toEqual({a: [1, 2]});
 });
 test("getObjPathEntries", () => {
     const fn = cm.getObjPathEntries;
