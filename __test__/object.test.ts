@@ -194,10 +194,11 @@ test("forEachObj", () => {
     expect(fn([], () => {
     })).toBeTruthy();
     let ec = 0;
-    expect(fn([1, 2], (i) => i > 0 ? false : undefined,()=>ec = 1)).toBeFalsy();
-    expect(ec).toBe(0)
-    expect(fn([1, 2], (i) => {},()=>ec = 2)).toBeTruthy();
-    expect(ec).toBe(2)
+    expect(fn([1, 2], (i) => i > 0 ? false : undefined, () => ec = 1)).toBeFalsy();
+    expect(ec).toBe(0);
+    expect(fn([1, 2], (i) => {
+    }, () => ec = 2)).toBeTruthy();
+    expect(ec).toBe(2);
 });
 test("reduceObj", () => {
     const fn = cm.reduceObj;
@@ -398,6 +399,14 @@ test("objEntries", () => {
     const result = fn(obj);
     const result2 = Object.entries(obj);
     expect(result).toEqual(result2);
+});
+test("translateObjPath", () => {
+    const fn = cm.translateObjPath;
+    expect(fn("a[b][c].d[e][f]")).toBe("a.b.c.d.e.f");
+    expect(fn("a.b.c.d.e.f")).toBe("a.b.c.d.e.f");
+    expect(fn("a.b.c.d.e.f","a")).toBe("b.c.d.e.f");
+    expect(fn("a[b][c].d.e.f","a\\[b\\]\\[c\\]")).toBe("d.e.f");
+    expect(fn("a.b.c.d.e.f","a.b.c")).toBe("d.e.f");
 });
 test("getObjValueByPath", () => {
     const fn = cm.getObjValueByPath;
