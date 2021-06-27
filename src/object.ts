@@ -64,7 +64,7 @@ export function deepMerge<T extends object, U extends object>(first: T, second: 
 export function forEachObj<T extends object>(
     obj: T,
     callbackFn: (value: T[keyof T], key: keyof T, obj: T) => (void | false),
-    elseCB?: () => any
+    elseCB?: () => any,
 ): boolean {
     for (const k in obj) {
         if (!obj.hasOwnProperty(k)) continue;
@@ -359,7 +359,7 @@ export function objUpdate<T extends object>(target: T, ...args: T[]): T {
 export function pickUpdated<T extends object>(
     target: T,
     objs: object[],
-    compareFn: (a, b) => boolean = (a, b) => a === b || (isNaN(a) && isNaN(b))
+    compareFn: (a, b) => boolean = (a, b) => a === b || (isNaN(a) && isNaN(b)),
 ): Partial<{ [k in keyof T]: any }> {
     return objReduce(target, (result, v, k) => {
         forEachRight(function (item: any): void | false {
@@ -443,6 +443,19 @@ export function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K
 }
 
 /**
+ * obj[a] => obj.a 从getObjValueByPath中分离出来
+ * @param path
+ * @param [objName = ""]
+ */
+export function translateObjPath(path: string, objName = ""): string {
+    // obj[a] => obj.a
+    path = path.replace(new RegExp(`^${objName}`), "");
+    path = path.replace(/\[([^\]]+)]/g, ".$1");
+    path = path.replace(/^\./, "");
+    return path;
+}
+
+/**
  * 通过object路径获取值
  * @example
  * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
@@ -451,6 +464,7 @@ export function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K
  * @param [objName = ""]
  */
 export function getObjValueByPath(obj: object, path: string, objName = ""): unknown {
+    // obj[a] => obj.a
     const p = path.replace(/\[([^\]]+)]/g, ".$1")
         .replace(new RegExp(`^${objName}`), "")
         .replace(/^\./, "");
