@@ -443,7 +443,7 @@ test("numToFixed", async () => {
 test("at", async () => {
     const fn = cm.at;
     // const arr = [1, 2, 3, 4, 5, 6, 7];
-    const arr:[1, 2, 3, 4, 5, 6, 7] = [1, 2, 3, 4, 5, 6, 7];
+    const arr: [1, 2, 3, 4, 5, 6, 7] = [1, 2, 3, 4, 5, 6, 7];
     expect(fn(arr, 0)).toBe(1);
     expect(fn(arr, -1)).toBe(7);
     expect(fn(arr, -7)).toBe(1);
@@ -468,5 +468,16 @@ test("at", async () => {
     expect(fn(str, -8)).toBe(undefined);
     expect(fn(str, -9, "20")).toBe("20");
     expect(fn(str, 7)).toBe(undefined);
-    expect(fn(str, 7, "20")).toBe("20");
+    expect(fn(str, 7, 20)).toBe(20);
+
+    const und = [null, false, undefined, "", NaN];
+
+    und.forEach((it, index) => {
+        expect(fn(und, index)).toEqual(it);
+        expect(fn(und, index, true)).toEqual(it);
+    });
+    expect(fn(und, 5, true)).toBe(true);
+    expect(fn(und, -7, true)).toBe(true);
+
+    expect(fn(Array(2), 0, true)).toBe(true);
 });
