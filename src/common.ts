@@ -466,7 +466,8 @@ export function at<V extends ArrayLike<any>,
     if (index < 0) {
         index = (arr.length + (index as number)) as any;
     }
-    return (index in arr ? arr[index] : def) as any;
+    // if (typeof arr === "string") return (arr[index] ?? def) as any;
+    return (arr.hasOwnProperty(index) ? arr[index] : def) as any;
 }
 
 type In<A, K, D> = K extends keyof A ? A[K] extends void ? D : A[K] : D;
