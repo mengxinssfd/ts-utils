@@ -395,13 +395,40 @@ export function scrollFixedWatcher(
     };
 }
 
-type CSSLenUnit = "rem" | "px" | "%";
+type Rem = "rem";
+type Px = "rem";
+type Percent = "rem";
+type CSSLenUnit = Rem | Px | Percent;
 
-export function translateCssLenUnit(
-    from: `${number}${CSSLenUnit}`,
-    to: CSSLenUnit,
-    relativeEl = document.documentElement
-): string {
+function toPx(from: `${number}${CSSLenUnit}`, relativePx: number): number | string {
+    const num = parseInt(from);
+    if (/px$/.test(from)) return num;
+    if (/rem$/.test(from)) {
+        const fs = parseInt(getComputedStyle(document.documentElement).fontSize);
+        return fs * num;
+    }
+    if (/%$/.test(from)) {
+        return relativePx * (num / 100);
+    }
+    return from;
+}
+
+function fromPx(px: number, to: CSSLenUnit, relativePx: number): string {
+    switch (to) {
+        case "px":
+            return px + to;
+        case "%":
+            return (px / relativePx * 100) + to;
+        case "rem":
+            const fs = parseInt(getComputedStyle(document.documentElement).fontSize);
+            return (px / fs).toFixed(2) + to;
+    }
+}
+
+export function translateCssLenUnit(from: `${number}${Px|Rem}`, to: Px): string;
+export function translateCssLenUnit(from: `${number}${Percent}`, to: Px | Rem, relativePx: number): string;
+export function translateCssLenUnit(from: `${number}${(Px|Rem)}`, to: Percent, relativePx: number): string;
+export function translateCssLenUnit(from: `${number}${CSSLenUnit}`, to: CSSLenUnit, relativePx: number): string {
     return "";
 }
 
