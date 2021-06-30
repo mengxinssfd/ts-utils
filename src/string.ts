@@ -142,6 +142,7 @@ export const chinese2Number: Chinese2Number = function (chineseNumber) {
 };
 chinese2Number.units = [...units];
 chinese2Number.numbers = [...numberArr];
+
 /**
  * 从字符串中删除指定字符串(from)中重复的第n(num)个字符串(str)
  * @example
@@ -206,4 +207,10 @@ export function smartRepeat(format: string): string {
         // format = start + strRepeat(repeatValue, count) + end;
     }
     return format;
+}
+
+
+export function firstCharToUpperCase(value: string): string {
+    const first = value[0];
+    return `${first.toUpperCase()}${value.substring(1).toLowerCase()}`;
 }
