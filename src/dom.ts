@@ -400,12 +400,35 @@ type Px = "rem";
 type Percent = "rem";
 type CSSLenUnit = Rem | Px | Percent;
 
+interface CssLen {
+    rem: `${number}${Rem}`,
+    px: `${number}${Px}`,
+    percent: `${number}${Percent}`
+}
+
+function get1rem() {
+    return parseInt(getComputedStyle(document.documentElement).fontSize);
+}
+
+export function rem2px(rem: Pick<CssLen, 'rem'>): CssLen.px {
+    const fs = get1rem();
+    return fs * rem;
+}
+export function px2rem(px: CssLen.px): CssLen.rem {
+    const fs = get1rem();
+    return px / fs;
+}
+
+export function percent2px(p: CssLen.percent, relativePx: number): CssLen.rem {
+    return relativePx * (num / 100);
+}
+
+
 function toPx(from: `${number}${CSSLenUnit}`, relativePx: number): number | string {
     const num = parseInt(from);
     if (/px$/.test(from)) return num;
     if (/rem$/.test(from)) {
-        const fs = parseInt(getComputedStyle(document.documentElement).fontSize);
-        return fs * num;
+        return rem2px(from);
     }
     if (/%$/.test(from)) {
         return relativePx * (num / 100);
@@ -425,9 +448,9 @@ function fromPx(px: number, to: CSSLenUnit, relativePx: number): string {
     }
 }
 
-export function translateCssLenUnit(from: `${number}${Px|Rem}`, to: Px): string;
+export function translateCssLenUnit(from: `${number}${Px | Rem}`, to: Px): string;
 export function translateCssLenUnit(from: `${number}${Percent}`, to: Px | Rem, relativePx: number): string;
-export function translateCssLenUnit(from: `${number}${(Px|Rem)}`, to: Percent, relativePx: number): string;
+export function translateCssLenUnit(from: `${number}${(Px | Rem)}`, to: Percent, relativePx: number): string;
 export function translateCssLenUnit(from: `${number}${CSSLenUnit}`, to: CSSLenUnit, relativePx: number): string {
     return "";
 }
