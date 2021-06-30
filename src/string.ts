@@ -221,3 +221,8 @@ export function camel2Underscore(value: string) {
     });
 }
 
+export function underscore2Camel(value: string) {
+    return value.replace(/(_[^_]+)/g, v => {
+        return firstCharToUpperCase(v.substring(1));
+    });
+}
