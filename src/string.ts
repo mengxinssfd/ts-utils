@@ -214,3 +214,10 @@ export function firstCharToUpperCase(value: string): string {
     const first = value[0];
     return `${first.toUpperCase()}${value.substring(1).toLowerCase()}`;
 }
+
+export function camel2Underscore(value: string) {
+    return value.replace(/([A-Z]+)/g, v => {
+        return `_${v.toLowerCase()}`;
+    });
+}
+
