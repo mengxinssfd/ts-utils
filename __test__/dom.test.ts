@@ -215,3 +215,41 @@ test("setStyle", () => {
     ss({left: "0"});
     expect(div.style.left).toBe("0px");
 });
+test("get1rem", () => {
+    document.documentElement.style.fontSize = "16px";
+    const fn = dom.get1rem;
+    expect(fn()).toBe(16);
+    document.documentElement.style.fontSize = "20px";
+    expect(fn()).toBe(20);
+});
+test("rem2px", () => {
+    document.documentElement.style.fontSize = "16px";
+    const fn = dom.rem2px;
+    expect(fn("1rem")).toBe("16px");
+    expect(fn("10rem")).toBe("160px");
+    expect(fn("0rem")).toBe("0px");
+});
+test("px2rem", () => {
+    document.documentElement.style.fontSize = "16px";
+    const fn = dom.px2rem;
+    expect(fn("1px")).toBe((1 / 16) + "rem");
+    expect(fn("16px")).toBe("1rem");
+    expect(fn("0px")).toBe("0rem");
+});
+test("percent2px", () => {
+    const fs = "16px";
+    const fn = dom.percent2px;
+    expect(fn("100%", fs)).toBe("16px");
+    expect(fn("50%", fs)).toBe("8px");
+    expect(fn("0%", fs)).toBe("0px");
+});
+test("px2Percent", () => {
+    const fs = "100px";
+    const fn = dom.px2Percent;
+    expect(fn("100px", fs)).toBe("100%");
+    expect(fn("10px", fs)).toBe("10%");
+    expect(fn("5px", fs)).toBe("5%");
+    expect(fn("0.005px", fs)).toBe("0%");
+    expect(fn("1.2345px", fs)).toBe("1.23%");
+    expect(fn("0px", fs)).toBe("0%");
+});
