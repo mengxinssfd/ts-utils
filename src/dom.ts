@@ -3,7 +3,7 @@ import {assign, forEachObj, pickByKeys} from "./object";
 import {SettableStyle, SettableProps} from "./TsTypes";
 import {isArray, isString} from "./dataType";
 import {isDom, isNodeList} from "./domType";
-import {root} from "./common";
+import {numToFixed, root} from "./common";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 const vendor: string | false = (() => {
@@ -396,64 +396,64 @@ export function scrollFixedWatcher(
 }
 
 type Rem = "rem";
-type Px = "rem";
-type Percent = "rem";
-type CSSLenUnit = Rem | Px | Percent;
+type Px = "px";
+type Percent = "%";
 
-interface CssLen {
-    rem: `${number}${Rem}`,
-    px: `${number}${Px}`,
-    percent: `${number}${Percent}`
+type RemVal = `${number}${Rem}`;
+type PxVal = `${number}${Px}`;
+type PercentVal = `${number}${Percent}`;
+
+type CSSLenUnit = RemVal | PxVal | PercentVal;
+
+export function get1rem() {
+    const computed = getComputedStyle(document.documentElement);
+    return parseInt(computed.fontSize);
 }
 
-function get1rem() {
-    return parseInt(getComputedStyle(document.documentElement).fontSize);
-}
-
-export function rem2px(rem: Pick<CssLen, 'rem'>): CssLen.px {
+export function rem2px(rem: RemVal): PxVal {
     const fs = get1rem();
-    return fs * rem;
+    return ((fs * parseFloat(rem)) + "px") as PxVal;
 }
-export function px2rem(px: CssLen.px): CssLen.rem {
+
+export function px2rem(px: PxVal): RemVal {
     const fs = get1rem();
-    return px / fs;
+    return (parseFloat(px) / fs + "rem") as RemVal;
 }
 
-export function percent2px(p: CssLen.percent, relativePx: number): CssLen.rem {
-    return relativePx * (num / 100);
+export function percent2px(p: PercentVal, relativePx: number | PxVal): PxVal {
+    return (parseFloat(relativePx as string) * (parseFloat(p) / 100) + "px") as PxVal;
 }
 
+export function px2Percent(px: PxVal, relativePx: number | PxVal): PercentVal {
+    const val = (parseFloat(px) * 100 / parseFloat(relativePx as string));
+    const toFixed = numToFixed(val, 2);
+    return (Number(toFixed) + "%") as PercentVal;
+}
 
-function toPx(from: `${number}${CSSLenUnit}`, relativePx: number): number | string {
-    const num = parseInt(from);
-    if (/px$/.test(from)) return num;
+export function rem2Percent(rem: RemVal, relativePx: number | PxVal): PercentVal {
+    return px2Percent(rem2px(rem), relativePx);
+}
+
+export function percent2Rem(p: PercentVal, relativePx: number | PxVal): RemVal {
+    return px2rem(percent2px(p, relativePx));
+}
+
+export function toPx(from: CSSLenUnit, relativePx: number): string {
     if (/rem$/.test(from)) {
-        return rem2px(from);
+        return rem2px(from as RemVal);
     }
     if (/%$/.test(from)) {
-        return relativePx * (num / 100);
+        return percent2px(from as PercentVal,relativePx);
     }
     return from;
 }
 
-function fromPx(px: number, to: CSSLenUnit, relativePx: number): string {
-    switch (to) {
-        case "px":
-            return px + to;
-        case "%":
-            return (px / relativePx * 100) + to;
-        case "rem":
-            const fs = parseInt(getComputedStyle(document.documentElement).fontSize);
-            return (px / fs).toFixed(2) + to;
-    }
-}
-
-export function translateCssLenUnit(from: `${number}${Px | Rem}`, to: Px): string;
+/*export function translateCssLenUnit(from: `${number}${Px | Rem}`, to: Px): string;
 export function translateCssLenUnit(from: `${number}${Percent}`, to: Px | Rem, relativePx: number): string;
 export function translateCssLenUnit(from: `${number}${(Px | Rem)}`, to: Percent, relativePx: number): string;
 export function translateCssLenUnit(from: `${number}${CSSLenUnit}`, to: CSSLenUnit, relativePx: number): string {
     return "";
-}
+}*/
 
 // translateCssLenUnit("100%", "rem");
 // 管道语法
