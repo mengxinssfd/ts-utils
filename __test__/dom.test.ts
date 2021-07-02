@@ -106,7 +106,7 @@ test("cssSupport", () => {
     expect(fn("position", "sticky")).toBeTruthy();
     expect(fn("ppppp" as any, "test")).toBeFalsy();
 });
-test("createElement", () => {
+test("createHtmlElement", () => {
     const fn = dom.createElement;
     let clickTest = 0;
     const div = fn("div", {
