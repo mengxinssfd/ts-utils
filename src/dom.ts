@@ -1,9 +1,10 @@
 import {includes, unique} from "./array";
-import {assign, forEachObj, pickByKeys} from "./object";
+import {assign, forEachObj, objReduce, pickByKeys} from "./object";
 import {SettableStyle, SettableProps} from "./TsTypes";
 import {isArray, isString} from "./dataType";
 import {isDom, isNodeList} from "./domType";
 import {numToFixed, root} from "./common";
+import {fromCamel} from "./string";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 const vendor: string | false = (() => {
@@ -140,14 +141,34 @@ export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSSty
 // export function setStyle(style: SettableStyle, el: HTMLElement | string);
 /**
  * @param style
- * @param el
+ * @param option
+ * @param {HTMLElement?} option.el
+ * @param [option.toCssText = true] 合并后只触发一次重绘，性能会更好一点
  * @returns setStyle.bind(el)
  */
-export function setStyle(style: SettableStyle, el?: HTMLElement | string): typeof setStyle {
+export function setStyle(
+    style: SettableStyle, {
+        toCssText = true,
+        el
+    }: { toCssText?: boolean; el?: HTMLElement | string } = {}
+): typeof setStyle {
     if (isString(el)) el = document.querySelector(el) as HTMLDivElement;
     let target: HTMLElement = el || this;
     if (!isDom(target)) throw new TypeError("setStyle param el | this is not HTMLElement");
-    assign(target.style, style);
+    if (toCssText) {
+        const cssText = target.style.cssText;
+        const cssTextObj = cssText.replace(/; ?$/, "").split(";").reduce((init, v) => {
+            const [key, value] = v.split(/: ?/);
+            init[key] = value;
+            return init;
+        }, {});
+        assign(cssTextObj, style);
+        target.style.cssText = objReduce(cssTextObj, (result, v, k) => {
+            return result + `${fromCamel(k as string, "-")}: ${v};`;
+        }, "");
+    } else {
+        assign(target.style, style);
+    }
     return setStyle.bind(target);
 }
 
@@ -443,7 +464,7 @@ export function toPx(from: CSSLenUnit, relativePx: number): string {
         return rem2px(from as RemVal);
     }
     if (/%$/.test(from)) {
-        return percent2px(from as PercentVal,relativePx);
+        return percent2px(from as PercentVal, relativePx);
     }
     return from;
 }
