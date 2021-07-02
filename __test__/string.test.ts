@@ -210,3 +210,18 @@ test("fromCamel", () => {
     expect(fn("TestCamelSTring")).toBe("test_camel_string");
     expect(fn("TestCamelSTring","-")).toBe("test-camel-string");
 });
+
+test("toCamel", () => {
+    const fn = cm.toCamel;
+    expect(fn("A")).toBe("A");
+    expect(fn("a")).toBe("a");
+    expect(fn("a", undefined, true)).toBe("A");
+    expect(fn("1")).toBe("1");
+    expect(fn("ab")).toBe("ab");
+    expect(fn("ab", undefined, true)).toBe("Ab");
+    expect(fn("aa_bb")).toBe("aaBb");
+    expect(fn("test_camel_string")).toBe("testCamelString");
+    expect(fn("test__camel_string")).toBe("testCamelString");
+    expect(fn("test_camel_string", undefined, true)).toBe("TestCamelString");
+    expect(fn("test-camel_string", /[-_]/)).toBe("testCamelString");
+});
