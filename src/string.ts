@@ -210,19 +210,23 @@ export function smartRepeat(format: string): string {
 }
 
 
-export function firstCharToUpperCase(value: string): string {
+export function capitalizeFirstChar(value: string): string {
     const first = value[0];
     return `${first.toUpperCase()}${value.substring(1).toLowerCase()}`;
 }
 
-export function camel2Underscore(value: string) {
-    return value.replace(/([A-Z]+)/g, v => {
-        return `_${v.toLowerCase()}`;
+export function fromCamel(value: string, delimiter: string = "_") {
+    return value.replace(/([A-Z]+)/g, (p1, p2, index) => {
+        return (index > 0 ? delimiter : "") + p2.toLowerCase();
     });
 }
 
-export function underscore2Camel(value: string) {
-    return value.replace(/(_[^_]+)/g, v => {
-        return firstCharToUpperCase(v.substring(1));
-    });
+export function toCamel(value: string, delimiter: string | RegExp = "_", toUpperCamelCase: boolean = false) {
+    const split = value.split(typeof delimiter === "string" ? new RegExp(delimiter + "+") : delimiter);
+    const join = split.slice(1).map(i => capitalizeFirstChar(i));
+    if (toUpperCamelCase) {
+        split[0] = capitalizeFirstChar(split[0]);
+    }
+    join.unshift(split[0]);
+    return join.join("");
 }
