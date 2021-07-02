@@ -210,7 +210,7 @@ test("setStyle", () => {
 
     const ss = fn({
         position: "static",
-    }, div);
+    }, {el: div});
     expect(div.style.position).toBe("static");
     ss({left: "0"});
     expect(div.style.left).toBe("0px");
