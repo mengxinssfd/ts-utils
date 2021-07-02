@@ -149,8 +149,8 @@ export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSSty
 export function setStyle(
     style: SettableStyle, {
         toCssText = true,
-        el
-    }: { toCssText?: boolean; el?: HTMLElement | string } = {}
+        el,
+    }: { toCssText?: boolean; el?: HTMLElement | string } = {},
 ): typeof setStyle {
     if (isString(el)) el = document.querySelector(el) as HTMLDivElement;
     let target: HTMLElement = el || this;
@@ -280,9 +280,8 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
     forEachObj(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
-            forEachObj(v, (value, key) => {
-                el.style[key] = value;
-            });
+            // 未添加到body中，不会触发重绘
+            assign(el.style, v);
             return;
         }
         el[k] = v;
