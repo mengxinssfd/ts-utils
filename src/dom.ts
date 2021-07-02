@@ -426,29 +426,52 @@ type PercentVal = `${number}${Percent}`;
 
 type CSSLenUnit = RemVal | PxVal | PercentVal;
 
-export function get1rem() {
+// 保留小数位
+const fractionDigits = 6;
+
+const tempToFixed = (num: number) => Number(numToFixed(num, fractionDigits, true));
+
+/**
+ * 获取等于1rem的像素值
+ */
+export function get1rem(): number {
     const computed = getComputedStyle(document.documentElement);
     return parseInt(computed.fontSize);
 }
 
+/**
+ * rem转像素
+ * @param rem
+ */
 export function rem2px(rem: RemVal): PxVal {
     const fs = get1rem();
-    return ((fs * parseFloat(rem)) + "px") as PxVal;
+    return (fs * parseFloat(rem) + "px") as PxVal;
 }
 
+/**
+ * 像素转rem
+ * @param px
+ */
 export function px2rem(px: PxVal): RemVal {
     const fs = get1rem();
-    return (parseFloat(px) / fs + "rem") as RemVal;
+    const result = parseFloat(px) / fs;
+    return (tempToFixed(result) + "rem") as RemVal;
 }
 
 export function percent2px(p: PercentVal, relativePx: number | PxVal): PxVal {
     return (parseFloat(relativePx as string) * (parseFloat(p) / 100) + "px") as PxVal;
 }
 
+/**
+ * 像素转百分比
+ * @param px
+ * @param relativePx
+ * @returns {string} PercentVal 保留2位小数
+ */
 export function px2Percent(px: PxVal, relativePx: number | PxVal): PercentVal {
     const val = (parseFloat(px) * 100 / parseFloat(relativePx as string));
-    const toFixed = numToFixed(val, 2);
-    return (Number(toFixed) + "%") as PercentVal;
+    const toFixed = tempToFixed(val);
+    return (toFixed + "%") as PercentVal;
 }
 
 export function rem2Percent(rem: RemVal, relativePx: number | PxVal): PercentVal {
