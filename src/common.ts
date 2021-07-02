@@ -439,7 +439,7 @@ export function numToFixed(num: number, fractionDigits = 0, rounding = false): s
     // 加1 四舍五入
     const pow = base ** (fractionDigits + 1);
     num = ~~(num * pow);
-    if (rounding) {
+    if (rounding && num) { // num为0的时候位数已经不对了
         num += 5;
     }
     num /= pow;
