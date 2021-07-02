@@ -198,3 +198,15 @@ test("capitalizeFirstChar", () => {
     expect(fn("Ab")).toBe("Ab");
     expect(fn("aa")).toBe("Aa");
 });
+
+test("fromCamel", () => {
+    const fn = cm.fromCamel;
+    expect(fn("a")).toBe("a");
+    expect(fn("A")).toBe("a");
+    expect(fn("Test")).toBe("test");
+    expect(fn("TEST")).toBe("test");
+    expect(fn("testCamel")).toBe("test_camel");
+    expect(fn("TestCamelString")).toBe("test_camel_string");
+    expect(fn("TestCamelSTring")).toBe("test_camel_string");
+    expect(fn("TestCamelSTring","-")).toBe("test-camel-string");
+});
