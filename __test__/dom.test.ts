@@ -228,6 +228,8 @@ test("rem2px", () => {
     expect(fn("1rem")).toBe("16px");
     expect(fn("10rem")).toBe("160px");
     expect(fn("0rem")).toBe("0px");
+    document.documentElement.style.fontSize = "72px";
+    expect(fn("0.2rem")).toBe("14.4px");
 });
 test("px2rem", () => {
     document.documentElement.style.fontSize = "16px";
@@ -235,6 +237,8 @@ test("px2rem", () => {
     expect(fn("1px")).toBe((1 / 16) + "rem");
     expect(fn("16px")).toBe("1rem");
     expect(fn("0px")).toBe("0rem");
+    document.documentElement.style.fontSize = "100px";
+    expect(fn("0.00001px")).toBe("0rem");
 });
 test("percent2px", () => {
     const fs = "16px";
@@ -242,6 +246,7 @@ test("percent2px", () => {
     expect(fn("100%", fs)).toBe("16px");
     expect(fn("50%", fs)).toBe("8px");
     expect(fn("0%", fs)).toBe("0px");
+    expect(fn("0.00001%", "100px")).toBe("0.00001px");
 });
 test("px2Percent", () => {
     const fs = "100px";
@@ -249,7 +254,30 @@ test("px2Percent", () => {
     expect(fn("100px", fs)).toBe("100%");
     expect(fn("10px", fs)).toBe("10%");
     expect(fn("5px", fs)).toBe("5%");
-    expect(fn("0.005px", fs)).toBe("0%");
-    expect(fn("1.2345px", fs)).toBe("1.23%");
+    expect(fn("0.005px", fs)).toBe("0.005%");
+    expect(fn("1.2345px", fs)).toBe("1.2345%");
+    expect(fn("1.2345678px", fs)).toBe("1.234568%");
     expect(fn("0px", fs)).toBe("0%");
+});
+test("rem2Percent", () => {
+    document.documentElement.style.fontSize = "72px";
+    const fs = "100px";
+    const fn = dom.rem2Percent;
+    expect(fn("1rem", fs)).toBe("72%");
+    expect(fn("0.2rem", fs)).toBe("14.4%");
+    expect(fn("0.1rem", fs)).toBe("7.2%");
+    expect(fn("0.01rem", fs)).toBe("0.72%");
+    expect(fn("0.001rem", fs)).toBe("0.072%");
+    expect(fn("0.0001rem", fs)).toBe("0.0072%");
+    expect(fn("0.000001rem", fs)).toBe("0.000072%");
+    expect(fn("0.0000001rem", fs)).toBe("0.000007%");
+    expect(fn("0.00000001rem", fs)).toBe("0.000001%");
+});
+test("percent2Rem", () => {
+    document.documentElement.style.fontSize = "100px";
+    const fs = "100px";
+    const fn = dom.percent2Rem;
+    expect(fn("100%", fs)).toBe("1rem");
+    expect(fn("1%", fs)).toBe("0.01rem");
+    expect(fn("0.00001%", fs)).toBe("0.000001rem");
 });
