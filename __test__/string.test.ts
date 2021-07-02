@@ -1,4 +1,5 @@
 import * as cm from "../src/string";
+
 test("strPadStart", () => {
     const fn = cm.strPadStart;
     expect(fn("123", 6, "0")).toBe("000123");
@@ -188,4 +189,12 @@ test("smartRepeat", () => {
     expect(fn("2[1[a]3[b]2[3[c]4[d]]]")).toBe("abbbcccddddcccddddabbbcccddddcccdddd");
 
     expect(fn("2[1[1]3[b]2[1[1]4[d]]]")).toBe("1bbb1dddd1dddd1bbb1dddd1dddd");
+});
+test("capitalizeFirstChar", () => {
+    const fn = cm.capitalizeFirstChar;
+    expect(fn("A")).toBe("A");
+    expect(fn("1")).toBe("1");
+    expect(fn("ab")).toBe("Ab");
+    expect(fn("Ab")).toBe("Ab");
+    expect(fn("aa")).toBe("Aa");
 });
