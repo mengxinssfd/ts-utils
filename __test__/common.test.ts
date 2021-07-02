@@ -403,6 +403,14 @@ test("root", async () => {
 });
 test("numToFixed", async () => {
     const fn = cm.numToFixed;
+    expect((0).toFixed(1)).toEqual("0.0");
+    expect(fn(0, 1)).toBe("0.0");
+    expect(fn(0, 1, true)).toBe("0.0");
+    expect((0).toFixed(6)).toEqual("0.000000");
+    expect(fn(0, 6)).toBe("0.000000");
+    expect(fn(0, 6, true)).toBe("0.000000");
+
+    expect(0.45.toFixed(1)).toEqual("0.5");
     expect(0.45.toFixed(1)).toEqual("0.5");
     expect(fn(0.45, 1)).toBe("0.4");
     expect(fn(0.45, 1, true)).toBe("0.5");
