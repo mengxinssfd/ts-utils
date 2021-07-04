@@ -431,6 +431,7 @@ const fractionDigits = 6;
 
 const tempToFixed = (num: number) => {
     const f = num.toFixed(fractionDigits);
+    // 经toFixed后一定会有"."，所以不需要担心10000这种会变成1
     return f.replace(/\.?0+$/, "");
 };
 

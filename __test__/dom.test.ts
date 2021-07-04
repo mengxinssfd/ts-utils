@@ -281,4 +281,6 @@ test("percent2Rem", () => {
     expect(fn("1%", fs)).toBe("0.01rem");
     expect(fn("0.00001%", fs)).toBe("0rem");
     expect(fn("0.0001%", fs)).toBe("0.000001rem");
+    expect(fn("1000%", fs)).toBe("10rem");
+    expect(fn("100000%", fs)).toBe("1000rem");
 });
