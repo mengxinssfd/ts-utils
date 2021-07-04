@@ -38,7 +38,7 @@ export function minus(num: number, ...others: Array<number>) {
 }
 
 export function times(num: number, ...others: Array<number>) {
-    return calcArr(num, others, (a, b, pow) => (a * pow * b * pow) / (pow * pow));
+    return calcArr(num, others, (a, b, pow) => pow * a * (b * pow) / (pow * pow));
 }
 
 export function divide(num: number, ...others: Array<number>) {
