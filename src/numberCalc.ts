@@ -29,20 +29,34 @@ function calcArr(num: number, nums: number[], callback: (a: number, b: number, p
     }, num);
 }
 
-export function plus(num: number, ...others: Array<number>) {
-    return calcArr(num, others, (a, b, pow) => (a * pow + b * pow) / pow);
+/**
+ * 科学计数法转普通小数
+ * @note 不能转太大的数 比如大于Number.MAX_SAFE_INTEGER
+ * @param num
+ */
+export function toNonExponential(num: number): string {
+    // toExponential 转为科学计数法
+    // const m = num.toExponential().match(/\d(?:\.(\d*))?e([+-]\d+)/);
+    const sNum = String(num);
+    const m = sNum.match(/\d(?:\.(\d*))?e([+-]\d+)/);
+    if (num > Number.MAX_SAFE_INTEGER || !m || m.length < 3) return sNum;
+    return num.toFixed(Math.max(0, (m[1] || "").length - Number(m[2])));
 }
 
-export function minus(num: number, ...others: Array<number>) {
-    return calcArr(num, others, (a, b, pow) => (a * pow - b * pow) / pow);
+export function plus(num: number, ...nums: Array<number>) {
+    return calcArr(num, nums, (a, b, pow) => (a * pow + b * pow) / pow);
 }
 
-export function times(num: number, ...others: Array<number>) {
-    return calcArr(num, others, (a, b, pow) => pow * a * (b * pow) / (pow * pow));
+export function minus(num: number, ...nums: Array<number>) {
+    return calcArr(num, nums, (a, b, pow) => (a * pow - b * pow) / pow);
 }
 
-export function divide(num: number, ...others: Array<number>) {
-    return calcArr(num, others, (a, b, pow) => a * pow / (b * pow));
+export function times(num: number, ...nums: Array<number>) {
+    return calcArr(num, nums, (a, b, pow) => pow * a * (b * pow) / (pow * pow));
+}
+
+export function divide(num: number, ...nums: Array<number>) {
+    return calcArr(num, nums, (a, b, pow) => a * pow / (b * pow));
 }
 
 // 链式计算
