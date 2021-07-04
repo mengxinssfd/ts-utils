@@ -3,6 +3,9 @@ import * as Num from "../src/number";
 test("strip", () => {
     expect(Num.strip(1.0000000000041083)).toBe(1);
     expect(Num.strip(1.0000000000001563)).toBe(1);
+    expect(Num.strip(20000000000.222222222)).not.toBe(20000000000.222222222);
+    expect(20000000000.222222222).toBe(20000000000.222222222);
+    expect(20000000000.222222222.toString()).toBe("20000000000.22222");
 });
 test("getNumberLenAfterDot", () => {
     expect(Num.getNumberLenAfterDot(0.12345667)).toBe(8);
@@ -29,4 +32,10 @@ test("toNonExponential", () => {
     expect(+num2 > Number.MAX_SAFE_INTEGER).toBe(false);
     expect(fn(+num2)).toBe("1000000000000000");
 });
+
+test("plus", () => {
+    const fn = Num.plus;
+    expect(fn(10000000000.111111111, 10000000000.111111111)).toBe(20000000000.222222222);
+});
+
 
