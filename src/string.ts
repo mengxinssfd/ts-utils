@@ -1,4 +1,5 @@
 /**
+ * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
  * 千位分隔 1,234,567,890
  * @param num
  */
