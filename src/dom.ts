@@ -1,5 +1,5 @@
 import {includes, unique} from "./array";
-import {divide, times} from "./numberCalc";
+import {divide, times} from "./number";
 import {assign, forEachObj, objReduce, pickByKeys} from "./object";
 import {SettableStyle, SettableProps} from "./TsTypes";
 import {isArray, isString} from "./dataType";
