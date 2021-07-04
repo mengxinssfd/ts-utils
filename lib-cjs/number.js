@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NumberCalc = exports.divide = exports.times = exports.minus = exports.plus = exports.toNonExponential = exports.getCommonPow = exports.getNumberLenAfterDot = exports.strip = void 0;
+exports.divide = exports.times = exports.minus = exports.plus = exports.toNonExponential = exports.calcArr = exports.getCommonPow = exports.getNumberLenAfterDot = exports.strip = void 0;
 // 数字计算
 /**
  * 把错误的数据转正  from number-precision
@@ -31,6 +31,7 @@ function calcArr(num, nums, callback) {
         return callback(a, b, pow);
     }, num);
 }
+exports.calcArr = calcArr;
 /**
  * 科学计数法转普通小数
  * @note 不能转太大的数 比如大于Number.MAX_SAFE_INTEGER
@@ -62,66 +63,3 @@ function divide(num, ...nums) {
     return calcArr(num, nums, (a, b, pow) => a * pow / (b * pow));
 }
 exports.divide = divide;
-// 链式计算
-class NumberCalc {
-    constructor(initNumber) {
-        this.initNumber = initNumber;
-        this.plus = this["+"];
-        this.minus = this["-"];
-        this.times = this["*"];
-        this.divide = this["/"];
-        this.setValue(initNumber);
-    }
-    // 初始化一个实例
-    static init(num) {
-        return new NumberCalc(num);
-    }
-    // 加
-    ["+"](...nums) {
-        // this.calc((a, b, pow) => (a * pow + b * pow) / pow, num, others);
-        this.setValue(plus(this.value, ...nums));
-        return this;
-    }
-    // 减
-    ["-"](...nums) {
-        this.setValue(minus(this.value, ...nums));
-        return this;
-    }
-    // 乘
-    ["*"](...nums) {
-        this.setValue(times(this.value, ...nums));
-        return this;
-    }
-    // 除
-    ["/"](...nums) {
-        this.setValue(divide(this.value, ...nums));
-        return this;
-    }
-    // 100 - 20 * 2; <==>  Calc.create(20)["*"](2).before(100, "-")
-    by(num, calcLabel) {
-        const value = this.value;
-        this.setValue(num);
-        this[calcLabel](value);
-        return this;
-    }
-    setValue(value) {
-        this.value = value;
-    }
-    // 获取当前值
-    get curVal() {
-        return strip(this.value);
-    }
-    // 设置当前值
-    set curVal(num) {
-        this.setValue(num);
-    }
-    // 重置为初始值
-    reset() {
-        this.value = this.initNumber;
-        return this;
-    }
-    valueOf() {
-        return this.value;
-    }
-}
-exports.NumberCalc = NumberCalc;

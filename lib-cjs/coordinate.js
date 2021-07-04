@@ -1,9 +1,12 @@
 "use strict";
 // 与坐标相关的
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getBorderWidthBySin = exports.getBorderWidthByCos = exports.twoBezier = exports.getRotatePoint = exports.getAngle = exports.Direct = exports.getDistance = exports.isPointInPath = void 0;
 // 坐标点
-const numberCalc_1 = require("./numberCalc");
+const CalcChain_1 = __importDefault(require("./CalcChain"));
 // 判断是否在范围内
 function inRange(a, [x1, x2]) {
     return (x1 <= a && a <= x2) || (x2 <= a && a <= x1);
@@ -92,8 +95,8 @@ function getRotatePoint(center, radius, rotate) {
     // 因为屏幕上的坐标系与数学上的坐标系不同，所以x，y有所变化
     // let x = center[0] + radius * Math.sin(angle);
     // let y = center[1] - radius * Math.cos(angle);
-    let x = numberCalc_1.NumberCalc.init(radius)["*"](Math.sin(angle))["+"](center[0]).curVal;
-    let y = numberCalc_1.NumberCalc.init(radius)["*"](Math.cos(angle)).by(center[1], "-").curVal;
+    let x = CalcChain_1.default.init(radius)["*"](Math.sin(angle))["+"](center[0]).value;
+    let y = CalcChain_1.default.init(radius)["*"](Math.cos(angle)).by(center[1], "-").value;
     return [x, y];
 }
 exports.getRotatePoint = getRotatePoint;

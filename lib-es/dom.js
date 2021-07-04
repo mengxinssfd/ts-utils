@@ -1,5 +1,5 @@
 import { includes, unique } from "./array";
-import { divide, times } from "./numberCalc";
+import { divide, times } from "./number";
 import { assign, forEachObj, objReduce, pickByKeys } from "./object";
 import { isArray, isString } from "./dataType";
 import { isDom, isNodeList } from "./domType";
@@ -363,6 +363,7 @@ export function scrollFixedWatcher(target, cb, top = 0, container = window) {
 const fractionDigits = 6;
 const tempToFixed = (num) => {
     const f = num.toFixed(fractionDigits);
+    // 经toFixed后一定会有"."，所以不需要担心10000这种会变成1
     return f.replace(/\.?0+$/, "");
 };
 /**

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.percent2Rem = exports.rem2Percent = exports.px2Percent = exports.percent2px = exports.px2rem = exports.rem2px = exports.get1rem = exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createHiddenHtmlElement = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.setStyle = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
 const array_1 = require("./array");
-const numberCalc_1 = require("./numberCalc");
+const number_1 = require("./number");
 const object_1 = require("./object");
 const dataType_1 = require("./dataType");
 const domType_1 = require("./domType");
@@ -385,6 +385,7 @@ exports.scrollFixedWatcher = scrollFixedWatcher;
 const fractionDigits = 6;
 const tempToFixed = (num) => {
     const f = num.toFixed(fractionDigits);
+    // 经toFixed后一定会有"."，所以不需要担心10000这种会变成1
     return f.replace(/\.?0+$/, "");
 };
 /**
@@ -410,13 +411,13 @@ exports.rem2px = rem2px;
  */
 function px2rem(px) {
     const fs = get1rem();
-    const result = numberCalc_1.divide(parseFloat(px), fs);
+    const result = number_1.divide(parseFloat(px), fs);
     return (tempToFixed(result) + "rem");
 }
 exports.px2rem = px2rem;
 function percent2px(p, relativePx) {
-    const t = numberCalc_1.times(parseFloat(relativePx), parseFloat(p));
-    return (numberCalc_1.divide(t, 100) + "px");
+    const t = number_1.times(parseFloat(relativePx), parseFloat(p));
+    return (number_1.divide(t, 100) + "px");
 }
 exports.percent2px = percent2px;
 /**

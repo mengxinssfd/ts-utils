@@ -22,7 +22,7 @@ __exportStar(require("./dom"), exports);
 __exportStar(require("./download"), exports);
 __exportStar(require("./eventBus"), exports);
 __exportStar(require("./ImgMerge"), exports);
-__exportStar(require("./numberCalc"), exports);
+__exportStar(require("./CalcChain"), exports);
 __exportStar(require("./OneByOne"), exports);
 __exportStar(require("./dataType"), exports);
 __exportStar(require("./url"), exports);

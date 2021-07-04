@@ -10,7 +10,7 @@ export * from "./dom";
 export * from "./download";
 export * from "./eventBus";
 export * from "./ImgMerge";
-export * from "./numberCalc";
+export * from "./CalcChain";
 export * from "./OneByOne";
 export * from "./dataType";
 export * from "./url";
