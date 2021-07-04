@@ -1,7 +1,7 @@
 // 与坐标相关的
 
 // 坐标点
-import {NumberCalc} from "./numberCalc";
+import CalcChain from "./CalcChain";
 
 export type Point = [number, number]
 
@@ -101,8 +101,8 @@ export function getRotatePoint(center: Point, radius: number, rotate: number): P
     // 因为屏幕上的坐标系与数学上的坐标系不同，所以x，y有所变化
     // let x = center[0] + radius * Math.sin(angle);
     // let y = center[1] - radius * Math.cos(angle);
-    let x = NumberCalc.init(radius)["*"](Math.sin(angle))["+"](center[0]).curVal;
-    let y = NumberCalc.init(radius)["*"](Math.cos(angle)).by(center[1], "-").curVal;
+    let x = CalcChain.init(radius)["*"](Math.sin(angle))["+"](center[0]).value;
+    let y = CalcChain.init(radius)["*"](Math.cos(angle)).by(center[1], "-").value;
     return [x, y];
 }
 
