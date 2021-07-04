@@ -28,10 +28,15 @@ export declare function prefixStyle<T extends keyof CSSStyleDeclaration>(style: 
 export declare function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSStyleDeclaration[K]>(key: K, value: V): boolean;
 /**
  * @param style
- * @param el
+ * @param option
+ * @param {HTMLElement?} option.el
+ * @param [option.toCssText = true] 合并后只触发一次重绘，性能会更好一点
  * @returns setStyle.bind(el)
  */
-export declare function setStyle(style: SettableStyle, el?: HTMLElement | string): typeof setStyle;
+export declare function setStyle(style: SettableStyle, { toCssText, el, }?: {
+    toCssText?: boolean;
+    el?: HTMLElement | string;
+}): typeof setStyle;
 /**
  * 手动添加img标签下载图片
  * @param url
@@ -86,3 +91,44 @@ export declare function inIframe(): boolean;
  * @return {function(): void}
  */
 export declare function scrollFixedWatcher(target: HTMLElement, cb: (reach: boolean) => void, top?: number, container?: HTMLElement | Window): () => void;
+declare type Rem = "rem";
+declare type Px = "px";
+declare type Percent = "%";
+declare type RemVal = `${number}${Rem}`;
+declare type PxVal = `${number}${Px}`;
+declare type PercentVal = `${number}${Percent}`;
+/**
+ * 获取等于1rem的像素值
+ */
+export declare function get1rem(): number;
+/**
+ * rem转像素
+ * @param rem
+ */
+export declare function rem2px(rem: RemVal): PxVal;
+/**
+ * 像素转rem
+ * @param px
+ */
+export declare function px2rem(px: PxVal): RemVal;
+export declare function percent2px(p: PercentVal, relativePx: number | PxVal): PxVal;
+/**
+ * 像素转百分比
+ * @param px
+ * @param relativePx
+ * @returns {string} PercentVal 保留fractionDigits位小数
+ */
+export declare function px2Percent(px: PxVal, relativePx: number | PxVal): PercentVal;
+/**
+ * rem转百分比
+ * @param rem
+ * @param relativePx
+ */
+export declare function rem2Percent(rem: RemVal, relativePx: number | PxVal): PercentVal;
+/**
+ * 百分百转rem
+ * @param p
+ * @param relativePx
+ */
+export declare function percent2Rem(p: PercentVal, relativePx: number | PxVal): RemVal;
+export {};

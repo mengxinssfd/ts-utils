@@ -1,5 +1,4 @@
 import * as urlUtils from "./url";
-import { isEmptyObject } from "./dataType";
 /**
  * 解析url
  * @Author: dyh
@@ -38,8 +37,9 @@ export class UrlModel {
         if (this.path) {
             url += this.path;
         }
-        if (!isEmptyObject(this.query)) {
-            url += "?" + urlUtils.stringifyUrlSearch(this.query);
+        const query = urlUtils.stringifyUrlSearch(this.query);
+        if (query) {
+            url += "?" + query;
         }
         if (this.hash) {
             url += this.hash;

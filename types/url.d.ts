@@ -47,5 +47,22 @@ export declare function stringifyUrlSearch(query: {
  * @param [noDecode=false]
  */
 export declare function getUrlParam(name: string, url?: string, noDecode?: boolean): string;
+/**
+ * 修改url参数，不能新增或删除参数
+ * @param param
+ * @param url
+ * @param noDecode
+ */
+export declare function updateUrlParam(param: {
+    [k: string]: any;
+}, url?: string, noDecode?: boolean): string;
+/**
+ * 设置url参数，可新增或删除参数
+ * @param param
+ * @param url
+ */
+export declare function setUrlParam(param: {
+    [k: string]: any;
+}, url?: string): string;
 export declare const UrlRegExp: RegExp;
 export declare function isUrl(url: string): boolean;

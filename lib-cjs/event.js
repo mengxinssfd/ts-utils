@@ -343,11 +343,24 @@ exports.isVisible = isVisible;
  * @param [offset=10]
  */
 function isScrollEnd(el, direct = "vertical", offset = 10) {
-    if (direct === "vertical") {
-        return el.scrollTop >= el.scrollHeight - el.clientHeight - offset;
+    let width, height;
+    let scrollEl = el;
+    if (el === window) {
+        let rootEl = document.documentElement;
+        scrollEl = document.body.scrollTop ? document.body : rootEl;
+        width = rootEl.clientWidth;
+        height = rootEl.clientHeight;
     }
     else {
-        return el.scrollLeft >= el.scrollWidth - el.clientWidth - offset;
+        width = scrollEl.clientWidth;
+        height = scrollEl.clientHeight;
+    }
+    const { scrollTop, scrollLeft, scrollHeight, scrollWidth } = scrollEl;
+    if (direct === "vertical") {
+        return scrollTop >= scrollHeight - height - offset;
+    }
+    else {
+        return scrollLeft >= scrollWidth - width - offset;
     }
 }
 exports.isScrollEnd = isScrollEnd;

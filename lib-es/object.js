@@ -1,5 +1,5 @@
-import { isArray, isObject, isBroadlyObj, isNaN } from "./dataType";
 import { forEachRight } from "./array";
+import { isArray, isBroadlyObj, isNaN, isObject, typeOf } from "./dataType";
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree) {
     function deeps(obj, num = 0) {
@@ -54,15 +54,19 @@ export function deepMerge(first, second) {
  * 代替Object.keys(obj).forEach，减少循环次数
  * @param obj
  * @param callbackFn 返回false的时候中断
+ * @param elseCB 遍历完后执行
+ * @returns {boolean} isDone
  */
-export function forEachObj(obj, callbackFn) {
+export function forEachObj(obj, callbackFn, elseCB) {
     for (const k in obj) {
         if (!obj.hasOwnProperty(k))
             continue;
         const v = obj[k];
         if (callbackFn(v, k, obj) === false)
-            return;
+            return false;
     }
+    elseCB && elseCB();
+    return true;
 }
 /**
  * @alias forEachObj
@@ -348,6 +352,18 @@ export function objEntries(obj) {
     }, []);
 }
 /**
+ * obj[a] => obj.a 从getObjValueByPath中分离出来
+ * @param path
+ * @param [objName = ""]
+ */
+export function translateObjPath(path, objName = "") {
+    // obj[a] => obj.a
+    path = path.replace(new RegExp(`^${objName}`), "");
+    path = path.replace(/\[([^\]]+)]/g, ".$1");
+    path = path.replace(/^\.|\[]/g, "");
+    return path;
+}
+/**
  * 通过object路径获取值
  * @example
  * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
@@ -356,14 +372,42 @@ export function objEntries(obj) {
  * @param [objName = ""]
  */
 export function getObjValueByPath(obj, path, objName = "") {
-    const p = path.replace(/\[([^\]]+)]/g, ".$1")
-        .replace(new RegExp(`^${objName}`), "")
-        .replace(/^\./, "");
+    const p = translateObjPath(path, objName);
     return p.split(".").reduce((init, v) => {
         if (!isBroadlyObj(init))
             return undefined;
         return init[v];
     }, obj);
+}
+/**
+ * 通过object路径设置值 如果路径中不存在则会自动创建对应的对象
+ * @example
+ * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
+ * @param obj
+ * @param path
+ * @param value
+ * @param onExist 当要改动位置已经有值时的回调
+ * @param [objName = ""]
+ */
+export function setObjValueByPath(obj, path, value, onExist = (a, b) => b, objName = "") {
+    const p = translateObjPath(path, objName);
+    const split = p.split(".");
+    const end = split.length - 1;
+    split.reduce(([init, currentPath], key, index) => {
+        currentPath = currentPath + (currentPath ? "." + key : key);
+        if (index === end) {
+            if (init.hasOwnProperty(key)) {
+                value = onExist(init[key], value, true, currentPath);
+            }
+            init[key] = value;
+            return [init[key], currentPath];
+        }
+        if (!isBroadlyObj(init[key])) {
+            init[key] = init.hasOwnProperty(key) ? onExist(init[key], {}, false, currentPath) : {};
+        }
+        return [init[key], currentPath];
+    }, [obj, ""]);
+    return obj;
 }
 /**
  * 获取object的路径数组
@@ -385,4 +429,43 @@ export function getObjPathEntries(obj, objName = "") {
         return init;
     }, []);
 }
-// TODO 根据路径还原整个object
+// 根据路径还原整个object
+export function revertObjFromPath(pathArr) {
+    function getKV(path) {
+        let [key, value] = path.split("=").map(item => decodeURIComponent(item));
+        let innerKey = "";
+        const reg = /(?:\[([^\[\]]*)])|(?:\.\[?([^\[\]]*)]?)/g;
+        if (reg.test(key)) {
+            innerKey = RegExp.$1 || RegExp.$2;
+            key = key.replace(reg, "");
+        }
+        // key = key.replace(/\[[^\[\]]*]/g, "");
+        return { key, value, innerKey };
+    }
+    return pathArr.reduce((result, path) => {
+        const { key, value, innerKey } = getKV(path);
+        const resultValue = result[key];
+        switch (typeOf(resultValue)) {
+            case "undefined":
+                if (!innerKey) {
+                    result[key] = value;
+                }
+                else {
+                    const arr = [];
+                    arr[innerKey] = value;
+                    result[key] = arr;
+                }
+                break;
+            case "string":
+                result[key] = [resultValue];
+            case "array":
+                if (!innerKey) {
+                    result[key].push(value);
+                }
+                else {
+                    result[key][innerKey] = value;
+                }
+        }
+        return result;
+    }, {});
+}

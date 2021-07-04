@@ -1,4 +1,5 @@
 /**
+ * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
  * 千位分隔 1,234,567,890
  * @param num
  */
@@ -71,3 +72,6 @@ export declare namespace strRepeat {
  * @param format
  */
 export declare function smartRepeat(format: string): string;
+export declare function capitalizeFirstChar(value: string): string;
+export declare function fromCamel(value: string, delimiter?: string): string;
+export declare function toCamel(value: string, delimiter?: string | RegExp, toUpperCamelCase?: boolean): string;

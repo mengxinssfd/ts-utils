@@ -64,7 +64,7 @@ export declare function isVisible(target: HTMLElement, container?: HTMLElement |
  * @param [direct="vertical"]
  * @param [offset=10]
  */
-export declare function isScrollEnd(el: HTMLElement, direct?: "vertical" | "horizontal", offset?: number): boolean;
+export declare function isScrollEnd(el: HTMLElement | Window, direct?: string, offset?: number): boolean;
 /**
  * 判断dom是否滚动到顶了
  * @param el

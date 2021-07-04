@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.numToFixed = exports.root = exports.promiseQueue = exports.promiseAny = exports.createEnumByObj = exports.createEnum = exports.formatJSON = exports.createUUID = exports.functionApply = exports.generateFunctionCode = exports.oneByOne = exports.forEachByLen = exports.polling = exports.debounceByPromise = exports.debounceCancelable = exports.throttle = exports.debounceAsync = exports.debounce = void 0;
+exports.at = exports.numToFixed = exports.root = exports.promiseQueue = exports.promiseAny = exports.createEnumByObj = exports.createEnum = exports.formatJSON = exports.createUUID = exports.functionApply = exports.generateFunctionCode = exports.oneByOne = exports.forEachByLen = exports.polling = exports.debounceByPromise = exports.debounceCancelable = exports.throttle = exports.debounceAsync = exports.debounce = void 0;
 const string_1 = require("./string");
 const time_1 = require("./time");
 const dataType_1 = require("./dataType");
@@ -414,6 +414,7 @@ exports.promiseQueue = promiseQueue;
 exports.root = Function("return this")();
 /**
  * 原来的函数四舍五入不准确
+ * @note 原来的toFixed可以把科学计数法的小数，给转成普通小数字符串
  * @param num
  * @param [fractionDigits = 0]
  * @param [rounding = false] 是否四舍五入
@@ -428,7 +429,7 @@ function numToFixed(num, fractionDigits = 0, rounding = false) {
     // 加1 四舍五入
     const pow = base ** (fractionDigits + 1);
     num = ~~(num * pow);
-    if (rounding) {
+    if (rounding && num) { // num为0的时候位数已经不对了
         num += 5;
     }
     num /= pow;
@@ -437,3 +438,21 @@ function numToFixed(num, fractionDigits = 0, rounding = false) {
     return split[0] + "." + digits;
 }
 exports.numToFixed = numToFixed;
+/**
+ * 从arr获取index处的item，支持负数
+ * @param arr
+ * @param index
+ * @param def
+ */
+function at(arr, index, def = undefined) {
+    if (index < 0) {
+        index = (arr.length + index);
+    }
+    // if (typeof arr === "string") return (arr[index] ?? def) as any;
+    return (arr.hasOwnProperty(index) ? arr[index] : def);
+}
+exports.at = at;
+// type A = In<[1, 2, 3], 7, 1>
+// type B = In<[1, 2, 3], (-1), 1>
+// const a = [1,2,3]
+// type A = In<typeof a, 5, unknown>

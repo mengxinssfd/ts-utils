@@ -1,8 +1,10 @@
 import { includes, unique } from "./array";
-import { assign, forEachObj, pickByKeys } from "./object";
+import { divide, times } from "./numberCalc";
+import { assign, forEachObj, objReduce, pickByKeys } from "./object";
 import { isArray, isString } from "./dataType";
 import { isDom, isNodeList } from "./domType";
 import { root } from "./common";
+import { fromCamel } from "./string";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 const vendor = (() => {
@@ -124,16 +126,32 @@ export function cssSupport(key, value) {
 // export function setStyle(style: SettableStyle, el: HTMLElement | string);
 /**
  * @param style
- * @param el
+ * @param option
+ * @param {HTMLElement?} option.el
+ * @param [option.toCssText = true] 合并后只触发一次重绘，性能会更好一点
  * @returns setStyle.bind(el)
  */
-export function setStyle(style, el) {
+export function setStyle(style, { toCssText = true, el, } = {}) {
     if (isString(el))
         el = document.querySelector(el);
     let target = el || this;
     if (!isDom(target))
         throw new TypeError("setStyle param el | this is not HTMLElement");
-    assign(target.style, style);
+    if (toCssText) {
+        const cssText = target.style.cssText;
+        const cssTextObj = cssText.replace(/; ?$/, "").split(";").reduce((init, v) => {
+            const [key, value] = v.split(/: ?/);
+            init[key] = value;
+            return init;
+        }, {});
+        assign(cssTextObj, style);
+        target.style.cssText = objReduce(cssTextObj, (result, v, k) => {
+            return result + `${fromCamel(k, "-")}: ${v};`;
+        }, "");
+    }
+    else {
+        assign(target.style, style);
+    }
     return setStyle.bind(target);
 }
 /**
@@ -232,9 +250,8 @@ export function createHtmlElement(tagName, params = {}) {
     forEachObj(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
-            forEachObj(v, (value, key) => {
-                el.style[key] = value;
-            });
+            // 未添加到body中，不会触发重绘
+            assign(el.style, v);
             return;
         }
         el[k] = v;
@@ -341,3 +358,83 @@ export function scrollFixedWatcher(target, cb, top = 0, container = window) {
         container.removeEventListener("scroll", handler);
     };
 }
+// type CSSLenUnit = RemVal | PxVal | PercentVal;
+// 保留小数位
+const fractionDigits = 6;
+const tempToFixed = (num) => {
+    const f = num.toFixed(fractionDigits);
+    return f.replace(/\.?0+$/, "");
+};
+/**
+ * 获取等于1rem的像素值
+ */
+export function get1rem() {
+    const computed = getComputedStyle(document.documentElement);
+    return parseInt(computed.fontSize);
+}
+/**
+ * rem转像素
+ * @param rem
+ */
+export function rem2px(rem) {
+    const fs = get1rem();
+    return (fs * parseFloat(rem) + "px");
+}
+/**
+ * 像素转rem
+ * @param px
+ */
+export function px2rem(px) {
+    const fs = get1rem();
+    const result = divide(parseFloat(px), fs);
+    return (tempToFixed(result) + "rem");
+}
+export function percent2px(p, relativePx) {
+    const t = times(parseFloat(relativePx), parseFloat(p));
+    return (divide(t, 100) + "px");
+}
+/**
+ * 像素转百分比
+ * @param px
+ * @param relativePx
+ * @returns {string} PercentVal 保留fractionDigits位小数
+ */
+export function px2Percent(px, relativePx) {
+    const val = (parseFloat(px) * 100 / parseFloat(relativePx));
+    const toFixed = tempToFixed(val);
+    return (toFixed + "%");
+}
+/**
+ * rem转百分比
+ * @param rem
+ * @param relativePx
+ */
+export function rem2Percent(rem, relativePx) {
+    return px2Percent(rem2px(rem), relativePx);
+}
+/**
+ * 百分百转rem
+ * @param p
+ * @param relativePx
+ */
+export function percent2Rem(p, relativePx) {
+    return px2rem(percent2px(p, relativePx));
+}
+/*export function toPx(from: CSSLenUnit, relativePx: number): string {
+    if (/rem$/.test(from)) {
+        return rem2px(from as RemVal);
+    }
+    if (/%$/.test(from)) {
+        return percent2px(from as PercentVal, relativePx);
+    }
+    return from;
+}*/
+/*export function translateCssLenUnit(from: `${number}${Px | Rem}`, to: Px): string;
+export function translateCssLenUnit(from: `${number}${Percent}`, to: Px | Rem, relativePx: number): string;
+export function translateCssLenUnit(from: `${number}${(Px | Rem)}`, to: Percent, relativePx: number): string;
+export function translateCssLenUnit(from: `${number}${CSSLenUnit}`, to: CSSLenUnit, relativePx: number): string {
+    return "";
+}*/
+// translateCssLenUnit("100%", "rem");
+// 管道语法
+// "100px" |> ((_: any) => translateCssLenUnit(_, "rem"));

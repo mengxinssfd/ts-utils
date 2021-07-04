@@ -5,8 +5,10 @@ export declare function deepMerge<T extends object, U extends object>(first: T, 
  * 代替Object.keys(obj).forEach，减少循环次数
  * @param obj
  * @param callbackFn 返回false的时候中断
+ * @param elseCB 遍历完后执行
+ * @returns {boolean} isDone
  */
-export declare function forEachObj<T extends object>(obj: T, callbackFn: (value: T[keyof T], key: keyof T, obj: T) => (void | false)): void;
+export declare function forEachObj<T extends object>(obj: T, callbackFn: (value: T[keyof T], key: keyof T, obj: T) => (void | false), elseCB?: () => any): boolean;
 /**
  * @alias forEachObj
  */
@@ -145,6 +147,12 @@ export declare function objValues<T extends object, K extends keyof T, V extends
  */
 export declare function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K]][];
 /**
+ * obj[a] => obj.a 从getObjValueByPath中分离出来
+ * @param path
+ * @param [objName = ""]
+ */
+export declare function translateObjPath(path: string, objName?: string): string;
+/**
  * 通过object路径获取值
  * @example
  * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
@@ -153,6 +161,18 @@ export declare function objEntries<T extends object, K extends keyof T>(obj: T):
  * @param [objName = ""]
  */
 export declare function getObjValueByPath(obj: object, path: string, objName?: string): unknown;
+declare type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) => any;
+/**
+ * 通过object路径设置值 如果路径中不存在则会自动创建对应的对象
+ * @example
+ * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
+ * @param obj
+ * @param path
+ * @param value
+ * @param onExist 当要改动位置已经有值时的回调
+ * @param [objName = ""]
+ */
+export declare function setObjValueByPath<T extends object>(obj: T, path: string, value: any, onExist?: SetObjValueByPathOnExist, objName?: string): T;
 /**
  * 获取object的路径数组
  * @example
@@ -162,3 +182,5 @@ export declare function getObjValueByPath(obj: object, path: string, objName?: s
  * @param [objName = ""]
  */
 export declare function getObjPathEntries(obj: object, objName?: string): Array<[string, any]>;
+export declare function revertObjFromPath(pathArr: string[]): object;
+export {};

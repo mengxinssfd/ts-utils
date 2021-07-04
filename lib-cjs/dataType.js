@@ -1,13 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isInteger = exports.isIncludeChinese = exports.isPercent = exports.isIterable = exports.isSameType = exports.objectIsEqual = exports.isEqual = exports.isEmpty = exports.isEmptyObject = exports.isNaN = exports.isPromiseLike = exports.inTypes = exports.isUndefined = exports.isBoolean = exports.isFunction = exports.isNumber = exports.isString = exports.isArrayLike = exports.isArray = exports.isBroadlyObj = exports.isObject = exports.typeOf = exports.isNative = void 0;
+exports.isArrayObj = exports.isInteger = exports.isIncludeChinese = exports.isPercent = exports.isIterable = exports.isSameType = exports.objectIsEqual = exports.isEqual = exports.isEmpty = exports.isEmptyObject = exports.isNaN = exports.isPromiseLike = exports.inTypes = exports.isUndefined = exports.isBoolean = exports.isFunction = exports.isNumber = exports.isString = exports.isArrayLike = exports.isArray = exports.isBroadlyObj = exports.isObjectLike = exports.isObject = exports.typeOf = exports.isNative = void 0;
 const array_1 = require("./array");
+const object_1 = require("./object");
 function isNative(value) {
     const reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
     const reIsNative = RegExp(`^${Function.prototype.toString.call(Object.prototype.hasOwnProperty)
         .replace(reRegExpChar, "\\$&")
         .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\])/g, "$1.*?")}$`);
-    return isBroadlyObj(value) && reIsNative.test(value);
+    return exports.isBroadlyObj(value) && reIsNative.test(value);
 }
 exports.isNative = isNative;
 // 获取数据类型
@@ -22,11 +23,12 @@ function isObject(target) {
     return typeOf(target) === "object";
 }
 exports.isObject = isObject;
-function isBroadlyObj(value) {
+function isObjectLike(value) {
     const type = typeof value;
     return value != null && (type === "object" || type === "function");
 }
-exports.isBroadlyObj = isBroadlyObj;
+exports.isObjectLike = isObjectLike;
+exports.isBroadlyObj = isObjectLike;
 function isArray(target) {
     return typeOf(target) === "array";
 }
@@ -35,7 +37,10 @@ exports.isArray = isArray;
 function isArrayLike(target) {
     // 检测target的类型
     const type = typeOf(target);
-    if (["string", "null", "undefined", "number", "boolean"].indexOf(type) > -1)
+    // string也是ArrayLike，但"length" in target会报错
+    if (type === "string")
+        return true;
+    if ([/*"string",*/ "null", "undefined", "number", "boolean"].indexOf(type) > -1)
         return false;
     // 如果target非null、undefined等，有length属性，则length等于target.length
     // 否则，length为false
@@ -198,3 +203,15 @@ function isInteger(value) {
     return value % 1 === 0;
 }
 exports.isInteger = isInteger;
+/**
+ * @example
+ * isArrayObj(Object.assign([1,2], {b: "1", c: "2"})) // => true
+ * isArrayObj([]) // => false
+ * @param value
+ */
+function isArrayObj(value) {
+    const keys = object_1.objKeys(value);
+    const reg = /\d+/;
+    return isArray(value) && keys.some(i => !reg.test(String(i)));
+}
+exports.isArrayObj = isArrayObj;

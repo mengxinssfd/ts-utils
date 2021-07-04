@@ -21,7 +21,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UrlModel = void 0;
 const urlUtils = __importStar(require("./url"));
-const dataType_1 = require("./dataType");
 /**
  * 解析url
  * @Author: dyh
@@ -60,8 +59,9 @@ class UrlModel {
         if (this.path) {
             url += this.path;
         }
-        if (!dataType_1.isEmptyObject(this.query)) {
-            url += "?" + urlUtils.stringifyUrlSearch(this.query);
+        const query = urlUtils.stringifyUrlSearch(this.query);
+        if (query) {
+            url += "?" + query;
         }
         if (this.hash) {
             url += this.hash;

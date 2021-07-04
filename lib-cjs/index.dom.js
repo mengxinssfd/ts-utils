@@ -10,6 +10,10 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./index.core"), exports);
-__exportStar(require("./index.dom"), exports);
-__exportStar(require("./index.bom"), exports);
+// 与dom有关的工具函数
+__exportStar(require("./dom"), exports);
+__exportStar(require("./download"), exports);
+__exportStar(require("./ImgMerge"), exports);
+__exportStar(require("./domType"), exports);
+__exportStar(require("./event"), exports);
+__exportStar(require("./blob"), exports);

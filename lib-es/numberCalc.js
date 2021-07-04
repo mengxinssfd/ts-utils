@@ -1,5 +1,4 @@
 // 数字计算
-import { isArray } from "./dataType";
 /**
  * 把错误的数据转正  from number-precision
  * strip(0.09999999999999998)=0.1
@@ -11,14 +10,46 @@ export function strip(num, precision = 12) {
 export function getNumberLenAfterDot(num) {
     Number(1000).toPrecision();
     const eSplit = String(num).split(/[eE]/);
-    const len = (eSplit[0].split('.')[1] || '').length - (+(eSplit[1] || 0));
+    const len = (eSplit[0].split(".")[1] || "").length - (+(eSplit[1] || 0));
     return len > 0 ? len : 0;
 }
 // (10.10, 1.00001) => 100000
-function getPow(a, b) {
+export function getCommonPow(a, b) {
     let aLen = getNumberLenAfterDot(a);
     let bLen = getNumberLenAfterDot(b);
     return Math.pow(10, Math.max(aLen, bLen));
+}
+function calcArr(num, nums, callback) {
+    return nums.reduce((a, b) => {
+        const pow = getCommonPow(a, b);
+        return callback(a, b, pow);
+    }, num);
+}
+/**
+ * 科学计数法转普通小数
+ * @note 不能转太大的数 比如大于Number.MAX_SAFE_INTEGER
+ * @param num
+ */
+export function toNonExponential(num) {
+    // toExponential 转为科学计数法
+    // const m = num.toExponential().match(/\d(?:\.(\d*))?e([+-]\d+)/);
+    const sNum = String(num);
+    const m = sNum.match(/\d(?:\.(\d*))?e([+-]\d+)/);
+    if (num > Number.MAX_SAFE_INTEGER || !m || m.length < 3)
+        return sNum;
+    return num.toFixed(Math.max(0, (m[1] || "").length - Number(m[2])));
+}
+export function plus(num, ...nums) {
+    return calcArr(num, nums, (a, b, pow) => (a * pow + b * pow) / pow);
+}
+export function minus(num, ...nums) {
+    return calcArr(num, nums, (a, b, pow) => (a * pow - b * pow) / pow);
+}
+export function times(num, ...nums) {
+    return calcArr(num, nums, (a, b, pow) => pow * a * (b * pow) / (pow * pow));
+}
+export function divide(num, ...nums) {
+    return calcArr(num, nums, (a, b, pow) => a * pow / (b * pow));
 }
 // 链式计算
 export class NumberCalc {
@@ -34,45 +65,25 @@ export class NumberCalc {
     static init(num) {
         return new NumberCalc(num);
     }
-    calcArr(num, callback) {
-        num.forEach(b => {
-            const a = this.value;
-            let pow = getPow(a, b);
-            this.setValue(callback(a, b, pow));
-        });
-    }
-    calc(callback, num, others) {
-        if (!isArray(num)) {
-            const a = this.value;
-            const b = num;
-            let pow = getPow(a, b);
-            this.setValue(callback(a, b, pow));
-        }
-        else {
-            this.calcArr(num, callback);
-        }
-        if (others.length) {
-            this.calcArr(others, callback);
-        }
-    }
     // 加
-    ["+"](num, ...others) {
-        this.calc((a, b, pow) => (a * pow + b * pow) / pow, num, others);
+    ["+"](...nums) {
+        // this.calc((a, b, pow) => (a * pow + b * pow) / pow, num, others);
+        this.setValue(plus(this.value, ...nums));
         return this;
     }
     // 减
-    ["-"](num, ...others) {
-        this.calc((a, b, pow) => (a * pow - b * pow) / pow, num, others);
+    ["-"](...nums) {
+        this.setValue(minus(this.value, ...nums));
         return this;
     }
     // 乘
-    ["*"](num, ...others) {
-        this.calc((a, b, pow) => pow * a * (b * pow) / (pow * pow), num, others);
+    ["*"](...nums) {
+        this.setValue(times(this.value, ...nums));
         return this;
     }
     // 除
-    ["/"](num, ...others) {
-        this.calc((a, b, pow) => a * pow / (b * pow), num, others);
+    ["/"](...nums) {
+        this.setValue(divide(this.value, ...nums));
         return this;
     }
     // 100 - 20 * 2; <==>  Calc.create(20)["*"](2).before(100, "-")
@@ -97,5 +108,8 @@ export class NumberCalc {
     reset() {
         this.value = this.initNumber;
         return this;
+    }
+    valueOf() {
+        return this.value;
     }
 }

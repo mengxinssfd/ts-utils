@@ -1,7 +1,8 @@
 export declare function isNative(value: any): boolean;
 export declare function typeOf(target: any): string;
 export declare function isObject(target: any): target is object;
-export declare function isBroadlyObj(value: object): value is object;
+export declare function isObjectLike(value: object): value is object;
+export declare const isBroadlyObj: typeof isObjectLike;
 export declare function isArray(target: any): target is Array<any>;
 export declare function isArrayLike(target: any): target is ArrayLike<any>;
 export declare function isString(target: any): target is string;
@@ -35,3 +36,10 @@ export declare function isIncludeChinese(value: string): boolean;
  * @param value
  */
 export declare function isInteger(value: number): boolean;
+/**
+ * @example
+ * isArrayObj(Object.assign([1,2], {b: "1", c: "2"})) // => true
+ * isArrayObj([]) // => false
+ * @param value
+ */
+export declare function isArrayObj(value: any): boolean;

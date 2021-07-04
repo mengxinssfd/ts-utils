@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createHiddenHtmlElement = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.setStyle = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
+exports.percent2Rem = exports.rem2Percent = exports.px2Percent = exports.percent2px = exports.px2rem = exports.rem2px = exports.get1rem = exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createHiddenHtmlElement = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.setStyle = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
 const array_1 = require("./array");
+const numberCalc_1 = require("./numberCalc");
 const object_1 = require("./object");
 const dataType_1 = require("./dataType");
 const domType_1 = require("./domType");
 const common_1 = require("./common");
+const string_1 = require("./string");
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 const vendor = (() => {
@@ -137,16 +139,32 @@ exports.cssSupport = cssSupport;
 // export function setStyle(style: SettableStyle, el: HTMLElement | string);
 /**
  * @param style
- * @param el
+ * @param option
+ * @param {HTMLElement?} option.el
+ * @param [option.toCssText = true] 合并后只触发一次重绘，性能会更好一点
  * @returns setStyle.bind(el)
  */
-function setStyle(style, el) {
+function setStyle(style, { toCssText = true, el, } = {}) {
     if (dataType_1.isString(el))
         el = document.querySelector(el);
     let target = el || this;
     if (!domType_1.isDom(target))
         throw new TypeError("setStyle param el | this is not HTMLElement");
-    object_1.assign(target.style, style);
+    if (toCssText) {
+        const cssText = target.style.cssText;
+        const cssTextObj = cssText.replace(/; ?$/, "").split(";").reduce((init, v) => {
+            const [key, value] = v.split(/: ?/);
+            init[key] = value;
+            return init;
+        }, {});
+        object_1.assign(cssTextObj, style);
+        target.style.cssText = object_1.objReduce(cssTextObj, (result, v, k) => {
+            return result + `${string_1.fromCamel(k, "-")}: ${v};`;
+        }, "");
+    }
+    else {
+        object_1.assign(target.style, style);
+    }
     return setStyle.bind(target);
 }
 exports.setStyle = setStyle;
@@ -249,9 +267,8 @@ function createHtmlElement(tagName, params = {}) {
     object_1.forEachObj(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
-            object_1.forEachObj(v, (value, key) => {
-                el.style[key] = value;
-            });
+            // 未添加到body中，不会触发重绘
+            object_1.assign(el.style, v);
             return;
         }
         el[k] = v;
@@ -363,3 +380,90 @@ function scrollFixedWatcher(target, cb, top = 0, container = window) {
     };
 }
 exports.scrollFixedWatcher = scrollFixedWatcher;
+// type CSSLenUnit = RemVal | PxVal | PercentVal;
+// 保留小数位
+const fractionDigits = 6;
+const tempToFixed = (num) => {
+    const f = num.toFixed(fractionDigits);
+    return f.replace(/\.?0+$/, "");
+};
+/**
+ * 获取等于1rem的像素值
+ */
+function get1rem() {
+    const computed = getComputedStyle(document.documentElement);
+    return parseInt(computed.fontSize);
+}
+exports.get1rem = get1rem;
+/**
+ * rem转像素
+ * @param rem
+ */
+function rem2px(rem) {
+    const fs = get1rem();
+    return (fs * parseFloat(rem) + "px");
+}
+exports.rem2px = rem2px;
+/**
+ * 像素转rem
+ * @param px
+ */
+function px2rem(px) {
+    const fs = get1rem();
+    const result = numberCalc_1.divide(parseFloat(px), fs);
+    return (tempToFixed(result) + "rem");
+}
+exports.px2rem = px2rem;
+function percent2px(p, relativePx) {
+    const t = numberCalc_1.times(parseFloat(relativePx), parseFloat(p));
+    return (numberCalc_1.divide(t, 100) + "px");
+}
+exports.percent2px = percent2px;
+/**
+ * 像素转百分比
+ * @param px
+ * @param relativePx
+ * @returns {string} PercentVal 保留fractionDigits位小数
+ */
+function px2Percent(px, relativePx) {
+    const val = (parseFloat(px) * 100 / parseFloat(relativePx));
+    const toFixed = tempToFixed(val);
+    return (toFixed + "%");
+}
+exports.px2Percent = px2Percent;
+/**
+ * rem转百分比
+ * @param rem
+ * @param relativePx
+ */
+function rem2Percent(rem, relativePx) {
+    return px2Percent(rem2px(rem), relativePx);
+}
+exports.rem2Percent = rem2Percent;
+/**
+ * 百分百转rem
+ * @param p
+ * @param relativePx
+ */
+function percent2Rem(p, relativePx) {
+    return px2rem(percent2px(p, relativePx));
+}
+exports.percent2Rem = percent2Rem;
+/*export function toPx(from: CSSLenUnit, relativePx: number): string {
+    if (/rem$/.test(from)) {
+        return rem2px(from as RemVal);
+    }
+    if (/%$/.test(from)) {
+        return percent2px(from as PercentVal, relativePx);
+    }
+    return from;
+}*/
+/*export function translateCssLenUnit(from: `${number}${Px | Rem}`, to: Px): string;
+export function translateCssLenUnit(from: `${number}${Percent}`, to: Px | Rem, relativePx: number): string;
+export function translateCssLenUnit(from: `${number}${(Px | Rem)}`, to: Percent, relativePx: number): string;
+export function translateCssLenUnit(from: `${number}${CSSLenUnit}`, to: CSSLenUnit, relativePx: number): string {
+    return "";
+}*/
+// translateCssLenUnit("100%", "rem");
+// 管道语法
+// "100px" |> ((_: any) => translateCssLenUnit(_, "rem"));

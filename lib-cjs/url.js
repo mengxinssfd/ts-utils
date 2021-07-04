@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isUrl = exports.UrlRegExp = exports.getUrlParam = exports.stringifyUrlSearch = exports.getUrlQuery = exports.getUrlParamObj = exports.getUrlHashParam = exports.getUrlHash = exports.getUrlPath = exports.getUrlPort = exports.getUrlHost = exports.getUrlProtocol = void 0;
-const dataType_1 = require("./dataType");
+exports.isUrl = exports.UrlRegExp = exports.setUrlParam = exports.updateUrlParam = exports.getUrlParam = exports.stringifyUrlSearch = exports.getUrlQuery = exports.getUrlParamObj = exports.getUrlHashParam = exports.getUrlHash = exports.getUrlPath = exports.getUrlPort = exports.getUrlHost = exports.getUrlProtocol = void 0;
 const object_1 = require("./object");
+const UrlModel_1 = require("./UrlModel");
 // url规则文档：https://datatracker.ietf.org/doc/html/rfc3986
 const protocolReg = /^(\w+):\/\//;
 /**
@@ -75,44 +75,10 @@ exports.getUrlHashParam = getUrlHashParam;
  * @param {string} [url = location.href]
  */
 function getUrlParamObj(url = location.href) {
-    let result = {};
     const params = url.match(/[^&#?/]+=[^&#?/]+/g);
     if (!params)
-        return result;
-    for (const k in params) {
-        const v = params[k];
-        let [key, value] = v.split("=").map(item => decodeURIComponent(item));
-        let innerKey = "";
-        const reg = /\[(\w*)]/g;
-        if (reg.test(key)) {
-            innerKey = RegExp.$1;
-            key = key.replace(reg, "");
-        }
-        key = key.replace(/\[(\w*)\]/g, "");
-        const resultValue = result[key];
-        switch (dataType_1.typeOf(resultValue)) {
-            case "undefined":
-                if (!innerKey) {
-                    result[key] = value;
-                }
-                else {
-                    const arr = [];
-                    arr[innerKey] = value;
-                    result[key] = arr;
-                }
-                break;
-            case "string":
-                result[key] = [resultValue];
-            case "array":
-                if (!innerKey) {
-                    result[key].push(value);
-                }
-                else {
-                    result[key][innerKey] = value;
-                }
-        }
-    }
-    return result;
+        return {};
+    return object_1.revertObjFromPath(params);
 }
 exports.getUrlParamObj = getUrlParamObj;
 exports.getUrlQuery = getUrlParamObj;
@@ -151,6 +117,34 @@ function getUrlParam(name, url = location.href /* node也有 */, noDecode = fals
     return noDecode ? ret : decodeURIComponent(ret);
 }
 exports.getUrlParam = getUrlParam;
+/**
+ * 修改url参数，不能新增或删除参数
+ * @param param
+ * @param url
+ * @param noDecode
+ */
+function updateUrlParam(param, url = location.href, noDecode = false) {
+    object_1.objForEach(param, (value, name) => {
+        const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i");
+        if (re.test(url)) {
+            const s = noDecode ? value : encodeURIComponent(value);
+            url = url.replace(`${name}=${RegExp.$1}`, `${name}=${s}`);
+        }
+    });
+    return url;
+}
+exports.updateUrlParam = updateUrlParam;
+/**
+ * 设置url参数，可新增或删除参数
+ * @param param
+ * @param url
+ */
+function setUrlParam(param, url = location.href) {
+    const model = new UrlModel_1.UrlModel(url);
+    object_1.assign(model.query, param);
+    return model.toString();
+}
+exports.setUrlParam = setUrlParam;
 // 参考async-validator
 exports.UrlRegExp = new RegExp("^(?!mailto:)(?:(?:http|https|ftp)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$", "i");
 function isUrl(url) {

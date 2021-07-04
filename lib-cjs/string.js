@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.smartRepeat = exports.strRepeat = exports.subString = exports.removeStrByNum = exports.chinese2Number = exports.number2Chinese = exports.strPadEnd = exports.strPadStart = exports.strTemplate = exports.thousandFormat = void 0;
+exports.toCamel = exports.fromCamel = exports.capitalizeFirstChar = exports.smartRepeat = exports.strRepeat = exports.subString = exports.removeStrByNum = exports.chinese2Number = exports.number2Chinese = exports.strPadEnd = exports.strPadStart = exports.strTemplate = exports.thousandFormat = void 0;
 /**
+ * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
  * 千位分隔 1,234,567,890
  * @param num
  */
@@ -194,3 +195,24 @@ function smartRepeat(format) {
     return format;
 }
 exports.smartRepeat = smartRepeat;
+function capitalizeFirstChar(value) {
+    const first = value[0];
+    return `${first.toUpperCase()}${value.substring(1).toLowerCase()}`;
+}
+exports.capitalizeFirstChar = capitalizeFirstChar;
+function fromCamel(value, delimiter = "_") {
+    return value.replace(/([A-Z]+)/g, (p1, p2, index) => {
+        return (index > 0 ? delimiter : "") + p2.toLowerCase();
+    });
+}
+exports.fromCamel = fromCamel;
+function toCamel(value, delimiter = "_", toUpperCamelCase = false) {
+    const split = value.split(typeof delimiter === "string" ? new RegExp(delimiter + "+") : delimiter);
+    const join = split.slice(1).map(i => capitalizeFirstChar(i));
+    if (toUpperCamelCase) {
+        split[0] = capitalizeFirstChar(split[0]);
+    }
+    join.unshift(split[0]);
+    return join.join("");
+}
+exports.toCamel = toCamel;

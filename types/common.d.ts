@@ -87,8 +87,19 @@ export declare function promiseQueue<T>(queue: Array<(lastValue: unknown) => Pro
 export declare const root: any;
 /**
  * 原来的函数四舍五入不准确
+ * @note 原来的toFixed可以把科学计数法的小数，给转成普通小数字符串
  * @param num
  * @param [fractionDigits = 0]
  * @param [rounding = false] 是否四舍五入
  */
 export declare function numToFixed(num: number, fractionDigits?: number, rounding?: boolean): string;
+/**
+ * 从arr获取index处的item，支持负数
+ * @param arr
+ * @param index
+ * @param def
+ */
+export declare function at<V extends ArrayLike<any>, K extends (keyof V | number), T extends ArrayLikeType<V>, D extends any | void>(arr: V, index: K, def?: D): In<V, K, D extends never ? T | void : T | D>;
+declare type In<A, K, D> = K extends keyof A ? A[K] extends void ? D : A[K] : D;
+declare type ArrayLikeType<T> = T extends ArrayLike<infer R> ? R : never;
+export {};

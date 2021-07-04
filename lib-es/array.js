@@ -52,19 +52,18 @@ export function createArray({ start = 0, end, len, fill }) {
  * @param callbackFn
  * @param elseCB 类似于Python的for else中的else，
  *        只会在完整的遍历后执行，任何一个break都不会触发
+ * @returns {boolean} isDone
  */
 export function forEach(arr, callbackFn, elseCB) {
     // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
     const len = arr.length || 0;
-    let i;
     // if (!isArrayLike(arr)) throw new TypeError();
-    for (i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
         if (callbackFn(arr[i], i, arr) === false)
-            break;
+            return false;
     }
-    if (i === len && elseCB) {
-        elseCB();
-    }
+    elseCB && elseCB();
+    return true;
 }
 /**
  * 跟promiseQueue类似，不过此函数是callback异步，重点在callback
@@ -388,7 +387,7 @@ export function groupBy(arr, key, defaultKey = "*") {
     const cb = isFunction(key) ? key : item => item[key];
     return arr.reduce((result, item) => {
         var _a;
-        const k = (_a = cb(item)) !== null && _a !== void 0 ? _a : defaultKey;
+        const k = (_a = cb(item, result)) !== null && _a !== void 0 ? _a : defaultKey;
         if (!result.hasOwnProperty(k)) {
             result[k] = [item];
         }

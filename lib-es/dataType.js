@@ -1,4 +1,5 @@
 import { includes } from "./array";
+import { objKeys } from "./object";
 export function isNative(value) {
     const reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
     const reIsNative = RegExp(`^${Function.prototype.toString.call(Object.prototype.hasOwnProperty)
@@ -16,10 +17,11 @@ export function typeOf(target) {
 export function isObject(target) {
     return typeOf(target) === "object";
 }
-export function isBroadlyObj(value) {
+export function isObjectLike(value) {
     const type = typeof value;
     return value != null && (type === "object" || type === "function");
 }
+export const isBroadlyObj = isObjectLike;
 export function isArray(target) {
     return typeOf(target) === "array";
 }
@@ -27,7 +29,10 @@ export function isArray(target) {
 export function isArrayLike(target) {
     // 检测target的类型
     const type = typeOf(target);
-    if (["string", "null", "undefined", "number", "boolean"].indexOf(type) > -1)
+    // string也是ArrayLike，但"length" in target会报错
+    if (type === "string")
+        return true;
+    if ([/*"string",*/ "null", "undefined", "number", "boolean"].indexOf(type) > -1)
         return false;
     // 如果target非null、undefined等，有length属性，则length等于target.length
     // 否则，length为false
@@ -171,4 +176,15 @@ export function isIncludeChinese(value) {
  */
 export function isInteger(value) {
     return value % 1 === 0;
+}
+/**
+ * @example
+ * isArrayObj(Object.assign([1,2], {b: "1", c: "2"})) // => true
+ * isArrayObj([]) // => false
+ * @param value
+ */
+export function isArrayObj(value) {
+    const keys = objKeys(value);
+    const reg = /\d+/;
+    return isArray(value) && keys.some(i => !reg.test(String(i)));
 }

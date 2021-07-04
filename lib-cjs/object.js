@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getObjPathEntries = exports.getObjValueByPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.pickUpdated = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pickDiff = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
-const dataType_1 = require("./dataType");
+exports.revertObjFromPath = exports.getObjPathEntries = exports.setObjValueByPath = exports.getObjValueByPath = exports.translateObjPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.pickUpdated = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pickDiff = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
 const array_1 = require("./array");
+const dataType_1 = require("./dataType");
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 function getTreeMaxDeep(tree) {
     function deeps(obj, num = 0) {
@@ -60,15 +60,19 @@ exports.deepMerge = deepMerge;
  * 代替Object.keys(obj).forEach，减少循环次数
  * @param obj
  * @param callbackFn 返回false的时候中断
+ * @param elseCB 遍历完后执行
+ * @returns {boolean} isDone
  */
-function forEachObj(obj, callbackFn) {
+function forEachObj(obj, callbackFn, elseCB) {
     for (const k in obj) {
         if (!obj.hasOwnProperty(k))
             continue;
         const v = obj[k];
         if (callbackFn(v, k, obj) === false)
-            return;
+            return false;
     }
+    elseCB && elseCB();
+    return true;
 }
 exports.forEachObj = forEachObj;
 /**
@@ -371,6 +375,19 @@ function objEntries(obj) {
 }
 exports.objEntries = objEntries;
 /**
+ * obj[a] => obj.a 从getObjValueByPath中分离出来
+ * @param path
+ * @param [objName = ""]
+ */
+function translateObjPath(path, objName = "") {
+    // obj[a] => obj.a
+    path = path.replace(new RegExp(`^${objName}`), "");
+    path = path.replace(/\[([^\]]+)]/g, ".$1");
+    path = path.replace(/^\.|\[]/g, "");
+    return path;
+}
+exports.translateObjPath = translateObjPath;
+/**
  * 通过object路径获取值
  * @example
  * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
@@ -379,9 +396,7 @@ exports.objEntries = objEntries;
  * @param [objName = ""]
  */
 function getObjValueByPath(obj, path, objName = "") {
-    const p = path.replace(/\[([^\]]+)]/g, ".$1")
-        .replace(new RegExp(`^${objName}`), "")
-        .replace(/^\./, "");
+    const p = translateObjPath(path, objName);
     return p.split(".").reduce((init, v) => {
         if (!dataType_1.isBroadlyObj(init))
             return undefined;
@@ -389,6 +404,37 @@ function getObjValueByPath(obj, path, objName = "") {
     }, obj);
 }
 exports.getObjValueByPath = getObjValueByPath;
+/**
+ * 通过object路径设置值 如果路径中不存在则会自动创建对应的对象
+ * @example
+ * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
+ * @param obj
+ * @param path
+ * @param value
+ * @param onExist 当要改动位置已经有值时的回调
+ * @param [objName = ""]
+ */
+function setObjValueByPath(obj, path, value, onExist = (a, b) => b, objName = "") {
+    const p = translateObjPath(path, objName);
+    const split = p.split(".");
+    const end = split.length - 1;
+    split.reduce(([init, currentPath], key, index) => {
+        currentPath = currentPath + (currentPath ? "." + key : key);
+        if (index === end) {
+            if (init.hasOwnProperty(key)) {
+                value = onExist(init[key], value, true, currentPath);
+            }
+            init[key] = value;
+            return [init[key], currentPath];
+        }
+        if (!dataType_1.isBroadlyObj(init[key])) {
+            init[key] = init.hasOwnProperty(key) ? onExist(init[key], {}, false, currentPath) : {};
+        }
+        return [init[key], currentPath];
+    }, [obj, ""]);
+    return obj;
+}
+exports.setObjValueByPath = setObjValueByPath;
 /**
  * 获取object的路径数组
  * @example
@@ -410,4 +456,44 @@ function getObjPathEntries(obj, objName = "") {
     }, []);
 }
 exports.getObjPathEntries = getObjPathEntries;
-// TODO 根据路径还原整个object
+// 根据路径还原整个object
+function revertObjFromPath(pathArr) {
+    function getKV(path) {
+        let [key, value] = path.split("=").map(item => decodeURIComponent(item));
+        let innerKey = "";
+        const reg = /(?:\[([^\[\]]*)])|(?:\.\[?([^\[\]]*)]?)/g;
+        if (reg.test(key)) {
+            innerKey = RegExp.$1 || RegExp.$2;
+            key = key.replace(reg, "");
+        }
+        // key = key.replace(/\[[^\[\]]*]/g, "");
+        return { key, value, innerKey };
+    }
+    return pathArr.reduce((result, path) => {
+        const { key, value, innerKey } = getKV(path);
+        const resultValue = result[key];
+        switch (dataType_1.typeOf(resultValue)) {
+            case "undefined":
+                if (!innerKey) {
+                    result[key] = value;
+                }
+                else {
+                    const arr = [];
+                    arr[innerKey] = value;
+                    result[key] = arr;
+                }
+                break;
+            case "string":
+                result[key] = [resultValue];
+            case "array":
+                if (!innerKey) {
+                    result[key].push(value);
+                }
+                else {
+                    result[key][innerKey] = value;
+                }
+        }
+        return result;
+    }, {});
+}
+exports.revertObjFromPath = revertObjFromPath;

@@ -1,4 +1,5 @@
 /**
+ * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
  * 千位分隔 1,234,567,890
  * @param num
  */
@@ -180,4 +181,22 @@ export function smartRepeat(format) {
         // format = start + strRepeat(repeatValue, count) + end;
     }
     return format;
+}
+export function capitalizeFirstChar(value) {
+    const first = value[0];
+    return `${first.toUpperCase()}${value.substring(1).toLowerCase()}`;
+}
+export function fromCamel(value, delimiter = "_") {
+    return value.replace(/([A-Z]+)/g, (p1, p2, index) => {
+        return (index > 0 ? delimiter : "") + p2.toLowerCase();
+    });
+}
+export function toCamel(value, delimiter = "_", toUpperCamelCase = false) {
+    const split = value.split(typeof delimiter === "string" ? new RegExp(delimiter + "+") : delimiter);
+    const join = split.slice(1).map(i => capitalizeFirstChar(i));
+    if (toUpperCamelCase) {
+        split[0] = capitalizeFirstChar(split[0]);
+    }
+    join.unshift(split[0]);
+    return join.join("");
 }

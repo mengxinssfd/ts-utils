@@ -11,9 +11,9 @@ export declare class UrlModel {
     path: string;
     href: string;
     hash: string;
-    query: {
+    query: Partial<{
         [key: string]: string[] | string;
-    };
+    }>;
     constructor(url: string);
     private parseAll;
     toString(): string;

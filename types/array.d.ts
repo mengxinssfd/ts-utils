@@ -24,8 +24,9 @@ export declare function createArray<T = number>({ start, end, len, fill }: {
  * @param callbackFn
  * @param elseCB 类似于Python的for else中的else，
  *        只会在完整的遍历后执行，任何一个break都不会触发
+ * @returns {boolean} isDone
  */
-export declare function forEach<T>(arr: ArrayLike<T>, callbackFn: (value: T, index: number, array: ArrayLike<T>) => (any | false), elseCB?: () => void): void;
+export declare function forEach<T>(arr: ArrayLike<T>, callbackFn: (value: T, index: number, array: ArrayLike<T>) => (any | false), elseCB?: () => void): boolean;
 /**
  * 跟promiseQueue类似，不过此函数是callback异步，重点在callback
  * @param cbAsync 异步回调
@@ -114,12 +115,12 @@ export declare function inRange(value: number, [min, max]: [number?, number?]): 
  */
 export declare function groupBy<T extends {
     [k: string]: any;
-}, K extends keyof T>(arr: T[], key: K, defaultKey?: number | string): {
+}, K extends keyof T, R extends {
     [k: string]: T[];
-};
+}>(arr: T[], key: K, defaultKey?: number | string): R;
 export declare function groupBy<T extends {
     [k: string]: any;
-}>(arr: T[], by: (it: T) => string | void, defaultKey?: number | string): {
+}, R extends {
     [k: string]: T[];
-};
+}>(arr: T[], by: (it: T, result: any) => string | void, defaultKey?: number | string): R;
 export {};
