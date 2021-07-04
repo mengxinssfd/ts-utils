@@ -1,6 +1,4 @@
 // 数字计算
-import {isArray} from "./dataType";
-
 /**
  * 把错误的数据转正  from number-precision
  * strip(0.09999999999999998)=0.1
@@ -13,7 +11,7 @@ export function strip(num: number, precision = 12): number {
 export function getNumberLenAfterDot(num: number | string): number {
     Number(1000).toPrecision();
     const eSplit = String(num).split(/[eE]/);
-    const len = (eSplit[0].split('.')[1] || '').length - (+(eSplit[1] || 0));
+    const len = (eSplit[0].split(".")[1] || "").length - (+(eSplit[1] || 0));
     return len > 0 ? len : 0;
 }
 
@@ -24,6 +22,28 @@ export function getCommonPow(a: number, b: number): number {
     return Math.pow(10, Math.max(aLen, bLen));
 }
 
+function calcArr(num: number, nums: number[], callback: (a: number, b: number, pow: number) => number): number {
+    return nums.reduce<number>((a, b) => {
+        const pow = getCommonPow(a, b);
+        return callback(a, b, pow);
+    }, num);
+}
+
+export function plus(num: number, ...others: Array<number>) {
+    return calcArr(num, others, (a, b, pow) => (a * pow + b * pow) / pow);
+}
+
+export function minus(num: number, ...others: Array<number>) {
+    return calcArr(num, others, (a, b, pow) => (a * pow - b * pow) / pow);
+}
+
+export function times(num: number, ...others: Array<number>) {
+    return calcArr(num, others, (a, b, pow) => (a * pow * b * pow) / (pow * pow));
+}
+
+export function divide(num: number, ...others: Array<number>) {
+    return calcArr(num, others, (a, b, pow) => a * pow / (b * pow));
+}
 
 // 链式计算
 export class NumberCalc {
@@ -38,55 +58,34 @@ export class NumberCalc {
         return new NumberCalc(num);
     }
 
-    private calcArr(num: number[], callback: (a: number, b: number, pow: number) => number) {
-        num.forEach(b => {
-            const a = this.value;
-            let pow = getCommonPow(a, b);
-            this.setValue(callback(a, b, pow));
-        });
-    }
-
-    private calc(callback: (a: number, b: number, pow: number) => number, num: number[] | number, others: number[]) {
-        if (!isArray(num)) {
-            const a = this.value;
-            const b = num;
-            let pow = getCommonPow(a, b);
-            this.setValue(callback(a, b, pow));
-        } else {
-            this.calcArr(num, callback);
-        }
-        if (others.length) {
-            this.calcArr(others, callback);
-        }
-    }
-
     // 加
-    public ["+"](num: number[] | number, ...others: number[]): NumberCalc {
-        this.calc((a, b, pow) => (a * pow + b * pow) / pow, num, others);
+    public ["+"](...nums: number[]): NumberCalc {
+        // this.calc((a, b, pow) => (a * pow + b * pow) / pow, num, others);
+        this.setValue(plus(this.value, ...nums));
         return this;
     }
 
     public plus = this["+"];
 
     // 减
-    public ["-"](num: number[] | number, ...others: number[]): NumberCalc {
-        this.calc((a, b, pow) => (a * pow - b * pow) / pow, num, others);
+    public ["-"](...nums: number[]): NumberCalc {
+        this.setValue(minus(this.value, ...nums));
         return this;
     }
 
     public minus = this["-"];
 
     // 乘
-    public ["*"](num: number[] | number, ...others: number[]): NumberCalc {
-        this.calc((a, b, pow) => pow * a * (b * pow) / (pow * pow), num, others);
+    public ["*"](...nums: number[]): NumberCalc {
+        this.setValue(times(this.value, ...nums));
         return this;
     }
 
     public times = this["*"];
 
     // 除
-    public ["/"](num: number[] | number, ...others: number[]): NumberCalc {
-        this.calc((a, b, pow) => a * pow / (b * pow), num, others);
+    public ["/"](...nums: number[]): NumberCalc {
+        this.setValue(divide(this.value, ...nums));
         return this;
     }
 
@@ -118,5 +117,9 @@ export class NumberCalc {
     public reset(): NumberCalc {
         this.value = this.initNumber;
         return this;
+    }
+
+    valueOf(): number {
+        return this.value;
     }
 }
