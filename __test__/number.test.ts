@@ -5,6 +5,7 @@ test("strip", () => {
     expect(Num.strip(1.0000000000001563)).toBe(1);
     expect(Num.strip(20000000000.222222222)).not.toBe(20000000000.222222222);
     expect(20000000000.222222222).toBe(20000000000.222222222);
+    // 不够精准，js无法表示那么长的数据,或许改考虑用bigint
     expect(20000000000.222222222.toString()).toBe("20000000000.22222");
 });
 test("getNumberLenAfterDot", () => {
