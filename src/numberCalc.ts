@@ -18,7 +18,7 @@ export function getNumberLenAfterDot(num: number | string): number {
 }
 
 // (10.10, 1.00001) => 100000
-function getPow(a: number, b: number): number {
+export function getCommonPow(a: number, b: number): number {
     let aLen = getNumberLenAfterDot(a);
     let bLen = getNumberLenAfterDot(b);
     return Math.pow(10, Math.max(aLen, bLen));
@@ -41,7 +41,7 @@ export class NumberCalc {
     private calcArr(num: number[], callback: (a: number, b: number, pow: number) => number) {
         num.forEach(b => {
             const a = this.value;
-            let pow = getPow(a, b);
+            let pow = getCommonPow(a, b);
             this.setValue(callback(a, b, pow));
         });
     }
@@ -50,7 +50,7 @@ export class NumberCalc {
         if (!isArray(num)) {
             const a = this.value;
             const b = num;
-            let pow = getPow(a, b);
+            let pow = getCommonPow(a, b);
             this.setValue(callback(a, b, pow));
         } else {
             this.calcArr(num, callback);
