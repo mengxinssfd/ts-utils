@@ -424,6 +424,7 @@ export const root = Function("return this")();
 
 /**
  * 原来的函数四舍五入不准确
+ * @note 原来的toFixed可以把科学计数法的小数，给转成普通小数字符串
  * @param num
  * @param [fractionDigits = 0]
  * @param [rounding = false] 是否四舍五入
