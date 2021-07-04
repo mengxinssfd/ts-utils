@@ -14,6 +14,21 @@ test("getNumberLenAfterDot", () => {
     expect(numCalc.getNumberLenAfterDot(1.123e+2)).toBe(1);
     expect(numCalc.getNumberLenAfterDot(1e+2)).toBe(0);
 });
+test("toNonExponential", () => {
+    const fn = numCalc.toNonExponential;
+    expect(fn(1e+2)).toBe("100");
+    expect(fn(0.0000001)).toBe("0.0000001");
+    expect(fn(0.0000000001)).toBe("0.0000000001");
+    const num = 100_000_000_000_000_000_000_000;
+    expect(num.toString()).toBe("1e+23");
+    expect(num > Number.MAX_SAFE_INTEGER).toBe(true);
+    expect(fn(num)).toBe("1e+23");
+
+    const num2 = (1_000_000_000_000_000).toExponential();
+    expect(num2.toString()).toBe("1e+15");
+    expect(+num2 > Number.MAX_SAFE_INTEGER).toBe(false);
+    expect(fn(+num2)).toBe("1000000000000000");
+});
 
 test("Calc", () => {
     const Calc = numCalc.NumberCalc;
