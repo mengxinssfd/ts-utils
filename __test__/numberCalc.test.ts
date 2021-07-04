@@ -4,7 +4,7 @@ test("strip", () => {
     expect(numCalc.strip(1.0000000000041083)).toBe(1);
     expect(numCalc.strip(1.0000000000001563)).toBe(1);
 });
-test('getNumberLenAfterDot', () => {
+test("getNumberLenAfterDot", () => {
     expect(numCalc.getNumberLenAfterDot(0.12345667)).toBe(8);
     expect(numCalc.getNumberLenAfterDot("0.123456789")).toBe(9);
     expect(numCalc.getNumberLenAfterDot(12345)).toBe(0);
@@ -15,7 +15,7 @@ test('getNumberLenAfterDot', () => {
     expect(numCalc.getNumberLenAfterDot(1e+2)).toBe(0);
 });
 
-test('Calc', () => {
+test("Calc", () => {
     const Calc = numCalc.NumberCalc;
     // 0.1 + 0.2 = 0.30000000000000004
     expect(0.1 + 0.2).not.toBe(0.3);
@@ -51,15 +51,14 @@ test('Calc', () => {
     // 0.1 + 0.2 - 0.1 = 0.2
     expect(c["+"](0.2)["-"](0.1).curVal).toBe(0.2);
 
-
     //  100 - 20 * 2 = 60
     expect(Calc.init(20)["*"](2).by(100, "-").curVal).toBe(60);
 
     // 100 - 10 - 20 - 30 - 100 = -60
-    expect(Calc.init(100)["-"]([10, 20, 30, 100]).curVal).toBe(-60);
-    expect(Calc.init(100)["-"]([10, 20, 30, 100]).curVal).toBe(-60);
+    expect(Calc.init(100)["-"](...[10, 20, 30, 100]).curVal).toBe(-60);
+    expect(Calc.init(100)["-"](...[10, 20, 30, 100]).curVal).toBe(-60);
     expect(Calc.init(100)["-"](10, 20, 30, 100).curVal).toBe(-60);
-    expect(Calc.init(100)["-"]([10, 20], 30, 100).curVal).toBe(-60);
-    expect(Calc.init(100)["-"]([10, 20, 30], 100).curVal).toBe(-60);
+    expect(Calc.init(100)["-"](...[10, 20], 30, 100).curVal).toBe(-60);
+    expect(Calc.init(100)["-"](...[10, 20, 30], 100).curVal).toBe(-60);
 });
 
