@@ -1,9 +1,10 @@
 import {includes, unique} from "./array";
+import {divide, times} from "./numberCalc";
 import {assign, forEachObj, objReduce, pickByKeys} from "./object";
 import {SettableStyle, SettableProps} from "./TsTypes";
 import {isArray, isString} from "./dataType";
 import {isDom, isNodeList} from "./domType";
-import {numToFixed, root} from "./common";
+import {root} from "./common";
 import {fromCamel} from "./string";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
@@ -428,7 +429,10 @@ type PercentVal = `${number}${Percent}`;
 // 保留小数位
 const fractionDigits = 6;
 
-const tempToFixed = (num: number) => Number(numToFixed(num, fractionDigits, true));
+const tempToFixed = (num: number) => {
+    const f = num.toFixed(fractionDigits);
+    return f.replace(/\.?0+$/, "");
+};
 
 /**
  * 获取等于1rem的像素值
@@ -453,12 +457,13 @@ export function rem2px(rem: RemVal): PxVal {
  */
 export function px2rem(px: PxVal): RemVal {
     const fs = get1rem();
-    const result = parseFloat(px) / fs;
+    const result = divide(parseFloat(px), fs);
     return (tempToFixed(result) + "rem") as RemVal;
 }
 
 export function percent2px(p: PercentVal, relativePx: number | PxVal): PxVal {
-    return (parseFloat(relativePx as string) * (parseFloat(p) / 100) + "px") as PxVal;
+    const t = times(parseFloat(relativePx as string), parseFloat(p));
+    return (divide(t, 100) + "px") as PxVal;
 }
 
 /**
