@@ -423,7 +423,7 @@ type RemVal = `${number}${Rem}`;
 type PxVal = `${number}${Px}`;
 type PercentVal = `${number}${Percent}`;
 
-type CSSLenUnit = RemVal | PxVal | PercentVal;
+// type CSSLenUnit = RemVal | PxVal | PercentVal;
 
 // 保留小数位
 const fractionDigits = 6;
@@ -465,7 +465,7 @@ export function percent2px(p: PercentVal, relativePx: number | PxVal): PxVal {
  * 像素转百分比
  * @param px
  * @param relativePx
- * @returns {string} PercentVal 保留2位小数
+ * @returns {string} PercentVal 保留fractionDigits位小数
  */
 export function px2Percent(px: PxVal, relativePx: number | PxVal): PercentVal {
     const val = (parseFloat(px) * 100 / parseFloat(relativePx as string));
@@ -473,15 +473,25 @@ export function px2Percent(px: PxVal, relativePx: number | PxVal): PercentVal {
     return (toFixed + "%") as PercentVal;
 }
 
+/**
+ * rem转百分比
+ * @param rem
+ * @param relativePx
+ */
 export function rem2Percent(rem: RemVal, relativePx: number | PxVal): PercentVal {
     return px2Percent(rem2px(rem), relativePx);
 }
 
+/**
+ * 百分百转rem
+ * @param p
+ * @param relativePx
+ */
 export function percent2Rem(p: PercentVal, relativePx: number | PxVal): RemVal {
     return px2rem(percent2px(p, relativePx));
 }
 
-export function toPx(from: CSSLenUnit, relativePx: number): string {
+/*export function toPx(from: CSSLenUnit, relativePx: number): string {
     if (/rem$/.test(from)) {
         return rem2px(from as RemVal);
     }
@@ -489,7 +499,7 @@ export function toPx(from: CSSLenUnit, relativePx: number): string {
         return percent2px(from as PercentVal, relativePx);
     }
     return from;
-}
+}*/
 
 /*export function translateCssLenUnit(from: `${number}${Px | Rem}`, to: Px): string;
 export function translateCssLenUnit(from: `${number}${Percent}`, to: Px | Rem, relativePx: number): string;
