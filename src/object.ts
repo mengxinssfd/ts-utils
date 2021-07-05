@@ -463,13 +463,26 @@ export function translateObjPath(path: string, objName = ""): string {
  * @param path
  * @param [objName = ""]
  */
-export function getObjValueByPath(obj: object, path: string, objName = ""): unknown {
+export function getObjValueByPath<T extends object, P extends string>(obj: T, path: P, objName = ""): unknown {
     const p = translateObjPath(path, objName);
     return p.split(".").reduce((init, v) => {
         if (!isBroadlyObj(init)) return undefined;
         return init[v];
     }, obj);
 }
+
+// TODO 未完待续
+type PathOf<T, K extends string, P extends string = ''> =
+    K extends `${infer A}.${infer B}`
+        ? A extends keyof T ? PathOf<T[A], B, `${P}${A}.`> : (T extends Array<infer I> ? PathOf<I, B, `${P}${K}.`> : never)
+        : K extends keyof T ? T[K] : (T extends Array<infer I> ? I : never);
+
+function test<T, K extends string, N extends string = "">(obj: T, k: K, name?: N): PathOf<T, K, N> {
+    return 0 as any;
+}
+
+test({a: "123", b: 222, c: {d: "test", e: [{test: 1}]}}, "c.e");
+
 
 type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) => any
 
