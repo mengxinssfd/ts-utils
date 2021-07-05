@@ -419,7 +419,7 @@ export function arrayRemoveItemsBy<T>(by: (v: T, k: number, a: T[]) => boolean, 
 
 export function unique<T>(target: T[], isRepeatFn?: (value: T, value2: T) => boolean) {
     if (!target.length) return target;
-    const fn = isRepeatFn || ((v1, v2) => v1 === v2);
+    const fn = isRepeatFn || ((v1, v2) => v1 === v2 || isNaN(v1) && isNaN(v2));
     const result: T[] = [target[0]];
     for (let i = 1; i < target.length; i++) {
         const item = target[i];
