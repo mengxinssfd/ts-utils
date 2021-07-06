@@ -1,5 +1,6 @@
 import {forEachRight} from "./array";
 import {isArray, isBroadlyObj, isNaN, isObject, typeOf} from "./dataType";
+import {PathOf, TypeOfPath} from "./ObjPath";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree: object): number {
@@ -463,33 +464,19 @@ export function translateObjPath(path: string, objName = ""): string {
  * @param path
  * @param [objName = ""]
  */
-export function getObjValueByPath<T extends object, P extends string>(obj: T, path: P, objName = ""): unknown {
+export function getObjValueByPath<T extends object, P extends string>(obj: T, path: PathOf<T, P>, objName = ""): TypeOfPath<T, P> {
     const p = translateObjPath(path, objName);
     return p.split(".").reduce((init, v) => {
         if (!isBroadlyObj(init)) return undefined;
         return init[v];
-    }, obj);
+    }, obj as any);
 }
-
-// TODO 未完待续
-type PathOf<T, K extends string, P extends string = ''> =
-    K extends `${infer A}.${infer B}`
-        ? A extends keyof T ? PathOf<T[A], B, `${P}${A}.`> : (T extends Array<infer I> ? PathOf<I, B, `${P}${K}.`> : never)
-        : K extends keyof T ? T[K] : (T extends Array<infer I> ? I : never);
-
-function test<T, K extends string, N extends string = "">(obj: T, k: K, name?: N): PathOf<T, K, N> {
-    return 0 as any;
-}
-
-test({a: "123", b: 222, c: {d: "test", e: [{test: 1}]}}, "c.e");
-
 
 type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) => any
 
 /**
  * 通过object路径设置值 如果路径中不存在则会自动创建对应的对象
  * @example
- * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
  * @param obj
  * @param path
  * @param value
@@ -584,4 +571,3 @@ export function revertObjFromPath(pathArr: string[]): object {
         return result;
     }, {});
 }
-
