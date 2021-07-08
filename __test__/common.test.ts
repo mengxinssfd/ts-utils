@@ -398,10 +398,10 @@ test("promiseQueue", async () => {
     ] as any, "hello");
     expect(v2).toBe("hello thank you im fine");
 });
-test("root", async () => {
+test("root", () => {
     expect(cm.root).toBe(window);
 });
-test("numToFixed", async () => {
+test("numToFixed", () => {
     const fn = cm.numToFixed;
     expect((0).toFixed(1)).toEqual("0.0");
     expect(fn(0, 1)).toBe("0.0");
@@ -448,7 +448,7 @@ test("numToFixed", async () => {
     // const f = fn(0.1, 100);
     // expect(0.1.toFixed(100)).toBe(f)
 });
-test("at", async () => {
+test("at", () => {
     const fn = cm.at;
     // const arr = [1, 2, 3, 4, 5, 6, 7];
     const arr: [1, 2, 3, 4, 5, 6, 7] = [1, 2, 3, 4, 5, 6, 7];
@@ -488,4 +488,12 @@ test("at", async () => {
     expect(fn(und, -7, true)).toBe(true);
 
     expect(fn(Array(2), 0, true)).toBe(true);
+});
+test("likeKeys", () => {
+    const fn = cm.likeKeys;
+    expect(fn([1, 2, 3, 4, 5, 6, 7], "0")).toEqual(["0"]);
+    expect(fn([1, 2, 3, 4, 5, 6, 7, 1, 1, 1, 1, 1, 1], "0")).toEqual(["0", "10"]);
+    expect(fn({test: 1, test2: 2, test3: 3}, "test")).toEqual(["test", "test2", "test3"]);
+    const map = new Map<string, number | string>([["test", 1], ["test2", 2], ["hello", "world"]]);
+    expect(fn(map, "test")).toEqual(["test", "test2"]);
 });
