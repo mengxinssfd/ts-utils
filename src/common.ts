@@ -1,7 +1,7 @@
 import {strPadEnd} from "./string";
 import {createTimeCountDown} from "./time";
-import {isArray, isString, isPromiseLike, isNumber} from "./dataType";
-import {assign, getReverseObj} from "./object";
+import {isArray, isString, isPromiseLike, isNumber, typeOf} from "./dataType";
+import {assign, getReverseObj, objKeys} from "./object";
 import {forEachAsync, inRange} from "./array";
 
 /**
@@ -478,3 +478,22 @@ type ArrayLikeType<T> = T extends ArrayLike<infer R> ? R : never
 // type B = In<[1, 2, 3], (-1), 1>
 // const a = [1,2,3]
 // type A = In<typeof a, 5, unknown>
+
+/**
+ * 查找对象中与param key类似的key
+ * @param target
+ * @param key
+ */
+export function likeKeys(target: object | Map<string, any>, key: string | RegExp): string[] {
+    const reg = new RegExp(key);
+    if (undefined !== root.Map && target instanceof Map) {
+        // keys = [...obj.keys()]; // babel编译成es5会编译成[].concat，无法使用
+        const keys: string[] = [];
+        for (const k of target.keys()) {
+            if (reg.test(k)) keys.push(k);
+        }
+        return keys;
+    }
+
+    return objKeys(target).filter(key => reg.test(key));
+}
