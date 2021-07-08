@@ -497,3 +497,29 @@ test("likeKeys", () => {
     const map = new Map<string, number | string>([["test", 1], ["test2", 2], ["hello", "world"]]);
     expect(fn(map, "test")).toEqual(["test", "test2"]);
 });
+
+test("parseCmdParams", () => {
+    const fn = cm.parseCmdParams;
+
+    function pcp(value: string) {
+        return Object.fromEntries(fn(value.split(" ").slice(2)));
+    }
+
+    expect(pcp("node test.js test.js -a -b -c")).toEqual({default: "test.js", a: true, b: true, c: true});
+
+    expect(pcp("node test.js test.js -a=123")).toEqual({default: "test.js", a: "123"});
+
+    expect(pcp("node test.js test.js -a=123 333 -b 666 888")).toEqual({
+        default: "test.js",
+        a: ["123", "333"],
+        b: ["666", "888"]
+    });
+
+    expect(pcp("node test.js test.js -a=123=333=444=555")).toEqual({default: "test.js", a: "123=333=444=555"});
+
+    expect(pcp("node test.js test.js -a= ")).toEqual({default: "test.js", a: true});
+
+    expect(pcp("node test.js test.js -a= -b=123")).toEqual({default: "test.js", a: true, b: "123"});
+
+    expect(pcp("node test.js test.js -a==123=333=444=555")).toEqual({default: "test.js", a: "=123=333=444=555"});
+});
