@@ -497,3 +497,54 @@ export function likeKeys(target: object | Map<string, any>, key: string | RegExp
 
     return objKeys(target).filter(key => reg.test(key));
 }
+
+
+/**
+ * 命令行的参数转为Map
+ * @param arr 命令行参数数组
+ * @param prefix 前缀 --d --f 前缀是"--"
+ * @param defaultKey 如果前面没有变量名那么使用默认
+ */
+export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "default"): Map<string, string[] | string | boolean> {
+    const list = arr.slice();
+    let currentKey = defaultKey;
+    const isKeyReg = new RegExp(`^${prefix}`);
+    const eqReg = /([^=]+)=([\s\S]+)?/;
+    const map: ReturnType<typeof parseCmdParams> = new Map();
+
+    function getKey(key: string): string {
+        if (eqReg.test(key)) {
+            key = RegExp.$1;
+            const value = RegExp.$2;
+            value && list.unshift(value);
+        }
+        return key;
+    }
+
+    function setValue(currentValue?: string[] | string | boolean) {
+        switch (typeOf(currentValue)) {
+            case "undefined":
+            case "boolean":
+                map.set(currentKey, it);
+                break;
+            case "array":
+                (currentValue as Array<string>).push(it);
+                break;
+            default:
+                map.set(currentKey, [currentValue as string, it]);
+        }
+    }
+
+    let it;
+    while (it = list.shift()) {
+        if (isKeyReg.test(it)) {
+            currentKey = getKey(it.replace(isKeyReg, ""));
+            if (!map.has(currentKey)) {
+                map.set(currentKey, true);
+            }
+            continue;
+        }
+        setValue(map.get(currentKey));
+    }
+    return map;
+}
