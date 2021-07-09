@@ -486,7 +486,7 @@ type ArrayLikeType<T> = T extends ArrayLike<infer R> ? R : never
  */
 export function likeKeys(target: object | Map<string, any>, key: string | RegExp): string[] {
     const reg = new RegExp(key);
-    if (undefined !== root.Map && target instanceof Map) {
+    if ("undefined" !== typeof Map && target instanceof Map) {
         // keys = [...obj.keys()]; // babel编译成es5会编译成[].concat，无法使用
         const keys: string[] = [];
         for (const k of target.keys()) {
@@ -497,7 +497,6 @@ export function likeKeys(target: object | Map<string, any>, key: string | RegExp
 
     return objKeys(target).filter(key => reg.test(key));
 }
-
 
 /**
  * 命令行的参数转为Map
