@@ -463,7 +463,7 @@ exports.at = at;
  */
 function likeKeys(target, key) {
     const reg = new RegExp(key);
-    if (undefined !== exports.root.Map && target instanceof Map) {
+    if ("undefined" !== typeof Map && target instanceof Map) {
         // keys = [...obj.keys()]; // babel编译成es5会编译成[].concat，无法使用
         const keys = [];
         for (const k of target.keys()) {
