@@ -57,8 +57,20 @@ hd.addEventListener("click", (e) => {
 });
 utils.createHiddenHtmlElement({style: {color: "red"}, innerText: "span"}, "span");
 
-utils.setStyle({width: "100px", height: "100px", backgroundColor: "red"}, div);
+utils.setStyle({width: "100px", height: "100px", backgroundColor: "red"}, {el: div});
 const setStyle = utils.setStyle.bind(document.querySelector(".set-style"));
 setStyle({height: "100px"});
 setStyle({backgroundColor: "pink"});
 setStyle({width: "100px"})({marginBottom: "20px"});
+
+utils.onDragEvent(({onDown, onMove, onUp}) => {
+    onDown((e, currentXY) => {
+        console.log("down", e, currentXY);
+    });
+    onMove((e, currentXY, lastXY, downXY) => {
+        console.log("move", e, currentXY, lastXY, downXY);
+    });
+    onUp((e, currentXY, downXY) => {
+        console.log("up", e, currentXY, downXY);
+    });
+});
