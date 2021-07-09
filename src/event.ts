@@ -151,6 +151,7 @@ type DragHook<T> = (cb: T) => void
  * 改成这样可以把数据控制在函数内部
  * @example
  *   onDragEvent(({onDown, onMove, onUp}) => {
+ *       // 目前只有第一次挂载的函数有效，后面的都无效。 那么是否应该可以更改呢
  *       onDown((e, currentXY) => {
  *           console.log("down", e, currentXY);
  *       });
