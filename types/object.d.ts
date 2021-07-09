@@ -1,3 +1,4 @@
+import { PathOf, TypeOfPath } from "./ObjPath";
 export declare function getTreeMaxDeep(tree: object): number;
 export declare function getTreeNodeLen(tree: object, nodeNumber?: number): number;
 export declare function deepMerge<T extends object, U extends object>(first: T, second: U): T & U;
@@ -160,12 +161,11 @@ export declare function translateObjPath(path: string, objName?: string): string
  * @param path
  * @param [objName = ""]
  */
-export declare function getObjValueByPath(obj: object, path: string, objName?: string): unknown;
+export declare function getObjValueByPath<T extends object, P extends string>(obj: T, path: PathOf<T, P>, objName?: string): TypeOfPath<T, P>;
 declare type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) => any;
 /**
  * 通过object路径设置值 如果路径中不存在则会自动创建对应的对象
  * @example
- * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
  * @param obj
  * @param path
  * @param value

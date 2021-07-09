@@ -1,7 +1,7 @@
 import { strPadEnd } from "./string";
 import { createTimeCountDown } from "./time";
-import { isArray, isString, isPromiseLike, isNumber } from "./dataType";
-import { assign, getReverseObj } from "./object";
+import { isArray, isString, isPromiseLike, isNumber, typeOf } from "./dataType";
+import { assign, getReverseObj, objKeys } from "./object";
 import { forEachAsync, inRange } from "./array";
 /**
  * 防抖函数
@@ -435,3 +435,67 @@ export function at(arr, index, def = undefined) {
 // type B = In<[1, 2, 3], (-1), 1>
 // const a = [1,2,3]
 // type A = In<typeof a, 5, unknown>
+/**
+ * 查找对象中与param key类似的key
+ * @param target
+ * @param key
+ */
+export function likeKeys(target, key) {
+    const reg = new RegExp(key);
+    if (undefined !== root.Map && target instanceof Map) {
+        // keys = [...obj.keys()]; // babel编译成es5会编译成[].concat，无法使用
+        const keys = [];
+        for (const k of target.keys()) {
+            if (reg.test(k))
+                keys.push(k);
+        }
+        return keys;
+    }
+    return objKeys(target).filter(key => reg.test(key));
+}
+/**
+ * 命令行的参数转为Map
+ * @param arr 命令行参数数组
+ * @param prefix 前缀 --d --f 前缀是"--"
+ * @param defaultKey 如果前面没有变量名那么使用默认
+ */
+export function parseCmdParams(arr, prefix = "-", defaultKey = "default") {
+    const list = arr.slice();
+    let currentKey = defaultKey;
+    const isKeyReg = new RegExp(`^${prefix}`);
+    const eqReg = /([^=]+)=([\s\S]+)?/;
+    const map = new Map();
+    function getKey(key) {
+        if (eqReg.test(key)) {
+            key = RegExp.$1;
+            const value = RegExp.$2;
+            value && list.unshift(value);
+        }
+        return key;
+    }
+    function setValue(currentValue) {
+        switch (typeOf(currentValue)) {
+            case "undefined":
+            case "boolean":
+                map.set(currentKey, it);
+                break;
+            case "array":
+                currentValue.push(it);
+                break;
+            default:
+                map.set(currentKey, [currentValue, it]);
+        }
+    }
+    let it;
+    while (it = list.shift()) {
+        if (isKeyReg.test(it)) {
+            currentKey = getKey(it.replace(isKeyReg, ""));
+            if (!map.has(currentKey)) {
+                map.set(currentKey, true);
+            }
+            continue;
+        }
+        setValue(map.get(currentKey));
+    }
+    return map;
+}

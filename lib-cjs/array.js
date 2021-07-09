@@ -364,7 +364,7 @@ exports.arrayRemoveItemsBy = arrayRemoveItemsBy;
 function unique(target, isRepeatFn) {
     if (!target.length)
         return target;
-    const fn = isRepeatFn || ((v1, v2) => v1 === v2);
+    const fn = isRepeatFn || ((v1, v2) => v1 === v2 || dataType_1.isNaN(v1) && dataType_1.isNaN(v2));
     const result = [target[0]];
     for (let i = 1; i < target.length; i++) {
         const item = target[i];

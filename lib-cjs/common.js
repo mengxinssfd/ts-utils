@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.at = exports.numToFixed = exports.root = exports.promiseQueue = exports.promiseAny = exports.createEnumByObj = exports.createEnum = exports.formatJSON = exports.createUUID = exports.functionApply = exports.generateFunctionCode = exports.oneByOne = exports.forEachByLen = exports.polling = exports.debounceByPromise = exports.debounceCancelable = exports.throttle = exports.debounceAsync = exports.debounce = void 0;
+exports.parseCmdParams = exports.likeKeys = exports.at = exports.numToFixed = exports.root = exports.promiseQueue = exports.promiseAny = exports.createEnumByObj = exports.createEnum = exports.formatJSON = exports.createUUID = exports.functionApply = exports.generateFunctionCode = exports.oneByOne = exports.forEachByLen = exports.polling = exports.debounceByPromise = exports.debounceCancelable = exports.throttle = exports.debounceAsync = exports.debounce = void 0;
 const string_1 = require("./string");
 const time_1 = require("./time");
 const dataType_1 = require("./dataType");
@@ -456,3 +456,69 @@ exports.at = at;
 // type B = In<[1, 2, 3], (-1), 1>
 // const a = [1,2,3]
 // type A = In<typeof a, 5, unknown>
+/**
+ * 查找对象中与param key类似的key
+ * @param target
+ * @param key
+ */
+function likeKeys(target, key) {
+    const reg = new RegExp(key);
+    if (undefined !== exports.root.Map && target instanceof Map) {
+        // keys = [...obj.keys()]; // babel编译成es5会编译成[].concat，无法使用
+        const keys = [];
+        for (const k of target.keys()) {
+            if (reg.test(k))
+                keys.push(k);
+        }
+        return keys;
+    }
+    return object_1.objKeys(target).filter(key => reg.test(key));
+}
+exports.likeKeys = likeKeys;
+/**
+ * 命令行的参数转为Map
+ * @param arr 命令行参数数组
+ * @param prefix 前缀 --d --f 前缀是"--"
+ * @param defaultKey 如果前面没有变量名那么使用默认
+ */
+function parseCmdParams(arr, prefix = "-", defaultKey = "default") {
+    const list = arr.slice();
+    let currentKey = defaultKey;
+    const isKeyReg = new RegExp(`^${prefix}`);
+    const eqReg = /([^=]+)=([\s\S]+)?/;
+    const map = new Map();
+    function getKey(key) {
+        if (eqReg.test(key)) {
+            key = RegExp.$1;
+            const value = RegExp.$2;
+            value && list.unshift(value);
+        }
+        return key;
+    }
+    function setValue(currentValue) {
+        switch (dataType_1.typeOf(currentValue)) {
+            case "undefined":
+            case "boolean":
+                map.set(currentKey, it);
+                break;
+            case "array":
+                currentValue.push(it);
+                break;
+            default:
+                map.set(currentKey, [currentValue, it]);
+        }
+    }
+    let it;
+    while (it = list.shift()) {
+        if (isKeyReg.test(it)) {
+            currentKey = getKey(it.replace(isKeyReg, ""));
+            if (!map.has(currentKey)) {
+                map.set(currentKey, true);
+            }
+            continue;
+        }
+        setValue(map.get(currentKey));
+    }
+    return map;
+}
+exports.parseCmdParams = parseCmdParams;

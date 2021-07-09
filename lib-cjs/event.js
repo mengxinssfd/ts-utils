@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isScrollStart = exports.isScrollEnd = exports.isVisible = exports.onceEvent = exports.eventProxy = exports.addResizeListener = exports.addScaleEventListener = exports.addDragEventListener = void 0;
+exports.isScrollStart = exports.isScrollEnd = exports.isVisible = exports.onceEvent = exports.eventProxy = exports.addResizeListener = exports.addScaleEventListener = exports.onDragEvent = exports.addDragEventListener = void 0;
 const array_1 = require("./array");
 const coordinate_1 = require("./coordinate");
 const domType_1 = require("./domType");
@@ -119,6 +119,41 @@ function addDragEventListener({ el, onDown, onMove, onUp, capture = { down: fals
     return removeAllEventListener;
 }
 exports.addDragEventListener = addDragEventListener;
+/**
+ * addDragEventListener的函数式用法.
+ * 使用addDragEventListener的时候，如果onDown,onMove,onUp之间有联系的话必须在外面写上通用数据,
+ * 改成这样可以把数据控制在函数内部
+ * @example
+ *   onDragEvent(({onDown, onMove, onUp}) => {
+ *       onDown((e, currentXY) => {
+ *           console.log("down", e, currentXY);
+ *       });
+ *       onMove((e, currentXY, lastXY, downXY) => {
+ *           console.log("move", e, currentXY, lastXY, downXY);
+ *       });
+ *       onUp((e, currentXY, downXY) => {
+ *           console.log("up", e, currentXY, downXY);
+ *       });
+ *   });
+ * @param hook
+ * @param el
+ * @param capture
+ */
+function onDragEvent(hook, { el = window, capture = { down: false, up: true, move: false } } = {}) {
+    const param = { el, capture };
+    const onDown = (cb) => {
+        param.onDown = cb;
+    };
+    const onMove = (cb) => {
+        param.onMove = cb;
+    };
+    const onUp = (cb) => {
+        param.onUp = cb;
+    };
+    hook({ onDown, onMove, onUp });
+    return addDragEventListener(param);
+}
+exports.onDragEvent = onDragEvent;
 /**
  * 缩放
  * @param el

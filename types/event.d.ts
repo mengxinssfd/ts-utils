@@ -14,10 +14,43 @@ declare type OnUp = (e: MouseEvent | TouchEvent, currentXY: xy, downXY: xy) => a
  * @param capture
  */
 export declare function addDragEventListener({ el, onDown, onMove, onUp, capture }: {
-    el?: string | HTMLElement;
+    el?: string | HTMLElement | Window;
     onDown?: OnDown;
     onMove?: OnMove;
     onUp?: OnUp;
+    capture?: {
+        down?: boolean;
+        up?: boolean;
+        move?: boolean;
+    };
+}): () => void;
+declare type DragHook<T> = (cb: T) => void;
+/**
+ * addDragEventListener的函数式用法.
+ * 使用addDragEventListener的时候，如果onDown,onMove,onUp之间有联系的话必须在外面写上通用数据,
+ * 改成这样可以把数据控制在函数内部
+ * @example
+ *   onDragEvent(({onDown, onMove, onUp}) => {
+ *       onDown((e, currentXY) => {
+ *           console.log("down", e, currentXY);
+ *       });
+ *       onMove((e, currentXY, lastXY, downXY) => {
+ *           console.log("move", e, currentXY, lastXY, downXY);
+ *       });
+ *       onUp((e, currentXY, downXY) => {
+ *           console.log("up", e, currentXY, downXY);
+ *       });
+ *   });
+ * @param hook
+ * @param el
+ * @param capture
+ */
+export declare function onDragEvent(hook: ({ onDown, onMove, onUp }: {
+    onDown: DragHook<OnDown>;
+    onMove: DragHook<OnMove>;
+    onUp: DragHook<OnUp>;
+}) => void, { el, capture }?: {
+    el?: string | HTMLElement | Window;
     capture?: {
         down?: boolean;
         up?: boolean;

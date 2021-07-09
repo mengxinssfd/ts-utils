@@ -102,4 +102,17 @@ export declare function numToFixed(num: number, fractionDigits?: number, roundin
 export declare function at<V extends ArrayLike<any>, K extends (keyof V | number), T extends ArrayLikeType<V>, D extends any | void>(arr: V, index: K, def?: D): In<V, K, D extends never ? T | void : T | D>;
 declare type In<A, K, D> = K extends keyof A ? A[K] extends void ? D : A[K] : D;
 declare type ArrayLikeType<T> = T extends ArrayLike<infer R> ? R : never;
+/**
+ * 查找对象中与param key类似的key
+ * @param target
+ * @param key
+ */
+export declare function likeKeys(target: object | Map<string, any>, key: string | RegExp): string[];
+/**
+ * 命令行的参数转为Map
+ * @param arr 命令行参数数组
+ * @param prefix 前缀 --d --f 前缀是"--"
+ * @param defaultKey 如果前面没有变量名那么使用默认
+ */
+export declare function parseCmdParams(arr: string[], prefix?: string, defaultKey?: string): Map<string, string[] | string | boolean>;
 export {};

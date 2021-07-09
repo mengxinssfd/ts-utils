@@ -407,7 +407,6 @@ exports.getObjValueByPath = getObjValueByPath;
 /**
  * 通过object路径设置值 如果路径中不存在则会自动创建对应的对象
  * @example
- * getObjValueByPath({a: {b: {c: 123}}}, "a.b.c") // => 123
  * @param obj
  * @param path
  * @param value
