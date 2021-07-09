@@ -63,7 +63,7 @@ setStyle({height: "100px"});
 setStyle({backgroundColor: "pink"});
 setStyle({width: "100px"})({marginBottom: "20px"});
 
-utils.onDragEvent(({onDown, onMove, onUp}) => {
+const cancelDragEvent = utils.onDragEvent(({onDown, onMove, onUp}) => {
     onDown((e, currentXY) => {
         console.log("down", e, currentXY);
     });
@@ -73,4 +73,10 @@ utils.onDragEvent(({onDown, onMove, onUp}) => {
     onUp((e, currentXY, downXY) => {
         console.log("up", e, currentXY, downXY);
     });
+});
+
+addEventListener("keydown", (e) => {
+    if (e.key === "r") {
+        cancelDragEvent();
+    }
 });
