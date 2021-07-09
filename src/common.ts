@@ -205,13 +205,13 @@ export function polling(callback: (times: number) => void | Promise<any>, interv
 
     function timeout() {
         const delay = interval - diff;
-        timer = window.setTimeout(() => {
+        timer = setTimeout(() => {
             if (status !== state.running) return;
             const now = Date.now();
             diff = now - lastTime - delay;
             lastTime = now;
             run();
-        }, delay);
+        }, delay) as any;
     }
 
     status = state.running;
