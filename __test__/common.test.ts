@@ -501,8 +501,8 @@ test("likeKeys", () => {
 test("parseCmdParams", () => {
     const fn = cm.parseCmdParams;
 
-    function pcp(value: string) {
-        return Object.fromEntries(fn(value.split(" ").slice(2)));
+    function pcp(value: string, prefix?: string, df?: string) {
+        return Object.fromEntries(fn(value.split(" ").slice(2), prefix, df));
     }
 
     expect(pcp("node test.js test.js -a -b -c")).toEqual({default: "test.js", a: true, b: true, c: true});
@@ -512,7 +512,7 @@ test("parseCmdParams", () => {
     expect(pcp("node test.js test.js -a=123 333 -b 666 888")).toEqual({
         default: "test.js",
         a: ["123", "333"],
-        b: ["666", "888"]
+        b: ["666", "888"],
     });
 
     expect(pcp("node test.js test.js -a=123=333=444=555")).toEqual({default: "test.js", a: "123=333=444=555"});
@@ -522,4 +522,6 @@ test("parseCmdParams", () => {
     expect(pcp("node test.js test.js -a= -b=123")).toEqual({default: "test.js", a: true, b: "123"});
 
     expect(pcp("node test.js test.js -a==123=333=444=555")).toEqual({default: "test.js", a: "=123=333=444=555"});
+
+    expect(pcp("node test.js test.js --a==123=333=444=555","--","args")).toEqual({args: "test.js", a: "=123=333=444=555"});
 });
