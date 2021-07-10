@@ -511,7 +511,7 @@ export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "defaul
     const eqReg = /([^=]+)=([\s\S]+)?/;
     const map: ReturnType<typeof parseCmdParams> = new Map();
 
-    function getKey(key: string): string {
+    function parseKey(key: string): string {
         if (eqReg.test(key)) {
             key = RegExp.$1;
             const value = RegExp.$2;
@@ -535,12 +535,17 @@ export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "defaul
     }
 
     let it;
+
+    function setKey() {
+        currentKey = parseKey(it.replace(isKeyReg, ""));
+        if (!map.has(currentKey)) {
+            map.set(currentKey, true);
+        }
+    }
+
     while (it = list.shift()) {
         if (isKeyReg.test(it)) {
-            currentKey = getKey(it.replace(isKeyReg, ""));
-            if (!map.has(currentKey)) {
-                map.set(currentKey, true);
-            }
+            setKey();
             continue;
         }
         setValue(map.get(currentKey));
