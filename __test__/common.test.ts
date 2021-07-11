@@ -1,6 +1,6 @@
-import * as cm from "../src/common";
-import {sleep} from "../src/time";
-import {strPadStart} from "../src/string";
+import * as cm from "../src/core/common";
+import {sleep} from "../src/core/time";
+import {strPadStart} from "../src/core/string";
 
 test("forEachByLen", () => {
     const arr: number[] = [];

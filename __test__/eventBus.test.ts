@@ -1,4 +1,4 @@
-import {EventBus} from "../src/eventBus";
+import {EventBus} from "../src/core/eventBus";
 
 test('EventBus', () => {
     let result = "";

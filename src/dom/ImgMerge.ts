@@ -1,7 +1,7 @@
-import {arrayRemoveItem, insertToArray} from "./array";
+import {arrayRemoveItem, insertToArray} from "../core/array";
 import {isImgElement} from "./domType";
-import {assign} from "./object";
-import {isNumber, isPromiseLike} from "./dataType";
+import {assign} from "../core/object";
+import {isNumber, isPromiseLike} from "../core/dataType";
 import {loadImg, createElement} from "./dom";
 
 // TODO 加上百分比和rem

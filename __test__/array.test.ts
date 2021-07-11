@@ -1,6 +1,6 @@
-import * as arr from "../src/array";
-import {sleep} from "../src/time";
-import {objForEach} from "../src/object";
+import * as arr from "../src/core/array";
+import {sleep} from "../src/core/time";
+import {objForEach} from "../src/core/object";
 
 test("forEach", () => {
     const fe = arr.forEach;

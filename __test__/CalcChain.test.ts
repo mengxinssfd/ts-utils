@@ -1,4 +1,4 @@
-import CalcChain from "../src/CalcChain";
+import CalcChain from "../src/core/CalcChain";
 
 test("Calc", () => {
     const Calc = CalcChain;

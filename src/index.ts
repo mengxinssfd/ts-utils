@@ -1,3 +1,3 @@
-export * from "./index.core";
-export * from "./index.dom";
-export * from "./index.bom";
+export * from "./core/index.core";
+export * from "./dom/index.dom";
+export * from "./bom/index.bom";

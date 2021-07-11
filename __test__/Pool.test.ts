@@ -1,4 +1,4 @@
-import {Pool} from "../src/Pool";
+import {Pool} from "../src/core/Pool";
 
 class PoolItem {
     private _x: number = 0;

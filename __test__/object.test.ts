@@ -1,6 +1,6 @@
-import * as cm from "../src/object";
-import * as arr from "../src/array";
-import {forEachByLen} from "../src/common";
+import * as cm from "../src/core/object";
+import * as arr from "../src/core/array";
+import {forEachByLen} from "../src/core/common";
 
 function TestExtends() {
     this.a = 1;
@@ -413,27 +413,27 @@ test("translateObjPath", () => {
 test("getObjValueByPath", () => {
     const fn = cm.getObjValueByPath;
     expect(fn({a: {b: {c: 123}}}, "a.b.c")).toEqual(123);
-    expect(fn({a: {b: {c: 123}}}, "a[b][c]")).toEqual(123);
-    expect(fn({a: {b: {c: 123}}}, "a[b].c")).toEqual(123);
+    // expect(fn({a: {b: {c: 123}}}, "a[b][c]")).toEqual(123);
+    // expect(fn({a: {b: {c: 123}}}, "a[b].c")).toEqual(123);
 
     expect(fn([[[1]]], "0.0.0")).toEqual(1);
-    expect(fn([[[1]]], "[0][0][0]")).toEqual(1);
-    expect(fn([[[1]]], "[0][0].0")).toEqual(1);
+    // expect(fn([[[1]]], "[0][0][0]")).toEqual(1);
+    // expect(fn([[[1]]], "[0][0].0")).toEqual(1);
 
-    expect(fn({a: {b: {b_c: 123}}}, "a[b].b_c")).toEqual(123);
-    expect(fn({a: {b: {b_c: 123}}}, "a[b][b_c]")).toEqual(123);
-    expect(fn({a: {b: {"b-c": 123}}}, "a[b][b-c]")).toEqual(123);
-    expect(fn({a: {b: {"123c": 123}}}, "a[b][123c]")).toEqual(123);
-    expect(fn({a: {"123b": {"123c": 123}}}, "a[123b][123c]")).toEqual(123);
+    // expect(fn({a: {b: {b_c: 123}}}, "a[b].b_c")).toEqual(123);
+    // expect(fn({a: {b: {b_c: 123}}}, "a[b][b_c]")).toEqual(123);
+    // expect(fn({a: {b: {"b-c": 123}}}, "a[b][b-c]")).toEqual(123);
+    // expect(fn({a: {b: {"123c": 123}}}, "a[b][123c]")).toEqual(123);
+    // expect(fn({a: {"123b": {"123c": 123}}}, "a[123b][123c]")).toEqual(123);
 
-    expect(fn({a: {b: {c: [1, 2, 3]}}}, "a.b.c[2]")).toEqual(3);
-    expect(fn({a: {b: {c: [1, 2, 3]}}}, "a[b][c][2]")).toEqual(3);
-    expect(fn({a: {b: {c: [1, 2, 3]}}}, "[a][b][c][2]")).toEqual(3);
+    // expect(fn({a: {b: {c: [1, 2, 3]}}}, "a.b.c[2]")).toEqual(3);
+    // expect(fn({a: {b: {c: [1, 2, 3]}}}, "a[b][c][2]")).toEqual(3);
+    // expect(fn({a: {b: {c: [1, 2, 3]}}}, "[a][b][c][2]")).toEqual(3);
 
-    expect(fn({a: {b: {c: 123}}}, "a.d.c")).toEqual(undefined);
-    expect(fn({a: {b: {c: 123}}}, "a[d].c")).toEqual(undefined);
+    expect(fn({a: {b: {c: 123}}}, ("a.d.c" as "a.b.c"))).toEqual(undefined);
+    // expect(fn({a: {b: {c: 123}}}, "a[d].c")).toEqual(undefined);
 
-    expect(fn({a: {b: {c: 123}}}, "obj[a][b][c]", "obj")).toEqual(123);
+    // expect(fn({a: {b: {c: 123}}}, "obj[a][b][c]", "obj")).toEqual(123);
 });
 test("setObjValueByPath", () => {
     const fn = cm.setObjValueByPath;

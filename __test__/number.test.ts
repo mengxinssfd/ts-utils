@@ -1,4 +1,4 @@
-import * as Num from "../src/number";
+import * as Num from "../src/core/number";
 
 test("strip", () => {
     expect(Num.strip(1.0000000000041083)).toBe(1);

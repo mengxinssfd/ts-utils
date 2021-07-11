@@ -1,11 +1,11 @@
-import {includes, unique} from "./array";
-import {divide, times} from "./number";
-import {assign, forEachObj, objReduce, pickByKeys} from "./object";
-import {SettableStyle, SettableProps} from "./TsTypes";
-import {isArray, isString} from "./dataType";
+import {includes, unique} from "../core/array";
+import {divide, times} from "../core/number";
+import {assign, forEachObj, objReduce, pickByKeys} from "../core/object";
+import {SettableStyle, SettableProps} from "../TsTypes";
+import {isArray, isString} from "../core/dataType";
 import {isDom, isNodeList} from "./domType";
-import {root} from "./common";
-import {fromCamel} from "./string";
+import {root} from "../core/common";
+import {fromCamel} from "../core/string";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 const vendor: string | false = (() => {

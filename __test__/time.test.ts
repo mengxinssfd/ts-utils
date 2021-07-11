@@ -1,5 +1,5 @@
-import * as t from "../src/time";
-import {createArray} from "../src/array";
+import * as t from "../src/core/time";
+import {createArray} from "../src/core/array";
 
 const sleepTime = 50;
 const arr = createArray({

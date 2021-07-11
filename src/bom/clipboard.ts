@@ -1,7 +1,7 @@
-import {isInputElement, isSelectElement, isTextAreaElement} from "./domType";
-import {createElement} from "./dom";
-import {castArray} from "./array";
-import {onceEvent} from "./event";
+import {isInputElement, isSelectElement, isTextAreaElement} from "../dom/domType";
+import {createElement} from "../dom/dom";
+import {castArray} from "../core/array";
+import {onceEvent} from "../dom/event";
 
 /**
  * @param element

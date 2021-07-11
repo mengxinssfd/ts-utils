@@ -1,5 +1,5 @@
-import * as dom from "../src/dom";
-import {isDivElement} from "../src/domType";
+import * as dom from "../src/dom/dom";
+import {isDivElement} from "../src/dom/domType";
 
 test("supportClassList", () => {
     const fn = dom.supportClassList;

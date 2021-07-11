@@ -1,6 +1,6 @@
-import {RGBA, RGB} from "../src/RGB";
-import {isRGBColor, isHEXColor} from "../src/color";
-import {createArray, unique} from "../src/array";
+import {RGBA, RGB} from "../src/core/RGB";
+import {isRGBColor, isHEXColor} from "../src/core/color";
+import {createArray, unique} from "../src/core/array";
 
 // RGB
 (function () {

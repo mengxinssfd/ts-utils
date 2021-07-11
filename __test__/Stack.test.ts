@@ -1,4 +1,4 @@
-import * as  Cache from "../src/Stack";
+import * as  Cache from "../src/core/Stack";
 
 function testCache(clazz: typeof Cache.Stack) {
     const c = new clazz();
