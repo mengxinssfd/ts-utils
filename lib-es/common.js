@@ -191,7 +191,7 @@ export function polling(callback, interval, immediate = true) {
     }
     function timeout() {
         const delay = interval - diff;
-        timer = window.setTimeout(() => {
+        timer = setTimeout(() => {
             if (status !== state.running)
                 return;
             const now = Date.now();
@@ -455,47 +455,51 @@ export function likeKeys(target, key) {
 }
 /**
  * 命令行的参数转为Map
+ * @notice 部分命令行工具中"--"是全写，"-"是缩写 这里未分
  * @param arr 命令行参数数组
  * @param prefix 前缀 --d --f 前缀是"--"
  * @param defaultKey 如果前面没有变量名那么使用默认
  */
 export function parseCmdParams(arr, prefix = "-", defaultKey = "default") {
-    const list = arr.slice();
-    let currentKey = defaultKey;
-    const isKeyReg = new RegExp(`^${prefix}`);
     const eqReg = /([^=]+)=([\s\S]+)?/;
+    const isKeyReg = new RegExp(`^${prefix}`);
+    const list = arr.slice();
     const map = new Map();
-    function getKey(key) {
+    let currentKey = defaultKey;
+    let item;
+    function setKey() {
+        let key = item.replace(isKeyReg, "");
         if (eqReg.test(key)) {
             key = RegExp.$1;
             const value = RegExp.$2;
             value && list.unshift(value);
         }
-        return key;
+        currentKey = key;
+        if (!map.has(currentKey)) {
+            map.set(currentKey, true);
+        }
     }
-    function setValue(currentValue) {
-        switch (typeOf(currentValue)) {
+    // fullFight
+    function setValue() {
+        const existValue = map.get(currentKey);
+        switch (typeOf(existValue)) {
             case "undefined":
             case "boolean":
-                map.set(currentKey, it);
+                map.set(currentKey, item);
                 break;
             case "array":
-                currentValue.push(it);
+                existValue.push(item);
                 break;
             default:
-                map.set(currentKey, [currentValue, it]);
+                map.set(currentKey, [existValue, item]);
         }
     }
-    let it;
-    while (it = list.shift()) {
-        if (isKeyReg.test(it)) {
-            currentKey = getKey(it.replace(isKeyReg, ""));
-            if (!map.has(currentKey)) {
-                map.set(currentKey, true);
-            }
+    while (item = list.shift()) {
+        if (isKeyReg.test(item)) {
+            setKey();
             continue;
         }
-        setValue(map.get(currentKey));
+        setValue();
     }
     return map;
 }

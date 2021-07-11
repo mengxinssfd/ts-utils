@@ -110,6 +110,7 @@ declare type ArrayLikeType<T> = T extends ArrayLike<infer R> ? R : never;
 export declare function likeKeys(target: object | Map<string, any>, key: string | RegExp): string[];
 /**
  * 命令行的参数转为Map
+ * @notice 部分命令行工具中"--"是全写，"-"是缩写 这里未分
  * @param arr 命令行参数数组
  * @param prefix 前缀 --d --f 前缀是"--"
  * @param defaultKey 如果前面没有变量名那么使用默认
