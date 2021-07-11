@@ -1,8 +1,11 @@
-import { arrayRemoveItem, insertToArray } from "./array";
-import { isImgElement } from "./domType";
-import { assign } from "./object";
-import { isNumber, isPromiseLike } from "./dataType";
-import { loadImg, createElement } from "./dom";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MergeImg = void 0;
+const array_1 = require("../core/array");
+const domType_1 = require("./domType");
+const object_1 = require("../core/object");
+const dataType_1 = require("../core/dataType");
+const dom_1 = require("./dom");
 let id = 0;
 class Node {
     constructor(parent) {
@@ -15,7 +18,7 @@ class Node {
         };
     }
     setStyle(style) {
-        assign(this.style, style);
+        object_1.assign(this.style, style);
         this.computeStyle();
     }
     get root() {
@@ -169,21 +172,21 @@ class Layer extends Node {
             return this.children.push(el);
         }
         else {
-            return insertToArray(el, (v, k) => {
+            return array_1.insertToArray(el, (v, k) => {
                 return v.style.zIndex <= el.style.zIndex || k === 0;
             }, list, { after: true, reverse: true });
         }
     }
     async addImg(urlOrPromiseImg, style = {}) {
         let img;
-        if (isImgElement(urlOrPromiseImg)) {
+        if (domType_1.isImgElement(urlOrPromiseImg)) {
             img = urlOrPromiseImg;
         }
-        else if (isPromiseLike(urlOrPromiseImg)) {
+        else if (dataType_1.isPromiseLike(urlOrPromiseImg)) {
             img = await urlOrPromiseImg;
         }
         else {
-            img = await loadImg(urlOrPromiseImg);
+            img = await dom_1.loadImg(urlOrPromiseImg);
         }
         const item = new ImgElement(this, style, img);
         const layer = this;
@@ -203,16 +206,16 @@ class Layer extends Node {
         this.children.forEach(child => child.render());
     }
     remove(value) {
-        if (isNumber(value)) {
+        if (dataType_1.isNumber(value)) {
             return this.children.splice(value, 1)[0];
         }
-        return arrayRemoveItem(value, this.children);
+        return array_1.arrayRemoveItem(value, this.children);
     }
     clear() {
         this.children = [];
     }
 }
-export class MergeImg {
+class MergeImg {
     /**
      * @param [width=0]
      * @param [height=0]
@@ -222,7 +225,7 @@ export class MergeImg {
         this.height = height;
         this.layers = [];
         const parent = document.body;
-        const canvas = createElement("canvas", {
+        const canvas = dom_1.createElement("canvas", {
             props: {
                 style: {
                     height: height + "px",
@@ -244,14 +247,14 @@ export class MergeImg {
     }
     addLayer(style) {
         var _a;
-        const layer = new Layer(this, assign({ width: this.width, height: this.height }, style));
+        const layer = new Layer(this, object_1.assign({ width: this.width, height: this.height }, style));
         layer.style.zIndex = (_a = layer.style.zIndex) !== null && _a !== void 0 ? _a : 0;
         const list = this.layers;
         if (!list.length) {
             list.push(layer);
         }
         else {
-            insertToArray(layer, (v, k) => {
+            array_1.insertToArray(layer, (v, k) => {
                 return v.style.zIndex <= layer.style.zIndex || k === 0;
             }, list, { after: true, reverse: true });
         }
@@ -262,7 +265,7 @@ export class MergeImg {
     }
     // 根据背景图创建一个MergeImg类 好处是可以根据背景图宽高设置canvas宽高，不用再额外设置
     static async createWithBg(url) {
-        const promise = loadImg(url);
+        const promise = dom_1.loadImg(url);
         const img = await promise;
         const mi = new MergeImg(img.width, img.height);
         await mi.addLayer().addImg(promise);
@@ -305,3 +308,4 @@ export class MergeImg {
         this._ctx = undefined;
     }
 }
+exports.MergeImg = MergeImg;

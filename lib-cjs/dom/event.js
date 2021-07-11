@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isScrollStart = exports.isScrollEnd = exports.isVisible = exports.onceEvent = exports.eventProxy = exports.addResizeListener = exports.addScaleEventListener = exports.onDragEvent = exports.addDragEventListener = void 0;
-const array_1 = require("./array");
-const coordinate_1 = require("./coordinate");
+const array_1 = require("../core/array");
+const coordinate_1 = require("../core/coordinate");
 const domType_1 = require("./domType");
-const dataType_1 = require("./dataType");
+const dataType_1 = require("../core/dataType");
 /**
  * 拖动事件 返回取消事件
  * @param el

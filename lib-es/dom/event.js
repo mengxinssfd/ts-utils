@@ -1,7 +1,7 @@
-import { includes } from "./array";
-import { getDistance } from "./coordinate";
+import { includes } from "../core/array";
+import { getDistance } from "../core/coordinate";
 import { isDom } from "./domType";
-import { isFunction, isString } from "./dataType";
+import { isFunction, isString } from "../core/dataType";
 /**
  * 拖动事件 返回取消事件
  * @param el

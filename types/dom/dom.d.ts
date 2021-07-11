@@ -1,4 +1,4 @@
-import { SettableStyle, SettableProps } from "./TsTypes";
+import { SettableStyle, SettableProps } from "../TsTypes";
 export declare function supportClassList(): boolean;
 export declare function hasClassIe8(target: HTMLElement, className: string[] | string): boolean;
 export declare function hasClassStandard(target: HTMLElement, className: string[] | string): boolean;

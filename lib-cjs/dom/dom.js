@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.percent2Rem = exports.rem2Percent = exports.px2Percent = exports.percent2px = exports.px2rem = exports.rem2px = exports.get1rem = exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createHiddenHtmlElement = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.setStyle = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
-const array_1 = require("./array");
-const number_1 = require("./number");
-const object_1 = require("./object");
-const dataType_1 = require("./dataType");
+const array_1 = require("../core/array");
+const number_1 = require("../core/number");
+const object_1 = require("../core/object");
+const dataType_1 = require("../core/dataType");
 const domType_1 = require("./domType");
-const common_1 = require("./common");
-const string_1 = require("./string");
+const common_1 = require("../core/common");
+const string_1 = require("../core/string");
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 const vendor = (() => {

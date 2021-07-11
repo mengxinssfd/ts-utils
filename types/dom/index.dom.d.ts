@@ -4,3 +4,4 @@ export * from "./ImgMerge";
 export * from "./domType";
 export * from "./event";
 export * from "./blob";
+export * from "./color";

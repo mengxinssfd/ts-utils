@@ -1,17 +1,12 @@
-"use strict";
 // import {isArray} from "./type";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getReverseRGB = exports.getAverageRGB = exports.hslToRgb = exports.rgbToHex = exports.isHEXColor = exports.isRGBColor = void 0;
-function isRGBColor(color) {
+export function isRGBColor(color) {
     const reg = /^[rR][gG][Bb][Aa]?[\(]([\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?),){2}[\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)(,[\s]*(0\.\d{1,2}|1|0))?[\)]{1}$/g;
     return reg.test(color);
 }
-exports.isRGBColor = isRGBColor;
-function isHEXColor(color) {
+export function isHEXColor(color) {
     const reg = /^#([\da-fA-F]{3}){1,2}$/;
     return reg.test(color);
 }
-exports.isHEXColor = isHEXColor;
 // 移动到RGB.fromHEX
 /*export function hexToRgb(hexValue: string) {
     // if (!isHEXColor(hexValue)) throw new TypeError("hexValue is not hex color");
@@ -26,7 +21,7 @@ exports.isHEXColor = isHEXColor;
     const b = parseInt(rgb[3], 16);
     return `rgb(${r},${g},${b})`;
 }*/
-function rgbToHex(color) {
+export function rgbToHex(color) {
     if (!isRGBColor(color))
         throw new TypeError();
     const rgb = color.split(",");
@@ -35,8 +30,7 @@ function rgbToHex(color) {
     const b = parseInt(rgb[2].split(")")[0]);
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
-exports.rgbToHex = rgbToHex;
-function hslToRgb(hslValue) {
+export function hslToRgb(hslValue) {
     const hsl = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(hslValue);
     const h = +hsl[1] / 360;
     const s = +hsl[2] / 100;
@@ -67,43 +61,3 @@ function hslToRgb(hslValue) {
     }
     return `rgb(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)})`;
 }
-exports.hslToRgb = hslToRgb;
-/**
- * 获取平均色
- * @param imgEl
- */
-function getAverageRGB(imgEl) {
-    let blockSize = 5, // only visit every 5 pixels
-    defaultRGB = { r: 0, g: 0, b: 0 }, // for non-supporting envs
-    canvas = document.createElement("canvas"), context = canvas.getContext && canvas.getContext("2d"), data, width, height, i = -4, length, rgb = { r: 0, g: 0, b: 0 }, count = 0;
-    if (!context) {
-        return defaultRGB;
-    }
-    height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
-    width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
-    context.drawImage(imgEl, 0, 0);
-    // context.createImageData(width, height);
-    try {
-        data = context.getImageData(0, 0, width, height);
-    }
-    catch (e) {
-        /* security error, img on diff domain */
-        return defaultRGB;
-    }
-    length = data.data.length;
-    while ((i += blockSize * 4) < length) {
-        ++count;
-        rgb.r += data.data[i];
-        rgb.g += data.data[i + 1];
-        rgb.b += data.data[i + 2];
-    }
-    // ~~ used to floor values
-    rgb.r = ~~(rgb.r / count);
-    rgb.g = ~~(rgb.g / count);
-    rgb.b = ~~(rgb.b / count);
-    return rgb;
-}
-exports.getAverageRGB = getAverageRGB;
-function getReverseRGB() {
-}
-exports.getReverseRGB = getReverseRGB;

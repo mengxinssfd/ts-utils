@@ -1,21 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.write2Clipboard = exports.setData2Clipboard = exports.supportClipboardWrite = exports.copy2Clipboard = exports.isSupportedClipboardCommand = exports.select = void 0;
-const domType_1 = require("./domType");
-const dom_1 = require("./dom");
-const array_1 = require("./array");
-const event_1 = require("./event");
+import { isInputElement, isSelectElement, isTextAreaElement } from "../dom/domType";
+import { createElement } from "../dom/dom";
+import { castArray } from "../core/array";
+import { onceEvent } from "../dom/event";
 /**
  * @param element
  * @return string
  */
-function select(element) {
+export function select(element) {
     let selectedText;
-    if (domType_1.isSelectElement(element)) {
+    if (isSelectElement(element)) {
         element.focus();
         selectedText = element.value;
     }
-    else if (domType_1.isInputElement(element) || domType_1.isTextAreaElement(element)) {
+    else if (isInputElement(element) || isTextAreaElement(element)) {
         const isReadOnly = element.hasAttribute("readonly");
         if (!isReadOnly) {
             element.setAttribute("readonly", "");
@@ -40,14 +37,12 @@ function select(element) {
     }
     return selectedText;
 }
-exports.select = select;
-function isSupportedClipboardCommand(action = ["cut", "copy"]) {
-    const actions = array_1.castArray(action);
+export function isSupportedClipboardCommand(action = ["cut", "copy"]) {
+    const actions = castArray(action);
     if (!!document.queryCommandSupported)
         return false;
     return actions.every((act) => document.queryCommandSupported(act));
 }
-exports.isSupportedClipboardCommand = isSupportedClipboardCommand;
 /**
  * 复制文字或html
  * 如果copy2Clipboard的this是一个html元素的话，
@@ -55,10 +50,10 @@ exports.isSupportedClipboardCommand = isSupportedClipboardCommand;
  * @param target {HTMLElement | string}
  * @return {Promise}
  */
-function copy2Clipboard(target) {
+export function copy2Clipboard(target) {
     let el;
     const isText = typeof target === "string";
-    el = isText ? dom_1.createElement("div", {
+    el = isText ? createElement("div", {
         props: {
             innerText: target,
             style: {
@@ -91,7 +86,6 @@ function copy2Clipboard(target) {
     });
     return p;
 }
-exports.copy2Clipboard = copy2Clipboard;
 /* if (window.Promise && !window.Promise.prototype.finally) {
     Promise.prototype.finally = function (cb?: (() => void)) {
         return this.then().then(cb, cb);
@@ -114,18 +108,17 @@ exports.copy2Clipboard = copy2Clipboard;
  */
 copy2Clipboard.once = function (el, target, eventType = "click", capture = false) {
     return new Promise(((resolve, reject) => {
-        event_1.onceEvent(el, eventType, () => {
+        onceEvent(el, eventType, () => {
             copy2Clipboard(target()).then(resolve, reject);
         }, capture);
     }));
 };
 const cb = window.navigator.clipboard;
-function supportClipboardWrite() {
+export function supportClipboardWrite() {
     var _a;
     return Boolean((_a = cb) === null || _a === void 0 ? void 0 : _a.write);
 }
-exports.supportClipboardWrite = supportClipboardWrite;
-function setData2Clipboard(data, el = document.documentElement, format = 'text/plain') {
+export function setData2Clipboard(data, el = document.documentElement, format = 'text/plain') {
     function cb(event) {
         var _a;
         (_a = event.clipboardData) === null || _a === void 0 ? void 0 : _a.setData(format, data);
@@ -135,13 +128,12 @@ function setData2Clipboard(data, el = document.documentElement, format = 'text/p
     el.addEventListener("copy", cb);
     return document.execCommand("copy");
 }
-exports.setData2Clipboard = setData2Clipboard;
 /**
  * 写进剪贴板
  * @desc notice - 只有在https或者localhost上可以用
  * @param contentList
  */
-async function write2Clipboard(contentList) {
+export async function write2Clipboard(contentList) {
     if (!supportClipboardWrite())
         throw new Error("unsupported navigator.clipboard.write");
     const clipboardItems = contentList.map(item => {
@@ -152,4 +144,3 @@ async function write2Clipboard(contentList) {
     });
     await cb.write(clipboardItems);
 }
-exports.write2Clipboard = write2Clipboard;

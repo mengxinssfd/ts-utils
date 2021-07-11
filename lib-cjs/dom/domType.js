@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isNodeList = exports.supportTouch = exports.isUlElement = exports.isSpanElement = exports.isDivElement = exports.isImgElement = exports.isTextAreaElement = exports.isInputElement = exports.isSelectElement = exports.isElementOf = exports.isDom = exports.isDomStandard = exports.isDomIe8 = void 0;
-const dataType_1 = require("./dataType");
+const dataType_1 = require("../core/dataType");
 function isDomIe8(target) {
     // 节点类型常用的有3种，元素节点Node.ELEMENT_NODE(1)；属性节点Node.ATTRIBUTE_NODE(2)以及文本节点Node.TEXT_NODE(3)
     return target && typeof target === "object" && target.nodeType === 1 && typeof target.nodeName === "string";

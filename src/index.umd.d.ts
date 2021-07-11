@@ -1,5 +1,5 @@
-import * as all from "./export";
-export * from "./export"
+import * as all from "./index";
+export * from "./index"
 
 declare global {
     interface Window {

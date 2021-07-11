@@ -17,3 +17,4 @@ __exportStar(require("./ImgMerge"), exports);
 __exportStar(require("./domType"), exports);
 __exportStar(require("./event"), exports);
 __exportStar(require("./blob"), exports);
+__exportStar(require("./color"), exports);
