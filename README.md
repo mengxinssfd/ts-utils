@@ -6,6 +6,9 @@
 目前有近200个工具函数。
 ## 使用方法
    es引入
+```shell
+npm i @mxssfd/ts-utils
+```
 ```javascript
 import {debounce} from "@mxssfd/ts-utils";
 debounce(() => { console.log("do something") }, 1000);
