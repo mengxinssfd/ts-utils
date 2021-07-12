@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/ts-utils",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "utils工具函数ts/js库",
   "main": "./lib-umd/index.js",
   "module": "./lib-es/index.js",
@@ -11,7 +11,7 @@
     "lib-es/*",
     "lib-umd/*",
     "lib-cjs/*",
-    "types/*.d.ts"
+    "types/*"
   ],
   "scripts": {
     "ru": "rollup -c",
