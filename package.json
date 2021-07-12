@@ -33,7 +33,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mengxinssfd/utilTs.git"
+    "url": "git+https://github.com/mengxinssfd/ts-utils.git"
   },
   "keywords": [
     "ts",
@@ -75,7 +75,7 @@
   "author": "dyh",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mengxinssfd/utilTs/issues"
+    "url": "https://github.com/mengxinssfd/ts-utils/issues"
   },
-  "homepage": "https://github.com/mengxinssfd/utilTs#readme"
+  "homepage": "https://github.com/mengxinssfd/ts-utils#readme"
 }
