@@ -74,15 +74,14 @@ export function deepCloneBfs<T>(target: T): T {
     type parent = any;
     type queItem = [key, value, parent];
     const result: any = new (target as any).constructor();
-    const queue: queItem[] = getChildren(target as any, result);
+    const queue: queItem[] = [];
+    getChildren(target as any, result);
 
-    function getChildren(tar: object, parent: any): typeof queue {
-        const que: typeof queue = [];
+    function getChildren(tar: object, parent: any) {
         for (let k in tar) {
             if (!tar.hasOwnProperty(k)) continue;
-            que.push([k, tar[k], parent]);
+            queue.push([k, tar[k], parent]);
         }
-        return que;
     }
 
     while (queue.length) {
@@ -98,7 +97,7 @@ export function deepCloneBfs<T>(target: T): T {
         if (parent[k] === undefined) {
             parent[k] = new v.constructor();
         }
-        queue.push(...getChildren(v, parent[k]));
+        getChildren(v, parent[k]);
     }
     return result;
 }
