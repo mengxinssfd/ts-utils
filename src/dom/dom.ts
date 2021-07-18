@@ -202,27 +202,47 @@ export function loadImg(url: string, props: Partial<HTMLImageElement> = {}): Pro
 }
 
 export function loadScript(url: string): Promise<HTMLScriptElement>;
-export function loadScript<T extends (script: HTMLScriptElement) => void>(url: string, successFn: T, errorFn?: Function): void;
+export function loadScript(param: {
+    url: string;
+    props?: Partial<HTMLScriptElement>;
+    attrs?: object;
+    onLoad: (el: HTMLScriptElement) => void;
+    onError?: Function
+}): void;
+export function loadScript(param: {
+    url: string;
+    props?: Partial<HTMLScriptElement>;
+    attrs?: object;
+    onLoad?: (el: HTMLScriptElement) => void;
+    onError: Function
+}): void;
 /**
  * 手动添加script
- * @param url
- * @param successFn {function?}
- * @param errorFn {function?}
+ * @param param
  */
-export function loadScript(url, successFn?, errorFn?) {
+export function loadScript(param) {
+    let url = "";
+    let onLoad, onError, props, attrs;
+    if (typeof param === "string") {
+        url = param;
+    } else {
+        ({url, onLoad, onError, props, attrs} = param);
+    }
     const cb = (successFn, errorFn) => {
         const script = createElement("script", {
             props: {
-                onload: () => successFn(script),
+                onload: () => successFn && successFn(script),
                 onabort: errorFn,
                 onerror: errorFn,
                 src: url,
+                ...props,
             },
-            parent: document.body,
+            attrs: attrs,
+            parent: document.body, // 插到body上是最后执行的，未插到dom上是不会下载的，所以不用在意props的设置顺序
         });
     };
-    if (successFn) {
-        cb(successFn!, errorFn);
+    if (onLoad || onError) {
+        cb(onLoad, onError);
         return;
     }
     return new Promise(function (resolve, reject) {
