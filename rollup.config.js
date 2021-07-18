@@ -22,7 +22,16 @@ export default {
       ` * Author: ${author}\n` +
       ` * Documentation: ${homepage}\n` +
       ` * Date: ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}\n` +
-      ` */\n`
+      ` */\n`,
+    intro: // window.tsUtilsVersions = tsUtils & <script alias="tu"></script> window.tu = tsUtils
+      `(function(){
+        var dc,alias;
+        if (typeof document !== "undefined" && (dc = document.currentScript) && (alias=dc.getAttribute("alias"))) {
+          window[alias] = ${libraryName};
+        }
+        if("undefined" === typeof ${libraryName}Versions) window.${libraryName}Versions = {};
+        window.${libraryName}Versions["${version}"] = ${libraryName};
+      })();`
   },
   plugins: [
     typescript({
