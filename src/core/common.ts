@@ -382,6 +382,10 @@ export function createEnumByObj<T extends object, K extends keyof T, O extends {
 // omit({a: 123, b: "bbb", c: true}, ["a", "b", "d"]);
 // type O = Omit<{ a: 123, b: "bbb", c: true }, "a" | "c">
 
+/**
+ * Promise.prototype.any list中任意一个promise resolve都会resolve
+ * @param list
+ */
 export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
     return new Promise<T>(((resolve, reject) => {
         let rejectTimes = 0;
