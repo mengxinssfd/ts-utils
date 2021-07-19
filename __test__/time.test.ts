@@ -111,7 +111,7 @@ test("formatDate", () => {
 
 test("dateDiff", () => {
     const v = t.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"));
-    expect(v).toBe("0年5天 00时00分00秒");
+    expect(v).toBe("0年5天00时00分00秒");
     expect(t.dateDiff(new Date("2020-05-01"), new Date("2020-05-06"), "dd天 hh时mm分ss秒")).toBe("05天 00时00分00秒");
     expect(t.dateDiff(new Date("2020-05-06"), new Date("2020-05-01 3:20:10"), "d天 hh时mm分ss秒")).toBe("5天 04时39分50秒");
 

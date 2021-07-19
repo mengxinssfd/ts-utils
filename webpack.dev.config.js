@@ -5,6 +5,7 @@ const config = {
     ImgMerge: "./test/merge-img/index.ts",
     layer: "./test/merge-img/layer.ts",
     touch: "./test/touch/index.ts",
+    time: "./test/time/index.ts",
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -46,6 +47,11 @@ const config = {
       template: "./test/touch/index.html",
       filename: "touch.html",
       chunks: ["touch"],// 于loader一样，在后面的会插到前面去
+    }),
+    new HtmlPlugin({
+      template: "./test/time/index.html",
+      filename: "time.html",
+      chunks: ["time"],
     }),
   ],
 };
