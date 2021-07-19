@@ -173,6 +173,8 @@ test("randomColor", () => {
     const rgbaList = fn("RGBA", 20);
     expect(rgbaList.length).toBe(20);
     rgbaList.forEach(it => expect(isRGBColor(it)).toBeTruthy());
+
+    expect(isHEXColor(cm.randomColor("" as any))).toBeTruthy();
 });
 test("shuffle", () => {
     const fn = cm.shuffle;
