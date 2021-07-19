@@ -35,7 +35,7 @@ export function rgbToHex(color: string) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
 
-export function hslToRgb(hslValue) {
+export function hslToRgb(hslValue: string): string {
     const hsl = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(hslValue) as string[];
     const h = +hsl[1] / 360;
     const s = +hsl[2] / 100;
