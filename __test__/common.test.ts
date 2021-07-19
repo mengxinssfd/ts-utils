@@ -379,14 +379,14 @@ test("promiseQueue", async () => {
     const fn = cm.promiseQueue;
     const v = await fn([
         (v) => Promise.resolve(`${v} thank you`),
-        (v) => Promise.resolve(`${v} im fine`),
+        (v) => Promise.resolve(`${v} im fine`)
     ], "hello");
     expect(v).toBe("hello thank you im fine");
 
     try {
         await fn([
             (v) => Promise.resolve(`${v} thank you`),
-            (v) => Promise.reject(`${v} im fine`),
+            (v) => Promise.reject(`${v} im fine`)
         ], "hello");
     } catch (e) {
         expect(e).toBe("hello thank you im fine");
@@ -394,7 +394,7 @@ test("promiseQueue", async () => {
 
     const v2 = await fn([
         (v) => `${v} thank you`,
-        (v) => `${v} im fine`,
+        (v) => `${v} im fine`
     ] as any, "hello");
     expect(v2).toBe("hello thank you im fine");
 });
@@ -509,10 +509,11 @@ test("parseCmdParams", () => {
 
     expect(pcp("node test.js test.js -a=123")).toEqual({default: "test.js", a: "123"});
 
-    expect(pcp("node test.js test.js -a=123 333 -b 666 888")).toEqual({
+    expect(pcp("node test.js test.js -a=123 333 555 -b 666 888 -c=1 -b=999")).toEqual({
         default: "test.js",
-        a: ["123", "333"],
-        b: ["666", "888"],
+        a: ["123", "333", "555"],
+        b: ["666", "888", "999"],
+        c: "1"
     });
 
     expect(pcp("node test.js test.js -a=123=333=444=555")).toEqual({default: "test.js", a: "123=333=444=555"});
@@ -523,5 +524,8 @@ test("parseCmdParams", () => {
 
     expect(pcp("node test.js test.js -a==123=333=444=555")).toEqual({default: "test.js", a: "=123=333=444=555"});
 
-    expect(pcp("node test.js test.js --a==123=333=444=555","--","args")).toEqual({args: "test.js", a: "=123=333=444=555"});
+    expect(pcp("node test.js test.js --a==123=333=444=555", "--", "args")).toEqual({
+        args: "test.js",
+        a: "=123=333=444=555"
+    });
 });
