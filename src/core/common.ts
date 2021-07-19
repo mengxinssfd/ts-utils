@@ -89,7 +89,7 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(call
 export function throttle<CB extends (...args: any[]) => (void | any)>(
     callback: CB,
     delay: number,
-    invalidCB: (interval: number) => void = (v) => void 0,
+    invalidCB: (interval: number) => void = (v) => void 0
 ): CB {
     let countDown = () => 0;
     return function (...args: any[]) {
@@ -387,16 +387,15 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
         let rejectTimes = 0;
         try {
             for (const p of list) {
-                if (isPromiseLike(p)) {
-                    p.then(res => resolve(res), () => {
-                        rejectTimes++;
-                        if (rejectTimes === list.length) {
-                            reject("AggregateError: All promises were rejected");
-                        }
-                    });
-                } else {
+                if (!isPromiseLike(p)) {
                     resolve(p);
+                    break;
                 }
+                p.then(res => resolve(res), () => {
+                    rejectTimes++;
+                    if (rejectTimes !== list.length) return;
+                    reject("AggregateError: All promises were rejected");
+                });
             }
             !list.length && reject("AggregateError: All promises were rejected");
         } catch (e) {
@@ -462,7 +461,7 @@ export function at<V extends ArrayLike<any>,
     D extends any | void>(
     arr: V,
     index: K,
-    def: D = undefined as never,
+    def: D = undefined as never
 ): In<V, K, D extends never ? T | void : T | D> {
     if (index < 0) {
         index = (arr.length + (index as number)) as any;
