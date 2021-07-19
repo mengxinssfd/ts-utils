@@ -114,6 +114,12 @@ test("randomInt", () => {
     const arr8 = createArray({len: 200, fill: () => fn()});
     expect(arr8.length).toBe(200);
     expect(arr8.every(i => i >= 0 && i < 1)).toBeTruthy();
+
+    const day = 1000 * 60 * 60 * 24;
+    forEachByLen(100, () => {
+        // ~~ 整数太大变负数
+        expect(fn(day * 30, day * 100)).toBeGreaterThanOrEqual(0);
+    });
 });
 test("randomItem", () => {
     const fn = cm.randomItem;
