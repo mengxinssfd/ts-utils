@@ -76,6 +76,10 @@ export declare function createEnumByObj<T extends object, K extends keyof T, O e
 }>(obj: T): T & {
     [k: string]: K;
 };
+/**
+ * Promise.prototype.any list中任意一个promise resolve都会resolve
+ * @param list
+ */
 export declare function promiseAny<T>(list: Promise<T>[]): Promise<T>;
 /**
  * promise队列  任何一个reject都会中断队列 (跟reduceAsync类似)

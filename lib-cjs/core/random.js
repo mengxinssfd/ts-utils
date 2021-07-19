@@ -36,7 +36,9 @@ function randomInt(min, max, len) {
     if (len === undefined) {
         const dif = max - min;
         // 直接调用randomFloat的话randomInt(-10,10)永远都不会出现-10
-        return ~~(Math.random() * dif) + min;
+        // 用~~做整数转换的时候，数字太大会变为负数: 如1000 * 60 * 60 * 24 * 30
+        //  return ~~(Math.random() * dif) + (min as number);
+        return parseInt((Math.random() * dif)) + min;
     }
     else {
         return array_1.createArray({ len, fill: () => randomInt(min, max) });
@@ -110,7 +112,7 @@ function randomColor(type, len) {
         const map = {
             "HEX": randomHEX,
             "RGB": randomRGB,
-            "RGBA": randomRGBA,
+            "RGBA": randomRGBA
         };
         return (map[type] || map.HEX)();
     }

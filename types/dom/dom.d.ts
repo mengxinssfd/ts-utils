@@ -44,7 +44,20 @@ export declare function setStyle(style: SettableStyle, { toCssText, el, }?: {
  */
 export declare function loadImg(url: string, props?: Partial<HTMLImageElement>): Promise<HTMLImageElement>;
 export declare function loadScript(url: string): Promise<HTMLScriptElement>;
-export declare function loadScript<T extends (script: HTMLScriptElement) => void>(url: string, successFn: T, errorFn?: Function): void;
+export declare function loadScript(param: {
+    url: string;
+    props?: Partial<HTMLScriptElement>;
+    attrs?: object;
+    onLoad: (el: HTMLScriptElement) => void;
+    onError?: Function;
+}): void;
+export declare function loadScript(param: {
+    url: string;
+    props?: Partial<HTMLScriptElement>;
+    attrs?: object;
+    onLoad?: (el: HTMLScriptElement) => void;
+    onError: Function;
+}): void;
 /**
  * @param [el = window]
  * @return {}

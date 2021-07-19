@@ -70,15 +70,14 @@ function deepCloneBfs(target) {
     if (typeof target !== "object" || !target)
         return target;
     const result = new target.constructor();
-    const queue = getChildren(target, result);
+    const queue = [];
+    getChildren(target, result);
     function getChildren(tar, parent) {
-        const que = [];
         for (let k in tar) {
             if (!tar.hasOwnProperty(k))
                 continue;
-            que.push([k, tar[k], parent]);
+            queue.push([k, tar[k], parent]);
         }
-        return que;
     }
     while (queue.length) {
         const [k, v, parent] = queue.shift();
@@ -91,7 +90,7 @@ function deepCloneBfs(target) {
         if (parent[k] === undefined) {
             parent[k] = new v.constructor();
         }
-        queue.push(...getChildren(v, parent[k]));
+        getChildren(v, parent[k]);
     }
     return result;
 }

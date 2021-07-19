@@ -7,7 +7,7 @@ export declare function number2Date(millisecond: number, format?: string): strin
  * 比较两个日期相差年天时分秒  用于倒计时等
  * @param start
  * @param end
- * @param [format="y年d天 hh时mm分ss秒"]
+ * @param [format="y年d天hh时mm分ss秒"]
  */
 export declare function dateDiff(start: Date, end: Date, format?: string): string;
 export interface formatDateInterface {

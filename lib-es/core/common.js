@@ -355,22 +355,25 @@ export function createEnumByObj(obj) {
 }
 // omit({a: 123, b: "bbb", c: true}, ["a", "b", "d"]);
 // type O = Omit<{ a: 123, b: "bbb", c: true }, "a" | "c">
+/**
+ * Promise.prototype.any list中任意一个promise resolve都会resolve
+ * @param list
+ */
 export function promiseAny(list) {
     return new Promise(((resolve, reject) => {
         let rejectTimes = 0;
         try {
             for (const p of list) {
-                if (isPromiseLike(p)) {
-                    p.then(res => resolve(res), () => {
-                        rejectTimes++;
-                        if (rejectTimes === list.length) {
-                            reject("AggregateError: All promises were rejected");
-                        }
-                    });
-                }
-                else {
+                if (!isPromiseLike(p)) {
                     resolve(p);
+                    break;
                 }
+                p.then(res => resolve(res), () => {
+                    rejectTimes++;
+                    if (rejectTimes !== list.length)
+                        return;
+                    reject("AggregateError: All promises were rejected");
+                });
             }
             !list.length && reject("AggregateError: All promises were rejected");
         }
