@@ -34,15 +34,17 @@ export function number2Date(millisecond: number, format = "d天hh时mm分ss秒")
  * 比较两个日期相差年天时分秒  用于倒计时等
  * @param start
  * @param end
- * @param [format="y年d天 hh时mm分ss秒"]
+ * @param [format="y年d天hh时mm分ss秒"]
  */
-export function dateDiff(start: Date, end: Date, format = "y年d天 hh时mm分ss秒"): string {
+export function dateDiff(start: Date, end: Date, format = "y年d天hh时mm分ss秒"): string {
     let result = format;
     if (start.getTime() > end.getTime()) {
         [start, end] = [end, start];
     }
-    const seconds = ~~((end.getTime() - start.getTime()) / 1000);
+    const targetTime = end.getTime() - start.getTime()
+    const seconds = ~~(targetTime / 1000);
     const obj: { [k: string]: number } = {
+        "S+": targetTime % 1000,
         "s+": seconds % 60,
         "m+": ~~(seconds / 60) % 60,
         "h+": ~~(seconds / (60 * 60)) % 24,
