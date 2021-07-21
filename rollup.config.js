@@ -8,6 +8,30 @@ const {version, author, homepage} = require('./package.json');
 const libraryName = "tsUtils";
 const date = new Date();
 
+function intro(lib,libraryName,version) {
+  function getCurrentScript() {
+    if(document.currentScript) {
+      return document.currentScript;
+    }
+    var nodes = document.getElementsByTagName("script");
+    for(var i = 0, node; node = nodes[i++];) {
+      if(node.readyState === "interactive") {
+        return node;
+      }
+    }
+  }
+
+  if(typeof document === "undefined") {
+    return;
+  }
+  var alias, currentScript;
+  if((currentScript = getCurrentScript()) && (alias = currentScript.getAttribute("alias"))) {
+    self[alias] = lib;
+  }
+  var vk = libraryName + "Versions";
+  if("undefined" === typeof self[vk]) self[vk] = {};
+  self[vk][version] = lib;
+}
 
 export default {
   input: 'src/index.ts',  // 入口文件
@@ -24,14 +48,7 @@ export default {
       ` * Date: ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}\n` +
       ` */\n`,
     intro: // window.tsUtilsVersions = tsUtils & <script alias="tu"></script> window.tu = tsUtils
-      `(function(){
-        var dc,alias;
-        if (typeof document !== "undefined" && (dc = document.currentScript) && (alias=dc.getAttribute("alias"))) {
-          window[alias] = ${libraryName};
-        }
-        if("undefined" === typeof ${libraryName}Versions) window.${libraryName}Versions = {};
-        window.${libraryName}Versions["${version}"] = ${libraryName};
-      })();`
+      `(${intro.toString()})(${libraryName},"${libraryName}","${version}");`
   },
   plugins: [
     typescript({
