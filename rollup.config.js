@@ -8,23 +8,20 @@ const {version, author, homepage} = require('./package.json');
 const libraryName = "tsUtils";
 const date = new Date();
 
-function intro(lib,libraryName,version) {
+
+function intro(lib, libraryName, version) {
   function getCurrentScript() {
     if(document.currentScript) {
       return document.currentScript;
     }
-    var nodes = document.getElementsByTagName("script");
-    for(var i = 0, node; node = nodes[i++];) {
-      if(node.readyState === "interactive") {
-        return node;
-      }
-    }
+    return document.getElementById(libraryName + version);
   }
 
   if(typeof document === "undefined") {
     return;
   }
   var alias, currentScript;
+  // 如果当前script绑定了${libraryName + version}为id则认为这是当前script
   if((currentScript = getCurrentScript()) && (alias = currentScript.getAttribute("alias"))) {
     self[alias] = lib;
   }
