@@ -65,7 +65,7 @@ export function deepMerge<T extends object, U extends object>(first: T, second: 
 export function forEachObj<T extends object>(
     obj: T,
     callbackFn: (value: T[keyof T], key: keyof T, obj: T) => (void | false),
-    elseCB?: () => any,
+    elseCB?: () => any
 ): boolean {
     for (const k in obj) {
         if (!obj.hasOwnProperty(k)) continue;
@@ -101,7 +101,7 @@ export function getReverseObj(obj: { [k: string]: string }): { [k: string]: stri
 export function reduceObj<T extends object, R>(
     obj: T,
     callbackFn: (previousValue: R, value: T[keyof T], key: keyof T, obj: T) => R,
-    initialValue: R,
+    initialValue: R
 ): R {
     let result = initialValue;
     forEachObj(obj, (v, k, o) => {
@@ -123,7 +123,7 @@ export const objReduce = reduceObj;
 export function pickByKeys<T extends object, K extends keyof T, O extends Pick<T, K>>(
     originObj: T,
     pickKeys: K[],
-    cb?: (value: T[K], key: K, originObj: T) => Pick<T, K>[K],
+    cb?: (value: T[K], key: K, originObj: T) => Pick<T, K>[K]
 ): Pick<T, K> {
     const callback = cb || (v => v);
     return pickKeys.reduce((res, key) => {
@@ -144,7 +144,7 @@ export function pickByKeys<T extends object, K extends keyof T, O extends Pick<T
 export function pickRename<T extends object, K extends keyof T, O extends { [k: string]: K }>(
     originObj: T,
     pickKeyMap: O,
-    cb?: (value: T[O[keyof O]], key: O[keyof O], originObj: T) => T[O[keyof O]],
+    cb?: (value: T[O[keyof O]], key: O[keyof O], originObj: T) => T[O[keyof O]]
 ): { [k in keyof O]: T[O[k]] } {
     const callback = cb || (v => v);
     /* const renames = Object.keys(renamePickObj) as (keyof O)[];
@@ -188,7 +188,7 @@ pickRename2({a: 123, b: "222"}, {
 export function pick<T extends object, K extends keyof T, KS extends K[]>(
     originObj: T,
     pickKeys: KS,
-    cb?: (value: T[K], key: K, fromObj: T) => T[K],
+    cb?: (value: T[K], key: K, fromObj: T) => T[K]
 ): { [key in K]: T[key] }
 /**
  * 功能与pickRename函数一致
@@ -199,7 +199,7 @@ export function pick<T extends object, K extends keyof T, KS extends K[]>(
 export function pick<T extends object, K extends keyof T, O extends { [k: string]: K }>(
     originObj: T,
     pickKeyMap: O,
-    cb?: (value: T[O[keyof O]], key: O[keyof O], fromObj: T) => T[O[keyof O]],
+    cb?: (value: T[O[keyof O]], key: O[keyof O], fromObj: T) => T[O[keyof O]]
 ): { [k in keyof O]: T[O[k]] }
 /**
  * 合并pickByKeys与pickRename两者的功能
@@ -251,7 +251,7 @@ export function pickDiff(origin: object, objs: object[], verify?: (originV: any,
  */
 export function renameObjKey<T extends object, K extends keyof T, O extends { [k: string]: K }, R extends Omit<T, O[keyof O]>>(
     originObj: T,
-    keyMap: O,
+    keyMap: O
 ): { [k in keyof O]: T[O[k]] } & R {
     const result: any = assign({}, originObj);
     let delKeys: K[] = [];
@@ -360,7 +360,7 @@ export function objUpdate<T extends object>(target: T, ...args: T[]): T {
 export function pickUpdated<T extends object>(
     target: T,
     objs: object[],
-    compareFn: (a, b) => boolean = (a, b) => a === b || (isNaN(a) && isNaN(b)),
+    compareFn: (a, b) => boolean = (a, b) => a === b || (isNaN(a) && isNaN(b))
 ): Partial<{ [k in keyof T]: any }> {
     return objReduce(target, (result, v, k) => {
         forEachRight(function (item: any): void | false {
@@ -483,12 +483,12 @@ type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) =
  * @param onExist 当要改动位置已经有值时的回调
  * @param [objName = ""]
  */
-export function setObjValueByPath<T extends object>(
+export function setObjValueByPath<T extends object, P extends string>(
     obj: T,
-    path: string,
-    value: any,
+    path: PathOf<T, P>,
+    value: TypeOfPath<T, P>,
     onExist: SetObjValueByPathOnExist = (a, b): any => b,
-    objName = "",
+    objName = ""
 ): T {
     const p = translateObjPath(path, objName);
     const split = p.split(".");
