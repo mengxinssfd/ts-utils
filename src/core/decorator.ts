@@ -1,30 +1,33 @@
 import {debounce} from "./common";
 
-/**
- * 防抖装饰器
- * @param delay
- * @constructor
- */
-export function Debounce(delay: number) {
+export function decoratorfy(callback: (descriptor: PropertyDescriptor) => Function) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         // 在babel的网站编译的是target包含key，descriptor
         if (target.descriptor) {
             descriptor = target.descriptor;
         }
-        descriptor.value = debounce(descriptor.value, delay);
+        descriptor.value = callback(descriptor);
     };
 }
+
+/**
+ * 防抖装饰器
+ * @param delay
+ * @constructor
+ */
+export const Debounce = (delay: number) =>
+    decoratorfy(
+        descriptor => debounce(descriptor.value, delay)
+    );
 
 
 /**
  * 比setInterval好的地方在于使用promise判断一回执行完毕情况
- *
- * // TODO 无法从origin函数外中断polling 如果同一个polling执行多次的话 无法中断前一个
  * @param interval
  * @param [immediate=true]
  * @constructor
  */
-export function Polling(interval: number, immediate = true) {
+/*export function Polling(interval: number, immediate = true) {
     enum state {running, stopped}
 
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -76,7 +79,61 @@ export function Polling(interval: number, immediate = true) {
         descriptor.value = start;
     };
 
-}
+}*/
+export const Polling = (interval: number, immediate = true) => decoratorfy((descriptor => {
+        enum state {running, stopped}
+
+        const origin = descriptor.value;
+        let timer: any;
+        let status: state;
+
+        function stop() {
+            status = state.stopped;
+            clearTimeout(timer);
+        }
+
+        function start() {
+            stop();
+            const p = new Promise<void>((res, rej) => {
+                let times = 0;
+
+                function nextTimeout() {
+                    timer = setTimeout(handle, interval);
+                }
+
+                function clear() {
+                    stop();
+                    res();
+                }
+
+                const handle = () => {
+                    const back = origin.call(this, times++, res, rej);
+                    if (status === state.running) {
+                        if (back instanceof Promise) {
+                            (back as Promise<any>).then(function () {
+                                nextTimeout();
+                            }).catch(clear);
+                        } else {
+                            back === false ? clear() : nextTimeout();
+                        }
+                    }
+                };
+
+                status = state.running;
+                if (immediate) {
+                    handle();
+                } else {
+                    nextTimeout();
+                }
+            });
+            p.finally(stop);
+            return p;
+        }
+
+        start.stop = stop;
+        return start;
+    }
+));
 
 /*
 export function Singleton<T extends { new(...args: any[]): {} }>(constructor: T): any {
