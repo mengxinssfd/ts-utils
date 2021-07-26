@@ -41,25 +41,50 @@ test("Polling", async (done) => {
 
     class Test {
         times = 0;
-        time = 0;
-        value: string | number = "";
 
         @Polling(100)
         test(times?: number) {
-            return new Promise<void>((res, rej) => {
-                if (times! >= 5) {
-                    rej();
-                } else {
-                    // console.log(times);
-                    res();
-                }
-            });
+            this.times = times!;
+            if (times! >= 5) {
+                return Promise.reject();
+            } else {
+                // console.log(times);
+                return Promise.resolve();
+            }
         }
     }
 
     const t = new Test();
 
     await t.test();
+
+    expect(t.times).toBe(5);
+
+    // await sleep(5000);
+    done();
+});
+test("Polling 2", async (done) => {
+    const Polling = dc.Polling;
+
+    class Test {
+        times = 0;
+
+        @Polling(100)
+        test(times?: number) {
+            this.times = times!;
+        }
+    }
+
+    const t = new Test();
+
+    t.test();
+
+    await sleep(550);
+    (t.test as any).stop();
+    expect(t.times).toBe(5);
+    t.test();
+    await sleep(350);
+    expect(t.times).toBe(3);
 
     // await sleep(5000);
     done();
