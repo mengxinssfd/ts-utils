@@ -2,16 +2,17 @@
  * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
  * 千位分隔 1,234,567,890
  * @param num
+ * @param [delimiter = ","]
  */
-export function thousandFormat(num: string | number): string {
-    return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
+export function thousandFormat(num: string | number, delimiter = ","): string {
+    return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
 }
 
 // 给不能用``模板字符串的环境使用
 // es5的格式化字符串 example: strTemplate("11%s111%s", 3, 4) => "1131114"
 export function strTemplate(str, ...params) {
     /*
-    // es5; typescript不需要str, ...params参数
+    // es5; typescript不需要str, ...params参数`
     var args = Array.prototype.slice.call(arguments, 0);
     if (!args.length) return "";
     var str = args[0];
