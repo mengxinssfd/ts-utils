@@ -571,3 +571,12 @@ export function revertObjFromPath(pathArr: string[]): object {
         return result;
     }, {});
 }
+
+// ie9+ 支持，不需要实现
+/*
+export function objCreate(proto: any) {
+    const origin = {};
+    // @ts-ignore
+    origin.__proto__ = proto;
+    return origin;
+}*/
