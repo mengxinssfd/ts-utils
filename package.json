@@ -28,7 +28,7 @@
     "test": "jest",
     "cov": "jest --coverage",
     "cov-no-cache": "jest --coverage --no-cache",
-    "dev": "set NODE_ENV=development&webpack-dev-server --config webpack.dev.config.js --host 0.0.0.0",
+    "dev": "set NODE_ENV=development&webpack-dev-server --config webpack.dev.config.js --host 0.0.0.0 --open \"http://localhost:8080/touch\"",
     "clear_jest": "jest --clearCache"
   },
   "repository": {
