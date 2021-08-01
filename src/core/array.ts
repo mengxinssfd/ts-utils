@@ -65,7 +65,7 @@ export function createArray<T = number>(
 export function forEach<T>(
     arr: ArrayLike<T>,
     callbackFn: (value: T, index: number, array: ArrayLike<T>) => (any | false),
-    elseCB?: () => void
+    elseCB?: () => void,
 ): boolean {
     // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
     const len = arr.length || 0;
@@ -135,11 +135,10 @@ export function forEachRight<T>(
     }
 }
 
-
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
 export function from<T, U = T>(
     iterable: Iterable<T> | ArrayLike<T>,
-    mapFn: (v: T, k?: number) => U = (value, index) => value as any
+    mapFn: (v: T, k?: number) => U = (value, index) => value as any,
 ): U[] {
     const arr: U[] = [];
     if (isArrayLike(iterable)) {
@@ -432,17 +431,12 @@ export function unique<T>(target: T[], isRepeatFn?: (value: T, value2: T) => boo
 /**
  * @example
  * castArray([1]); // [1]
- * @param value
- */
-export function castArray<T>(value: T[]): T[];
-/**
  * @example
  * castArray(1); // [1]
  * @param value
  */
-export function castArray<T>(value: T): T[];
-export function castArray(value) {
-    return isArray(value) ? value : [value];
+export function castArray<T>(value: T): T extends Array<any> ? T : Array<T> {
+    return (isArray(value) ? value : [value]) as any;
 }
 
 /**
