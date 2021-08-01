@@ -2,7 +2,7 @@ import * as utils from "../../src";
 
 declare global {
     interface Window {
-        u: any
+        u: any;
     }
 }
 window.u = utils;
@@ -38,7 +38,7 @@ addEventListener("click", () => {
 utils.forEachAsync((r) => r(), [
     () => Promise.resolve(100),
     () => Promise.reject("test"),
-    () => Promise.resolve(200),
+    () => Promise.resolve(200)
 ]).catch((res) => {
     console.log(res);
 });
@@ -56,7 +56,6 @@ hd.addEventListener("click", (e) => {
     return false;
 });
 utils.createHiddenHtmlElement({style: {color: "red"}, innerText: "span"}, "span");
-
 utils.setStyle({width: "100px", height: "100px", backgroundColor: "red"}, {el: div});
 const setStyle = utils.setStyle.bind(document.querySelector(".set-style"));
 setStyle({height: "100px"});
@@ -75,8 +74,39 @@ const cancelDragEvent = utils.onDragEvent(({onDown, onMove, onUp}) => {
     });
 });
 
+const toggleHeightDiv = utils.createHtmlElement("div", {
+    props: {
+        className: "toggle-height",
+        style: {
+            overflow: "hidden"
+        }
+    },
+    children: [
+        utils.createHtmlElement("div", {
+            props: {
+                style: {
+                    height: "200px",
+                    width: "200px",
+                    background: "yellow"
+                }
+            }
+        })
+    ],
+    parent: document.body
+});
+
 addEventListener("keydown", (e) => {
-    if (e.key === "r") {
-        cancelDragEvent();
+    switch (e.code) {
+        case "KeyR":
+            cancelDragEvent();
+            break;
+        case "Space":
+            utils.toggleWidthOrHeight(toggleHeightDiv, "height", {
+                duration: "1s",
+                timingFunction: "ease-in-out"
+                // delay: "0.5s"
+            });
+            break;
     }
 });
+

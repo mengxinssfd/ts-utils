@@ -1,4 +1,4 @@
-import {includes, unique} from "../core/array";
+import {castArray, includes, unique} from "../core/array";
 import {divide, times} from "../core/number";
 import {assign, forEachObj, objReduce, pickByKeys} from "../core/object";
 import {SettableStyle, SettableProps} from "../TsTypes";
@@ -17,7 +17,8 @@ const vendor: string | false = (() => {
         standard: "transform",
     };
     for (let key in transformName) {
-        if (elementStyle[transformName[key]] !== undefined) {
+        const transform = transformName[key];
+        if (elementStyle[transform] !== undefined) {
             return key;
         }
     }
@@ -113,9 +114,9 @@ export function toggleClass(target: HTMLElement, className: string): string {
  * @param style
  * @returns {string}
  */
-export function prefixStyle<T extends keyof CSSStyleDeclaration>(style: T): T | false {
+export function prefixStyle<T extends keyof CSSStyleDeclaration>(style: T): T | null {
     if (vendor === false) {
-        return false;
+        return null;
     }
     if (vendor === "standard") {
         return style;
