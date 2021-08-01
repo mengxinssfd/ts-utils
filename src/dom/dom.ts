@@ -6,6 +6,7 @@ import {isArray, isString} from "../core/dataType";
 import {isDom, isNodeList} from "./domType";
 import {root} from "../core/common";
 import {fromCamel} from "../core/string";
+import {onceEvent} from "./event";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 const vendor: string | false = (() => {
@@ -540,3 +541,50 @@ export function translateCssLenUnit(from: `${number}${CSSLenUnit}`, to: CSSLenUn
 // translateCssLenUnit("100%", "rem");
 // 管道语法
 // "100px" |> ((_: any) => translateCssLenUnit(_, "rem"));
+
+/**
+ * 用于类似手风琴的伸缩效果
+ * @param el  el的宽或高必须是子元素撑开的，否则无效
+ * @param type
+ * @param transition
+ */
+export function toggleWidthOrHeight(el: HTMLElement, type: "width" | "height", transition: {
+    duration?: string;
+    delay?: string;
+    timingFunction?: string
+} = {}) {
+    const trans = "transition";
+    const prefixTransition = prefixStyle(trans)!;
+
+    const isHide = el.getAttribute("toggle-status") === "hide";
+    const transitionValue = `${type} ${transition.duration || ".3s"} ${transition.timingFunction || ""} ${transition.delay || ""}`.trim();
+    if (!isHide) {
+        el.setAttribute("toggle-status", "hide");
+        const set = setStyle([
+            {[trans]: "none"},
+            {[type]: (type === "height" ? el.scrollHeight : el.scrollWidth) + "px"}
+        ], {el});
+        set({
+            [prefixTransition]: transitionValue,
+            [trans]: transitionValue
+        });
+        setTimeout(function () {
+            set({[type]: "0"});
+        });
+    } else {
+        el.removeAttribute("toggle-status");
+        const set = setStyle({
+            [trans]: "none",
+            [type]: "0"
+        }, {el})({
+            [prefixTransition]: transitionValue,
+            [trans]: transitionValue
+        });
+        setTimeout(function () {
+            set({[type]: (type === "height" ? el.scrollHeight : el.scrollWidth) + "px"});
+        });
+        onceEvent(el, "transitionend", function () {
+            set({[type]: ""});
+        });
+    }
+}
