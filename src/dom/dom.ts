@@ -149,7 +149,7 @@ export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSSty
  * @returns setStyle.bind(el)
  */
 export function setStyle(
-    style: SettableStyle, {
+    style: Array<SettableStyle> | SettableStyle, {
         toCssText = true,
         el,
     }: { toCssText?: boolean; el?: HTMLElement | string } = {},
@@ -157,6 +157,7 @@ export function setStyle(
     if (isString(el)) el = document.querySelector(el) as HTMLDivElement;
     let target: HTMLElement = el || this;
     if (!isDom(target)) throw new TypeError("setStyle param el | this is not HTMLElement");
+    toCssText = isArray(style) ? false : toCssText;
     if (toCssText) {
         const cssText = target.style.cssText;
         const cssTextObj = cssText.replace(/; ?$/, "").split(";").reduce((init, v) => {
@@ -169,7 +170,8 @@ export function setStyle(
             return result + `${fromCamel(k as string, "-")}: ${v};`;
         }, "");
     } else {
-        assign(target.style, style);
+        const styleList = castArray(style);
+        styleList.forEach(style => assign(target.style, style));
     }
     return setStyle.bind(target);
 }
