@@ -588,3 +588,16 @@ export function toggleWidthOrHeight(el: HTMLElement, type: "width" | "height", t
         });
     }
 }
+
+/**
+ * 滚动到目标处
+ * @param target
+ */
+export function scrollTo(target = 0) {
+    let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    // todo 要区分上下
+    if (scrollTop > target) {
+        window.requestAnimationFrame(() => scrollTo(target));
+        window.scrollTo(target, scrollTop - scrollTop / 8);
+    }
+}
