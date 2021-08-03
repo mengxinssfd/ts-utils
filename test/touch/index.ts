@@ -1,5 +1,6 @@
 import * as utils from "../../src";
 
+utils.setStyle({height: "32000px"}, {el: document.body});
 declare global {
     interface Window {
         u: any;
@@ -29,16 +30,16 @@ utils.addScaleEventListener(document.documentElement, function (scale) {
 
 addEventListener("click", () => {
     // dom.innerText = String(utils.randomInt(100, 10000));
-    utils.copy2Clipboard(String(utils.randomInt(100, 10000))).then((text) => {
-        // utils.copy2Clipboard(dom).then((text) => {
-        console.log(text);
-    });
+    /* utils.copy2Clipboard(String(utils.randomInt(100, 10000))).then((text) => {
+         // utils.copy2Clipboard(dom).then((text) => {
+         console.log(text);
+     });*/
 });
 
 utils.forEachAsync((r) => r(), [
     () => Promise.resolve(100),
     () => Promise.reject("test"),
-    () => Promise.resolve(200)
+    () => Promise.resolve(200),
 ]).catch((res) => {
     console.log(res);
 });
@@ -78,8 +79,8 @@ const toggleHeightDiv = utils.createHtmlElement("div", {
     props: {
         className: "toggle-height",
         style: {
-            overflow: "hidden"
-        }
+            overflow: "hidden",
+        },
     },
     children: [
         utils.createHtmlElement("div", {
@@ -87,14 +88,28 @@ const toggleHeightDiv = utils.createHtmlElement("div", {
                 style: {
                     height: "200px",
                     width: "200px",
-                    background: "yellow"
-                }
-            }
-        })
+                    background: "yellow",
+                },
+            },
+        }),
     ],
-    parent: document.body
+    parent: document.body,
 });
-
+(window as any).scrollSpeed = 10;
+utils.createHtmlElement("input", {
+    props: {
+        value: (window as any).scrollSpeed,
+        style: {
+            position: "fixed",
+            right: "0",
+            top: "50%",
+        },
+        oninput(e) {
+            (window as any).scrollSpeed = Number(e.target.value);
+        },
+    },
+    parent: document.body,
+});
 addEventListener("keydown", (e) => {
     switch (e.code) {
         case "KeyR":
@@ -103,10 +118,15 @@ addEventListener("keydown", (e) => {
         case "Space":
             utils.toggleWidthOrHeight(toggleHeightDiv, "height", {
                 duration: "1s",
-                timingFunction: "ease-in-out"
+                timingFunction: "ease-in-out",
                 // delay: "0.5s"
             });
             break;
+        case "KeyT":
+            utils.scrollTo(0, (window as any).scrollSpeed);
+            break;
+        case "KeyB":
+            utils.scrollTo(36000, (window as any).scrollSpeed);
+            break;
     }
 });
-
