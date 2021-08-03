@@ -38,5 +38,14 @@ test("plus", () => {
     const fn = Num.plus;
     expect(fn(10000000000.111111111, 10000000000.111111111)).toBe(20000000000.222222222);
 });
+test("getSafeNum", () => {
+    const fn = Num.getSafeNum;
+    expect(fn(0)).toBe(0);
+    expect(fn(0, 1, 100)).toBe(1);
+    expect(fn(50, 1, 100)).toBe(50);
+    expect(fn(101, 1, 100)).toBe(100);
+    expect(fn(101, 1)).toBe(101);
+});
+
 
 
