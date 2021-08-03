@@ -2,7 +2,7 @@ import {strPadEnd} from "./string";
 import {createTimeCountDown} from "./time";
 import {isArray, isString, isPromiseLike, isNumber, typeOf} from "./dataType";
 import {assign, getReverseObj, objKeys} from "./object";
-import {forEachAsync, inRange} from "./array";
+import {inRange} from "./array";
 
 /**
  * 防抖函数
@@ -416,12 +416,15 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
  * @param initValue
  */
 export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T) {
+    return queue.reduce((p, next) => p.then(res => next(res)), Promise.resolve(initValue) as Promise<unknown>);
+}
+/*export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T) {
     let lastValue: unknown = initValue;
     await forEachAsync(async (promise) => {
         lastValue = await promise(lastValue);
     }, queue);
     return lastValue;
-}
+}*/
 
 export const root = Function("return this")();
 
