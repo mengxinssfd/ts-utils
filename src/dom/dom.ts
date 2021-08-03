@@ -1,7 +1,7 @@
 import {castArray, includes, unique} from "../core/array";
-import {divide, times} from "../core/number";
+import {divide, getSafeNum, times} from "../core/number";
 import {assign, forEachObj, objReduce, pickByKeys} from "../core/object";
-import {SettableStyle, SettableProps} from "../TsTypes";
+import {SettableProps, SettableStyle} from "../TsTypes";
 import {isArray, isString} from "../core/dataType";
 import {isDom, isNodeList} from "./domType";
 import {root} from "../core/common";
@@ -562,11 +562,11 @@ export function toggleWidthOrHeight(el: HTMLElement, type: "width" | "height", t
         el.setAttribute("toggle-status", "hide");
         const set = setStyle([
             {[trans]: "none"},
-            {[type]: (type === "height" ? el.scrollHeight : el.scrollWidth) + "px"}
+            {[type]: (type === "height" ? el.scrollHeight : el.scrollWidth) + "px"},
         ], {el});
         set({
             [prefixTransition]: transitionValue,
-            [trans]: transitionValue
+            [trans]: transitionValue,
         });
         setTimeout(function () {
             set({[type]: "0"});
@@ -575,10 +575,10 @@ export function toggleWidthOrHeight(el: HTMLElement, type: "width" | "height", t
         el.removeAttribute("toggle-status");
         const set = setStyle({
             [trans]: "none",
-            [type]: "0"
+            [type]: "0",
         }, {el})({
             [prefixTransition]: transitionValue,
-            [trans]: transitionValue
+            [trans]: transitionValue,
         });
         setTimeout(function () {
             set({[type]: (type === "height" ? el.scrollHeight : el.scrollWidth) + "px"});
@@ -589,15 +589,59 @@ export function toggleWidthOrHeight(el: HTMLElement, type: "width" | "height", t
     }
 }
 
+let stopScrollTo: Function | null = null;
+
 /**
  * 滚动到目标处
- * @param target
+ * @param y
+ * @param speed [1 - 100]
  */
-export function scrollTo(target = 0) {
-    let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    // todo 要区分上下
-    if (scrollTop > target) {
-        window.requestAnimationFrame(() => scrollTo(target));
-        window.scrollTo(target, scrollTop - scrollTop / 8);
+export function scrollTo(y = 0, speed = 10) {
+    stopScrollTo && stopScrollTo();
+    speed = getSafeNum(speed, 1, 100);
+    let top: number = 0;
+    const el = document.body.scrollTop ? document.body : document.documentElement;
+    const getTop = () => top = el.scrollTop;
+    getTop();
+    let lastTop: number = Infinity;
+    let isOver: () => boolean;
+    if (top > y) {
+        // 往上
+        isOver = () => getTop() <= y;
+    } else if (top < y) {
+        // 往下
+        y = Math.min(y, el.scrollHeight - window.innerHeight);
+        speed *= -1;
+        isOver = () => getTop() >= y;
+    } else {
+        return;
     }
+
+    let stop = false;
+    stopScrollTo = () => {
+        stop = true;
+        stopScrollTo = null;
+    };
+    const clear = () => {
+        stop = true;
+        window.removeEventListener("wheel", clear);
+        stopScrollTo = null;
+    };
+    window.addEventListener("wheel", clear);
+
+    function scroll() {
+        if (stop) return; // 不单独拿出来的话，未滚动完成马上再次滚动的话会先到达上次的目标点在滚动
+        if (!isOver() && lastTop !== top) {
+            const abs = Math.abs(y - top);
+            const move = Number((speed + abs / 50 * speed / 10).toFixed(1));
+            el.scrollTop = top - move;
+            lastTop = top;
+            window.requestAnimationFrame(scroll);
+        } else {
+            el.scrollTop = y;
+            clear();
+        }
+    }
+
+    scroll();
 }
