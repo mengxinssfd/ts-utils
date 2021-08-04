@@ -52,8 +52,12 @@ export type PublicOnly<T> = Pick<T, keyof T>; // seems like a no-op but it works
 // }
 // type PublicFoo = PublicOnly<Foo>; // {a: string}
 
-
 export type SettableStyle = Partial<Omit<CSSStyleDeclaration, ReadonlyKeys<CSSStyleDeclaration>>>;
 
 export type SettableProps<R extends HTMLElement> = ({ style?: SettableStyle } & Partial<Omit<R, "style" | ReadonlyKeys<R>>>);
+
+// ".123" => "123" | "123." => 123
+export type DotTrim<T> = T extends `${infer U}.` | `.${infer U}` ? DotTrim<U> : T;
+// type dt = DotTrim<".d.e.f"> // d.e.f
+// type dt2 = DotTrim<"a..."> // a
 
