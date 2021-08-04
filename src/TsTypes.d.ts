@@ -61,3 +61,10 @@ export type DotTrim<T> = T extends `${infer U}.` | `.${infer U}` ? DotTrim<U> : 
 // type dt = DotTrim<".d.e.f"> // d.e.f
 // type dt2 = DotTrim<"a..."> // a
 
+
+// 如果T为空则返回空，不为空返回默认
+// EmptyNotDef<"", "123"> // ""
+// EmptyNotDef<"123", "333"> // 333
+export type EmptyNotDef<T, D> = T extends "" ? T : D;
+// type ed = EmptyNotDef<"", "123"> // ""
+// type ed2 = EmptyNotDef<"123", "333"> // 333
