@@ -1,5 +1,5 @@
 // reference https://mp.weixin.qq.com/s/KJdUdwbLN4g4M7xy34m-fA
-import {BracketsToEmpty, DotTrim, EmptyNotDef} from "../TsTypes";
+import {BracketsToEmpty, DotTrim, EmptyNotDef, RemoveStrStart} from "../TsTypes";
 
 type OneLevelPathOf<T> = keyof T & (string | number)
 type PathForHint<T> = OneLevelPathOf<T>;
@@ -70,6 +70,18 @@ export type TransferPath<P extends string, Path = DotTrim<P>> = // Path不能传
 // type fp8 = FormatPath2<`a[b].c`>; // a.b.c
 // type fp9 = FormatPath2<`[a][b]c`>; // a.b.c
 // type fp88 = TS<`a[b].c`>; // a.b.c
+
+/**
+ * 如果转换后的路径跟PathOf的路径一样，就说明该路径是对的并返回原path,否则返回PathOf所返回的类型
+ */
+export type TransferPathOf<T extends object,
+    K extends string,
+    S extends string,
+    NO_START extends string = DotTrim<RemoveStrStart<K, S>>,
+    NO_START_PATH = TransferPath<NO_START>,
+    PATH = PathOf<T, TransferPath<NO_START>>> = NO_START_PATH extends PATH ? K : PATH;
+
+
 /**
  * Recursively convert objects to tuples, like
  * `{ name: { first: string } }` -> `['name'] | ['name', 'first']`
