@@ -1,4 +1,4 @@
-import { SettableStyle, SettableProps } from "../TsTypes";
+import { SettableProps, SettableStyle } from "../TsTypes";
 export declare function supportClassList(): boolean;
 export declare function hasClassIe8(target: HTMLElement, className: string[] | string): boolean;
 export declare function hasClassStandard(target: HTMLElement, className: string[] | string): boolean;
@@ -18,7 +18,7 @@ export declare function toggleClass(target: HTMLElement, className: string): str
  * @param style
  * @returns {string}
  */
-export declare function prefixStyle<T extends keyof CSSStyleDeclaration>(style: T): T | false;
+export declare function prefixStyle<T extends keyof CSSStyleDeclaration>(style: T): T | null;
 /**
  * 判断是否支持css
  * @param key
@@ -33,7 +33,7 @@ export declare function cssSupport<K extends keyof CSSStyleDeclaration, V extend
  * @param [option.toCssText = true] 合并后只触发一次重绘，性能会更好一点
  * @returns setStyle.bind(el)
  */
-export declare function setStyle(style: SettableStyle, { toCssText, el, }?: {
+export declare function setStyle(style: Array<SettableStyle> | SettableStyle, { toCssText, el, }?: {
     toCssText?: boolean;
     el?: HTMLElement | string;
 }): typeof setStyle;
@@ -144,4 +144,21 @@ export declare function rem2Percent(rem: RemVal, relativePx: number | PxVal): Pe
  * @param relativePx
  */
 export declare function percent2Rem(p: PercentVal, relativePx: number | PxVal): RemVal;
+/**
+ * 用于类似手风琴的伸缩效果
+ * @param el  el的宽或高必须是子元素撑开的，否则无效
+ * @param type
+ * @param transition
+ */
+export declare function toggleWidthOrHeight(el: HTMLElement, type: "width" | "height", transition?: {
+    duration?: string;
+    delay?: string;
+    timingFunction?: string;
+}): void;
+/**
+ * 滚动到目标处
+ * @param y
+ * @param speed [1 - 100]
+ */
+export declare function scrollTo(y?: number, speed?: number): void;
 export {};

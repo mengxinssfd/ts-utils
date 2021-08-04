@@ -51,3 +51,13 @@ export function times(num, ...nums) {
 export function divide(num, ...nums) {
     return calcArr(num, nums, (a, b, pow) => a * pow / (b * pow));
 }
+/**
+ * 安全数字
+ * 如果value小于min，那么返回min，如果value大于max，那么返回max，否则返回value
+ * @param value
+ * @param min
+ * @param max
+ */
+export function getSafeNum(value, min = -Infinity, max = Infinity) {
+    return Math.max(min, Math.min(value, max));
+}

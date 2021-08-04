@@ -80,15 +80,11 @@ export declare function unique<T>(target: T[], isRepeatFn?: (value: T, value2: T
 /**
  * @example
  * castArray([1]); // [1]
- * @param value
- */
-export declare function castArray<T>(value: T[]): T[];
-/**
  * @example
  * castArray(1); // [1]
  * @param value
  */
-export declare function castArray<T>(value: T): T[];
+export declare function castArray<T>(value: T): T extends Array<any> ? T : Array<T>;
 /**
  * 数组分片
  * @example

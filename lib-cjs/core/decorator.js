@@ -1,80 +1,134 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Polling = exports.Debounce = void 0;
+exports.Polling = exports.Debounce = exports.decoratorfy = void 0;
 const common_1 = require("./common");
+function decoratorfy(callback) {
+    return function (target, propertyKey, descriptor) {
+        // 在babel的网站编译的是target包含key，descriptor
+        if (target.descriptor) {
+            descriptor = target.descriptor;
+        }
+        descriptor.value = callback(descriptor);
+    };
+}
+exports.decoratorfy = decoratorfy;
 /**
  * 防抖装饰器
  * @param delay
  * @constructor
  */
-function Debounce(delay) {
-    return function (target, propertyKey, descriptor) {
-        // 在babel的网站编译的是target包含key，descriptor
-        if (target.descriptor) {
-            descriptor = target.descriptor;
-        }
-        descriptor.value = common_1.debounce(descriptor.value, delay);
-    };
-}
+const Debounce = (delay) => decoratorfy(descriptor => common_1.debounce(descriptor.value, delay));
 exports.Debounce = Debounce;
 /**
  * 比setInterval好的地方在于使用promise判断一回执行完毕情况
- *
- * // TODO 无法从origin函数外中断polling 如果同一个polling执行多次的话 无法中断前一个
  * @param interval
  * @param [immediate=true]
  * @constructor
  */
-function Polling(interval, immediate = true) {
-    let state;
-    (function (state) {
-        state[state["running"] = 0] = "running";
-        state[state["stopped"] = 1] = "stopped";
-    })(state || (state = {}));
-    return function (target, propertyKey, descriptor) {
+/*export function Polling(interval: number, immediate = true) {
+    enum state {running, stopped}
+
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         // 在babel的网站编译的是target包含key，descriptor
         if (target.descriptor) {
             descriptor = target.descriptor;
         }
+
         const origin = descriptor.value;
+
         function start() {
-            return new Promise((res, rej) => {
-                let timer;
-                let status;
+            return new Promise<void>((res, rej) => {
+                let timer: any;
+                let status: state;
                 let times = 0;
+
                 function nextTimeout() {
                     timer = setTimeout(handle, interval);
                 }
+
                 function clear() {
                     status = state.stopped;
                     clearTimeout(timer);
                     res();
                 }
+
                 function handle() {
                     const back = origin.call(this, times++, res, rej);
                     if (status === state.running) {
                         if (back instanceof Promise) {
-                            back.then(function () {
+                            (back as Promise<any>).then(function () {
                                 nextTimeout();
                             }).catch(clear);
-                        }
-                        else {
+                        } else {
                             back === false ? clear() : nextTimeout();
                         }
                     }
                 }
+
                 status = state.running;
                 if (immediate) {
                     handle();
-                }
-                else {
+                } else {
                     nextTimeout();
                 }
             });
         }
+
         descriptor.value = start;
     };
-}
+
+}*/
+const Polling = (interval, immediate = true) => decoratorfy((descriptor => {
+    let state;
+    (function (state) {
+        state[state["running"] = 0] = "running";
+        state[state["stopped"] = 1] = "stopped";
+    })(state || (state = {}));
+    const origin = descriptor.value;
+    let timer;
+    let status;
+    function stop() {
+        status = state.stopped;
+        clearTimeout(timer);
+    }
+    function start() {
+        stop();
+        const p = new Promise((res, rej) => {
+            let times = 0;
+            function nextTimeout() {
+                timer = setTimeout(handle, interval);
+            }
+            function clear() {
+                stop();
+                res();
+            }
+            const handle = () => {
+                const back = origin.call(this, times++, res, rej);
+                if (status === state.running) {
+                    if (back instanceof Promise) {
+                        back.then(function () {
+                            nextTimeout();
+                        }).catch(clear);
+                    }
+                    else {
+                        back === false ? clear() : nextTimeout();
+                    }
+                }
+            };
+            status = state.running;
+            if (immediate) {
+                handle();
+            }
+            else {
+                nextTimeout();
+            }
+        });
+        p.finally(stop);
+        return p;
+    }
+    start.stop = stop;
+    return start;
+}));
 exports.Polling = Polling;
 /*
 export function Singleton<T extends { new(...args: any[]): {} }>(constructor: T): any {

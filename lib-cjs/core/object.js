@@ -380,11 +380,12 @@ exports.objEntries = objEntries;
  * @param [objName = ""]
  */
 function translateObjPath(path, objName = "") {
+    let result = path;
     // obj[a] => obj.a
-    path = path.replace(new RegExp(`^${objName}`), "");
-    path = path.replace(/\[([^\]]+)]/g, ".$1");
-    path = path.replace(/^\.|\[]/g, "");
-    return path;
+    result = result.replace(new RegExp(`^${objName}`), "");
+    result = result.replace(/\[([^\]]+)]/g, ".$1");
+    result = result.replace(/^\.|\[]/g, "");
+    return result;
 }
 exports.translateObjPath = translateObjPath;
 /**
@@ -496,3 +497,11 @@ function revertObjFromPath(pathArr) {
     }, {});
 }
 exports.revertObjFromPath = revertObjFromPath;
+// ie9+ 支持，不需要实现
+/*
+export function objCreate(proto: any) {
+    const origin = {};
+    // @ts-ignore
+    origin.__proto__ = proto;
+    return origin;
+}*/

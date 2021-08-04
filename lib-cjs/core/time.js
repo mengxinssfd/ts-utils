@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMonthTheNthWeekday = exports.getTheLastDayOfAMonth = exports.createTimeCountDown = exports.createTimeCountUp = exports.sleep = exports.str2Date = exports.getDateFromStr = exports.formatDate = exports.dateDiff = exports.number2Date = void 0;
+exports.getMonthTheNthWeekday = exports.getTheLastDayOfAMonth = exports.createTimeCountDown = exports.createTimeCountUp = exports.sleep = exports.str2Date = exports.getDateFromStr = exports.useDateFormat = exports.formatDate = exports.dateDiff = exports.number2Date = void 0;
 const string_1 = require("./string");
 const array_1 = require("./array");
 /**
@@ -121,8 +121,11 @@ const formatDate = function (format = "yyyy-MM-dd hh:mm:ss") {
 exports.formatDate = formatDate;
 exports.formatDate.weekText = [];
 exports.formatDate.seasonText = ["春", "夏", "秋", "冬"];
-// 可能会影响打包tree shaking
-Date.prototype.format = exports.formatDate;
+// 挂载到Date原型
+function useDateFormat(force = false) {
+    (!Date.prototype.format || force) && (Date.prototype.format = exports.formatDate);
+}
+exports.useDateFormat = useDateFormat;
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
  * @param date 格式：yyyy-MM-dd hh:mm:ss

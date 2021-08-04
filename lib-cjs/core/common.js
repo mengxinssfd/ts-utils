@@ -407,13 +407,16 @@ exports.promiseAny = promiseAny;
  * @param initValue
  */
 async function promiseQueue(queue, initValue) {
-    let lastValue = initValue;
-    await array_1.forEachAsync(async (promise) => {
+    return queue.reduce((p, next) => p.then(res => next(res)), Promise.resolve(initValue));
+}
+exports.promiseQueue = promiseQueue;
+/*export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T) {
+    let lastValue: unknown = initValue;
+    await forEachAsync(async (promise) => {
         lastValue = await promise(lastValue);
     }, queue);
     return lastValue;
-}
-exports.promiseQueue = promiseQueue;
+}*/
 exports.root = Function("return this")();
 /**
  * 原来的函数四舍五入不准确

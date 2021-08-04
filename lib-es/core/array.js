@@ -352,8 +352,15 @@ export function unique(target, isRepeatFn) {
     }
     return result;
 }
+/**
+ * @example
+ * castArray([1]); // [1]
+ * @example
+ * castArray(1); // [1]
+ * @param value
+ */
 export function castArray(value) {
-    return isArray(value) ? value : [value];
+    return (isArray(value) ? value : [value]);
 }
 /**
  * 数组分片

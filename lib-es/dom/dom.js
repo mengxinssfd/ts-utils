@@ -1,10 +1,11 @@
-import { includes, unique } from "../core/array";
-import { divide, times } from "../core/number";
+import { castArray, includes, unique } from "../core/array";
+import { divide, getSafeNum, times } from "../core/number";
 import { assign, forEachObj, objReduce, pickByKeys } from "../core/object";
 import { isArray, isString } from "../core/dataType";
 import { isDom, isNodeList } from "./domType";
 import { root } from "../core/common";
 import { fromCamel } from "../core/string";
+import { onceEvent } from "./event";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle = document.createElement("div").style;
 const vendor = (() => {
@@ -16,7 +17,8 @@ const vendor = (() => {
         standard: "transform",
     };
     for (let key in transformName) {
-        if (elementStyle[transformName[key]] !== undefined) {
+        const transform = transformName[key];
+        if (elementStyle[transform] !== undefined) {
             return key;
         }
     }
@@ -100,7 +102,7 @@ export function toggleClass(target, className) {
  */
 export function prefixStyle(style) {
     if (vendor === false) {
-        return false;
+        return null;
     }
     if (vendor === "standard") {
         return style;
@@ -137,6 +139,7 @@ export function setStyle(style, { toCssText = true, el, } = {}) {
     let target = el || this;
     if (!isDom(target))
         throw new TypeError("setStyle param el | this is not HTMLElement");
+    toCssText = isArray(style) ? false : toCssText;
     if (toCssText) {
         const cssText = target.style.cssText;
         const cssTextObj = cssText.replace(/; ?$/, "").split(";").reduce((init, v) => {
@@ -150,7 +153,8 @@ export function setStyle(style, { toCssText = true, el, } = {}) {
         }, "");
     }
     else {
-        assign(target.style, style);
+        const styleList = castArray(style);
+        styleList.forEach(style => assign(target.style, style));
     }
     return setStyle.bind(target);
 }
@@ -441,3 +445,101 @@ export function translateCssLenUnit(from: `${number}${CSSLenUnit}`, to: CSSLenUn
 // translateCssLenUnit("100%", "rem");
 // 管道语法
 // "100px" |> ((_: any) => translateCssLenUnit(_, "rem"));
+/**
+ * 用于类似手风琴的伸缩效果
+ * @param el  el的宽或高必须是子元素撑开的，否则无效
+ * @param type
+ * @param transition
+ */
+export function toggleWidthOrHeight(el, type, transition = {}) {
+    const trans = "transition";
+    const prefixTransition = prefixStyle(trans);
+    const isHide = el.getAttribute("toggle-status") === "hide";
+    const transitionValue = `${type} ${transition.duration || ".3s"} ${transition.timingFunction || ""} ${transition.delay || ""}`.trim();
+    if (!isHide) {
+        el.setAttribute("toggle-status", "hide");
+        const set = setStyle([
+            { [trans]: "none" },
+            { [type]: (type === "height" ? el.scrollHeight : el.scrollWidth) + "px" },
+        ], { el });
+        set({
+            [prefixTransition]: transitionValue,
+            [trans]: transitionValue,
+        });
+        setTimeout(function () {
+            set({ [type]: "0" });
+        });
+    }
+    else {
+        el.removeAttribute("toggle-status");
+        const set = setStyle({
+            [trans]: "none",
+            [type]: "0",
+        }, { el })({
+            [prefixTransition]: transitionValue,
+            [trans]: transitionValue,
+        });
+        setTimeout(function () {
+            set({ [type]: (type === "height" ? el.scrollHeight : el.scrollWidth) + "px" });
+        });
+        onceEvent(el, "transitionend", function () {
+            set({ [type]: "" });
+        });
+    }
+}
+let stopScrollTo = null;
+/**
+ * 滚动到目标处
+ * @param y
+ * @param speed [1 - 100]
+ */
+export function scrollTo(y = 0, speed = 10) {
+    stopScrollTo && stopScrollTo();
+    speed = getSafeNum(speed, 1, 100);
+    let top = 0;
+    const el = document.body.scrollTop ? document.body : document.documentElement;
+    const getTop = () => top = el.scrollTop;
+    getTop();
+    let lastTop = Infinity;
+    let isOver;
+    if (top > y) {
+        // 往上
+        isOver = () => getTop() <= y;
+    }
+    else if (top < y) {
+        // 往下
+        y = Math.min(y, el.scrollHeight - window.innerHeight);
+        speed *= -1;
+        isOver = () => getTop() >= y;
+    }
+    else {
+        return;
+    }
+    let stop = false;
+    stopScrollTo = () => {
+        stop = true;
+        stopScrollTo = null;
+    };
+    const clear = () => {
+        stop = true;
+        window.removeEventListener("wheel", clear);
+        stopScrollTo = null;
+    };
+    window.addEventListener("wheel", clear);
+    function scroll() {
+        if (stop)
+            return; // 不单独拿出来的话，未滚动完成马上再次滚动的话会先到达上次的目标点在滚动
+        if (!isOver() && lastTop !== top) {
+            const abs = Math.abs(y - top);
+            const move = Number((speed + abs / 50 * speed / 10).toFixed(1));
+            el.scrollTop = top - move;
+            lastTop = top;
+            window.requestAnimationFrame(scroll);
+        }
+        else {
+            el.scrollTop = y;
+            clear();
+        }
+    }
+    scroll();
+}

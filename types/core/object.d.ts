@@ -1,4 +1,5 @@
-import { PathOf, TypeOfPath } from "./ObjPath";
+import { TransferPath, TypeOfPath, TransferPathOf } from "./ObjPath";
+import { DotTrim, RemoveStrStart } from "../TsTypes";
 export declare function getTreeMaxDeep(tree: object): number;
 export declare function getTreeNodeLen(tree: object, nodeNumber?: number): number;
 export declare function deepMerge<T extends object, U extends object>(first: T, second: U): T & U;
@@ -152,7 +153,7 @@ export declare function objEntries<T extends object, K extends keyof T>(obj: T):
  * @param path
  * @param [objName = ""]
  */
-export declare function translateObjPath(path: string, objName?: string): string;
+export declare function translateObjPath<P extends string, S extends string = "">(path: P, objName?: S): DotTrim<TransferPath<RemoveStrStart<P, S>>>;
 /**
  * 通过object路径获取值
  * @example
@@ -161,7 +162,7 @@ export declare function translateObjPath(path: string, objName?: string): string
  * @param path
  * @param [objName = ""]
  */
-export declare function getObjValueByPath<T extends object, P extends string>(obj: T, path: PathOf<T, P>, objName?: string): TypeOfPath<T, P>;
+export declare function getObjValueByPath<T extends object, P extends string, S extends string = "", NO_START extends string = DotTrim<RemoveStrStart<P, S>>, Path extends string = TransferPath<NO_START>>(obj: T, path: TransferPathOf<T, P, S>, objName?: S): TypeOfPath<T, Path>;
 declare type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) => any;
 /**
  * 通过object路径设置值 如果路径中不存在则会自动创建对应的对象
@@ -172,7 +173,7 @@ declare type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: s
  * @param onExist 当要改动位置已经有值时的回调
  * @param [objName = ""]
  */
-export declare function setObjValueByPath<T extends object>(obj: T, path: string, value: any, onExist?: SetObjValueByPathOnExist, objName?: string): T;
+export declare function setObjValueByPath<T extends object, P extends string, S extends string = "", NO_START extends string = DotTrim<RemoveStrStart<P, S>>, Path extends string = TransferPath<NO_START>>(obj: T, path: TransferPathOf<T, P, S>, value: TypeOfPath<T, Path>, onExist?: SetObjValueByPathOnExist, objName?: S): T;
 /**
  * 获取object的路径数组
  * @example

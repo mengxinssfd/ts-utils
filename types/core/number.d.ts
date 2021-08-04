@@ -16,3 +16,11 @@ export declare function plus(num: number, ...nums: Array<number>): number;
 export declare function minus(num: number, ...nums: Array<number>): number;
 export declare function times(num: number, ...nums: Array<number>): number;
 export declare function divide(num: number, ...nums: Array<number>): number;
+/**
+ * 安全数字
+ * 如果value小于min，那么返回min，如果value大于max，那么返回max，否则返回value
+ * @param value
+ * @param min
+ * @param max
+ */
+export declare function getSafeNum(value: number, min?: number, max?: number): number;

@@ -375,8 +375,15 @@ function unique(target, isRepeatFn) {
     return result;
 }
 exports.unique = unique;
+/**
+ * @example
+ * castArray([1]); // [1]
+ * @example
+ * castArray(1); // [1]
+ * @param value
+ */
 function castArray(value) {
-    return dataType_1.isArray(value) ? value : [value];
+    return (dataType_1.isArray(value) ? value : [value]);
 }
 exports.castArray = castArray;
 /**

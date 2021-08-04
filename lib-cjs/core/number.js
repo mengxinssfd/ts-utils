@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.divide = exports.times = exports.minus = exports.plus = exports.toNonExponential = exports.calcArr = exports.getCommonPow = exports.getNumberLenAfterDot = exports.strip = void 0;
+exports.getSafeNum = exports.divide = exports.times = exports.minus = exports.plus = exports.toNonExponential = exports.calcArr = exports.getCommonPow = exports.getNumberLenAfterDot = exports.strip = void 0;
 // 数字计算
 /**
  * 把错误的数据转正  from number-precision
@@ -63,3 +63,14 @@ function divide(num, ...nums) {
     return calcArr(num, nums, (a, b, pow) => a * pow / (b * pow));
 }
 exports.divide = divide;
+/**
+ * 安全数字
+ * 如果value小于min，那么返回min，如果value大于max，那么返回max，否则返回value
+ * @param value
+ * @param min
+ * @param max
+ */
+function getSafeNum(value, min = -Infinity, max = Infinity) {
+    return Math.max(min, Math.min(value, max));
+}
+exports.getSafeNum = getSafeNum;

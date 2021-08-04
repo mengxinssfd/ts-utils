@@ -21,6 +21,7 @@ export interface formatDateInterface {
  * @returns String
  */
 export declare const formatDate: formatDateInterface;
+export declare function useDateFormat(force?: boolean): void;
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
  * @param date 格式：yyyy-MM-dd hh:mm:ss
