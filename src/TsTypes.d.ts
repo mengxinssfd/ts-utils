@@ -72,3 +72,8 @@ export type EmptyNotDef<T, D> = T extends "" ? T : D;
 // []转为""
 export type BracketsToEmpty<T> = T extends `[]${infer U}` ? BracketsToEmpty<U> : T;
 // type bte = BracketsToEmpty<"[][][]"> // ""
+
+// 移除S中开头的START 相当于S.replace(new RegExp(`^${Start}`), "");
+export type RemoveStrStart<S extends string, START extends string> = S extends `${START}${infer U}` ? U : S;
+// type rss1 = RemoveStrStart<"anyScript", "any">; // Script
+// type rss2 = RemoveStrStart<"anyScript", "Any">; // anyScript
