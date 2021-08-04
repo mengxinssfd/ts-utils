@@ -68,3 +68,7 @@ export type DotTrim<T> = T extends `${infer U}.` | `.${infer U}` ? DotTrim<U> : 
 export type EmptyNotDef<T, D> = T extends "" ? T : D;
 // type ed = EmptyNotDef<"", "123"> // ""
 // type ed2 = EmptyNotDef<"123", "333"> // 333
+
+// []转为""
+export type BracketsToEmpty<T> = T extends `[]${infer U}` ? BracketsToEmpty<U> : T;
+// type bte = BracketsToEmpty<"[][][]"> // ""
