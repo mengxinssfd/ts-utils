@@ -1,6 +1,6 @@
 import {forEachRight} from "./array";
 import {isArray, isBroadlyObj, isNaN, isObject, typeOf} from "./dataType";
-import {TransferPath, PathOf, TypeOfPath} from "./ObjPath";
+import {TransferPath, PathOf, TypeOfPath, TransferPathOf} from "./ObjPath";
 import {DotTrim, RemoveStrStart} from "../TsTypes";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
@@ -466,13 +466,26 @@ export function translateObjPath<P extends string, S extends string = "">(path: 
  * @param path
  * @param [objName = ""]
  */
-export function getObjValueByPath<T extends object, P extends string>(obj: T, path: PathOf<T, P>, objName = ""): TypeOfPath<T, P> {
+export function getObjValueByPath<T extends object,
+    P extends string,
+    S extends string = "",
+    NO_START extends string = DotTrim<RemoveStrStart<P, S>>,
+    Path extends string = TransferPath<NO_START>>
+(
+    obj: T,
+    path: TransferPathOf<T, P, S>,
+    objName: S = "" as S
+): TypeOfPath<T, Path> {
     const p = translateObjPath(path, objName);
     return p.split(".").reduce((init, v) => {
         if (!isBroadlyObj(init)) return undefined;
         return init[v];
     }, obj as any);
 }
+
+getObjValueByPath({a: {b: {b_c: 123}}}, "a.b.b_c");
+getObjValueByPath({a: {b: {c: 123}}}, "obj[a][b][c]", "obj");
+getObjValueByPath({a: 123, b: {c: false}}, "obj[b][c]", "obj");
 
 type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) => any
 
