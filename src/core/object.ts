@@ -1,6 +1,6 @@
 import {forEachRight} from "./array";
 import {isArray, isBroadlyObj, isNaN, isObject, typeOf} from "./dataType";
-import {TransferPath, PathOf, TypeOfPath, TransferPathOf} from "./ObjPath";
+import {TransferPath, TypeOfPath, TransferPathOf} from "./ObjPath";
 import {DotTrim, RemoveStrStart} from "../TsTypes";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
@@ -483,9 +483,9 @@ export function getObjValueByPath<T extends object,
     }, obj as any);
 }
 
-getObjValueByPath({a: {b: {b_c: 123}}}, "a.b.b_c");
-getObjValueByPath({a: {b: {c: 123}}}, "obj[a][b][c]", "obj");
-getObjValueByPath({a: 123, b: {c: false}}, "obj[b][c]", "obj");
+// getObjValueByPath({a: {b: {b_c: 123}}}, "a.b.b_c");
+// getObjValueByPath({a: {b: {c: 123}}}, "obj[a][b][c]", "obj");
+// getObjValueByPath({a: 123, b: {c: false}}, "obj[b][c]", "obj");
 
 type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) => any
 
@@ -498,12 +498,16 @@ type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) =
  * @param onExist 当要改动位置已经有值时的回调
  * @param [objName = ""]
  */
-export function setObjValueByPath<T extends object, P extends string>(
+export function setObjValueByPath<T extends object,
+    P extends string,
+    S extends string = "",
+    NO_START extends string = DotTrim<RemoveStrStart<P, S>>,
+    Path extends string = TransferPath<NO_START>>(
     obj: T,
-    path: PathOf<T, P>,
-    value: TypeOfPath<T, P>,
+    path: TransferPathOf<T, P, S>,
+    value: TypeOfPath<T, Path>,
     onExist: SetObjValueByPathOnExist = (a, b): any => b,
-    objName = ""
+    objName: S = "" as S
 ): T {
     const p = translateObjPath(path, objName);
     const split = p.split(".");
