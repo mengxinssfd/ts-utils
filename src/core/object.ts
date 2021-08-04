@@ -1,6 +1,7 @@
 import {forEachRight} from "./array";
 import {isArray, isBroadlyObj, isNaN, isObject, typeOf} from "./dataType";
-import {PathOf, TypeOfPath} from "./ObjPath";
+import {TransferPath, PathOf, TypeOfPath} from "./ObjPath";
+import {DotTrim, RemoveStrStart} from "../TsTypes";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree: object): number {
@@ -448,12 +449,13 @@ export function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K
  * @param path
  * @param [objName = ""]
  */
-export function translateObjPath(path: string, objName = ""): string {
+export function translateObjPath<P extends string, S extends string = "">(path: P, objName: S = "" as S): DotTrim<RemoveStrStart<TransferPath<P>, TransferPath<S>>> {
+    let result: any = path;
     // obj[a] => obj.a
-    path = path.replace(new RegExp(`^${objName}`), "");
-    path = path.replace(/\[([^\]]+)]/g, ".$1");
-    path = path.replace(/^\.|\[]/g, "");
-    return path;
+    result = result.replace(new RegExp(`^${objName}`), "");
+    result = result.replace(/\[([^\]]+)]/g, ".$1");
+    result = result.replace(/^\.|\[]/g, "");
+    return result;
 }
 
 /**
