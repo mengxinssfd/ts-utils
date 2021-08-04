@@ -449,7 +449,7 @@ export function objEntries<T extends object, K extends keyof T>(obj: T): [K, T[K
  * @param path
  * @param [objName = ""]
  */
-export function translateObjPath<P extends string, S extends string = "">(path: P, objName: S = "" as S): DotTrim<RemoveStrStart<TransferPath<P>, TransferPath<S>>> {
+export function translateObjPath<P extends string, S extends string = "">(path: P, objName: S = "" as S): DotTrim<TransferPath<RemoveStrStart<P, S>>> {
     let result: any = path;
     // obj[a] => obj.a
     result = result.replace(new RegExp(`^${objName}`), "");
