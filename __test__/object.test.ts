@@ -537,4 +537,16 @@ test("revertObjFromPath", () => {
     // TODO 暂不支持多层路径
     // expect(fn(["a[b][c]=1", "a[b][d]=2"])).toEqual({a: {b: {c: 1, d: 2}}});
 });
+test("objFilter", () => {
+    const fn = cm.objFilter;
+    expect(fn({
+        a: "",
+        b: 123,
+        c: 0,
+        d: undefined,
+        e: false,
+        f: NaN,
+        g: null,
+    })).toEqual({b: 123});
+});
 
