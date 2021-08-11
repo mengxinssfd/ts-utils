@@ -599,3 +599,14 @@ export function objCreate(proto: any) {
     origin.__proto__ = proto;
     return origin;
 }*/
+export function objFilter(
+    obj: Record<string, any>,
+    predicate: ((v: any, k: string) => boolean) = (v) => v
+): object {
+    return objReduce(obj, (init, v, k) => {
+        if (predicate(v, k)) {
+            init[k] = v;
+        }
+        return init;
+    }, {});
+}
