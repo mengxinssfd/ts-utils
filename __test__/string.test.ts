@@ -39,6 +39,13 @@ test("thousandFormat", () => {
     expect(cm.thousandFormat(123456789)).toBe("123,456,789");
     expect(cm.thousandFormat(123)).toBe("123");
     expect(cm.thousandFormat(5763423)).toBe("5,763,423");
+
+    expect(cm.thousandFormat(123.11, true)).toBe("123.11");
+    expect(cm.thousandFormat(123123.1111, true)).toBe("123,123.111,1");
+    expect(cm.thousandFormat(12312311.111111, true)).toBe("12,312,311.111,111");
+    expect(cm.thousandFormat(12312311.111111)).toBe("12,312,311.111111");
+    expect(cm.thousandFormat(12312311.111111,true," ")).toBe("12 312 311.111 111");
+
 });
 test("getChineseNumber", () => {
     expect(cm.number2Chinese(123)).toBe("一百二十三");
@@ -208,7 +215,7 @@ test("fromCamel", () => {
     expect(fn("testCamel")).toBe("test_camel");
     expect(fn("TestCamelString")).toBe("test_camel_string");
     expect(fn("TestCamelSTring")).toBe("test_camel_string");
-    expect(fn("TestCamelSTring","-")).toBe("test-camel-string");
+    expect(fn("TestCamelSTring", "-")).toBe("test-camel-string");
 });
 
 test("toCamel", () => {
