@@ -2,10 +2,17 @@
  * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
  * 千位分隔 1,234,567,890
  * @param num
+ * @param [isFormatDecimalPlaces=false] 是否格式化小数位
  * @param [delimiter = ","]
  */
-export function thousandFormat(num: string | number, delimiter = ","): string {
-    return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
+export function thousandFormat(num: string | number, isFormatDecimalPlaces = false, delimiter = ","): string {
+    // 123123.1111 => 123,123.1,111
+    // return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
+    const split = String(num).split(".");
+    split[0] = split[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
+    if (split.length === 1 || !isFormatDecimalPlaces) return split.join(".");
+    split[1] = split[1].replace(/(\d{3})/g, `$1${delimiter}`);
+    return split.join(".").replace(new RegExp(`${delimiter}$`), "");
 }
 
 // 给不能用``模板字符串的环境使用
@@ -52,14 +59,13 @@ export function strPadEnd(target: string, maxLen: number, fill = " "): string {
     return target + end;
 }
 
-
 const numberArr: any = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
 const sbq = ["十", "百", "千"];
 const units: any = ["", ...sbq, "万", ...sbq, "亿"];
 const unitLen: number = units.length;
 
 export interface Number2Chinese {
-    (number: number): string
+    (number: number): string;
 
     units: string[];
     numbers: string [];
@@ -97,7 +103,7 @@ number2Chinese.units = [...units];
 number2Chinese.numbers = [...numberArr];
 
 export interface Chinese2Number {
-    (chineseNumber: string): number
+    (chineseNumber: string): number;
 
     units: string[];
     numbers: string [];
@@ -210,7 +216,6 @@ export function smartRepeat(format: string): string {
     }
     return format;
 }
-
 
 export function capitalizeFirstChar(value: string): string {
     const first = value[0];
