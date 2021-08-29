@@ -1,10 +1,12 @@
 "use strict";
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.write2Clipboard = exports.setData2Clipboard = exports.supportClipboardWrite = exports.copy2Clipboard = exports.isSupportedClipboardCommand = exports.select = void 0;
 const domType_1 = require("../dom/domType");
 const dom_1 = require("../dom/dom");
 const array_1 = require("../core/array");
 const event_1 = require("../dom/event");
+const common_1 = require("../core/common");
 /**
  * @param element
  * @return string
@@ -119,7 +121,7 @@ copy2Clipboard.once = function (el, target, eventType = "click", capture = false
         }, capture);
     }));
 };
-const cb = window.navigator.clipboard;
+const cb = (_a = common_1.root === null || common_1.root === void 0 ? void 0 : common_1.root.navigator) === null || _a === void 0 ? void 0 : _a.clipboard;
 function supportClipboardWrite() {
     var _a;
     return Boolean((_a = cb) === null || _a === void 0 ? void 0 : _a.write);

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Download = void 0;
 class Download {
-    constructor({ res, filename, onGetJSON }) {
+    static downloadOrJSON({ res, filename, onGetJSON }) {
         if (res.status === 200) {
             // Log(res);
             const blob = res.data;

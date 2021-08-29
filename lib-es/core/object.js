@@ -477,3 +477,11 @@ export function objCreate(proto: any) {
     origin.__proto__ = proto;
     return origin;
 }*/
+export function objFilter(obj, predicate = (v) => v) {
+    return objReduce(obj, (init, v, k) => {
+        if (predicate(v, k)) {
+            init[k] = v;
+        }
+        return init;
+    }, {});
+}

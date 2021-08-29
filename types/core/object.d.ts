@@ -184,4 +184,5 @@ export declare function setObjValueByPath<T extends object, P extends string, S 
  */
 export declare function getObjPathEntries(obj: object, objName?: string): Array<[string, any]>;
 export declare function revertObjFromPath(pathArr: string[]): object;
+export declare function objFilter(obj: Record<string, any>, predicate?: ((v: any, k: string) => boolean)): object;
 export {};

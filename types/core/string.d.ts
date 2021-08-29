@@ -2,9 +2,10 @@
  * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
  * 千位分隔 1,234,567,890
  * @param num
+ * @param [isFormatDecimalPlaces=false] 是否格式化小数位
  * @param [delimiter = ","]
  */
-export declare function thousandFormat(num: string | number, delimiter?: string): string;
+export declare function thousandFormat(num: string | number, isFormatDecimalPlaces?: boolean, delimiter?: string): string;
 export declare function strTemplate(str: any, ...params: any[]): any;
 /**
  * 给长度不满足要求的字符串添加前缀 strFillPrefix

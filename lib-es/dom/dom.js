@@ -1,3 +1,4 @@
+var _a, _b;
 import { castArray, includes, unique } from "../core/array";
 import { divide, getSafeNum, times } from "../core/number";
 import { assign, forEachObj, objReduce, pickByKeys } from "../core/object";
@@ -7,7 +8,7 @@ import { root } from "../core/common";
 import { fromCamel } from "../core/string";
 import { onceEvent } from "./event";
 // 所有主要浏览器都支持 createElement() 方法
-let elementStyle = document.createElement("div").style;
+let elementStyle = (_b = (_a = root === null || root === void 0 ? void 0 : root.document) === null || _a === void 0 ? void 0 : _a.createElement("div").style) !== null && _b !== void 0 ? _b : {};
 const vendor = (() => {
     let transformName = {
         webkit: "webkitTransform",
@@ -25,8 +26,9 @@ const vendor = (() => {
     return false;
 })();
 export function supportClassList() {
+    var _a;
     // classList ie9以上支持
-    return !!document.documentElement.classList;
+    return !!((_a = root === null || root === void 0 ? void 0 : root.document) === null || _a === void 0 ? void 0 : _a.documentElement.classList);
 }
 function name2List(className) {
     if (!className)

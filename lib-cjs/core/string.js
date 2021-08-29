@@ -5,10 +5,18 @@ exports.toCamel = exports.fromCamel = exports.capitalizeFirstChar = exports.smar
  * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
  * 千位分隔 1,234,567,890
  * @param num
+ * @param [isFormatDecimalPlaces=false] 是否格式化小数位
  * @param [delimiter = ","]
  */
-function thousandFormat(num, delimiter = ",") {
-    return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
+function thousandFormat(num, isFormatDecimalPlaces = false, delimiter = ",") {
+    // 123123.1111 => 123,123.1,111
+    // return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
+    const split = String(num).split(".");
+    split[0] = split[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
+    if (split.length === 1 || !isFormatDecimalPlaces)
+        return split.join(".");
+    split[1] = split[1].replace(/(\d{3})/g, `$1${delimiter}`);
+    return split.join(".").replace(new RegExp(`${delimiter}$`), "");
 }
 exports.thousandFormat = thousandFormat;
 // 给不能用``模板字符串的环境使用

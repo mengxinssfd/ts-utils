@@ -2,10 +2,18 @@
  * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
  * 千位分隔 1,234,567,890
  * @param num
+ * @param [isFormatDecimalPlaces=false] 是否格式化小数位
  * @param [delimiter = ","]
  */
-export function thousandFormat(num, delimiter = ",") {
-    return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
+export function thousandFormat(num, isFormatDecimalPlaces = false, delimiter = ",") {
+    // 123123.1111 => 123,123.1,111
+    // return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
+    const split = String(num).split(".");
+    split[0] = split[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
+    if (split.length === 1 || !isFormatDecimalPlaces)
+        return split.join(".");
+    split[1] = split[1].replace(/(\d{3})/g, `$1${delimiter}`);
+    return split.join(".").replace(new RegExp(`${delimiter}$`), "");
 }
 // 给不能用``模板字符串的环境使用
 // es5的格式化字符串 example: strTemplate("11%s111%s", 3, 4) => "1131114"

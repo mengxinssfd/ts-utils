@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.revertObjFromPath = exports.getObjPathEntries = exports.setObjValueByPath = exports.getObjValueByPath = exports.translateObjPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.pickUpdated = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pickDiff = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
+exports.objFilter = exports.revertObjFromPath = exports.getObjPathEntries = exports.setObjValueByPath = exports.getObjValueByPath = exports.translateObjPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.pickUpdated = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pickDiff = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
 const array_1 = require("./array");
 const dataType_1 = require("./dataType");
 // 获取object树的最大层数 tree是object的话，tree就是层数1
@@ -505,3 +505,12 @@ export function objCreate(proto: any) {
     origin.__proto__ = proto;
     return origin;
 }*/
+function objFilter(obj, predicate = (v) => v) {
+    return exports.objReduce(obj, (init, v, k) => {
+        if (predicate(v, k)) {
+            init[k] = v;
+        }
+        return init;
+    }, {});
+}
+exports.objFilter = objFilter;

@@ -1,7 +1,9 @@
+var _a;
 import { isInputElement, isSelectElement, isTextAreaElement } from "../dom/domType";
 import { createElement } from "../dom/dom";
 import { castArray } from "../core/array";
 import { onceEvent } from "../dom/event";
+import { root } from "../core/common";
 /**
  * @param element
  * @return string
@@ -113,7 +115,7 @@ copy2Clipboard.once = function (el, target, eventType = "click", capture = false
         }, capture);
     }));
 };
-const cb = window.navigator.clipboard;
+const cb = (_a = root === null || root === void 0 ? void 0 : root.navigator) === null || _a === void 0 ? void 0 : _a.clipboard;
 export function supportClipboardWrite() {
     var _a;
     return Boolean((_a = cb) === null || _a === void 0 ? void 0 : _a.write);

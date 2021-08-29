@@ -1,4 +1,5 @@
 "use strict";
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.scrollTo = exports.toggleWidthOrHeight = exports.percent2Rem = exports.rem2Percent = exports.px2Percent = exports.percent2px = exports.px2rem = exports.rem2px = exports.get1rem = exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createHiddenHtmlElement = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.setStyle = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
 const array_1 = require("../core/array");
@@ -10,7 +11,7 @@ const common_1 = require("../core/common");
 const string_1 = require("../core/string");
 const event_1 = require("./event");
 // 所有主要浏览器都支持 createElement() 方法
-let elementStyle = document.createElement("div").style;
+let elementStyle = (_b = (_a = common_1.root === null || common_1.root === void 0 ? void 0 : common_1.root.document) === null || _a === void 0 ? void 0 : _a.createElement("div").style) !== null && _b !== void 0 ? _b : {};
 const vendor = (() => {
     let transformName = {
         webkit: "webkitTransform",
@@ -28,8 +29,9 @@ const vendor = (() => {
     return false;
 })();
 function supportClassList() {
+    var _a;
     // classList ie9以上支持
-    return !!document.documentElement.classList;
+    return !!((_a = common_1.root === null || common_1.root === void 0 ? void 0 : common_1.root.document) === null || _a === void 0 ? void 0 : _a.documentElement.classList);
 }
 exports.supportClassList = supportClassList;
 function name2List(className) {

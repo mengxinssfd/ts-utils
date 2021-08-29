@@ -1,5 +1,5 @@
 export class Download {
-    constructor({ res, filename, onGetJSON }) {
+    static downloadOrJSON({ res, filename, onGetJSON }) {
         if (res.status === 200) {
             // Log(res);
             const blob = res.data;
