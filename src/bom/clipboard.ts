@@ -2,6 +2,7 @@ import {isInputElement, isSelectElement, isTextAreaElement} from "../dom/domType
 import {createElement} from "../dom/dom";
 import {castArray} from "../core/array";
 import {onceEvent} from "../dom/event";
+import {root} from "../core/common";
 
 /**
  * @param element
@@ -124,7 +125,7 @@ copy2Clipboard.once = function (
     }));
 };
 
-const cb = window.navigator.clipboard;
+const cb:Clipboard = root?.navigator?.clipboard;
 
 export function supportClipboardWrite() {
     return Boolean((cb as any)?.write);

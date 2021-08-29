@@ -8,7 +8,7 @@ import {root} from "../core/common";
 import {fromCamel} from "../core/string";
 import {onceEvent} from "./event";
 // 所有主要浏览器都支持 createElement() 方法
-let elementStyle = document.createElement("div").style;
+let elementStyle:CSSStyleDeclaration = root?.document?.createElement("div").style ?? {};
 const vendor: string | false = (() => {
     let transformName: any = {
         webkit: "webkitTransform",
@@ -28,7 +28,7 @@ const vendor: string | false = (() => {
 
 export function supportClassList(): boolean {
     // classList ie9以上支持
-    return !!document.documentElement.classList;
+    return !!root?.document?.documentElement.classList;
 }
 
 function name2List(className: string[] | string): string[] {
