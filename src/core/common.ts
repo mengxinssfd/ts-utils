@@ -233,6 +233,12 @@ export function forEachByLen(len: number, callback: (index: number) => (any | fa
         break;
     }
 }
+// 代替for循环
+export function forEachByLenRight(len: number, callback: (index: number) => (any | false)) {
+    for (let i = len; i >= 0; i--) {
+        if (callback(i) === false) break;
+    }
+}
 
 /**
  * 每隔一段事件返回字符串中的一个单词
