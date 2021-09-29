@@ -108,20 +108,26 @@ export interface formatDateInterface {
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
  * @param [format="yyyy-MM-dd hh:mm:ss"]
+ * @param date {Date?}
  * @returns String
  */
-export const formatDate: formatDateInterface = function (this: Date, format = "yyyy-MM-dd hh:mm:ss") {
+export const formatDate: formatDateInterface = function (
+    this: Date,
+    format = "yyyy-MM-dd hh:mm:ss",
+    date?: Date
+) {
+    const dt: Date = date || this;
     let o: any = {
-        "M+": this.getMonth() + 1,                    //月份
-        "d+": this.getDate(),                         //日
-        "h+": this.getHours(),                        //小时
-        "m+": this.getMinutes(),                      //分
-        "s+": this.getSeconds(),                      //秒
+        "M+": dt.getMonth() + 1,                    //月份
+        "d+": dt.getDate(),                         //日
+        "h+": dt.getHours(),                        //小时
+        "m+": dt.getMinutes(),                      //分
+        "s+": dt.getSeconds(),                      //秒
         "q": (function (__this) {          //季度
             const q = Math.floor((__this.getMonth() + 3) / 3) - 1;
             return formatDate.seasonText[q];
-        })(this),
-        "S+": this.getMilliseconds(),                   //毫秒
+        })(dt),
+        "S+": dt.getMilliseconds(),                   //毫秒
         "w": (function (__this) {        //周
             const d = __this.getDay();
             // 星期
@@ -134,10 +140,10 @@ export const formatDate: formatDateInterface = function (this: Date, format = "y
                 });
             }
             return formatDate.weekText[d];
-        })(this),
+        })(dt),
     };
     if (/(y+)/.test(format)) {
-        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        format = format.replace(RegExp.$1, (dt.getFullYear() + "").substr(4 - RegExp.$1.length));
     }
     for (let k in o) {
         if (new RegExp("(" + k + ")").test(format)) {

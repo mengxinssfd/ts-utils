@@ -563,3 +563,13 @@ export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "defaul
     }
     return map;
 }
+
+/**
+ * 返回函数绑定this后的函数
+ * @param fn
+ * @param thisTarget
+ */
+export function getBoundFn<T extends Function>(fn: T, thisTarget: object): T {
+    return fn.bind(thisTarget);
+}
+// getBoundFn(formatDate, new Date())('yyyy mm');
