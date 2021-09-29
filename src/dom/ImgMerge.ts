@@ -18,6 +18,11 @@ type Style = {
     background?: string;
 }
 
+type Radius = number | [number, number, number, number];
+type ImgStyle = Style & {
+    radius?: Radius
+}
+
 let id = 0;
 
 type ComputedStyleExclude = "verticalAlign" | "horizontalAlign" | "right" | "bottom" | "background"
@@ -34,7 +39,7 @@ abstract class Node {
         const style = parent instanceof MergeImg ? parent : parent.computedStyle;
         this.auto = {
             width: style.width,
-            height: style.height,
+            height: style.height
         };
     }
 
@@ -78,7 +83,7 @@ abstract class Node {
             height,
             horizontalAlign,
             verticalAlign,
-            zIndex,
+            zIndex
         } = this.style;
         let dw: number;
         let dh: number;
@@ -165,7 +170,7 @@ abstract class Node {
             height: dh,
             zIndex: zIndex || 0,
             left: x,
-            top: y,
+            top: y
         };
     }
 
@@ -173,16 +178,16 @@ abstract class Node {
 }
 
 class ImgElement extends Node {
-    public style!: Style;
+    public style!: ImgStyle;
     id!: number;
 
-    constructor(parent: Node, style: Style, public content: HTMLImageElement) {
+    constructor(parent: Node, style: ImgStyle, public content: HTMLImageElement) {
         super(parent);
         this.id = id++;
         const img = content;
         const {
             width,
-            height,
+            height
         } = style;
         let dw = width as number || img.width;
         let dh = height as number || img.height;
@@ -196,10 +201,11 @@ class ImgElement extends Node {
 
         this.auto = {
             width: dw,
-            height: dh,
+            height: dh
         };
         this.setStyle(style);
     }
+
 
     protected _render() {
         if (!this.ctx) throw new Error();
@@ -230,10 +236,10 @@ class Layer extends Node {
         }
     }
 
-    async addImg(img: HTMLImageElement, style?: Style): Promise<ImgElement>
-    async addImg(url: string, style?: Style): Promise<ImgElement>
-    async addImg(promiseImg: Promise<HTMLImageElement>, style?: Style): Promise<ImgElement>
-    async addImg(urlOrPromiseImg, style: Style = {}) {
+    async addImg(img: HTMLImageElement, style?: ImgStyle): Promise<ImgElement>
+    async addImg(url: string, style?: ImgStyle): Promise<ImgElement>
+    async addImg(promiseImg: Promise<HTMLImageElement>, style?: ImgStyle): Promise<ImgElement>
+    async addImg(urlOrPromiseImg, style: ImgStyle = {}) {
         let img: HTMLImageElement;
         if (isImgElement(urlOrPromiseImg)) {
             img = urlOrPromiseImg;
@@ -294,12 +300,12 @@ export class MergeImg {
                     width: width + "px",
                     // position: "fixed",
                     // left: "-10000px",
-                    display: "none",
+                    display: "none"
                 },
                 width,
-                height,
+                height
             },
-            parent,
+            parent
         });
         this.canvas = canvas;
         this.parent = parent;
@@ -365,11 +371,43 @@ export class MergeImg {
         });
     }
 
+    // todo 可以作用于单个图片
+    async drawRoundRect(r: number) {
+        const img = await loadImg(this.toDataURL());
+        const ctx = this.ctx as CanvasRenderingContext2D;
+        this.clear();
+        // 不能缩放图片
+        const pattern = ctx.createPattern(img, "no-repeat") as CanvasPattern;
+        const x = 0;
+        const y = 0;
+        const w = this.width;
+        const h = this.height;
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+        // ctx.drawImage(img, x, y, w, h);
+
+        // 如果要绘制一个圆，使用下面代码
+        // context.arc(obj.width / 2, obj.height / 2, Math.max(obj.width, obj.height) / 2, 0, 2 * Math.PI);
+        // 这里使用圆角矩形
+
+        // 填充绘制的圆
+        ctx.fillStyle = pattern;
+        ctx.fill();
+    }
+
     destroy() {
         if (!this.canvas) throw new Error("destroyed");
-        this.parent.removeChild(this.canvas);
-        this.layers = [];
-        this.canvas = undefined;
         this._ctx = undefined;
+        this.layers = [];
+        this.parent.removeChild(this.canvas);
+        this.canvas = undefined;
+
     }
 }

@@ -115,6 +115,7 @@ loadScript({
                 horizontalAlign: "right",
                 zIndex: 1000,
             });
+            await mi.drawRoundRect(20);
             // const blob = await mi.toBlob();
             // console.log(blob);
             createElement("img", {
