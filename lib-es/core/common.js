@@ -220,6 +220,13 @@ export function forEachByLen(len, callback) {
         break;
     }
 }
+// 代替for循环
+export function forEachByLenRight(len, callback) {
+    for (let i = len; i >= 0; i--) {
+        if (callback(i) === false)
+            break;
+    }
+}
 /**
  * 每隔一段事件返回字符串中的一个单词
  * @param words
@@ -509,3 +516,12 @@ export function parseCmdParams(arr, prefix = "-", defaultKey = "default") {
     }
     return map;
 }
+/**
+ * 返回函数绑定this后的函数
+ * @param fn
+ * @param thisTarget
+ */
+export function getBoundFn(fn, thisTarget) {
+    return fn.bind(thisTarget);
+}
+// getBoundFn(formatDate, new Date())('yyyy mm');

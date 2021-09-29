@@ -10,6 +10,10 @@ declare type Style = {
     horizontalAlign?: "left" | "middle" | "right";
     background?: string;
 };
+declare type Radius = number | [number, number, number, number];
+declare type ImgStyle = Style & {
+    radius?: Radius;
+};
 declare type ComputedStyleExclude = "verticalAlign" | "horizontalAlign" | "right" | "bottom" | "background";
 declare abstract class Node {
     parent: Node | MergeImg;
@@ -33,9 +37,9 @@ declare abstract class Node {
 }
 declare class ImgElement extends Node {
     content: HTMLImageElement;
-    style: Style;
+    style: ImgStyle;
     id: number;
-    constructor(parent: Node, style: Style, content: HTMLImageElement);
+    constructor(parent: Node, style: ImgStyle, content: HTMLImageElement);
     protected _render(): void;
 }
 declare class Layer extends Node {
@@ -44,9 +48,9 @@ declare class Layer extends Node {
     children: Node[];
     constructor(parent: MergeImg, style: Style);
     add(el: ImgElement): number;
-    addImg(img: HTMLImageElement, style?: Style): Promise<ImgElement>;
-    addImg(url: string, style?: Style): Promise<ImgElement>;
-    addImg(promiseImg: Promise<HTMLImageElement>, style?: Style): Promise<ImgElement>;
+    addImg(img: HTMLImageElement, style?: ImgStyle): Promise<ImgElement>;
+    addImg(url: string, style?: ImgStyle): Promise<ImgElement>;
+    addImg(promiseImg: Promise<HTMLImageElement>, style?: ImgStyle): Promise<ImgElement>;
     protected _render(): void;
     remove(el: ImgElement): ImgElement | void;
     remove(index: number): ImgElement | void;
@@ -71,6 +75,7 @@ export declare class MergeImg {
     clear(): void;
     toDataURL(type?: string, quality?: any): string;
     toBlob(type?: string, quality?: any): Promise<Blob>;
+    drawRoundRect(r: number): Promise<void>;
     destroy(): void;
 }
 export {};

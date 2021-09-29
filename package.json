@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/ts-utils",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "utils工具函数ts/js库",
   "jsdelivr": "./lib-umd/index.js",
   "main": "./lib-cjs/index.js",

@@ -18,6 +18,7 @@ export interface formatDateInterface {
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
  * @param [format="yyyy-MM-dd hh:mm:ss"]
+ * @param date {Date?}
  * @returns String
  */
 export declare const formatDate: formatDateInterface;

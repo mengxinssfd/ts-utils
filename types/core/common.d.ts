@@ -45,6 +45,7 @@ export declare function debounceByPromise<T, CB extends (...args: any[]) => Prom
  */
 export declare function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate?: boolean): () => void;
 export declare function forEachByLen(len: number, callback: (index: number) => (any | false)): void;
+export declare function forEachByLenRight(len: number, callback: (index: number) => (any | false)): void;
 /**
  * 每隔一段事件返回字符串中的一个单词
  * @param words
@@ -120,4 +121,10 @@ export declare function likeKeys(target: object | Map<string, any>, key: string 
  * @param defaultKey 如果前面没有变量名那么使用默认
  */
 export declare function parseCmdParams(arr: string[], prefix?: string, defaultKey?: string): Map<string, string[] | string | boolean>;
+/**
+ * 返回函数绑定this后的函数
+ * @param fn
+ * @param thisTarget
+ */
+export declare function getBoundFn<T extends Function>(fn: T, thisTarget: object): T;
 export {};

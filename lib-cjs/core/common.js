@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseCmdParams = exports.likeKeys = exports.at = exports.numToFixed = exports.root = exports.promiseQueue = exports.promiseAny = exports.createEnumByObj = exports.createEnum = exports.formatJSON = exports.createUUID = exports.functionApply = exports.generateFunctionCode = exports.oneByOne = exports.forEachByLen = exports.polling = exports.debounceByPromise = exports.debounceCancelable = exports.throttle = exports.debounceAsync = exports.debounce = void 0;
+exports.getBoundFn = exports.parseCmdParams = exports.likeKeys = exports.at = exports.numToFixed = exports.root = exports.promiseQueue = exports.promiseAny = exports.createEnumByObj = exports.createEnum = exports.formatJSON = exports.createUUID = exports.functionApply = exports.generateFunctionCode = exports.oneByOne = exports.forEachByLenRight = exports.forEachByLen = exports.polling = exports.debounceByPromise = exports.debounceCancelable = exports.throttle = exports.debounceAsync = exports.debounce = void 0;
 const string_1 = require("./string");
 const time_1 = require("./time");
 const dataType_1 = require("./dataType");
@@ -230,6 +230,14 @@ function forEachByLen(len, callback) {
     }
 }
 exports.forEachByLen = forEachByLen;
+// 代替for循环
+function forEachByLenRight(len, callback) {
+    for (let i = len; i >= 0; i--) {
+        if (callback(i) === false)
+            break;
+    }
+}
+exports.forEachByLenRight = forEachByLenRight;
 /**
  * 每隔一段事件返回字符串中的一个单词
  * @param words
@@ -532,3 +540,13 @@ function parseCmdParams(arr, prefix = "-", defaultKey = "default") {
     return map;
 }
 exports.parseCmdParams = parseCmdParams;
+/**
+ * 返回函数绑定this后的函数
+ * @param fn
+ * @param thisTarget
+ */
+function getBoundFn(fn, thisTarget) {
+    return fn.bind(thisTarget);
+}
+exports.getBoundFn = getBoundFn;
+// getBoundFn(formatDate, new Date())('yyyy mm');

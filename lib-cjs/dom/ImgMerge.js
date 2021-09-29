@@ -14,7 +14,7 @@ class Node {
         const style = parent instanceof MergeImg ? parent : parent.computedStyle;
         this.auto = {
             width: style.width,
-            height: style.height,
+            height: style.height
         };
     }
     setStyle(style) {
@@ -44,7 +44,7 @@ class Node {
         this.ctx.fillRect(left, top, width, height);
     }
     computeStyle() {
-        const { left, top, right, bottom, width, height, horizontalAlign, verticalAlign, zIndex, } = this.style;
+        const { left, top, right, bottom, width, height, horizontalAlign, verticalAlign, zIndex } = this.style;
         let dw;
         let dh;
         let x = 0;
@@ -124,7 +124,7 @@ class Node {
             height: dh,
             zIndex: zIndex || 0,
             left: x,
-            top: y,
+            top: y
         };
     }
 }
@@ -134,7 +134,7 @@ class ImgElement extends Node {
         this.content = content;
         this.id = id++;
         const img = content;
-        const { width, height, } = style;
+        const { width, height } = style;
         let dw = width || img.width;
         let dh = height || img.height;
         if (width === "auto") {
@@ -145,7 +145,7 @@ class ImgElement extends Node {
         }
         this.auto = {
             width: dw,
-            height: dh,
+            height: dh
         };
         this.setStyle(style);
     }
@@ -232,12 +232,12 @@ class MergeImg {
                     width: width + "px",
                     // position: "fixed",
                     // left: "-10000px",
-                    display: "none",
+                    display: "none"
                 },
                 width,
-                height,
+                height
             },
-            parent,
+            parent
         });
         this.canvas = canvas;
         this.parent = parent;
@@ -299,13 +299,43 @@ class MergeImg {
             }, type, quality);
         });
     }
+    // todo 可以作用于单个图片
+    async drawRoundRect(r) {
+        const img = await dom_1.loadImg(this.toDataURL());
+        const ctx = this.ctx;
+        this.clear();
+        // 不能缩放图片
+        const pattern = ctx.createPattern(img, "no-repeat");
+        const x = 0;
+        const y = 0;
+        const w = this.width;
+        const h = this.height;
+        if (w < 2 * r)
+            r = w / 2;
+        if (h < 2 * r)
+            r = h / 2;
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+        // ctx.drawImage(img, x, y, w, h);
+        // 如果要绘制一个圆，使用下面代码
+        // context.arc(obj.width / 2, obj.height / 2, Math.max(obj.width, obj.height) / 2, 0, 2 * Math.PI);
+        // 这里使用圆角矩形
+        // 填充绘制的圆
+        ctx.fillStyle = pattern;
+        ctx.fill();
+    }
     destroy() {
         if (!this.canvas)
             throw new Error("destroyed");
-        this.parent.removeChild(this.canvas);
-        this.layers = [];
-        this.canvas = undefined;
         this._ctx = undefined;
+        this.layers = [];
+        this.parent.removeChild(this.canvas);
+        this.canvas = undefined;
     }
 }
 exports.MergeImg = MergeImg;

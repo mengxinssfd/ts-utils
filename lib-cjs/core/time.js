@@ -77,20 +77,22 @@ exports.dateDiff = dateDiff;
 /**
  * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
  * @param [format="yyyy-MM-dd hh:mm:ss"]
+ * @param date {Date?}
  * @returns String
  */
-const formatDate = function (format = "yyyy-MM-dd hh:mm:ss") {
+const formatDate = function (format = "yyyy-MM-dd hh:mm:ss", date) {
+    const dt = date || this;
     let o = {
-        "M+": this.getMonth() + 1,
-        "d+": this.getDate(),
-        "h+": this.getHours(),
-        "m+": this.getMinutes(),
-        "s+": this.getSeconds(),
+        "M+": dt.getMonth() + 1,
+        "d+": dt.getDate(),
+        "h+": dt.getHours(),
+        "m+": dt.getMinutes(),
+        "s+": dt.getSeconds(),
         "q": (function (__this) {
             const q = Math.floor((__this.getMonth() + 3) / 3) - 1;
             return exports.formatDate.seasonText[q];
-        })(this),
-        "S+": this.getMilliseconds(),
+        })(dt),
+        "S+": dt.getMilliseconds(),
         "w": (function (__this) {
             const d = __this.getDay();
             // 星期
@@ -103,10 +105,10 @@ const formatDate = function (format = "yyyy-MM-dd hh:mm:ss") {
                 });
             }
             return exports.formatDate.weekText[d];
-        })(this),
+        })(dt),
     };
     if (/(y+)/.test(format)) {
-        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        format = format.replace(RegExp.$1, (dt.getFullYear() + "").substr(4 - RegExp.$1.length));
     }
     for (let k in o) {
         if (new RegExp("(" + k + ")").test(format)) {
