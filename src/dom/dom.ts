@@ -8,7 +8,7 @@ import {root} from "../core/common";
 import {fromCamel} from "../core/string";
 import {onceEvent} from "./event";
 // 所有主要浏览器都支持 createElement() 方法
-let elementStyle:CSSStyleDeclaration = root?.document?.createElement("div").style ?? {};
+let elementStyle: CSSStyleDeclaration = root?.document?.createElement("div").style ?? {};
 const vendor: string | false = (() => {
     let transformName: any = {
         webkit: "webkitTransform",
@@ -206,6 +206,7 @@ export function loadImg(url: string, props: Partial<HTMLImageElement> = {}): Pro
 }
 
 export function loadScript(url: string): Promise<HTMLScriptElement>;
+export function loadScript(url: string, props: Partial<HTMLScriptElement>): Promise<HTMLScriptElement>;
 export function loadScript(param: {
     url: string;
     props?: Partial<HTMLScriptElement>;
@@ -223,10 +224,11 @@ export function loadScript(param: {
 /**
  * 手动添加script
  * @param param
+ * @param props
  */
-export function loadScript(param) {
+export function loadScript(param, props?) {
     let url = "";
-    let onLoad, onError, props, attrs;
+    let onLoad, onError, attrs;
     if (typeof param === "string") {
         url = param;
     } else {
