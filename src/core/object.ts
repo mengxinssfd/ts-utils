@@ -1,6 +1,6 @@
 import {forEachRight} from "./array";
 import {isArray, isBroadlyObj, isNaN, isObject, typeOf} from "./dataType";
-import {TransferPath, TypeOfPath, TransferPathOf} from "./ObjPath";
+import type {TransferPath, TypeOfPath, TransferPathOf} from "./ObjPath";
 import {DotTrim, RemoveStrStart} from "../TsTypes";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
@@ -221,7 +221,7 @@ export function pick(originObj, picks, cb) {
     // ------- 第二种写法 -------
     // 更简洁 减少判断次数
     // TODO 需要判断返回值类型是否改变了  改变则抛出异常
-    return isObj ? pickRename(originObj, picks, cb) : pickByKeys(originObj, picks, cb);
+    return isObj ? pickRename(originObj, picks as any, cb) : pickByKeys(originObj, picks, cb);
 }
 
 // pick({a: 132, b: "123123"}, ["a", "b"]);
