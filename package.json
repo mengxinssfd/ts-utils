@@ -79,7 +79,7 @@
     "webpack-dev-server": "^3.9.0"
   },
   "author": "dyh",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mengxinssfd/ts-utils/issues"
   },
