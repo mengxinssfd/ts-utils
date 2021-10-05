@@ -13,6 +13,7 @@
     "allowJs": true,
     // "jsx": "react",
     "moduleResolution": "node",
+    // "removeComments": true,
     "declaration": true,
     //    "rootDir": "src",
     "forceConsistentCasingInFileNames": false,
