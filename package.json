@@ -83,5 +83,12 @@
   "bugs": {
     "url": "https://github.com/mengxinssfd/ts-utils/issues"
   },
-  "homepage": "https://github.com/mengxinssfd/ts-utils#readme"
+  "homepage": "https://github.com/mengxinssfd/ts-utils#readme",
+  "exports": {
+    ".": {
+      "import": "./lib-es/index.js",
+      "require": "./lib-cjs/index.js"
+    },
+    "./": "./"
+  }
 }
