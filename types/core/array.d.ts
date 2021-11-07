@@ -101,6 +101,11 @@ export declare function chunk(arr: any[], chunkLen: number): any[];
  */
 export declare function inRange(value: number, [min, max]: [number?, number?]): boolean;
 /**
+ * @param value {number}
+ * @param ranges {[number,number][]}
+ */
+export declare function inRanges(value: number, ...ranges: [number?, number?][]): boolean;
+/**
  * 数组分组
  * @example
  * groupBy([{type: 1}, {type: 2}], "type") // returns {1: [{type: 1}], 2: [{type: 2}]}

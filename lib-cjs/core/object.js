@@ -278,7 +278,7 @@ exports.defaults = defaults;
 function objUpdate(target, ...args) {
     exports.objForEach(target, (v, k) => {
         array_1.forEachRight(function (item) {
-            if (item.hasOwnProperty(k)) {
+            if (item && item.hasOwnProperty(k)) {
                 target[k] = item[k];
                 return false;
             }
@@ -296,7 +296,7 @@ exports.objUpdate = objUpdate;
 function pickUpdated(target, objs, compareFn = (a, b) => a === b || (dataType_1.isNaN(a) && dataType_1.isNaN(b))) {
     return exports.objReduce(target, (result, v, k) => {
         array_1.forEachRight(function (item) {
-            if (item.hasOwnProperty(k)) {
+            if (item && item.hasOwnProperty(k)) {
                 if (!compareFn(target[k], item[k])) {
                     result[k] = item[k];
                 }

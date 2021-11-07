@@ -1,4 +1,4 @@
-import { TransferPath, TypeOfPath, TransferPathOf } from "./ObjPath";
+import type { TransferPath, TypeOfPath, TransferPathOf } from "./ObjPath";
 import { DotTrim, RemoveStrStart } from "../TsTypes";
 export declare function getTreeMaxDeep(tree: object): number;
 export declare function getTreeNodeLen(tree: object, nodeNumber?: number): number;

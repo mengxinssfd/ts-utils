@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMonthTheNthWeekday = exports.getTheLastDayOfAMonth = exports.createTimeCountDown = exports.createTimeCountUp = exports.sleep = exports.str2Date = exports.getDateFromStr = exports.useDateFormat = exports.formatDate = exports.dateDiff = exports.number2Date = void 0;
+exports.getMilliseconds = exports.getMonthTheNthWeekday = exports.getTheLastDayOfAMonth = exports.createTimeCountDown = exports.createTimeCountUp = exports.sleep = exports.str2Date = exports.getDateFromStr = exports.noConflictDateFormat = exports.useDateFormat = exports.formatDate = exports.dateDiff = exports.number2Date = void 0;
 const string_1 = require("./string");
 const array_1 = require("./array");
 /**
@@ -123,11 +123,17 @@ const formatDate = function (format = "yyyy-MM-dd hh:mm:ss", date) {
 exports.formatDate = formatDate;
 exports.formatDate.weekText = [];
 exports.formatDate.seasonText = ["春", "夏", "秋", "冬"];
+let originDateFormat;
 // 挂载到Date原型
 function useDateFormat(force = false) {
+    originDateFormat = Date.prototype.format;
     (!Date.prototype.format || force) && (Date.prototype.format = exports.formatDate);
 }
 exports.useDateFormat = useDateFormat;
+function noConflictDateFormat() {
+    Date.prototype.format = originDateFormat;
+}
+exports.noConflictDateFormat = noConflictDateFormat;
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
  * @param date 格式：yyyy-MM-dd hh:mm:ss
@@ -229,3 +235,21 @@ function getMonthTheNthWeekday(month, nth, weekday = 0) {
     return date;
 }
 exports.getMonthTheNthWeekday = getMonthTheNthWeekday;
+/**
+ * 获取毫秒数
+ * @param days
+ * @param hours
+ * @param minutes
+ * @param seconds
+ */
+function getMilliseconds({ days = 0, hours = 0, minutes = 0, seconds = 0 } = {}) {
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    let result = seconds * second;
+    result += minutes * minute;
+    result += hours * hour;
+    result += days * hour * 24;
+    return result;
+}
+exports.getMilliseconds = getMilliseconds;

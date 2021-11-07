@@ -205,10 +205,11 @@ exports.loadImg = loadImg;
 /**
  * 手动添加script
  * @param param
+ * @param props
  */
-function loadScript(param) {
+function loadScript(param, props) {
     let url = "";
-    let onLoad, onError, props, attrs;
+    let onLoad, onError, attrs;
     if (typeof param === "string") {
         url = param;
     }

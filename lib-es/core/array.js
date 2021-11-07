@@ -37,7 +37,7 @@ export function createArray({ start = 0, end, len, fill }) {
             callback = (i) => i;
             break;
         default:
-            callback = (i) => fill;
+            callback = () => fill;
     }
     const arr = [];
     for (let item = start, index = 0; item < e; item++, index++) {
@@ -114,10 +114,10 @@ export function forEachRight(callbackfn, thisArg) {
     }
 }
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
-export function from(iterable, mapFn = (value, index) => value) {
+export function from(iterable, mapFn = (value) => value) {
     const arr = [];
     if (isArrayLike(iterable)) {
-        forEach(iterable, ((v, k, array) => {
+        forEach(iterable, ((v, k) => {
             arr.push(mapFn(v, k));
         }));
     }
@@ -389,6 +389,13 @@ export function chunk(arr, chunkLen) {
  */
 export function inRange(value, [min = -Infinity, max = Infinity]) {
     return min <= value && value <= max;
+}
+/**
+ * @param value {number}
+ * @param ranges {[number,number][]}
+ */
+export function inRanges(value, ...ranges) {
+    return ranges.some(item => inRange(value, item));
 }
 export function groupBy(arr, key, defaultKey = "*") {
     const cb = isFunction(key) ? key : item => item[key];
