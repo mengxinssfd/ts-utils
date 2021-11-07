@@ -408,7 +408,7 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
                 });
             }
             !list.length && reject("AggregateError: All promises were rejected");
-        } catch (e) {
+        } catch (e:any) {
             reject(e.toString());
         }
 
