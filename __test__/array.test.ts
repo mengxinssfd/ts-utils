@@ -35,7 +35,7 @@ test("forEach", () => {
     rt = fe(arr2, (v, k) => arr2[k] = "a" + v, () => elseCount++);
     expect(rt).toBeTruthy();
     expect(elseCount).toBe(1);
-    rt = fe(arr2, (v, k) => false, () => elseCount++);
+    rt = fe(arr2, () => false, () => elseCount++);
     expect(rt).toBeFalsy();
     expect(elseCount).toBe(1);
 
@@ -596,10 +596,24 @@ test("arrayRemoveItemsBy", () => {
 });
 test("inRange", () => {
     const fn = arr.inRange;
-    expect(fn(0, [, 100])).toBeTruthy();
+    expect(fn(0, [undefined, 100])).toBeTruthy();
     expect(fn(0, [0])).toBeTruthy();
     expect(fn(0, [1])).toBeFalsy();
     expect(fn(0, [1, 2])).toBeFalsy();
+});
+test("inRanges", () => {
+    const fn = arr.inRanges;
+    expect(fn(0, [undefined, 100])).toBeTruthy();
+    expect(fn(0, [0])).toBeTruthy();
+    expect(fn(0, [1])).toBeFalsy();
+    expect(fn(0, [1, 2])).toBeFalsy();
+
+    expect(fn(0, [1, 2], [-9, -1])).toBeFalsy();
+    expect(fn(-9, [1, 2], [-9, -1])).toBeTruthy();
+    expect(fn(-1, [1, 2], [-9, -1])).toBeTruthy();
+    expect(fn(-10, [1, 2], [-9, -1])).toBeFalsy();
+    expect(fn(-10, [1, 2], [-9, -1], [-20, -10])).toBeTruthy();
+    expect(fn(0, [1, 2], [-9, -1])).toBeFalsy();
 });
 test("groupBy", () => {
     const fn = arr.groupBy;
