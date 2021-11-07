@@ -245,3 +245,28 @@ test("getMonthTheNthWeekday", async () => {
     expect(fn(new Date("2021-3"), 4 - 5, 7)!.getDate()).toBe(28);
     expect(fn(new Date("2021-4"), 4 - 5, 5)!.getDate()).toBe(30);
 });
+
+test("getMilliseconds", async () => {
+    const fn = t.getMilliseconds;
+
+    expect(fn({seconds: 1})).toBe(1000);
+    expect(fn({seconds: 1.5})).toBe(1500);
+    expect(fn({seconds: 60})).toBe(1000 * 60);
+    expect(fn({minutes: 1})).toBe(1000 * 60);
+    expect(fn({minutes: 1.5})).toBe(1000 * 90);
+    expect(fn({minutes: 1})).toBe(fn({seconds: 60}));
+    expect(fn({minutes: 1.5})).toBe(fn({seconds: 90}));
+    expect(fn({hours: 1})).toBe(fn({minutes: 60}));
+    expect(fn({days: 1})).toBe(fn({hours: 24}));
+    expect(fn({days: 1.5})).toBe(fn({hours: 36}));
+    expect(fn({days: 1, hours: 1, seconds: 10})).toBe(10 * 1000 + 1000 * 60 * 60 + 1000 * 60 * 60 * 24);
+    expect(fn({days: 1, hours: 1, seconds: 10})).toBe(
+        fn({days: 1}) +
+        fn({hours: 1}) +
+        fn({seconds: 10})
+    );
+    expect(fn({days: 2})).toBe(fn({days: 1}) * 2)
+    const date = new Date();
+
+    expect(-fn({hours: 1})).toBe(date.getTime() - date.setHours(date.getHours() + 1))
+});
