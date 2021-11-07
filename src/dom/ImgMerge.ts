@@ -178,7 +178,7 @@ abstract class Node {
 }
 
 class ImgElement extends Node {
-    public style!: ImgStyle;
+    declare public style: ImgStyle;
     id!: number;
 
     constructor(parent: Node, style: ImgStyle, public content: HTMLImageElement) {
@@ -216,7 +216,7 @@ class ImgElement extends Node {
 }
 
 class Layer extends Node {
-    parent!: MergeImg;
+    declare parent: MergeImg;
     children: Node[] = [];
 
     constructor(parent: MergeImg, public style: Style) {

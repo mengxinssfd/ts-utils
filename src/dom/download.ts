@@ -45,7 +45,7 @@ export class Download {
             // domA = null;
             window.URL.revokeObjectURL(objectURL);
         } else {
-            navigator.msSaveBlob(objectURL, filename);
+            (navigator as any).msSaveBlob(objectURL, filename);
         }
         window.URL.revokeObjectURL(objectURL);
     }
