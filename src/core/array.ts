@@ -44,7 +44,7 @@ export function createArray<T = number>(
             callback = (i) => i;
             break;
         default:
-            callback = (i) => fill;
+            callback = () => fill;
     }
     const arr: any[] = [];
     for (let item = start, index = 0; item < e; item++, index++) {
@@ -138,11 +138,11 @@ export function forEachRight<T>(
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
 export function from<T, U = T>(
     iterable: Iterable<T> | ArrayLike<T>,
-    mapFn: (v: T, k?: number) => U = (value, index) => value as any,
+    mapFn: (v: T, k?: number) => U = (value) => value as any,
 ): U[] {
     const arr: U[] = [];
     if (isArrayLike(iterable)) {
-        forEach(iterable, ((v, k, array) => {
+        forEach(iterable, ((v, k) => {
             arr.push(mapFn(v, k));
         }));
     } else {
@@ -469,6 +469,18 @@ export function inRange(
 ): boolean {
     return min <= value && value <= max;
 }
+
+/**
+ * @param value {number}
+ * @param ranges {[number,number][]}
+ */
+export function inRanges(
+    value: number,
+    ...ranges: [number?, number?][]
+): boolean {
+    return ranges.some(item => inRange(value, item));
+}
+
 
 /**
  * 数组分组
