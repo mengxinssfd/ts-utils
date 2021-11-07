@@ -249,6 +249,7 @@ test("getMonthTheNthWeekday", async () => {
 test("getMilliseconds", async () => {
     const fn = t.getMilliseconds;
 
+    expect(fn()).toBe(0);
     expect(fn({seconds: 1})).toBe(1000);
     expect(fn({seconds: 1.5})).toBe(1500);
     expect(fn({seconds: 60})).toBe(1000 * 60);
@@ -269,4 +270,25 @@ test("getMilliseconds", async () => {
     const date = new Date();
 
     expect(-fn({hours: 1})).toBe(date.getTime() - date.setHours(date.getHours() + 1))
+});
+test("useDateFormat", async () => {
+    const fn = t.useDateFormat
+
+    expect('format' in new Date()).toBe(false);
+    fn();
+    expect('format' in new Date()).toBe(true);
+    expect((Date.prototype as any).format).toBe(t.formatDate);
+    t.noConflictDateFormat();
+    expect((Date.prototype as any).format).toBe(undefined);
+
+    const test = () => {
+    }
+    (Date.prototype as any).format = test;
+
+    fn();
+
+    expect((Date.prototype as any).format).toBe(test);
+
+    fn(true);
+    expect((Date.prototype as any).format).toBe(t.formatDate);
 });
