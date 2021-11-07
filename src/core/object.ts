@@ -343,7 +343,7 @@ export function defaults(target, ...args) {
 export function objUpdate<T extends object>(target: T, ...args: T[]): T {
     objForEach(target, (v, k) => {
         forEachRight(function (item): void | false {
-            if (item.hasOwnProperty(k)) {
+            if (item && item.hasOwnProperty(k)) {
                 target[k] = item[k];
                 return false;
             }
@@ -365,7 +365,7 @@ export function pickUpdated<T extends object>(
 ): Partial<{ [k in keyof T]: any }> {
     return objReduce(target, (result, v, k) => {
         forEachRight(function (item: any): void | false {
-            if (item.hasOwnProperty(k)) {
+            if (item && item.hasOwnProperty(k)) {
                 if (!compareFn(target[k], item[k])) {
                     result[k] = item[k];
                 }
