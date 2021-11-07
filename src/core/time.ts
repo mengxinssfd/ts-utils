@@ -272,10 +272,10 @@ export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
 
 /**
  * 获取毫秒数
- * @param days
- * @param hours
- * @param minutes
- * @param seconds
+ * @param [days=0]
+ * @param [hours=0]
+ * @param [minutes=0]
+ * @param [seconds=0]
  */
 export function getMilliseconds({days = 0, hours = 0, minutes = 0, seconds = 0}: {
     days?: number,
