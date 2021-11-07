@@ -158,9 +158,15 @@ export const formatDate: formatDateInterface = function (
 formatDate.weekText = [];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
 
+let originDateFormat;
 // 挂载到Date原型
 export function useDateFormat(force = false) {
+    originDateFormat = Date.prototype.format;
     (!Date.prototype.format || force) && (Date.prototype.format = formatDate);
+}
+
+export function noConflictDateFormat(){
+    Date.prototype.format = originDateFormat;
 }
 
 /**
