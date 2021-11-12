@@ -159,13 +159,14 @@ formatDate.weekText = [];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
 
 let originDateFormat;
+
 // 挂载到Date原型
 export function useDateFormat(force = false) {
     originDateFormat = Date.prototype.format;
     (!Date.prototype.format || force) && (Date.prototype.format = formatDate);
 }
 
-export function noConflictDateFormat(){
+export function noConflictDateFormat() {
     Date.prototype.format = originDateFormat;
 }
 
@@ -292,4 +293,16 @@ export function getMilliseconds({days = 0, hours = 0, minutes = 0, seconds = 0}:
     result += hours * hour;
     result += days * hour * 24;
     return result;
+}
+
+
+/**
+ * 判断时间是否相同
+ * @param format yyyy-MM-dd hh:mm:ss
+ * @param date
+ * @param dates
+ */
+export function isSameTime(format: string, date: Date, ...dates: Date[]): boolean {
+    const dt: string = formatDate.call(date, format);
+    return dates.every(date => formatDate.call(date, format) === dt)
 }
