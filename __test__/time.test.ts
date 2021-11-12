@@ -292,3 +292,13 @@ test("useDateFormat", async () => {
     fn(true);
     expect((Date.prototype as any).format).toBe(t.formatDate);
 });
+test("isSameTime", async () => {
+    const fn = t.isSameTime
+
+    const date = new Date("2021-10-10")
+    const date2 = new Date("2021-10-30")
+
+    expect(fn("yyyy-MM",date,date2)).toBe(true);
+    expect(fn("yyyy-MM-dd",date,date2)).toBe(false);
+    expect(fn("yyyy hh:mm:ss",date,date2)).toBe(true);
+});
