@@ -58,18 +58,10 @@ exports.isSupportedClipboardCommand = isSupportedClipboardCommand;
  * @return {Promise}
  */
 function copy2Clipboard(target) {
-    let el;
-    const isText = typeof target === "string";
-    el = isText ? dom_1.createElement("div", {
-        props: {
-            innerText: target,
-            style: {
-                position: "fixed",
-                left: "-100000px",
-            },
-        },
-        parent: document.body,
-    }) : target;
+    const isDoc = domType_1.isDom(target);
+    const el = isDoc ?
+        target :
+        dom_1.createHiddenHtmlElement({ innerText: String(target) });
     const p = new Promise((resolve, reject) => {
         select(el);
         let succeeded;
@@ -81,6 +73,7 @@ function copy2Clipboard(target) {
             succeeded = false;
             error = err;
         }
+        // execCommand可能返回false
         if (succeeded) {
             resolve(target);
             return;
@@ -89,7 +82,7 @@ function copy2Clipboard(target) {
     });
     p.finally(function () {
         window.getSelection && window.getSelection().removeAllRanges();
-        isText && el && document.body.removeChild(el);
+        !isDoc && el && document.body.removeChild(el);
     });
     return p;
 }

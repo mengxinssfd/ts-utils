@@ -1,4 +1,4 @@
-import { SettableProps, SettableStyle } from "../TsTypes";
+import type { SettableProps, SettableStyle } from "../TsTypes";
 export declare function supportClassList(): boolean;
 export declare function hasClassIe8(target: HTMLElement, className: string[] | string): boolean;
 export declare function hasClassStandard(target: HTMLElement, className: string[] | string): boolean;
@@ -44,6 +44,7 @@ export declare function setStyle(style: Array<SettableStyle> | SettableStyle, { 
  */
 export declare function loadImg(url: string, props?: Partial<HTMLImageElement>): Promise<HTMLImageElement>;
 export declare function loadScript(url: string): Promise<HTMLScriptElement>;
+export declare function loadScript(url: string, props: Partial<HTMLScriptElement>): Promise<HTMLScriptElement>;
 export declare function loadScript(param: {
     url: string;
     props?: Partial<HTMLScriptElement>;

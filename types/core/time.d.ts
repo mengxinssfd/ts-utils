@@ -23,6 +23,7 @@ export interface formatDateInterface {
  */
 export declare const formatDate: formatDateInterface;
 export declare function useDateFormat(force?: boolean): void;
+export declare function noConflictDateFormat(): void;
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
  * @param date 格式：yyyy-MM-dd hh:mm:ss
@@ -49,3 +50,16 @@ export declare function getTheLastDayOfAMonth(month: Date): Date;
  * @param [weekday=0] 0和7都是周日
  */
 export declare function getMonthTheNthWeekday(month: Date, nth: number, weekday?: number): Date | null;
+/**
+ * 获取毫秒数
+ * @param days
+ * @param hours
+ * @param minutes
+ * @param seconds
+ */
+export declare function getMilliseconds({ days, hours, minutes, seconds }?: {
+    days?: number;
+    hours?: number;
+    minutes?: number;
+    seconds?: number;
+}): number;

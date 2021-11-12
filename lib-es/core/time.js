@@ -117,9 +117,14 @@ export const formatDate = function (format = "yyyy-MM-dd hh:mm:ss", date) {
 };
 formatDate.weekText = [];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
+let originDateFormat;
 // 挂载到Date原型
 export function useDateFormat(force = false) {
+    originDateFormat = Date.prototype.format;
     (!Date.prototype.format || force) && (Date.prototype.format = formatDate);
+}
+export function noConflictDateFormat() {
+    Date.prototype.format = originDateFormat;
 }
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
@@ -215,4 +220,21 @@ export function getMonthTheNthWeekday(month, nth, weekday = 0) {
     }
     date.setDate(dayDate);
     return date;
+}
+/**
+ * 获取毫秒数
+ * @param days
+ * @param hours
+ * @param minutes
+ * @param seconds
+ */
+export function getMilliseconds({ days = 0, hours = 0, minutes = 0, seconds = 0 } = {}) {
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    let result = seconds * second;
+    result += minutes * minute;
+    result += hours * hour;
+    result += days * hour * 24;
+    return result;
 }

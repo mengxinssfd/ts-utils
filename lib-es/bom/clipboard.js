@@ -1,6 +1,6 @@
 var _a;
-import { isInputElement, isSelectElement, isTextAreaElement } from "../dom/domType";
-import { createElement } from "../dom/dom";
+import { isDom, isInputElement, isSelectElement, isTextAreaElement } from "../dom/domType";
+import { createHiddenHtmlElement } from "../dom/dom";
 import { castArray } from "../core/array";
 import { onceEvent } from "../dom/event";
 import { root } from "../core/common";
@@ -53,18 +53,10 @@ export function isSupportedClipboardCommand(action = ["cut", "copy"]) {
  * @return {Promise}
  */
 export function copy2Clipboard(target) {
-    let el;
-    const isText = typeof target === "string";
-    el = isText ? createElement("div", {
-        props: {
-            innerText: target,
-            style: {
-                position: "fixed",
-                left: "-100000px",
-            },
-        },
-        parent: document.body,
-    }) : target;
+    const isDoc = isDom(target);
+    const el = isDoc ?
+        target :
+        createHiddenHtmlElement({ innerText: String(target) });
     const p = new Promise((resolve, reject) => {
         select(el);
         let succeeded;
@@ -76,6 +68,7 @@ export function copy2Clipboard(target) {
             succeeded = false;
             error = err;
         }
+        // execCommand可能返回false
         if (succeeded) {
             resolve(target);
             return;
@@ -84,7 +77,7 @@ export function copy2Clipboard(target) {
     });
     p.finally(function () {
         window.getSelection && window.getSelection().removeAllRanges();
-        isText && el && document.body.removeChild(el);
+        !isDoc && el && document.body.removeChild(el);
     });
     return p;
 }

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.groupBy = exports.inRange = exports.chunk = exports.castArray = exports.unique = exports.arrayRemoveItemsBy = exports.arrayRemoveItem = exports.insertToArray = exports.binaryFindIndex = exports.binaryFind = exports.binaryFind2 = exports.flat = exports.findIndexRight = exports.findIndex = exports.find = exports.includes = exports.filter = exports.from = exports.forEachRight = exports.reduceAsync = exports.mapAsync = exports.forEachAsync = exports.forEach = exports.createArray = void 0;
+exports.groupBy = exports.inRanges = exports.inRange = exports.chunk = exports.castArray = exports.unique = exports.arrayRemoveItemsBy = exports.arrayRemoveItem = exports.insertToArray = exports.binaryFindIndex = exports.binaryFind = exports.binaryFind2 = exports.flat = exports.findIndexRight = exports.findIndex = exports.find = exports.includes = exports.filter = exports.from = exports.forEachRight = exports.reduceAsync = exports.mapAsync = exports.forEachAsync = exports.forEach = exports.createArray = void 0;
 const dataType_1 = require("./dataType");
 /**
  * @description len与end两个都有值时，以小的为准
@@ -40,7 +40,7 @@ function createArray({ start = 0, end, len, fill }) {
             callback = (i) => i;
             break;
         default:
-            callback = (i) => fill;
+            callback = () => fill;
     }
     const arr = [];
     for (let item = start, index = 0; item < e; item++, index++) {
@@ -123,10 +123,10 @@ function forEachRight(callbackfn, thisArg) {
 }
 exports.forEachRight = forEachRight;
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
-function from(iterable, mapFn = (value, index) => value) {
+function from(iterable, mapFn = (value) => value) {
     const arr = [];
     if (dataType_1.isArrayLike(iterable)) {
-        forEach(iterable, ((v, k, array) => {
+        forEach(iterable, ((v, k) => {
             arr.push(mapFn(v, k));
         }));
     }
@@ -416,6 +416,14 @@ function inRange(value, [min = -Infinity, max = Infinity]) {
     return min <= value && value <= max;
 }
 exports.inRange = inRange;
+/**
+ * @param value {number}
+ * @param ranges {[number,number][]}
+ */
+function inRanges(value, ...ranges) {
+    return ranges.some(item => inRange(value, item));
+}
+exports.inRanges = inRanges;
 function groupBy(arr, key, defaultKey = "*") {
     const cb = dataType_1.isFunction(key) ? key : item => item[key];
     return arr.reduce((result, item) => {
