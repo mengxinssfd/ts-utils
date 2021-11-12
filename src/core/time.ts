@@ -295,6 +295,14 @@ export function getMilliseconds({days = 0, hours = 0, minutes = 0, seconds = 0}:
     return result;
 }
 
+/**
+ * 格式化时间，代替formatDate.call，formatDate.call赋值总是有warn
+ * @param date {Date}
+ * @param [format="yyyy-MM-dd hh:mm:ss"]
+ */
+export function getFormattedDate(date: Date, format: string = "yyyy-MM-dd hh:mm:ss"): string {
+    return formatDate.call(date, format);
+}
 
 /**
  * 判断时间是否相同
@@ -303,6 +311,6 @@ export function getMilliseconds({days = 0, hours = 0, minutes = 0, seconds = 0}:
  * @param dates
  */
 export function isSameTime(format: string, date: Date, ...dates: Date[]): boolean {
-    const dt: string = formatDate.call(date, format);
-    return dates.every(date => formatDate.call(date, format) === dt)
+    const dt = getFormattedDate(date,format);
+    return dates.every(date => getFormattedDate(date, format) === dt)
 }
