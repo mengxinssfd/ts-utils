@@ -66,7 +66,7 @@ test("getDateFromStr", () => {
         "2020/02/02 10/10/10",
         "2020/02/02/10/10/10",
     ].forEach((time: string) => {
-        expect(t.formatDate.call(fn(time))).toBe("2020-02-02 10:10:10");
+        expect(t.getFormattedDate(fn(time) as Date)).toBe("2020-02-02 10:10:10");
     });
     expect(fn("")).toBe(null);
     expect(fn("123cvsd213")).toBe(null);
@@ -90,6 +90,7 @@ test("formatDate", () => {
     expect(fn(new Date("2020-01-18"), "w")).toBe("六");
     // week end
     // season start
+    t.formatDate.seasonText = ["春", "夏", "秋", "冬"];
     expect(fn(new Date("2020-01-12"), "q")).toBe("春");
     expect(fn(new Date("2020-02-12"), "q")).toBe("春");
     expect(fn(new Date("2020-03-13"), "q")).toBe("春");
@@ -112,6 +113,7 @@ test("formatDate", () => {
 test("getFormattedDate", () => {
     const fn = t.getFormattedDate;
     const date1 = t.getDateFromStr("2020-02-02 10:10:10") as Date;
+    expect(fn(date1)).toBe("2020-02-02 10:10:10");
     expect(fn(date1, "yyyy-MM-dd")).toBe("2020-02-02");
     expect(fn(date1, "hh:mm:ss")).toBe("10:10:10");
     expect(fn(date1, "dd-MM-yyyy")).toBe("02-02-2020");
@@ -126,6 +128,7 @@ test("getFormattedDate", () => {
     expect(fn(new Date("2020-01-18"), "w")).toBe("六");
     // week end
     // season start
+    t.formatDate.seasonText = ["春", "夏", "秋", "冬"];
     expect(fn(new Date("2020-01-12"), "q")).toBe("春");
     expect(fn(new Date("2020-02-12"), "q")).toBe("春");
     expect(fn(new Date("2020-03-13"), "q")).toBe("春");
