@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMilliseconds = exports.getMonthTheNthWeekday = exports.getTheLastDayOfAMonth = exports.createTimeCountDown = exports.createTimeCountUp = exports.sleep = exports.str2Date = exports.getDateFromStr = exports.noConflictDateFormat = exports.useDateFormat = exports.formatDate = exports.dateDiff = exports.number2Date = void 0;
+exports.isSameTime = exports.getFormattedDate = exports.getMilliseconds = exports.getMonthTheNthWeekday = exports.getTheLastDayOfAMonth = exports.createTimeCountDown = exports.createTimeCountUp = exports.sleep = exports.str2Date = exports.getDateFromStr = exports.noConflictDateFormat = exports.useDateFormat = exports.formatDate = exports.dateDiff = exports.number2Date = void 0;
 const string_1 = require("./string");
 const array_1 = require("./array");
 /**
@@ -237,10 +237,10 @@ function getMonthTheNthWeekday(month, nth, weekday = 0) {
 exports.getMonthTheNthWeekday = getMonthTheNthWeekday;
 /**
  * 获取毫秒数
- * @param days
- * @param hours
- * @param minutes
- * @param seconds
+ * @param [days=0]
+ * @param [hours=0]
+ * @param [minutes=0]
+ * @param [seconds=0]
  */
 function getMilliseconds({ days = 0, hours = 0, minutes = 0, seconds = 0 } = {}) {
     const second = 1000;
@@ -253,3 +253,23 @@ function getMilliseconds({ days = 0, hours = 0, minutes = 0, seconds = 0 } = {})
     return result;
 }
 exports.getMilliseconds = getMilliseconds;
+/**
+ * 格式化时间，代替formatDate.call，formatDate.call赋值总是有warn
+ * @param date {Date}
+ * @param [format="yyyy-MM-dd hh:mm:ss"]
+ */
+function getFormattedDate(date, format = "yyyy-MM-dd hh:mm:ss") {
+    return exports.formatDate.call(date, format);
+}
+exports.getFormattedDate = getFormattedDate;
+/**
+ * 判断时间是否相同
+ * @param format yyyy-MM-dd hh:mm:ss
+ * @param date
+ * @param dates
+ */
+function isSameTime(format, date, ...dates) {
+    const dt = getFormattedDate(date, format);
+    return dates.every(date => getFormattedDate(date, format) === dt);
+}
+exports.isSameTime = isSameTime;

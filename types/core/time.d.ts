@@ -52,10 +52,10 @@ export declare function getTheLastDayOfAMonth(month: Date): Date;
 export declare function getMonthTheNthWeekday(month: Date, nth: number, weekday?: number): Date | null;
 /**
  * 获取毫秒数
- * @param days
- * @param hours
- * @param minutes
- * @param seconds
+ * @param [days=0]
+ * @param [hours=0]
+ * @param [minutes=0]
+ * @param [seconds=0]
  */
 export declare function getMilliseconds({ days, hours, minutes, seconds }?: {
     days?: number;
@@ -63,3 +63,16 @@ export declare function getMilliseconds({ days, hours, minutes, seconds }?: {
     minutes?: number;
     seconds?: number;
 }): number;
+/**
+ * 格式化时间，代替formatDate.call，formatDate.call赋值总是有warn
+ * @param date {Date}
+ * @param [format="yyyy-MM-dd hh:mm:ss"]
+ */
+export declare function getFormattedDate(date: Date, format?: string): string;
+/**
+ * 判断时间是否相同
+ * @param format yyyy-MM-dd hh:mm:ss
+ * @param date
+ * @param dates
+ */
+export declare function isSameTime(format: string, date: Date, ...dates: Date[]): boolean;
