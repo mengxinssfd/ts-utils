@@ -54,7 +54,7 @@ class EventBus {
     }
     off(eventName, callback) {
         const list = this.getCallbackList(eventName);
-        let index = array_1.findIndex(i => i === callback, list);
+        let index = (0, array_1.findIndex)(i => i === callback, list);
         (index > -1) && list.splice(index, 1);
     }
     offAll() {

@@ -13,11 +13,11 @@ const common_1 = require("../core/common");
  */
 function select(element) {
     let selectedText;
-    if (domType_1.isSelectElement(element)) {
+    if ((0, domType_1.isSelectElement)(element)) {
         element.focus();
         selectedText = element.value;
     }
-    else if (domType_1.isInputElement(element) || domType_1.isTextAreaElement(element)) {
+    else if ((0, domType_1.isInputElement)(element) || (0, domType_1.isTextAreaElement)(element)) {
         const isReadOnly = element.hasAttribute("readonly");
         if (!isReadOnly) {
             element.setAttribute("readonly", "");
@@ -44,7 +44,7 @@ function select(element) {
 }
 exports.select = select;
 function isSupportedClipboardCommand(action = ["cut", "copy"]) {
-    const actions = array_1.castArray(action);
+    const actions = (0, array_1.castArray)(action);
     if (!!document.queryCommandSupported)
         return false;
     return actions.every((act) => document.queryCommandSupported(act));
@@ -58,10 +58,10 @@ exports.isSupportedClipboardCommand = isSupportedClipboardCommand;
  * @return {Promise}
  */
 function copy2Clipboard(target) {
-    const isDoc = domType_1.isDom(target);
+    const isDoc = (0, domType_1.isDom)(target);
     const el = isDoc ?
         target :
-        dom_1.createHiddenHtmlElement({ innerText: String(target) });
+        (0, dom_1.createHiddenHtmlElement)({ innerText: String(target), style: { visibility: 'visible', opacity: '0' } });
     const p = new Promise((resolve, reject) => {
         select(el);
         let succeeded;
@@ -109,7 +109,7 @@ exports.copy2Clipboard = copy2Clipboard;
  */
 copy2Clipboard.once = function (el, target, eventType = "click", capture = false) {
     return new Promise(((resolve, reject) => {
-        event_1.onceEvent(el, eventType, () => {
+        (0, event_1.onceEvent)(el, eventType, () => {
             copy2Clipboard(target()).then(resolve, reject);
         }, capture);
     }));

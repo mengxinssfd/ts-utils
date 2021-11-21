@@ -18,7 +18,7 @@ class Node {
         };
     }
     setStyle(style) {
-        object_1.assign(this.style, style);
+        (0, object_1.assign)(this.style, style);
         this.computeStyle();
     }
     get root() {
@@ -172,21 +172,21 @@ class Layer extends Node {
             return this.children.push(el);
         }
         else {
-            return array_1.insertToArray(el, (v, k) => {
+            return (0, array_1.insertToArray)(el, (v, k) => {
                 return v.style.zIndex <= el.style.zIndex || k === 0;
             }, list, { after: true, reverse: true });
         }
     }
     async addImg(urlOrPromiseImg, style = {}) {
         let img;
-        if (domType_1.isImgElement(urlOrPromiseImg)) {
+        if ((0, domType_1.isImgElement)(urlOrPromiseImg)) {
             img = urlOrPromiseImg;
         }
-        else if (dataType_1.isPromiseLike(urlOrPromiseImg)) {
+        else if ((0, dataType_1.isPromiseLike)(urlOrPromiseImg)) {
             img = await urlOrPromiseImg;
         }
         else {
-            img = await dom_1.loadImg(urlOrPromiseImg);
+            img = await (0, dom_1.loadImg)(urlOrPromiseImg);
         }
         const item = new ImgElement(this, style, img);
         const layer = this;
@@ -206,10 +206,10 @@ class Layer extends Node {
         this.children.forEach(child => child.render());
     }
     remove(value) {
-        if (dataType_1.isNumber(value)) {
+        if ((0, dataType_1.isNumber)(value)) {
             return this.children.splice(value, 1)[0];
         }
-        return array_1.arrayRemoveItem(value, this.children);
+        return (0, array_1.arrayRemoveItem)(value, this.children);
     }
     clear() {
         this.children = [];
@@ -225,7 +225,7 @@ class MergeImg {
         this.height = height;
         this.layers = [];
         const parent = document.body;
-        const canvas = dom_1.createElement("canvas", {
+        const canvas = (0, dom_1.createElement)("canvas", {
             props: {
                 style: {
                     height: height + "px",
@@ -247,14 +247,14 @@ class MergeImg {
     }
     addLayer(style) {
         var _a;
-        const layer = new Layer(this, object_1.assign({ width: this.width, height: this.height }, style));
+        const layer = new Layer(this, (0, object_1.assign)({ width: this.width, height: this.height }, style));
         layer.style.zIndex = (_a = layer.style.zIndex) !== null && _a !== void 0 ? _a : 0;
         const list = this.layers;
         if (!list.length) {
             list.push(layer);
         }
         else {
-            array_1.insertToArray(layer, (v, k) => {
+            (0, array_1.insertToArray)(layer, (v, k) => {
                 return v.style.zIndex <= layer.style.zIndex || k === 0;
             }, list, { after: true, reverse: true });
         }
@@ -265,7 +265,7 @@ class MergeImg {
     }
     // 根据背景图创建一个MergeImg类 好处是可以根据背景图宽高设置canvas宽高，不用再额外设置
     static async createWithBg(url) {
-        const promise = dom_1.loadImg(url);
+        const promise = (0, dom_1.loadImg)(url);
         const img = await promise;
         const mi = new MergeImg(img.width, img.height);
         await mi.addLayer().addImg(promise);
@@ -301,7 +301,7 @@ class MergeImg {
     }
     // todo 可以作用于单个图片
     async drawRoundRect(r) {
-        const img = await dom_1.loadImg(this.toDataURL());
+        const img = await (0, dom_1.loadImg)(this.toDataURL());
         const ctx = this.ctx;
         this.clear();
         // 不能缩放图片

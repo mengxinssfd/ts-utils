@@ -20,7 +20,7 @@ function randomFloat(min, max, len) {
         return (Math.random() * dif) + min;
     }
     else {
-        return array_1.createArray({ len, fill: () => randomFloat(min, max) });
+        return (0, array_1.createArray)({ len, fill: () => randomFloat(min, max) });
     }
 }
 exports.randomFloat = randomFloat;
@@ -41,7 +41,7 @@ function randomInt(min, max, len) {
         return parseInt((Math.random() * dif)) + min;
     }
     else {
-        return array_1.createArray({ len, fill: () => randomInt(min, max) });
+        return (0, array_1.createArray)({ len, fill: () => randomInt(min, max) });
     }
 }
 exports.randomInt = randomInt;
@@ -59,9 +59,9 @@ exports.randomItem = randomItem;
  * @param arr
  */
 function shuffle(arr) {
-    if (!dataType_1.isArrayLike(arr))
+    if (!(0, dataType_1.isArrayLike)(arr))
         throw new TypeError();
-    const newArr = clone_1.deepCloneBfs(arr);
+    const newArr = (0, clone_1.deepCloneBfs)(arr);
     let m = newArr.length;
     while (m) {
         const i = randomInt(m--);
@@ -96,11 +96,11 @@ function randomRGBA() {
 exports.randomRGBA = randomRGBA;
 function randomHEX() {
     const num = randomInt(0xffffff).toString(16);
-    return "#" + string_1.strPadStart(num, 6, "0");
+    return "#" + (0, string_1.strPadStart)(num, 6, "0");
 }
 exports.randomHEX = randomHEX;
 function randomColor(type, len) {
-    if (dataType_1.isNumber(type)) {
+    if ((0, dataType_1.isNumber)(type)) {
         len = type;
         type = "HEX";
     }
@@ -117,7 +117,7 @@ function randomColor(type, len) {
         return (map[type] || map.HEX)();
     }
     else {
-        return array_1.createArray({ len, fill: () => randomColor(type) });
+        return (0, array_1.createArray)({ len, fill: () => randomColor(type) });
     }
 }
 exports.randomColor = randomColor;

@@ -56,7 +56,7 @@ export function copy2Clipboard(target) {
     const isDoc = isDom(target);
     const el = isDoc ?
         target :
-        createHiddenHtmlElement({ innerText: String(target) });
+        createHiddenHtmlElement({ innerText: String(target), style: { visibility: 'visible', opacity: '0' } });
     const p = new Promise((resolve, reject) => {
         select(el);
         let succeeded;

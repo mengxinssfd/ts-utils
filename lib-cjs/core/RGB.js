@@ -42,7 +42,7 @@ class RGB extends RGBSuper {
         super(r, g, b);
     }
     static random() {
-        const num = random_1.randomInt(0, 255, 3);
+        const num = (0, random_1.randomInt)(0, 255, 3);
         return new RGB(num[0], num[1], num[2]);
     }
     static fromStr(color) {
@@ -59,7 +59,7 @@ class RGB extends RGBSuper {
         const rgx = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
         const hex = hexColor.replace(rgx, (m, r, g, b) => r + r + g + g + b + b);
         const rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        if (!dataType_1.isArray(rgb) || rgb.length < 4)
+        if (!(0, dataType_1.isArray)(rgb) || rgb.length < 4)
             throw new TypeError();
         const r = parseInt(rgb[1], 16);
         const g = parseInt(rgb[2], 16);
@@ -89,8 +89,8 @@ class RGBA extends RGBSuper {
         this._a = Number(a.toFixed(2));
     }
     static random() {
-        const num = random_1.randomInt(0, 255, 3);
-        return new RGBA(num[0], num[1], num[2], random_1.randomInt());
+        const num = (0, random_1.randomInt)(0, 255, 3);
+        return new RGBA(num[0], num[1], num[2], (0, random_1.randomInt)());
     }
     static fromStr(color) {
         if (!RGBA.validate(color))

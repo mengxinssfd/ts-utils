@@ -38,7 +38,7 @@ function name2List(className) {
     if (!className)
         return [];
     let list = className;
-    if (dataType_1.isString(className)) {
+    if ((0, dataType_1.isString)(className)) {
         list = [className.trim()];
     }
     return list.reduce((init, v, k) => {
@@ -51,13 +51,13 @@ function hasClassIe8(target, className) {
     const list = name2List(className);
     const originClass = target.className;
     const classList = originClass.split(/ +/);
-    return list.every(i => array_1.includes(classList, i));
+    return list.every(i => (0, array_1.includes)(classList, i));
 }
 exports.hasClassIe8 = hasClassIe8;
 function hasClassStandard(target, className) {
     const list = name2List(className);
     const classList = target.classList;
-    return list.every(i => array_1.includes(classList, i));
+    return list.every(i => (0, array_1.includes)(classList, i));
 }
 exports.hasClassStandard = hasClassStandard;
 /**
@@ -75,7 +75,7 @@ function addClassIe8(target, className) {
     let names = name2List(className);
     const oldClass = target.className + " " + names.join(" ");
     names = oldClass.split(" ");
-    names = array_1.unique(names);
+    names = (0, array_1.unique)(names);
     names = names.filter(it => Boolean(it));
     target.className = names.join(" ");
     return target.className;
@@ -84,8 +84,8 @@ exports.addClassIe8 = addClassIe8;
 exports.addClass = supportClassList() ? addClassStandard : addClassIe8;
 function removeClassIe8(target, className) {
     const list = name2List(className);
-    const classList = array_1.unique(target.className.split(/ +/).filter(i => {
-        return !array_1.includes(list, i);
+    const classList = (0, array_1.unique)(target.className.split(/ +/).filter(i => {
+        return !(0, array_1.includes)(list, i);
     }));
     return target.className = classList.join(" ");
 }
@@ -100,11 +100,11 @@ function removeClassStandard(target, className) {
 exports.removeClassStandard = removeClassStandard;
 exports.removeClass = supportClassList() ? removeClassStandard : removeClassIe8;
 function toggleClass(target, className) {
-    if (exports.hasClass(target, className)) {
-        return exports.removeClass(target, className);
+    if ((0, exports.hasClass)(target, className)) {
+        return (0, exports.removeClass)(target, className);
     }
     else {
-        return exports.addClass(target, className);
+        return (0, exports.addClass)(target, className);
     }
 }
 exports.toggleClass = toggleClass;
@@ -149,12 +149,12 @@ exports.cssSupport = cssSupport;
  * @returns setStyle.bind(el)
  */
 function setStyle(style, { toCssText = true, el, } = {}) {
-    if (dataType_1.isString(el))
+    if ((0, dataType_1.isString)(el))
         el = document.querySelector(el);
     let target = el || this;
-    if (!domType_1.isDom(target))
+    if (!(0, domType_1.isDom)(target))
         throw new TypeError("setStyle param el | this is not HTMLElement");
-    toCssText = dataType_1.isArray(style) ? false : toCssText;
+    toCssText = (0, dataType_1.isArray)(style) ? false : toCssText;
     if (toCssText) {
         const cssText = target.style.cssText;
         const cssTextObj = cssText.replace(/; ?$/, "").split(";").reduce((init, v) => {
@@ -162,14 +162,14 @@ function setStyle(style, { toCssText = true, el, } = {}) {
             init[key] = value;
             return init;
         }, {});
-        object_1.assign(cssTextObj, style);
-        target.style.cssText = object_1.objReduce(cssTextObj, (result, v, k) => {
-            return result + `${string_1.fromCamel(k, "-")}: ${v};`;
+        (0, object_1.assign)(cssTextObj, style);
+        target.style.cssText = (0, object_1.objReduce)(cssTextObj, (result, v, k) => {
+            return result + `${(0, string_1.fromCamel)(k, "-")}: ${v};`;
         }, "");
     }
     else {
-        const styleList = array_1.castArray(style);
-        styleList.forEach(style => object_1.assign(target.style, style));
+        const styleList = (0, array_1.castArray)(style);
+        styleList.forEach(style => (0, object_1.assign)(target.style, style));
     }
     return setStyle.bind(target);
 }
@@ -186,7 +186,7 @@ function loadImg(url, props = {}) {
             reject(ev);
         };
         const img = createHtmlElement("img", {
-            props: object_1.assign({
+            props: (0, object_1.assign)({
                 // 不支持crossOrigin的浏览器（IE 10及以下版本不支持，Android 4.3 及以下版本不支持）
                 // 可以使用 XMLHttprequest 和 URL.createObjectURL() 来做兼容
                 // 不是所有的图片都支持 如http://gchat.qpic.cn/gchatpic_new/0/0-0-58CAD4E2605562E55627B37C15FACB65/0?term=2
@@ -217,7 +217,7 @@ function loadScript(param, props) {
         ({ url, onLoad, onError, props, attrs } = param);
     }
     const cb = (successFn, errorFn) => {
-        const script = exports.createElement("script", {
+        const script = (0, exports.createElement)("script", {
             props: Object.assign({ onload: () => successFn && successFn(script), onabort: errorFn, onerror: errorFn, src: url }, props),
             attrs: attrs,
             parent: document.body, // 插到body上是最后执行的，未插到dom上是不会下载的，所以不用在意props的设置顺序
@@ -238,7 +238,7 @@ exports.loadScript = loadScript;
  */
 function noScroll(el = window) {
     let scroller = el;
-    if (dataType_1.isString(el)) {
+    if ((0, dataType_1.isString)(el)) {
         scroller = document.querySelector(el);
         if (!scroller)
             throw new Error(`el not found`);
@@ -251,13 +251,13 @@ function noScroll(el = window) {
             scroller = document.documentElement;
         }
     }
-    const last = object_1.pickByKeys(getComputedStyle(scroller), ["marginTop", "overflow"]);
+    const last = (0, object_1.pickByKeys)(getComputedStyle(scroller), ["marginTop", "overflow"]);
     const scrollTop = scroller.scrollTop;
     scroller.scrollTop = 0;
     scroller.style.overflow = "hidden";
     scroller.style.marginTop = (-scrollTop + parseInt(last.marginTop)) + "px";
     return function () {
-        object_1.assign(scroller.style, last);
+        (0, object_1.assign)(scroller.style, last);
         // scrollTop必须最后传 否则可能不能回到原位
         scroller.scrollTop = scrollTop;
     };
@@ -273,30 +273,30 @@ function createHtmlElement(tagName, params = {}) {
     const el = document.createElement(tagName);
     const { attrs = {}, props = {}, parent, children } = params;
     // set props
-    object_1.forEachObj(props, (v, k, o) => {
+    (0, object_1.forEachObj)(props, (v, k, o) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
             // 未添加到body中，不会触发重绘
-            object_1.assign(el.style, v);
+            (0, object_1.assign)(el.style, v);
             return;
         }
         el[k] = v;
     });
     // set attrs
-    object_1.forEachObj(attrs, (v, k, o) => {
+    (0, object_1.forEachObj)(attrs, (v, k, o) => {
         const isObjValue = typeof v === "object";
         el.setAttribute(k, isObjValue ? JSON.stringify(v) : v);
     });
     // set children
-    if (dataType_1.isArray(children) || domType_1.isNodeList(children)) {
+    if ((0, dataType_1.isArray)(children) || (0, domType_1.isNodeList)(children)) {
         children.forEach(child => el.appendChild(child));
     }
     // set parent
     if (parent) {
-        if (domType_1.isDom(parent)) {
+        if ((0, domType_1.isDom)(parent)) {
             parent.appendChild(el);
         }
-        else if (dataType_1.isString(parent)) {
+        else if ((0, dataType_1.isString)(parent)) {
             const pr = document.querySelector(parent);
             if (!pr)
                 throw new TypeError(`createHtmlElement param 'parent' => "${parent}" not founded`);
@@ -330,7 +330,7 @@ exports.createHiddenHtmlElement = createHiddenHtmlElement;
  */
 function getFontScale(reverse = false) {
     const fontSize = 10;
-    const div = exports.createElement("div", {
+    const div = (0, exports.createElement)("div", {
         props: { style: { fontSize: fontSize + "px" } },
         parent: document.body,
     });
@@ -420,13 +420,13 @@ exports.rem2px = rem2px;
  */
 function px2rem(px) {
     const fs = get1rem();
-    const result = number_1.divide(parseFloat(px), fs);
+    const result = (0, number_1.divide)(parseFloat(px), fs);
     return (tempToFixed(result) + "rem");
 }
 exports.px2rem = px2rem;
 function percent2px(p, relativePx) {
-    const t = number_1.times(parseFloat(relativePx), parseFloat(p));
-    return (number_1.divide(t, 100) + "px");
+    const t = (0, number_1.times)(parseFloat(relativePx), parseFloat(p));
+    return ((0, number_1.divide)(t, 100) + "px");
 }
 exports.percent2px = percent2px;
 /**
@@ -514,7 +514,7 @@ function toggleWidthOrHeight(el, type, transition = {}) {
         setTimeout(function () {
             set({ [type]: (type === "height" ? el.scrollHeight : el.scrollWidth) + "px" });
         });
-        event_1.onceEvent(el, "transitionend", function () {
+        (0, event_1.onceEvent)(el, "transitionend", function () {
             set({ [type]: "" });
         });
     }
@@ -528,7 +528,7 @@ let stopScrollTo = null;
  */
 function scrollTo(y = 0, speed = 10) {
     stopScrollTo && stopScrollTo();
-    speed = number_1.getSafeNum(speed, 1, 100);
+    speed = (0, number_1.getSafeNum)(speed, 1, 100);
     let top = 0;
     const el = document.body.scrollTop ? document.body : document.documentElement;
     const getTop = () => top = el.scrollTop;

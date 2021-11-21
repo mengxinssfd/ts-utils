@@ -17,7 +17,7 @@ exports.decoratorfy = decoratorfy;
  * @param delay
  * @constructor
  */
-const Debounce = (delay) => decoratorfy(descriptor => common_1.debounce(descriptor.value, delay));
+const Debounce = (delay) => decoratorfy(descriptor => (0, common_1.debounce)(descriptor.value, delay));
 exports.Debounce = Debounce;
 /**
  * 比setInterval好的地方在于使用promise判断一回执行完毕情况

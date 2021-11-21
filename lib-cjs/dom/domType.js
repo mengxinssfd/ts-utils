@@ -14,9 +14,9 @@ function isDomStandard(target) {
 exports.isDomStandard = isDomStandard;
 // 在ie HTMLElement类型是object 在chrome/firefox HTMLElement是function ie9以下HTMLElement为undefined
 // 不论object还是function都能用instanceof
-exports.isDom = dataType_1.isUndefined(common_1.root.HTMLElement) ? isDomIe8 : isDomStandard;
+exports.isDom = (0, dataType_1.isUndefined)(common_1.root.HTMLElement) ? isDomIe8 : isDomStandard;
 function isElementOf(nodeName, el) {
-    return exports.isDom(el) && el.nodeName === nodeName.toUpperCase();
+    return (0, exports.isDom)(el) && el.nodeName === nodeName.toUpperCase();
 }
 exports.isElementOf = isElementOf;
 function isSelectElement(el) {
@@ -52,6 +52,6 @@ function supportTouch() {
 }
 exports.supportTouch = supportTouch;
 function isNodeList(target) {
-    return dataType_1.typeOf(target) === "nodelist";
+    return (0, dataType_1.typeOf)(target) === "nodelist";
 }
 exports.isNodeList = isNodeList;

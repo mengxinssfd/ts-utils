@@ -65,7 +65,7 @@ function dateDiff(start, end, format = "y年d天hh时mm分ss秒") {
             // 奇怪的bug 本地调试的时候RegExp.$1不准确,"s+"的时候$1是空字符串; 非调试的时候又没问题
             const s1 = RegExp.$1;
             const v = obj[k];
-            let value = string_1.strPadStart(String(v), s1.length, "0");
+            let value = (0, string_1.strPadStart)(String(v), s1.length, "0");
             // substring(start,end) start小于0的时候为0  substr(from,len)from小于0的时候为字符串的长度+from
             value = value.substring(value.length - s1.length); //手动切割00:00 m:s "00".length - "s".length，因为strPadStart当字符串长度大于length的话不会切割
             result = result.replace(s1, value);
@@ -97,10 +97,10 @@ const formatDate = function (format = "yyyy-MM-dd hh:mm:ss", date) {
             const d = __this.getDay();
             // 星期
             if (!exports.formatDate.weekText || !exports.formatDate.weekText.length) {
-                exports.formatDate.weekText = array_1.createArray({
+                exports.formatDate.weekText = (0, array_1.createArray)({
                     end: 7,
                     fill(item, index) {
-                        return index === 0 ? "日" : string_1.number2Chinese(index);
+                        return index === 0 ? "日" : (0, string_1.number2Chinese)(index);
                     },
                 });
             }
@@ -206,7 +206,7 @@ exports.getTheLastDayOfAMonth = getTheLastDayOfAMonth;
  */
 function getMonthTheNthWeekday(month, nth, weekday = 0) {
     // if (!nth || weekday < 0 || weekday > 7) return null;
-    if (!nth || !array_1.inRange(weekday, [0, 7]))
+    if (!nth || !(0, array_1.inRange)(weekday, [0, 7]))
         return null;
     const monthTime = month.getTime();
     const endDate = getTheLastDayOfAMonth(month);

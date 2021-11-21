@@ -152,7 +152,7 @@ exports.pickRename = pickRename;
  * 合并pickByKeys与pickRename两者的功能
  */
 function pick(originObj, picks, cb) {
-    const isObj = dataType_1.isObject(picks);
+    const isObj = (0, dataType_1.isObject)(picks);
     // ------- 第一种写法 -------
     // const callback = cb || (v => v);
     // const pickKeys = isObj ? Object.keys(picks) : picks;
@@ -179,10 +179,10 @@ exports.pick = pick;
  */
 function pickDiff(origin, objs, verify) {
     const verifyFn = verify || ((originV, objV, k, origin, obj) => {
-        return origin.hasOwnProperty(k) && originV === objV || dataType_1.isNaN(originV) && dataType_1.isNaN(objV);
+        return origin.hasOwnProperty(k) && originV === objV || (0, dataType_1.isNaN)(originV) && (0, dataType_1.isNaN)(objV);
     });
     return objs.reduce((result, obj) => {
-        exports.objForEach(obj, (v, k) => {
+        (0, exports.objForEach)(obj, (v, k) => {
             if (verifyFn(origin[k], v, k, origin, obj))
                 return;
             result[k] = v;
@@ -276,8 +276,8 @@ exports.defaults = defaults;
  * @param args
  */
 function objUpdate(target, ...args) {
-    exports.objForEach(target, (v, k) => {
-        array_1.forEachRight(function (item) {
+    (0, exports.objForEach)(target, (v, k) => {
+        (0, array_1.forEachRight)(function (item) {
             if (item && item.hasOwnProperty(k)) {
                 target[k] = item[k];
                 return false;
@@ -293,9 +293,9 @@ exports.objUpdate = objUpdate;
  * @param objs  相当于assign(...objs) 同样的key只会取最后一个
  * @param compareFn
  */
-function pickUpdated(target, objs, compareFn = (a, b) => a === b || (dataType_1.isNaN(a) && dataType_1.isNaN(b))) {
-    return exports.objReduce(target, (result, v, k) => {
-        array_1.forEachRight(function (item) {
+function pickUpdated(target, objs, compareFn = (a, b) => a === b || ((0, dataType_1.isNaN)(a) && (0, dataType_1.isNaN)(b))) {
+    return (0, exports.objReduce)(target, (result, v, k) => {
+        (0, array_1.forEachRight)(function (item) {
             if (item && item.hasOwnProperty(k)) {
                 if (!compareFn(target[k], item[k])) {
                     result[k] = item[k];
@@ -326,7 +326,7 @@ type B = Pick2<A, keyof A>*/
  */
 function createObj(entries) {
     return entries.reduce((initValue, item) => {
-        if (!dataType_1.isArray(item) || item.length < 1)
+        if (!(0, dataType_1.isArray)(item) || item.length < 1)
             throw new TypeError("createObj args type error");
         const [key, value] = item;
         if (key !== void 0) {
@@ -399,7 +399,7 @@ exports.translateObjPath = translateObjPath;
 function getObjValueByPath(obj, path, objName = "") {
     const p = translateObjPath(path, objName);
     return p.split(".").reduce((init, v) => {
-        if (!dataType_1.isBroadlyObj(init))
+        if (!(0, dataType_1.isBroadlyObj)(init))
             return undefined;
         return init[v];
     }, obj);
@@ -427,7 +427,7 @@ function setObjValueByPath(obj, path, value, onExist = (a, b) => b, objName = ""
             init[key] = value;
             return [init[key], currentPath];
         }
-        if (!dataType_1.isBroadlyObj(init[key])) {
+        if (!(0, dataType_1.isBroadlyObj)(init[key])) {
             init[key] = init.hasOwnProperty(key) ? onExist(init[key], {}, false, currentPath) : {};
         }
         return [init[key], currentPath];
@@ -446,7 +446,7 @@ exports.setObjValueByPath = setObjValueByPath;
 function getObjPathEntries(obj, objName = "") {
     return reduceObj(obj, (init, v, k) => {
         const key = `${objName}[${k}]`;
-        if (dataType_1.isBroadlyObj(v)) {
+        if ((0, dataType_1.isBroadlyObj)(v)) {
             init.push(...getObjPathEntries(v, key));
         }
         else {
@@ -472,7 +472,7 @@ function revertObjFromPath(pathArr) {
     return pathArr.reduce((result, path) => {
         const { key, value, innerKey } = getKV(path);
         const resultValue = result[key];
-        switch (dataType_1.typeOf(resultValue)) {
+        switch ((0, dataType_1.typeOf)(resultValue)) {
             case "undefined":
                 if (!innerKey) {
                     result[key] = value;
@@ -506,7 +506,7 @@ export function objCreate(proto: any) {
     return origin;
 }*/
 function objFilter(obj, predicate = (v) => v) {
-    return exports.objReduce(obj, (init, v, k) => {
+    return (0, exports.objReduce)(obj, (init, v, k) => {
         if (predicate(v, k)) {
             init[k] = v;
         }

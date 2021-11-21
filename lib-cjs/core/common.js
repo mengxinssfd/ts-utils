@@ -94,7 +94,7 @@ function throttle(callback, delay, invalidCB = (v) => void 0) {
             invalidCB(interval);
             return;
         }
-        countDown = time_1.createTimeCountDown(delay);
+        countDown = (0, time_1.createTimeCountDown)(delay);
         return callback.apply(this, args);
     };
 }
@@ -318,7 +318,7 @@ function formatJSON(json, indent = 2) {
     function foreach(js, floor = 0) {
         switch (typeof js) {
             case "object":
-                const isArr = dataType_1.isArray(js);
+                const isArr = (0, dataType_1.isArray)(js);
                 let space = " ".repeat(indent * floor);
                 const start = isArr ? "[\r\n" : "{\r\n";
                 const end = "\r\n" + space + (isArr ? "]" : "}");
@@ -347,7 +347,7 @@ function formatJSON(json, indent = 2) {
                 // 函数的}位置有点对不上
                 return `"${js.toString()}"`;
             default:
-                return dataType_1.isString(js) ? ("\"" + js + "\"") : js;
+                return (0, dataType_1.isString)(js) ? ("\"" + js + "\"") : js;
         }
     }
     return foreach(json);
@@ -375,7 +375,7 @@ function createEnumByObj(obj) {
      Object.freeze(res); // freeze值不可变
      // Object.seal(result); // seal值可以变
      return res;*/
-    return object_1.assign({}, obj, object_1.getReverseObj(obj));
+    return (0, object_1.assign)({}, obj, (0, object_1.getReverseObj)(obj));
 }
 exports.createEnumByObj = createEnumByObj;
 // omit({a: 123, b: "bbb", c: true}, ["a", "b", "d"]);
@@ -389,7 +389,7 @@ function promiseAny(list) {
         let rejectTimes = 0;
         try {
             for (const p of list) {
-                if (!dataType_1.isPromiseLike(p)) {
+                if (!(0, dataType_1.isPromiseLike)(p)) {
                     resolve(p);
                     break;
                 }
@@ -434,7 +434,7 @@ exports.root = Function("return this")();
  * @param [rounding = false] 是否四舍五入
  */
 function numToFixed(num, fractionDigits = 0, rounding = false) {
-    if (!dataType_1.isNumber(fractionDigits) || !array_1.inRange(fractionDigits, [0, 100])) {
+    if (!(0, dataType_1.isNumber)(fractionDigits) || !(0, array_1.inRange)(fractionDigits, [0, 100])) {
         throw new TypeError("numToFixed() fractionDigits argument must be between 0 and 100");
     }
     if (fractionDigits === 0)
@@ -448,7 +448,7 @@ function numToFixed(num, fractionDigits = 0, rounding = false) {
     }
     num /= pow;
     const split = String(num).split(".");
-    const digits = string_1.strPadEnd((split[1] || "").substr(0, fractionDigits), fractionDigits, "0");
+    const digits = (0, string_1.strPadEnd)((split[1] || "").substr(0, fractionDigits), fractionDigits, "0");
     return split[0] + "." + digits;
 }
 exports.numToFixed = numToFixed;
@@ -486,7 +486,7 @@ function likeKeys(target, key) {
         }
         return keys;
     }
-    return object_1.objKeys(target).filter(key => reg.test(key));
+    return (0, object_1.objKeys)(target).filter(key => reg.test(key));
 }
 exports.likeKeys = likeKeys;
 /**
@@ -518,7 +518,7 @@ function parseCmdParams(arr, prefix = "-", defaultKey = "default") {
     // fullFight
     function setValue() {
         const existValue = map.get(currentKey);
-        switch (dataType_1.typeOf(existValue)) {
+        switch ((0, dataType_1.typeOf)(existValue)) {
             case "undefined":
             case "boolean":
                 map.set(currentKey, item);

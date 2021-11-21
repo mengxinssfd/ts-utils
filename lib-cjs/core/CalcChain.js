@@ -18,22 +18,22 @@ class CalcChain {
     // 加
     ["+"](...nums) {
         // this.calc((a, b, pow) => (a * pow + b * pow) / pow, num, others);
-        this.setValue(number_1.plus(this._value, ...nums));
+        this.setValue((0, number_1.plus)(this._value, ...nums));
         return this;
     }
     // 减
     ["-"](...nums) {
-        this.setValue(number_1.minus(this._value, ...nums));
+        this.setValue((0, number_1.minus)(this._value, ...nums));
         return this;
     }
     // 乘
     ["*"](...nums) {
-        this.setValue(number_1.times(this._value, ...nums));
+        this.setValue((0, number_1.times)(this._value, ...nums));
         return this;
     }
     // 除
     ["/"](...nums) {
-        this.setValue(number_1.divide(this._value, ...nums));
+        this.setValue((0, number_1.divide)(this._value, ...nums));
         return this;
     }
     // 100 - 20 * 2; <==>  Calc.create(20)["*"](2).before(100, "-")
@@ -48,7 +48,7 @@ class CalcChain {
     }
     // 获取当前值
     get value() {
-        return number_1.strip(this._value);
+        return (0, number_1.strip)(this._value);
     }
     // 设置当前值
     set value(num) {

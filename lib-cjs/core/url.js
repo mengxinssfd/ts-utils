@@ -78,16 +78,16 @@ function getUrlParamObj(url = location.href) {
     const params = url.match(/[^&#?/]+=[^&#?/]+/g);
     if (!params)
         return {};
-    return object_1.revertObjFromPath(params);
+    return (0, object_1.revertObjFromPath)(params);
 }
 exports.getUrlParamObj = getUrlParamObj;
 exports.getUrlQuery = getUrlParamObj;
 function stringifyUrlSearch(query) {
-    return object_1.reduceObj(query, (initValue, v, k, obj) => {
+    return (0, object_1.reduceObj)(query, (initValue, v, k, obj) => {
         if (v === undefined)
             return initValue;
         if (typeof v === "object") {
-            object_1.forEachObj(v, (val, key) => {
+            (0, object_1.forEachObj)(v, (val, key) => {
                 if (val === undefined)
                     return;
                 initValue.push(`${k}[${key}]=${encodeURIComponent(val)}`);
@@ -124,7 +124,7 @@ exports.getUrlParam = getUrlParam;
  * @param noDecode
  */
 function updateUrlParam(param, url = location.href, noDecode = false) {
-    object_1.objForEach(param, (value, name) => {
+    (0, object_1.objForEach)(param, (value, name) => {
         const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i");
         if (re.test(url)) {
             const s = noDecode ? value : encodeURIComponent(value);
@@ -141,7 +141,7 @@ exports.updateUrlParam = updateUrlParam;
  */
 function setUrlParam(param, url = location.href) {
     const model = new UrlModel_1.UrlModel(url);
-    object_1.assign(model.query, param);
+    (0, object_1.assign)(model.query, param);
     return model.toString();
 }
 exports.setUrlParam = setUrlParam;

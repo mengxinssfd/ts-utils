@@ -31,7 +31,7 @@ function createArray({ start = 0, end, len, fill }) {
         }
     }
     let callback;
-    switch (dataType_1.typeOf(fill)) {
+    switch ((0, dataType_1.typeOf)(fill)) {
         case "function":
             callback = fill;
             break;
@@ -113,7 +113,7 @@ async function reduceAsync(callbackfn, initValue, thisArg) {
 exports.reduceAsync = reduceAsync;
 function forEachRight(callbackfn, thisArg) {
     const arr = thisArg || this;
-    if (!dataType_1.isArray(arr))
+    if (!(0, dataType_1.isArray)(arr))
         throw new TypeError();
     // if (!isArrayLike(arr)) throw new TypeError();
     for (let i = arr.length - 1; i > -1; i--) {
@@ -125,7 +125,7 @@ exports.forEachRight = forEachRight;
 // from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
 function from(iterable, mapFn = (value) => value) {
     const arr = [];
-    if (dataType_1.isArrayLike(iterable)) {
+    if ((0, dataType_1.isArrayLike)(iterable)) {
         forEach(iterable, ((v, k) => {
             arr.push(mapFn(v, k));
         }));
@@ -168,7 +168,7 @@ function includes(thisArg, searchElement, fromIndex = 0) {
             if (item === searchElement)
                 return true;
         }
-        if (dataType_1.isNaN(item) && dataType_1.isNaN(searchElement))
+        if ((0, dataType_1.isNaN)(item) && (0, dataType_1.isNaN)(searchElement))
             return true;
     }
     return false;
@@ -190,9 +190,9 @@ function find(predicate, thisArg) {
 exports.find = find;
 function findIndex(predicate, thisArg) {
     const arr = thisArg || this;
-    if (!dataType_1.isArrayLike(arr))
+    if (!(0, dataType_1.isArrayLike)(arr))
         throw new TypeError();
-    if (!dataType_1.isFunction(predicate))
+    if (!(0, dataType_1.isFunction)(predicate))
         return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
     const len = arr.length;
     for (let i = 0; i < len; i++) {
@@ -205,9 +205,9 @@ function findIndex(predicate, thisArg) {
 exports.findIndex = findIndex;
 function findIndexRight(predicate, thisArg) {
     const arr = thisArg || this;
-    if (!dataType_1.isArrayLike(arr))
+    if (!(0, dataType_1.isArrayLike)(arr))
         throw new TypeError();
-    if (!dataType_1.isFunction(predicate))
+    if (!(0, dataType_1.isFunction)(predicate))
         return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
     const end = arr.length - 1;
     for (let i = end; i >= 0; i--) {
@@ -220,12 +220,12 @@ function findIndexRight(predicate, thisArg) {
 exports.findIndexRight = findIndexRight;
 function flat(target, depth = 1) {
     function innerFlat(innerArr, innerDepth = 0) {
-        if (!dataType_1.isArray(innerArr) || innerDepth++ === depth)
+        if (!(0, dataType_1.isArray)(innerArr) || innerDepth++ === depth)
             return innerArr;
         const result = [];
         for (let i = 0; i < innerArr.length; i++) {
             const newItem = innerFlat(innerArr[i], innerDepth);
-            result.push(...(dataType_1.isArray(newItem) ? newItem : [newItem]));
+            result.push(...((0, dataType_1.isArray)(newItem) ? newItem : [newItem]));
         }
         return result;
     }
@@ -322,7 +322,7 @@ exports.binaryFindIndex = binaryFindIndex;
 function insertToArray(insert, to, array, { after = false, reverse = false } = {}) {
     const inserts = castArray(insert);
     let index = to;
-    if (dataType_1.isFunction(to)) {
+    if ((0, dataType_1.isFunction)(to)) {
         index = (reverse ? findIndexRight : findIndex)((v, k, a) => {
             return to(v, k, a, insert);
         }, array);
@@ -364,7 +364,7 @@ exports.arrayRemoveItemsBy = arrayRemoveItemsBy;
 function unique(target, isRepeatFn) {
     if (!target.length)
         return target;
-    const fn = isRepeatFn || ((v1, v2) => v1 === v2 || dataType_1.isNaN(v1) && dataType_1.isNaN(v2));
+    const fn = isRepeatFn || ((v1, v2) => v1 === v2 || (0, dataType_1.isNaN)(v1) && (0, dataType_1.isNaN)(v2));
     const result = [target[0]];
     for (let i = 1; i < target.length; i++) {
         const item = target[i];
@@ -383,7 +383,7 @@ exports.unique = unique;
  * @param value
  */
 function castArray(value) {
-    return (dataType_1.isArray(value) ? value : [value]);
+    return ((0, dataType_1.isArray)(value) ? value : [value]);
 }
 exports.castArray = castArray;
 /**
@@ -394,7 +394,7 @@ exports.castArray = castArray;
  * @param chunkLen
  */
 function chunk(arr, chunkLen) {
-    if (!dataType_1.isArray(arr))
+    if (!(0, dataType_1.isArray)(arr))
         throw new TypeError("chunk param arr type error");
     if (chunkLen < 1)
         return arr.slice();
@@ -425,7 +425,7 @@ function inRanges(value, ...ranges) {
 }
 exports.inRanges = inRanges;
 function groupBy(arr, key, defaultKey = "*") {
-    const cb = dataType_1.isFunction(key) ? key : item => item[key];
+    const cb = (0, dataType_1.isFunction)(key) ? key : item => item[key];
     return arr.reduce((result, item) => {
         var _a;
         const k = (_a = cb(item, result)) !== null && _a !== void 0 ? _a : defaultKey;

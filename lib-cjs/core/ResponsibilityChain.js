@@ -31,7 +31,7 @@ class ResponsibilityChain {
             this._status = State.done;
             onDone && onDone(value, index);
         };
-        this.chain = chain.map(c => dataType_1.isFunction(c) ? { handler: c } : c);
+        this.chain = chain.map(c => (0, dataType_1.isFunction)(c) ? { handler: c } : c);
     }
     get value() {
         return this._value;

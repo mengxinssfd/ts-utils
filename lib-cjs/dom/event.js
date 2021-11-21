@@ -15,8 +15,8 @@ const dataType_1 = require("../core/dataType");
  */
 function addDragEventListener({ el, onDown, onMove, onUp, capture = { down: false, up: true, move: false } }) {
     let dom = el;
-    if (!domType_1.isDom(el)) {
-        if (dataType_1.isString(el)) {
+    if (!(0, domType_1.isDom)(el)) {
+        if ((0, dataType_1.isString)(el)) {
             dom = document.querySelector(el);
             if (!dom) {
                 throw new Error("element not found!");
@@ -57,7 +57,7 @@ function addDragEventListener({ el, onDown, onMove, onUp, capture = { down: fals
         downXY = getXY(e);
         lastXY = downXY;
         let backVal = void 0;
-        if (onDown && dataType_1.isFunction(onDown)) {
+        if (onDown && (0, dataType_1.isFunction)(onDown)) {
             backVal = onDown.call(this, e, downXY);
         }
         return backVal;
@@ -66,7 +66,7 @@ function addDragEventListener({ el, onDown, onMove, onUp, capture = { down: fals
     function move(e) {
         const moveXY = getXY(e);
         let backVal = void 0;
-        if (onMove && dataType_1.isFunction(onMove)) {
+        if (onMove && (0, dataType_1.isFunction)(onMove)) {
             backVal = onMove.call(this, e, moveXY, lastXY, downXY);
         }
         lastXY = moveXY;
@@ -78,7 +78,7 @@ function addDragEventListener({ el, onDown, onMove, onUp, capture = { down: fals
         const upXY = getXY(e);
         let backVal = void 0;
         lastXY = upXY;
-        if (onUp && dataType_1.isFunction(onUp)) {
+        if (onUp && (0, dataType_1.isFunction)(onUp)) {
             backVal = onUp.call(this, e, upXY, downXY);
         }
         removeMoveAndUpEventListener();
@@ -163,8 +163,8 @@ exports.onDragEvent = onDragEvent;
  */
 function addScaleEventListener(el, onScale, capture = { down: false, up: true, move: false }) {
     let dom = el;
-    if (!domType_1.isDom(el)) {
-        if (dataType_1.isString(el)) {
+    if (!(0, domType_1.isDom)(el)) {
+        if ((0, dataType_1.isString)(el)) {
             dom = document.querySelector(el);
             if (!dom) {
                 throw new Error("element not found!");
@@ -178,7 +178,7 @@ function addScaleEventListener(el, onScale, capture = { down: false, up: true, m
     function getDis(touches) {
         const t1 = touches[0];
         const t2 = touches[1];
-        return coordinate_1.getDistance([t1.pageX, t1.pageY], [t2.pageX, t2.pageY]);
+        return (0, coordinate_1.getDistance)([t1.pageX, t1.pageY], [t2.pageX, t2.pageY]);
     }
     function move(e) {
         if (e.touches.length < 2)
@@ -289,7 +289,7 @@ function eventProxy(containerEl, eventType, targetEl, callback) {
     if (!containerEl) {
         containsDom = document.documentElement;
     }
-    else if (domType_1.isDom(containerEl)) {
+    else if ((0, domType_1.isDom)(containerEl)) {
         containsDom = containerEl;
     }
     else {
@@ -298,10 +298,10 @@ function eventProxy(containerEl, eventType, targetEl, callback) {
     function handle(e) {
         e = e || window.event;
         // TODO 通过document.querySelectorAll匹配  并且该函数被滥用的话，会有性能问题
-        const targetDom = domType_1.isDom(targetEl)
+        const targetDom = (0, domType_1.isDom)(targetEl)
             ? [targetEl]
             : document.querySelectorAll(targetEl);
-        if (array_1.includes(targetDom, e.target)) {
+        if ((0, array_1.includes)(targetDom, e.target)) {
             callback(e);
         }
     }
@@ -324,13 +324,13 @@ exports.eventProxy = eventProxy;
  */
 function onceEvent(el, eventType, callback, capture = false) {
     let dom;
-    if (dataType_1.isString(el)) {
+    if ((0, dataType_1.isString)(el)) {
         dom = document.querySelector(el);
         if (!dom) {
             throw new Error("element not found!");
         }
     }
-    else if (domType_1.isDom(el)) {
+    else if ((0, domType_1.isDom)(el)) {
         dom = el;
     }
     else {
@@ -339,7 +339,7 @@ function onceEvent(el, eventType, callback, capture = false) {
     let handler = (e) => {
         // 移除的时候也要带上捕获还是冒泡
         dom.removeEventListener(eventType, handler, capture);
-        if (callback && dataType_1.isFunction(callback)) {
+        if (callback && (0, dataType_1.isFunction)(callback)) {
             return callback(e);
         }
     };

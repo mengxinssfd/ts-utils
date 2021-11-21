@@ -6,7 +6,7 @@ const dataType_1 = require("./dataType");
 // 如果要复制函数属性的话，使用deepClone
 // 不建议复制函数，因为复制的函数不能访问原函数外面的变量
 function cloneFunction(fn) {
-    if (dataType_1.typeOf(fn) !== "function")
+    if ((0, dataType_1.typeOf)(fn) !== "function")
         return fn;
     let str = fn.toString();
     // fn(){} es6写法的函数要转换成function(){}
@@ -41,8 +41,8 @@ const cloneStrategies = (function () {
 function deepClone(target) {
     const cache = new Stack_1.Stack();
     function _clone(value) {
-        const type = dataType_1.typeOf(value);
-        const isObject = dataType_1.isBroadlyObj(value);
+        const type = (0, dataType_1.typeOf)(value);
+        const isObject = (0, dataType_1.isBroadlyObj)(value);
         if (isObject && cache.has(value)) {
             return value;
         }

@@ -16,7 +16,7 @@ class ListCache extends CacheSup {
         return this;
     }
     has(value) {
-        return this.cache.some(i => value === i || dataType_1.isNaN(value) && dataType_1.isNaN(i));
+        return this.cache.some(i => value === i || (0, dataType_1.isNaN)(value) && (0, dataType_1.isNaN)(i));
     }
     clear() {
         this.cache = [];
@@ -46,4 +46,4 @@ class SetCache extends CacheSup {
     }
 }
 exports.SetCache = SetCache;
-exports.Stack = dataType_1.isNative(common_1.root.Set) ? SetCache : ListCache;
+exports.Stack = (0, dataType_1.isNative)(common_1.root.Set) ? SetCache : ListCache;

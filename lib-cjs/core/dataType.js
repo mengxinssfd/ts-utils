@@ -8,7 +8,7 @@ function isNative(value) {
     const reIsNative = RegExp(`^${Function.prototype.toString.call(Object.prototype.hasOwnProperty)
         .replace(reRegExpChar, "\\$&")
         .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\])/g, "$1.*?")}$`);
-    return exports.isBroadlyObj(value) && reIsNative.test(value);
+    return (0, exports.isBroadlyObj)(value) && reIsNative.test(value);
 }
 exports.isNative = isNative;
 // 获取数据类型
@@ -116,7 +116,7 @@ exports.isEmptyObject = isEmptyObject;
 // 判断是否是空值 undefined, null, "", [], {} ,NaN都为true
 function isEmpty(target) {
     // TO DO 可以替换array里的includes
-    if (array_1.includes([undefined, null, "", NaN], target))
+    if ((0, array_1.includes)([undefined, null, "", NaN], target))
         return true;
     // if (includes([undefined, null, "", NaN], target)) return true;
     switch (typeOf(target)) {
@@ -210,7 +210,7 @@ exports.isInteger = isInteger;
  * @param value
  */
 function isArrayObj(value) {
-    const keys = object_1.objKeys(value);
+    const keys = (0, object_1.objKeys)(value);
     const reg = /\d+/;
     return isArray(value) && keys.some(i => !reg.test(String(i)));
 }
