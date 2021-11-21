@@ -59,7 +59,7 @@ export function copy2Clipboard<T extends HTMLElement | string>(target: T): Promi
     const isDoc = isDom(target);
     const el = isDoc ?
         target as HTMLElement :
-        createHiddenHtmlElement({innerText: String(target)});
+        createHiddenHtmlElement({innerText: String(target), style: {visibility: 'visible', opacity: '0'}});
     const p = new Promise<T>((resolve, reject) => {
         select(el);
         let succeeded;
