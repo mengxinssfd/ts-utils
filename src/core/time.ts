@@ -1,5 +1,5 @@
-import {number2Chinese, strPadStart} from "./string";
-import {createArray, inRange} from "./array";
+import {strPadStart} from "./string";
+import {inRange} from "./array";
 
 /**
  * @param millisecond
@@ -99,76 +99,66 @@ export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H
 */
 
 export interface formatDateInterface {
-    (format?: string): string;
+    (date: Date, format?: string, options?: { seasonText?: string[], weekText?: string[] }): string;
 
     seasonText: string[];
     weekText: string[];
 }
 
 /**
- * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
+ * 格式化日期
  * @param [format="yyyy-MM-dd hh:mm:ss"]
- * @param date {Date?}
+ * @param date {Date}
+ * @param seasonText {string[]}
+ * @param weekText {string[]}
  * @returns String
  */
 export const formatDate: formatDateInterface = function (
-    this: Date,
+    date,
     format = "yyyy-MM-dd hh:mm:ss",
-    date?: Date
+    {
+        seasonText = formatDate.seasonText,
+        weekText = formatDate.weekText,
+    } = {}
 ) {
-    const dt: Date = date || this;
-    let o: any = {
-        "M+": dt.getMonth() + 1,                    //月份
-        "d+": dt.getDate(),                         //日
-        "h+": dt.getHours(),                        //小时
-        "m+": dt.getMinutes(),                      //分
-        "s+": dt.getSeconds(),                      //秒
-        "q": (function (__this) {          //季度
-            const q = Math.floor((__this.getMonth() + 3) / 3) - 1;
-            return formatDate.seasonText[q];
-        })(dt),
-        "S+": dt.getMilliseconds(),                   //毫秒
-        "w": (function (__this) {        //周
-            const d = __this.getDay();
-            // 星期
-            if (!formatDate.weekText || !formatDate.weekText.length) {
-                formatDate.weekText = createArray({
-                    end: 7,
-                    fill(item, index) {
-                        return index === 0 ? "日" : number2Chinese(index);
-                    },
-                });
-            }
-            return formatDate.weekText[d];
-        })(dt),
+    let o: Record<string, Function> = {
+        "M+": () => date.getMonth() + 1,                    //月份
+        "d+": () => date.getDate(),                         //日
+        "h+": () => date.getHours(),                        //小时
+        "m+": () => date.getMinutes(),                      //分
+        "s+": () => date.getSeconds(),                      //秒
+        "q": () => {                                      //季度
+            // 按月份区分的季度并不准确
+            const q = Math.floor((date.getMonth() + 3) / 3) - 1;
+            return seasonText[q];
+        },
+        "S+": () => date.getMilliseconds(),                  //毫秒
+        "w": () => weekText[date.getDay()]                   //周
     };
     if (/(y+)/.test(format)) {
-        format = format.replace(RegExp.$1, (dt.getFullYear() + "").substr(4 - RegExp.$1.length));
+        format = format.replace(
+            RegExp.$1,
+            strPadStart(
+                String(date.getFullYear()),
+                RegExp.$1.length, "0", true
+            )
+        );
     }
     for (let k in o) {
         if (new RegExp("(" + k + ")").test(format)) {
             const s1 = RegExp.$1;
-            const v = o[k];
-            const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
-            format = format.replace(s1, value);
+            const v = String(o[k]());
+            // const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
+            format = format.replace(
+                s1,
+                strPadStart(v, s1.length, "0")
+            );
         }
     }
     return format;
 };
-formatDate.weekText = [];
+formatDate.weekText = ["日", "一", "二", "三", "四", "五", "六"];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
-
-let originDateFormat;
-
-// 挂载到Date原型
-export function useDateFormat(force = false) {
-    originDateFormat = Date.prototype.format;
-    (!Date.prototype.format || force) && (Date.prototype.format = formatDate);
-}
-
-export function noConflictDateFormat() {
-    Date.prototype.format = originDateFormat;
-}
 
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
@@ -228,7 +218,7 @@ export function createTimeCountDown(countDown: number): () => number {
  * 获取某月最后一天的date
  * @param month
  */
-export function getTheLastDayOfAMonth(month: Date): Date {
+export function getTheLastDateOfAMonth(month: Date): Date {
     const lastDate = new Date(month.getTime());
     lastDate.setMonth(month.getMonth() + 1);
     lastDate.setDate(0);
@@ -245,7 +235,7 @@ export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
     // if (!nth || weekday < 0 || weekday > 7) return null;
     if (!nth || !inRange(weekday, [0, 7])) return null;
     const monthTime = month.getTime();
-    const endDate = getTheLastDayOfAMonth(month);
+    const endDate = getTheLastDateOfAMonth(month);
 
     let date: Date;
     if (nth > 0) {
@@ -268,7 +258,6 @@ export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
     }
     date.setDate(dayDate);
     return date;
-
 }
 
 /**
@@ -295,14 +284,6 @@ export function getMilliseconds({days = 0, hours = 0, minutes = 0, seconds = 0}:
     return result;
 }
 
-/**
- * 格式化时间，代替formatDate.call，formatDate.call赋值总是有warn
- * @param date {Date}
- * @param [format="yyyy-MM-dd hh:mm:ss"]
- */
-export function getFormattedDate(date: Date, format: string = "yyyy-MM-dd hh:mm:ss"): string {
-    return formatDate.call(date, format);
-}
 
 /**
  * 判断时间是否相同
@@ -311,6 +292,6 @@ export function getFormattedDate(date: Date, format: string = "yyyy-MM-dd hh:mm:
  * @param dates
  */
 export function isSameTime(format: string, date: Date, ...dates: Date[]): boolean {
-    const dt = getFormattedDate(date,format);
-    return dates.every(date => getFormattedDate(date, format) === dt)
+    const dt = formatDate(date, format);
+    return dates.every(date => formatDate(date, format) === dt);
 }
