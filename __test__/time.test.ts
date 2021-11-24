@@ -38,8 +38,8 @@ test("str2Date", () => {
     expect(t2).toBeGreaterThan(t1);
     expect(t.str2Date("abcd")).toBeNull();
 
-    function fn(date: string, format?: string):string {
-        return t.formatDate.call(t.str2Date(date), format);
+    function fn(date: string, format?: string): string {
+        return t.formatDate(t.str2Date(date) as Date, format);
     }
 
     expect(fn("2020-02-02", "yyyy")).toBe("2020");
@@ -66,7 +66,7 @@ test("getDateFromStr", () => {
         "2020/02/02 10/10/10",
         "2020/02/02/10/10/10",
     ].forEach((time: string) => {
-        expect(t.getFormattedDate(fn(time) as Date)).toBe("2020-02-02 10:10:10");
+        expect(t.formatDate(fn(time) as Date)).toBe("2020-02-02 10:10:10");
     });
     expect(fn("")).toBe(null);
     expect(fn("123cvsd213")).toBe(null);
@@ -75,7 +75,7 @@ test("getDateFromStr", () => {
 });
 test("formatDate", () => {
     const date1 = t.getDateFromStr("2020-02-02 10:10:10") as Date;
-    const fn = (date: Date, format?: string): string => t.formatDate.call(date, format);
+    const fn = t.formatDate;
     expect(fn(date1, "yyyy-MM-dd")).toBe("2020-02-02");
     expect(fn(date1, "hh:mm:ss")).toBe("10:10:10");
     expect(fn(date1, "dd-MM-yyyy")).toBe("02-02-2020");
@@ -104,49 +104,12 @@ test("formatDate", () => {
     expect(fn(new Date("2020-11-18"), "q")).toBe("冬");
     expect(fn(new Date("2020-12-18"), "q")).toBe("冬");
 
+    expect(fn(new Date("2020-01-12"), "q", {seasonText:['spring']})).toBe("spring");
     t.formatDate.seasonText = ["spring"];
     expect(fn(new Date("2020-01-12"), "q")).toBe("spring");
     // season end
-    const date2 = t.getDateFromStr("2019-12-1 10:10:10") as Date;
-    expect(fn(date2, "d-MM-yy")).toBe("1-12-19");
-});
-test("getFormattedDate", () => {
-    const fn = t.getFormattedDate;
-    const date1 = t.getDateFromStr("2020-02-02 10:10:10") as Date;
-    expect(fn(date1)).toBe("2020-02-02 10:10:10");
-    expect(fn(date1, "yyyy-MM-dd")).toBe("2020-02-02");
-    expect(fn(date1, "hh:mm:ss")).toBe("10:10:10");
-    expect(fn(date1, "dd-MM-yyyy")).toBe("02-02-2020");
-    // week start
-    expect(fn(new Date("2020-01-12"), "周w")).toBe("周日");
-    expect(fn(new Date("2020-01-12"), "w")).toBe("日");
-    expect(fn(new Date("2020-01-13"), "w")).toBe("一");
-    expect(fn(new Date("2020-01-14"), "w")).toBe("二");
-    expect(fn(new Date("2020-01-15"), "w")).toBe("三");
-    expect(fn(new Date("2020-01-16"), "w")).toBe("四");
-    expect(fn(new Date("2020-01-17"), "w")).toBe("五");
-    expect(fn(new Date("2020-01-18"), "w")).toBe("六");
-    // week end
-    // season start
-    t.formatDate.seasonText = ["春", "夏", "秋", "冬"];
-    expect(fn(new Date("2020-01-12"), "q")).toBe("春");
-    expect(fn(new Date("2020-02-12"), "q")).toBe("春");
-    expect(fn(new Date("2020-03-13"), "q")).toBe("春");
-    expect(fn(new Date("2020-04-14"), "q")).toBe("夏");
-    expect(fn(new Date("2020-05-15"), "q")).toBe("夏");
-    expect(fn(new Date("2020-06-16"), "q")).toBe("夏");
-    expect(fn(new Date("2020-07-17"), "q")).toBe("秋");
-    expect(fn(new Date("2020-08-18"), "q")).toBe("秋");
-    expect(fn(new Date("2020-09-18"), "q")).toBe("秋");
-    expect(fn(new Date("2020-10-18"), "q")).toBe("冬");
-    expect(fn(new Date("2020-11-18"), "q")).toBe("冬");
-    expect(fn(new Date("2020-12-18"), "q")).toBe("冬");
-
-    t.formatDate.seasonText = ["spring"];
-    expect(fn(new Date("2020-01-12"), "q")).toBe("spring");
-    // season end
-    const date2 = t.getDateFromStr("2019-12-1 10:10:10") as Date;
-    expect(fn(date2, "d-MM-yy")).toBe("1-12-19");
+    const date2 = t.getDateFromStr("2019-12-12 10:10:10") as Date;
+    expect(fn(date2, "d-M-yy")).toBe("12-12-19");
 });
 
 test("dateDiff", () => {
@@ -202,7 +165,7 @@ test("createTimeCountDown", async () => {
     expect(t1).toBeGreaterThanOrEqual(down - 300);
 });
 test("getTheLastDayOfAMonth", async () => {
-    const fn = t.getTheLastDayOfAMonth;
+    const fn = t.getTheLastDateOfAMonth;
 
     expect(fn(new Date("2021-1")).getDate()).toBe(31);
     expect(fn(new Date("2021-2")).getDate()).toBe(28);
@@ -306,37 +269,16 @@ test("getMilliseconds", async () => {
         fn({hours: 1}) +
         fn({seconds: 10})
     );
-    expect(fn({days: 2})).toBe(fn({days: 1}) * 2)
+    expect(fn({days: 2})).toBe(fn({days: 1}) * 2);
     const date = new Date();
 
-    expect(-fn({hours: 1})).toBe(date.getTime() - date.setHours(date.getHours() + 1))
-});
-test("useDateFormat", async () => {
-    const fn = t.useDateFormat
-
-    expect('format' in new Date()).toBe(false);
-    fn();
-    expect('format' in new Date()).toBe(true);
-    expect((Date.prototype as any).format).toBe(t.formatDate);
-    t.noConflictDateFormat();
-    expect((Date.prototype as any).format).toBe(undefined);
-
-    const test = () => {
-    }
-    (Date.prototype as any).format = test;
-
-    fn();
-
-    expect((Date.prototype as any).format).toBe(test);
-
-    fn(true);
-    expect((Date.prototype as any).format).toBe(t.formatDate);
+    expect(-fn({hours: 1})).toBe(date.getTime() - date.setHours(date.getHours() + 1));
 });
 test("isSameTime", async () => {
-    const fn = t.isSameTime
+    const fn = t.isSameTime;
 
-    const date = new Date("2021-10-10")
-    const date2 = new Date("2021-10-30")
+    const date = new Date("2021-10-10");
+    const date2 = new Date("2021-10-30");
 
     expect(fn("yyyy-MM", date, date2)).toBe(true);
     expect(fn("yyyy-MM-dd", date, date2)).toBe(false);
