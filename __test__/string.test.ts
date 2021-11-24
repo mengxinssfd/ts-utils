@@ -17,6 +17,8 @@ test("strPadStart", () => {
     expect("0".padStart(5)).toBe("    0");
     expect(fn("0", 5, "")).toBe("0");
     expect("0".padStart(5, "")).toBe("0");
+
+    expect(fn("123", 2, "", true)).toBe("23");
 });
 test("strPadEnd", () => {
     const fn = cm.strPadEnd;
@@ -34,6 +36,8 @@ test("strPadEnd", () => {
     expect("0".padEnd(2)).toBe("0 ");
     expect(fn("0", 2, "")).toBe("0");
     expect("0".padEnd(2, "")).toBe("0");
+
+    expect(fn("123", 2, "", true)).toBe("12");
 });
 test("thousandFormat", () => {
     expect(cm.thousandFormat(123456789)).toBe("123,456,789");
@@ -44,7 +48,7 @@ test("thousandFormat", () => {
     expect(cm.thousandFormat(123123.1111, true)).toBe("123,123.111,1");
     expect(cm.thousandFormat(12312311.111111, true)).toBe("12,312,311.111,111");
     expect(cm.thousandFormat(12312311.111111)).toBe("12,312,311.111111");
-    expect(cm.thousandFormat(12312311.111111,true," ")).toBe("12 312 311.111 111");
+    expect(cm.thousandFormat(12312311.111111, true, " ")).toBe("12 312 311.111 111");
 
 });
 test("getChineseNumber", () => {
