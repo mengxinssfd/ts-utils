@@ -104,12 +104,17 @@ test("formatDate", () => {
     expect(fn(new Date("2020-11-18"), "q")).toBe("冬");
     expect(fn(new Date("2020-12-18"), "q")).toBe("冬");
 
-    expect(fn(new Date("2020-01-12"), "q", {seasonText:['spring']})).toBe("spring");
+    expect(fn(new Date("2020-01-12"), "q", {seasonText: ['spring']})).toBe("spring");
     t.formatDate.seasonText = ["spring"];
     expect(fn(new Date("2020-01-12"), "q")).toBe("spring");
     // season end
     const date2 = t.getDateFromStr("2019-12-12 10:10:10") as Date;
     expect(fn(date2, "d-M-yy")).toBe("12-12-19");
+
+
+    expect(fn(new Date(
+        2021, 10, 24, 18, 0, 0, 0
+    ), "yyyy-MM-dd hh:mm:ss:SSSS")).toBe("2021-11-24 18:00:00:0000");
 });
 
 test("dateDiff", () => {
