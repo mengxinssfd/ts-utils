@@ -13,7 +13,7 @@ u.createHtmlElement("div", {
 const rand = u.randomInt(1000 * 60 * 60 * 24 * 30);
 console.log(rand);
 const date = new Date(Date.now() + rand);
-endTime.innerText = u.formatDate.call(date);
+endTime.innerText = u.formatDate(date);
 u.polling(() => {
   countDown.innerText = u.dateDiff(new Date(), date, "d天hh时mm分ss秒SSS毫秒");
 }, 1000 / 30);

@@ -1,4 +1,5 @@
 import * as utils from "../../src";
+import {animateTo, createHtmlElement} from "../../src";
 
 utils.setStyle({height: "32000px"}, {el: document.body});
 declare global {
@@ -128,5 +129,67 @@ addEventListener("keydown", (e) => {
         case "KeyB":
             utils.scrollTo(36000, (window as any).scrollSpeed);
             break;
+    }
+});
+const parent = createHtmlElement("div", {
+    props: {
+        style: {
+            width: "200px",
+            height: "200px",
+            background: "lime",
+            overflowY: "auto",
+        },
+    },
+    children: [
+        createHtmlElement("div", {
+            props: {
+                style: {
+                    height: "20px",
+                    background: 'red'
+                }
+            }
+        }),
+        createHtmlElement("div", {
+            props: {
+                style: {
+                    width: "50%",
+                    height: "2000px",
+                    background: 'pink'
+                }
+            }
+        }),
+        createHtmlElement("div", {
+            props: {
+                style: {
+                    height: "20px",
+                    background: 'black'
+                }
+            }
+        }),
+    ],
+    parent: document.body
+});
+parent.scrollTop = 200;
+addEventListener("keydown", (e) => {
+    console.log(e.code);
+    switch (e.code) {
+        case "KeyQ":
+            utils.scrollTo(0, (window as any).scrollSpeed, parent);
+            break;
+        case "KeyW":
+            utils.scrollTo(2000, (window as any).scrollSpeed, parent);
+            break;
+    }
+});
+
+const count = createHtmlElement("div", {parent: document.body});
+
+(window as any).at = animateTo({
+    from: 0,
+    to: 100000,
+    minStepDenominator:500,
+    speed: 0.5,
+    callback(num) {
+        count.innerText = String(~~num);
     }
 });
