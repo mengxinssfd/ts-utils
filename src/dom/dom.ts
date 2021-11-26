@@ -591,6 +591,86 @@ export function toggleWidthOrHeight(el: HTMLElement, type: "width" | "height", t
     }
 }
 
+
+export function animateTo(
+    {
+        from,
+        to,
+        callback,
+        speed = 0.5,
+        immediate = true,
+        minStepDenominator = 50
+    }: {
+        from: number;
+        to: number;
+        speed?: number;
+        minStepDenominator?: number;
+        immediate?: boolean;
+        callback: (num: number) => void
+    }
+) {
+    const originSpeed = speed;
+    let isStopped: boolean;
+    let current: number;
+    let isOver: () => boolean;
+    let direct: 1 | -1 = 1;
+    let minMove: number;
+
+    function init() {
+        const isUp = to > from;
+        isStopped = false;
+        current = from;
+        direct = isUp ? 1 : -1;
+        speed = originSpeed;
+        minMove = Math.max(Math.abs(to), Math.abs(from)) / minStepDenominator;
+        isOver = from > to ? () => current <= to : () => current >= to;
+        immediate && callback(current);
+    }
+
+    function run() {
+        if (isStopped) return;
+        if (!isOver()) {
+            const abs = Math.max(Math.abs(current - to), 1);
+            const move = Math.min(abs / 10 * speed, minMove) * direct;
+            current += move;
+            callback(current);
+            window.requestAnimationFrame(run);
+        } else {
+            stop();
+            current = to;
+            callback(current);
+        }
+    }
+
+    function stop() {
+        isStopped = true;
+    }
+
+    init();
+    run();
+
+    return {
+        isStop() {
+            return isStopped;
+        },
+        reset() {
+            init();
+            run();
+        },
+        reverse() {
+            [to, from] = [from, to];
+            init();
+            run();
+        },
+        run() {
+            isStopped = false;
+            run();
+        },
+        stop
+    };
+
+}
+
 let stopScrollTo: Function | null = null;
 
 /**
