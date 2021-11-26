@@ -597,13 +597,14 @@ let stopScrollTo: Function | null = null;
  * 滚动到目标处
  * @param y
  * @param speed [1 - 100]
+ * @param el {HTMLElement | Window}
  */
-export function scrollTo(y = 0, speed = 10) {
+export function scrollTo(y = 0, speed = 10, el: HTMLElement | Window = window) {
     stopScrollTo && stopScrollTo();
     speed = getSafeNum(speed, 1, 100);
     let top: number = 0;
-    const el = document.body.scrollTop ? document.body : document.documentElement;
-    const getTop = () => top = el.scrollTop;
+    const element = el === window ? (document.body.scrollTop ? document.body : document.documentElement) : el as HTMLElement;
+    const getTop = () => top = element.scrollTop;
     getTop();
     let lastTop: number = Infinity;
     let isOver: () => boolean;
@@ -612,7 +613,7 @@ export function scrollTo(y = 0, speed = 10) {
         isOver = () => getTop() <= y;
     } else if (top < y) {
         // 往下
-        y = Math.min(y, el.scrollHeight - window.innerHeight);
+        y = Math.min(y, element.scrollHeight - (el === window ? window.innerHeight : element.offsetHeight));
         speed *= -1;
         isOver = () => getTop() >= y;
     } else {
@@ -624,23 +625,25 @@ export function scrollTo(y = 0, speed = 10) {
         stop = true;
         stopScrollTo = null;
     };
+    const eventTypes = ["wheel", "touchstart", "mousedown"];
     const clear = () => {
         stop = true;
-        window.removeEventListener("wheel", clear);
+        eventTypes.forEach(type => window.removeEventListener(type, clear));
         stopScrollTo = null;
     };
-    window.addEventListener("wheel", clear);
+
+    eventTypes.forEach(type => window.addEventListener(type, clear));
 
     function scroll() {
         if (stop) return; // 不单独拿出来的话，未滚动完成马上再次滚动的话会先到达上次的目标点在滚动
         if (!isOver() && lastTop !== top) {
             const abs = Math.abs(y - top);
             const move = Number((speed + abs / 50 * speed / 10).toFixed(1));
-            el.scrollTop = top - move;
+            element.scrollTop = top - move;
             lastTop = top;
             window.requestAnimationFrame(scroll);
         } else {
-            el.scrollTop = y;
+            element.scrollTop = y;
             clear();
         }
     }
