@@ -158,6 +158,20 @@ test("reduceAsync", async () => {
     }, "hello");
 
     expect(v3).toBe("hello thank you im fine");
+
+    expect(await fn.call([
+        () => 1,
+        () => 2,
+    ] as Array<(v: any) => any>, (initValue, value: any) => {
+        return initValue + value();
+    }, 0)).toBe(3);
+
+    expect(await fn.call([
+        () => 1,
+        () => 2,
+    ] as Array<(v: any) => any>, (initValue, value: any) => {
+        return initValue + value();
+    })).toBe(3);
 });
 test("forEachRight", () => {
     const fn = arr.forEachRight;
