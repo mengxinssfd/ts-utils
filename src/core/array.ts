@@ -112,16 +112,17 @@ export async function mapAsync<T, R, A extends ArrayLike<T>>(
  * @param initValue
  * @param thisArg
  */
-export async function reduceAsync<T, R, A extends ArrayLike<T>, I>(
+export async function reduceAsync<T, R, A extends ArrayLike<T>, I = A>(
     callbackfn: (initValue: I, value: T, index: number, array: A) => Promise<I>,
-    initValue: I,
+    initValue?: I,
     thisArg?: A | Iterable<T>,
 ): Promise<I> {
-    const arr = thisArg || this;
+    const arr = (thisArg || this).slice();
+    let previousValue = initValue ?? await arr.shift()();
     await forEachAsync<T>(async (v, k, a) => {
-        initValue = await callbackfn(initValue, v, k, a as any);
+        previousValue = await callbackfn(previousValue, v, k, a as any);
     }, arr);
-    return initValue;
+    return previousValue;
 }
 
 export function forEachRight<T>(
