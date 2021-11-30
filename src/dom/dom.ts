@@ -7,6 +7,7 @@ import {isDom, isNodeList} from "./domType";
 import {root} from "../core/common";
 import {fromCamel} from "../core/string";
 import {onceEvent} from "./event";
+import {Point, twoBezier} from "../core/coordinate";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle: CSSStyleDeclaration = root?.document?.createElement("div").style ?? {};
 const vendor: string | false = (() => {
@@ -634,6 +635,87 @@ export function animateTo(
             const move = Math.min(abs / 10 * speed, minMove) * direct;
             current += move;
             callback(current);
+            window.requestAnimationFrame(run);
+        } else {
+            stop();
+            current = to;
+            callback(current);
+        }
+    }
+
+    function stop() {
+        isStopped = true;
+    }
+
+    init();
+    run();
+
+    return {
+        isStop() {
+            return isStopped;
+        },
+        reset() {
+            init();
+            run();
+        },
+        reverse() {
+            [to, from] = [from, to];
+            init();
+            run();
+        },
+        run() {
+            isStopped = false;
+            run();
+        },
+        stop
+    };
+
+}
+
+
+export function animateTo2(
+    {
+        from,
+        to,
+        callback,
+        duration = 3000,
+        immediate = true,
+    }: {
+        from: number;
+        to: number;
+        duration?: number;
+        frameRate?: number;
+        immediate?: boolean;
+        callback: (num: number) => void
+    }
+) {
+    let isStopped: boolean;
+    let current: number;
+    let times = 0;
+    let startPoint: Point = [0, 0];
+    let endPoint: Point = [0, 0];
+    let controlPoint: Point = [0, 0];
+
+
+    function init() {
+        times = duration / 1000 * 60;
+        const diff = Math.abs(to - from);
+        startPoint = [from, 0];
+        endPoint = [to, 0];
+        controlPoint = [diff, diff * 0.1];
+        if (to < from) {
+            controlPoint = controlPoint.reverse() as Point;
+        }
+        isStopped = false;
+        current = from;
+        immediate && callback(current);
+    }
+
+    function run() {
+        if (isStopped) return;
+        if (current <= times) {
+            const [x] = twoBezier(current++ / times, startPoint, endPoint, controlPoint);
+            callback(x);
             window.requestAnimationFrame(run);
         } else {
             stop();

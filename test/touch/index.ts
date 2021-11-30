@@ -1,5 +1,5 @@
 import * as utils from "../../src";
-import {animateTo, createHtmlElement} from "../../src";
+import {createHtmlElement} from "../../src";
 
 utils.setStyle({height: "32000px"}, {el: document.body});
 declare global {
@@ -184,12 +184,21 @@ addEventListener("keydown", (e) => {
 
 const count = createHtmlElement("div", {parent: document.body});
 
-(window as any).at = animateTo({
+/*(window as any).at = utils.animateTo({
     from: 0,
-    to: 100000,
-    minStepDenominator:500,
+    to: 1000,
+    // minStepDenominator:500,
     speed: 0.5,
     callback(num) {
+        count.innerText = String(~~num);
+    }
+});*/
+(window as any).at = utils.animateTo2({
+    from: 100,
+    to: 0,
+    duration: 10000,
+    callback(num) {
+        console.log(num);
         count.innerText = String(~~num);
     }
 });
