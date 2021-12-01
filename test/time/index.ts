@@ -1,4 +1,6 @@
 import * as u from "../../src";
+import * as utils from "../../src";
+import {animateTo, createHtmlElement} from "../../src";
 
 let endTime;
 let countDown;
@@ -21,4 +23,28 @@ u.polling(() => {
 addEventListener("click", () => {
   const r = u.randomInt(30);
   console.log(r, r * 1000 * 60 * 60 * 24);
+});
+
+addEventListener("keydown", (e) => {
+  console.log(e.code);
+  switch (e.code) {
+    case "KeyQ":
+      utils.scrollTo(0, (window as any).scrollSpeed, parent);
+      break;
+    case "KeyW":
+      utils.scrollTo(2000, (window as any).scrollSpeed, parent);
+      break;
+  }
+});
+
+const count = createHtmlElement("div", {parent: document.body});
+
+(window as any).at = animateTo({
+  from: 0,
+  to: 100000,
+  minStepDenominator:500,
+  speed: 0.5,
+  callback(num) {
+    count.innerText = String(~~num);
+  }
 });

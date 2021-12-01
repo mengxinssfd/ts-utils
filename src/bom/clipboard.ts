@@ -118,10 +118,43 @@ copy2Clipboard.once = function (
     }));
 };
 
-const cb: Clipboard = root?.navigator?.clipboard;
+copy2Clipboard.interceptor = (
+    {
+        cb,
+        el = window,
+        capture = true,
+        type = "copy",
+        format = 'text/plain',
+    }: {
+        cb: (e: ClipboardEvent, data: string) => string;
+        el: Window | HTMLElement;
+        capture?: boolean;
+        type?: "copy" | "cut"
+        format?: string
+    }
+) => {
+    const handler = (e: ClipboardEvent) => {
+        const clipboardData = e.clipboardData;
+        if (!clipboardData) return;
+
+        // CB?.readText().then((data) => {
+        //     clipboardData.setData(format, cb(e, data));
+        // });
+
+        const selection = window.getSelection() as Selection;
+        clipboardData.setData(format, cb(e, selection.toString()));
+        e.preventDefault();
+    };
+    el.addEventListener("copy", handler as EventListener, capture);
+    return () => {
+        el.removeEventListener(type, handler as EventListener, capture);
+    };
+};
+
+const CB: Clipboard = root?.navigator?.clipboard;
 
 export function supportClipboardWrite() {
-    return Boolean((cb as any)?.write);
+    return Boolean((CB as any)?.write);
 }
 
 export function setData2Clipboard(
@@ -154,5 +187,5 @@ export async function write2Clipboard(contentList: Array<string | Blob>) {
             [blob.type]: blob,
         });
     });
-    await (cb as any).write(clipboardItems);
+    await (CB as any).write(clipboardItems);
 }

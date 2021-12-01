@@ -1,5 +1,5 @@
 import * as utils from "../../src";
-import {animateTo, createHtmlElement} from "../../src";
+import {createHtmlElement} from "../../src";
 
 utils.setStyle({height: "32000px"}, {el: document.body});
 declare global {
@@ -170,26 +170,22 @@ const parent = createHtmlElement("div", {
     parent: document.body
 });
 parent.scrollTop = 200;
-addEventListener("keydown", (e) => {
-    console.log(e.code);
-    switch (e.code) {
-        case "KeyQ":
-            utils.scrollTo(0, (window as any).scrollSpeed, parent);
-            break;
-        case "KeyW":
-            utils.scrollTo(2000, (window as any).scrollSpeed, parent);
-            break;
+
+const interceptor = createHtmlElement("div", {
+        props: {
+            innerText: "hello"
+        },
+        parent: document.body,
     }
+);
+
+utils.copy2Clipboard.interceptor({
+    cb(e, data) {
+        console.log(e.target, data);
+        return data + " world!!!";
+    },
+    el: interceptor,
+    format: "Text",
+    capture: false
 });
 
-const count = createHtmlElement("div", {parent: document.body});
-
-(window as any).at = animateTo({
-    from: 0,
-    to: 100000,
-    minStepDenominator:500,
-    speed: 0.5,
-    callback(num) {
-        count.innerText = String(~~num);
-    }
-});
