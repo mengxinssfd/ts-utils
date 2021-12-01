@@ -490,18 +490,77 @@ export function toggleWidthOrHeight(el, type, transition = {}) {
         });
     }
 }
+export function animateTo({ from, to, callback, speed = 0.5, immediate = true, minStepDenominator = 50 }) {
+    const originSpeed = speed;
+    let isStopped;
+    let current;
+    let isOver;
+    let direct = 1;
+    let minMove;
+    function init() {
+        const isUp = to > from;
+        isStopped = false;
+        current = from;
+        direct = isUp ? 1 : -1;
+        speed = originSpeed;
+        minMove = Math.max(Math.abs(to), Math.abs(from)) / minStepDenominator;
+        isOver = from > to ? () => current <= to : () => current >= to;
+        immediate && callback(current);
+    }
+    function run() {
+        if (isStopped)
+            return;
+        if (!isOver()) {
+            const abs = Math.max(Math.abs(current - to), 1);
+            const move = Math.min(abs / 10 * speed, minMove) * direct;
+            current += move;
+            callback(current);
+            window.requestAnimationFrame(run);
+        }
+        else {
+            stop();
+            current = to;
+            callback(current);
+        }
+    }
+    function stop() {
+        isStopped = true;
+    }
+    init();
+    run();
+    return {
+        isStop() {
+            return isStopped;
+        },
+        reset() {
+            init();
+            run();
+        },
+        reverse() {
+            [to, from] = [from, to];
+            init();
+            run();
+        },
+        run() {
+            isStopped = false;
+            run();
+        },
+        stop
+    };
+}
 let stopScrollTo = null;
 /**
  * 滚动到目标处
  * @param y
  * @param speed [1 - 100]
+ * @param el {HTMLElement | Window}
  */
-export function scrollTo(y = 0, speed = 10) {
+export function scrollTo(y = 0, speed = 10, el = window) {
     stopScrollTo && stopScrollTo();
     speed = getSafeNum(speed, 1, 100);
     let top = 0;
-    const el = document.body.scrollTop ? document.body : document.documentElement;
-    const getTop = () => top = el.scrollTop;
+    const element = el === window ? (document.body.scrollTop ? document.body : document.documentElement) : el;
+    const getTop = () => top = element.scrollTop;
     getTop();
     let lastTop = Infinity;
     let isOver;
@@ -511,7 +570,7 @@ export function scrollTo(y = 0, speed = 10) {
     }
     else if (top < y) {
         // 往下
-        y = Math.min(y, el.scrollHeight - window.innerHeight);
+        y = Math.min(y, element.scrollHeight - (el === window ? window.innerHeight : element.offsetHeight));
         speed *= -1;
         isOver = () => getTop() >= y;
     }
@@ -523,24 +582,25 @@ export function scrollTo(y = 0, speed = 10) {
         stop = true;
         stopScrollTo = null;
     };
+    const eventTypes = ["wheel", "touchstart", "mousedown"];
     const clear = () => {
         stop = true;
-        window.removeEventListener("wheel", clear);
+        eventTypes.forEach(type => window.removeEventListener(type, clear));
         stopScrollTo = null;
     };
-    window.addEventListener("wheel", clear);
+    eventTypes.forEach(type => window.addEventListener(type, clear));
     function scroll() {
         if (stop)
             return; // 不单独拿出来的话，未滚动完成马上再次滚动的话会先到达上次的目标点在滚动
         if (!isOver() && lastTop !== top) {
             const abs = Math.abs(y - top);
             const move = Number((speed + abs / 50 * speed / 10).toFixed(1));
-            el.scrollTop = top - move;
+            element.scrollTop = top - move;
             lastTop = top;
             window.requestAnimationFrame(scroll);
         }
         else {
-            el.scrollTop = y;
+            element.scrollTop = y;
             clear();
         }
     }

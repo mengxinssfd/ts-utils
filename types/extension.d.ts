@@ -3,7 +3,7 @@ declare global {
         /**
          * @param [format="yyyy-MM-dd hh:mm:ss"]
          */
-        format(format?: string): string;
+        // format(format?: string): string;
     }
 }
 export {}; 

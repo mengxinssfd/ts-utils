@@ -86,7 +86,7 @@ export function getReverseObj(obj) {
  * 代替Object.keys(obj).reduce，减少循环次数
  * @param obj
  * @param callbackFn
- * @param initialValue 初始值
+ * @param initialValue 初始值 数组中可以省略，默认使用数组中的第一项作为初始值，但object不存在第一项，所以不能省略
  */
 export function reduceObj(obj, callbackFn, initialValue) {
     let result = initialValue;

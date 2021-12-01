@@ -1,7 +1,7 @@
 "use strict";
 var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scrollTo = exports.toggleWidthOrHeight = exports.percent2Rem = exports.rem2Percent = exports.px2Percent = exports.percent2px = exports.px2rem = exports.rem2px = exports.get1rem = exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createHiddenHtmlElement = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.setStyle = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
+exports.scrollTo = exports.animateTo = exports.toggleWidthOrHeight = exports.percent2Rem = exports.rem2Percent = exports.px2Percent = exports.percent2px = exports.px2rem = exports.rem2px = exports.get1rem = exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createHiddenHtmlElement = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.setStyle = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
 const array_1 = require("../core/array");
 const number_1 = require("../core/number");
 const object_1 = require("../core/object");
@@ -520,18 +520,78 @@ function toggleWidthOrHeight(el, type, transition = {}) {
     }
 }
 exports.toggleWidthOrHeight = toggleWidthOrHeight;
+function animateTo({ from, to, callback, speed = 0.5, immediate = true, minStepDenominator = 50 }) {
+    const originSpeed = speed;
+    let isStopped;
+    let current;
+    let isOver;
+    let direct = 1;
+    let minMove;
+    function init() {
+        const isUp = to > from;
+        isStopped = false;
+        current = from;
+        direct = isUp ? 1 : -1;
+        speed = originSpeed;
+        minMove = Math.max(Math.abs(to), Math.abs(from)) / minStepDenominator;
+        isOver = from > to ? () => current <= to : () => current >= to;
+        immediate && callback(current);
+    }
+    function run() {
+        if (isStopped)
+            return;
+        if (!isOver()) {
+            const abs = Math.max(Math.abs(current - to), 1);
+            const move = Math.min(abs / 10 * speed, minMove) * direct;
+            current += move;
+            callback(current);
+            window.requestAnimationFrame(run);
+        }
+        else {
+            stop();
+            current = to;
+            callback(current);
+        }
+    }
+    function stop() {
+        isStopped = true;
+    }
+    init();
+    run();
+    return {
+        isStop() {
+            return isStopped;
+        },
+        reset() {
+            init();
+            run();
+        },
+        reverse() {
+            [to, from] = [from, to];
+            init();
+            run();
+        },
+        run() {
+            isStopped = false;
+            run();
+        },
+        stop
+    };
+}
+exports.animateTo = animateTo;
 let stopScrollTo = null;
 /**
  * 滚动到目标处
  * @param y
  * @param speed [1 - 100]
+ * @param el {HTMLElement | Window}
  */
-function scrollTo(y = 0, speed = 10) {
+function scrollTo(y = 0, speed = 10, el = window) {
     stopScrollTo && stopScrollTo();
     speed = (0, number_1.getSafeNum)(speed, 1, 100);
     let top = 0;
-    const el = document.body.scrollTop ? document.body : document.documentElement;
-    const getTop = () => top = el.scrollTop;
+    const element = el === window ? (document.body.scrollTop ? document.body : document.documentElement) : el;
+    const getTop = () => top = element.scrollTop;
     getTop();
     let lastTop = Infinity;
     let isOver;
@@ -541,7 +601,7 @@ function scrollTo(y = 0, speed = 10) {
     }
     else if (top < y) {
         // 往下
-        y = Math.min(y, el.scrollHeight - window.innerHeight);
+        y = Math.min(y, element.scrollHeight - (el === window ? window.innerHeight : element.offsetHeight));
         speed *= -1;
         isOver = () => getTop() >= y;
     }
@@ -553,24 +613,25 @@ function scrollTo(y = 0, speed = 10) {
         stop = true;
         stopScrollTo = null;
     };
+    const eventTypes = ["wheel", "touchstart", "mousedown"];
     const clear = () => {
         stop = true;
-        window.removeEventListener("wheel", clear);
+        eventTypes.forEach(type => window.removeEventListener(type, clear));
         stopScrollTo = null;
     };
-    window.addEventListener("wheel", clear);
+    eventTypes.forEach(type => window.addEventListener(type, clear));
     function scroll() {
         if (stop)
             return; // 不单独拿出来的话，未滚动完成马上再次滚动的话会先到达上次的目标点在滚动
         if (!isOver() && lastTop !== top) {
             const abs = Math.abs(y - top);
             const move = Number((speed + abs / 50 * speed / 10).toFixed(1));
-            el.scrollTop = top - move;
+            element.scrollTop = top - move;
             lastTop = top;
             window.requestAnimationFrame(scroll);
         }
         else {
-            el.scrollTop = y;
+            element.scrollTop = y;
             clear();
         }
     }

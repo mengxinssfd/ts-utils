@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/ts-utils",
-  "version": "3.0.12",
+  "version": "3.0.13",
   "description": "utils工具函数ts/js库",
   "jsdelivr": "./lib-umd/index.js",
   "main": "./lib-cjs/index.js",
@@ -34,7 +34,7 @@
     "test": "jest",
     "cov": "jest --coverage",
     "cov-no-cache": "jest --coverage --no-cache",
-    "dev": "set NODE_ENV=development&webpack-dev-server --config webpack.dev.config.js --host 0.0.0.0 --open \"http://localhost:8080/touch\"",
+    "dev": "set NODE_ENV=development&webpack-dev-server --config webpack.dev.config.js --host 0.0.0.0 --open \"http://localhost:8080/touch.html\"",
     "clear_jest": "jest --clearCache"
   },
   "repository": {

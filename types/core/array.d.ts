@@ -40,7 +40,7 @@ export declare function mapAsync<T, R, A extends ArrayLike<T>>(cbAsync: (value: 
  * @param initValue
  * @param thisArg
  */
-export declare function reduceAsync<T, R, A extends ArrayLike<T>, I>(callbackfn: (initValue: I, value: T, index: number, array: A) => Promise<I>, initValue: I, thisArg?: A | Iterable<T>): Promise<I>;
+export declare function reduceAsync<T, R, A extends ArrayLike<T>, I = A>(callbackfn: (initValue: I, value: T, index: number, array: A) => Promise<I>, initValue?: I, thisArg?: A | Iterable<T>): Promise<I>;
 export declare function forEachRight<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => (any | false), thisArg?: ArrayLike<T> | Iterable<T>): void;
 export declare function from<T, U = T>(iterable: Iterable<T> | ArrayLike<T>, mapFn?: (v: T, k?: number) => U): U[];
 export declare function filter<T>(callbackfn: (value: T, index: number, array: ArrayLike<T>) => boolean, thisArg?: ArrayLike<T>): T[];

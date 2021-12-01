@@ -156,10 +156,25 @@ export declare function toggleWidthOrHeight(el: HTMLElement, type: "width" | "he
     delay?: string;
     timingFunction?: string;
 }): void;
+export declare function animateTo({ from, to, callback, speed, immediate, minStepDenominator }: {
+    from: number;
+    to: number;
+    speed?: number;
+    minStepDenominator?: number;
+    immediate?: boolean;
+    callback: (num: number) => void;
+}): {
+    isStop(): boolean;
+    reset(): void;
+    reverse(): void;
+    run(): void;
+    stop: () => void;
+};
 /**
  * 滚动到目标处
  * @param y
  * @param speed [1 - 100]
+ * @param el {HTMLElement | Window}
  */
-export declare function scrollTo(y?: number, speed?: number): void;
+export declare function scrollTo(y?: number, speed?: number, el?: HTMLElement | Window): void;
 export {};

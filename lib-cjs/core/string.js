@@ -39,15 +39,25 @@ exports.strTemplate = strTemplate;
  * @param target
  * @param maxLen
  * @param [fill=' '] 默认fill=" "
+ * @param [clearMore=false]
  */
-function strPadStart(target, maxLen, fill = " ") {
-    if (target.length >= maxLen || fill === "")
+function strPadStart(target, maxLen, fill = " ", clearMore = false) {
+    if (target.length >= maxLen || fill === "") {
+        if (clearMore) {
+            // 切掉多余的部分
+            return target.substr(target.length - maxLen);
+        }
         return target;
+    }
+    // 缺少的长度
     const lessLen = maxLen - target.length;
+    // 填充补足不够的部分
     while (fill.length < lessLen) {
         fill += fill;
     }
+    // 切除多余部分 fill是多个字符时补足的长度可能会超出
     fill = fill.substr(0, lessLen);
+    // 补足前缀
     return fill + target;
 }
 exports.strPadStart = strPadStart;
@@ -56,10 +66,15 @@ exports.strPadStart = strPadStart;
  * @param target
  * @param maxLen
  * @param [fill=" "] 默认fill=" "
+ * @param [clearMore=false]
  */
-function strPadEnd(target, maxLen, fill = " ") {
-    if (target.length >= maxLen || fill === "")
+function strPadEnd(target, maxLen, fill = " ", clearMore = false) {
+    if (target.length >= maxLen || fill === "") {
+        if (clearMore) {
+            return target.substr(0, maxLen);
+        }
         return target;
+    }
     let lessLen = maxLen - target.length;
     let end = strPadStart(target, maxLen, fill).substr(0, lessLen);
     return target + end;

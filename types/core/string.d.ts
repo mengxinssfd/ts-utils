@@ -12,15 +12,17 @@ export declare function strTemplate(str: any, ...params: any[]): any;
  * @param target
  * @param maxLen
  * @param [fill=' '] 默认fill=" "
+ * @param [clearMore=false]
  */
-export declare function strPadStart(target: string, maxLen: number, fill?: string): string;
+export declare function strPadStart(target: string, maxLen: number, fill?: string, clearMore?: boolean): string;
 /**
  * 给长度不满足要求的字符串添加后缀 strFillPrefix
  * @param target
  * @param maxLen
  * @param [fill=" "] 默认fill=" "
+ * @param [clearMore=false]
  */
-export declare function strPadEnd(target: string, maxLen: number, fill?: string): string;
+export declare function strPadEnd(target: string, maxLen: number, fill?: string, clearMore?: boolean): string;
 export interface Number2Chinese {
     (number: number): string;
     units: string[];

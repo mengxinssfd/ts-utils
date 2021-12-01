@@ -11,19 +11,22 @@ export declare function number2Date(millisecond: number, format?: string): strin
  */
 export declare function dateDiff(start: Date, end: Date, format?: string): string;
 export interface formatDateInterface {
-    (format?: string): string;
+    (date: Date, format?: string, options?: {
+        seasonText?: string[];
+        weekText?: string[];
+    }): string;
     seasonText: string[];
     weekText: string[];
 }
 /**
- * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
+ * 格式化日期
  * @param [format="yyyy-MM-dd hh:mm:ss"]
- * @param date {Date?}
+ * @param date {Date}
+ * @param seasonText {string[]}
+ * @param weekText {string[]}
  * @returns String
  */
 export declare const formatDate: formatDateInterface;
-export declare function useDateFormat(force?: boolean): void;
-export declare function noConflictDateFormat(): void;
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
  * @param date 格式：yyyy-MM-dd hh:mm:ss
@@ -42,7 +45,7 @@ export declare function createTimeCountDown(countDown: number): () => number;
  * 获取某月最后一天的date
  * @param month
  */
-export declare function getTheLastDayOfAMonth(month: Date): Date;
+export declare function getTheLastDateOfAMonth(month: Date): Date;
 /**
  * 获取指定某年月份(month)第n(nth)个星期几(weekday)的Date
  * @param month
@@ -63,12 +66,6 @@ export declare function getMilliseconds({ days, hours, minutes, seconds }?: {
     minutes?: number;
     seconds?: number;
 }): number;
-/**
- * 格式化时间，代替formatDate.call，formatDate.call赋值总是有warn
- * @param date {Date}
- * @param [format="yyyy-MM-dd hh:mm:ss"]
- */
-export declare function getFormattedDate(date: Date, format?: string): string;
 /**
  * 判断时间是否相同
  * @param format yyyy-MM-dd hh:mm:ss

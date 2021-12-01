@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isSameTime = exports.getFormattedDate = exports.getMilliseconds = exports.getMonthTheNthWeekday = exports.getTheLastDayOfAMonth = exports.createTimeCountDown = exports.createTimeCountUp = exports.sleep = exports.str2Date = exports.getDateFromStr = exports.noConflictDateFormat = exports.useDateFormat = exports.formatDate = exports.dateDiff = exports.number2Date = void 0;
+exports.isSameTime = exports.getMilliseconds = exports.getMonthTheNthWeekday = exports.getTheLastDateOfAMonth = exports.createTimeCountDown = exports.createTimeCountUp = exports.sleep = exports.str2Date = exports.getDateFromStr = exports.formatDate = exports.dateDiff = exports.number2Date = void 0;
 const string_1 = require("./string");
 const array_1 = require("./array");
 /**
@@ -75,65 +75,44 @@ function dateDiff(start, end, format = "y年d天hh时mm分ss秒") {
 }
 exports.dateDiff = dateDiff;
 /**
- * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
+ * 格式化日期
  * @param [format="yyyy-MM-dd hh:mm:ss"]
- * @param date {Date?}
+ * @param date {Date}
+ * @param seasonText {string[]}
+ * @param weekText {string[]}
  * @returns String
  */
-const formatDate = function (format = "yyyy-MM-dd hh:mm:ss", date) {
-    const dt = date || this;
+const formatDate = function (date, format = "yyyy-MM-dd hh:mm:ss", { seasonText = exports.formatDate.seasonText, weekText = exports.formatDate.weekText, } = {}) {
     let o = {
-        "M+": dt.getMonth() + 1,
-        "d+": dt.getDate(),
-        "h+": dt.getHours(),
-        "m+": dt.getMinutes(),
-        "s+": dt.getSeconds(),
-        "q": (function (__this) {
-            const q = Math.floor((__this.getMonth() + 3) / 3) - 1;
-            return exports.formatDate.seasonText[q];
-        })(dt),
-        "S+": dt.getMilliseconds(),
-        "w": (function (__this) {
-            const d = __this.getDay();
-            // 星期
-            if (!exports.formatDate.weekText || !exports.formatDate.weekText.length) {
-                exports.formatDate.weekText = (0, array_1.createArray)({
-                    end: 7,
-                    fill(item, index) {
-                        return index === 0 ? "日" : (0, string_1.number2Chinese)(index);
-                    },
-                });
-            }
-            return exports.formatDate.weekText[d];
-        })(dt),
+        "M+": () => date.getMonth() + 1,
+        "d+": () => date.getDate(),
+        "h+": () => date.getHours(),
+        "m+": () => date.getMinutes(),
+        "s+": () => date.getSeconds(),
+        "q": () => {
+            // 按月份区分的季度并不准确
+            const q = Math.floor((date.getMonth() + 3) / 3) - 1;
+            return seasonText[q];
+        },
+        "S+": () => date.getMilliseconds(),
+        "w": () => weekText[date.getDay()] //周
     };
     if (/(y+)/.test(format)) {
-        format = format.replace(RegExp.$1, (dt.getFullYear() + "").substr(4 - RegExp.$1.length));
+        format = format.replace(RegExp.$1, (0, string_1.strPadStart)(String(date.getFullYear()), RegExp.$1.length, "0", true));
     }
     for (let k in o) {
         if (new RegExp("(" + k + ")").test(format)) {
             const s1 = RegExp.$1;
-            const v = o[k];
-            const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
-            format = format.replace(s1, value);
+            const v = String(o[k]());
+            // const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
+            format = format.replace(s1, (0, string_1.strPadStart)(v, s1.length, "0"));
         }
     }
     return format;
 };
 exports.formatDate = formatDate;
-exports.formatDate.weekText = [];
+exports.formatDate.weekText = ["日", "一", "二", "三", "四", "五", "六"];
 exports.formatDate.seasonText = ["春", "夏", "秋", "冬"];
-let originDateFormat;
-// 挂载到Date原型
-function useDateFormat(force = false) {
-    originDateFormat = Date.prototype.format;
-    (!Date.prototype.format || force) && (Date.prototype.format = exports.formatDate);
-}
-exports.useDateFormat = useDateFormat;
-function noConflictDateFormat() {
-    Date.prototype.format = originDateFormat;
-}
-exports.noConflictDateFormat = noConflictDateFormat;
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
  * @param date 格式：yyyy-MM-dd hh:mm:ss
@@ -191,13 +170,13 @@ exports.createTimeCountDown = createTimeCountDown;
  * 获取某月最后一天的date
  * @param month
  */
-function getTheLastDayOfAMonth(month) {
+function getTheLastDateOfAMonth(month) {
     const lastDate = new Date(month.getTime());
     lastDate.setMonth(month.getMonth() + 1);
     lastDate.setDate(0);
     return lastDate;
 }
-exports.getTheLastDayOfAMonth = getTheLastDayOfAMonth;
+exports.getTheLastDateOfAMonth = getTheLastDateOfAMonth;
 /**
  * 获取指定某年月份(month)第n(nth)个星期几(weekday)的Date
  * @param month
@@ -209,7 +188,7 @@ function getMonthTheNthWeekday(month, nth, weekday = 0) {
     if (!nth || !(0, array_1.inRange)(weekday, [0, 7]))
         return null;
     const monthTime = month.getTime();
-    const endDate = getTheLastDayOfAMonth(month);
+    const endDate = getTheLastDateOfAMonth(month);
     let date;
     if (nth > 0) {
         date = new Date(monthTime);
@@ -254,22 +233,13 @@ function getMilliseconds({ days = 0, hours = 0, minutes = 0, seconds = 0 } = {})
 }
 exports.getMilliseconds = getMilliseconds;
 /**
- * 格式化时间，代替formatDate.call，formatDate.call赋值总是有warn
- * @param date {Date}
- * @param [format="yyyy-MM-dd hh:mm:ss"]
- */
-function getFormattedDate(date, format = "yyyy-MM-dd hh:mm:ss") {
-    return exports.formatDate.call(date, format);
-}
-exports.getFormattedDate = getFormattedDate;
-/**
  * 判断时间是否相同
  * @param format yyyy-MM-dd hh:mm:ss
  * @param date
  * @param dates
  */
 function isSameTime(format, date, ...dates) {
-    const dt = getFormattedDate(date, format);
-    return dates.every(date => getFormattedDate(date, format) === dt);
+    const dt = (0, exports.formatDate)(date, format);
+    return dates.every(date => (0, exports.formatDate)(date, format) === dt);
 }
 exports.isSameTime = isSameTime;

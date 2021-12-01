@@ -104,11 +104,12 @@ exports.mapAsync = mapAsync;
  * @param thisArg
  */
 async function reduceAsync(callbackfn, initValue, thisArg) {
-    const arr = thisArg || this;
+    const arr = (thisArg || this).slice();
+    let previousValue = initValue !== null && initValue !== void 0 ? initValue : await arr.shift()();
     await forEachAsync(async (v, k, a) => {
-        initValue = await callbackfn(initValue, v, k, a);
+        previousValue = await callbackfn(previousValue, v, k, a);
     }, arr);
-    return initValue;
+    return previousValue;
 }
 exports.reduceAsync = reduceAsync;
 function forEachRight(callbackfn, thisArg) {
