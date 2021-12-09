@@ -137,14 +137,16 @@ const parent = createHtmlElement("div", {
             width: "200px",
             height: "200px",
             background: "lime",
-            overflowY: "auto",
+            overflowX: "auto",
         },
     },
     children: [
         createHtmlElement("div", {
             props: {
                 style: {
-                    height: "20px",
+                    display:'inline-block',
+                    height: "100%",
+                    width: "20px",
                     background: 'red'
                 }
             }
@@ -152,8 +154,9 @@ const parent = createHtmlElement("div", {
         createHtmlElement("div", {
             props: {
                 style: {
-                    width: "50%",
-                    height: "2000px",
+                    display:'inline-block',
+                    height: "50%",
+                    width: "2000px",
                     background: 'pink'
                 }
             }
@@ -161,7 +164,9 @@ const parent = createHtmlElement("div", {
         createHtmlElement("div", {
             props: {
                 style: {
-                    height: "20px",
+                    display:'inline-block',
+                    height: "50%",
+                    width: "2000px",
                     background: 'black'
                 }
             }
@@ -170,6 +175,16 @@ const parent = createHtmlElement("div", {
     parent: document.body
 });
 parent.scrollTop = 200;
+addEventListener("keydown", (e) => {
+    switch (e.code) {
+        case "KeyA":
+            utils.scrollTo(0, (window as any).scrollSpeed, parent,"horizontal");
+            break;
+        case "KeyS":
+            utils.scrollTo(36000, (window as any).scrollSpeed, parent,"horizontal");
+            break;
+    }
+});
 
 const interceptor = createHtmlElement("div", {
         props: {

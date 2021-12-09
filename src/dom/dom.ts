@@ -675,27 +675,42 @@ let stopScrollTo: Function | null = null;
 
 /**
  * 滚动到目标处
- * @param y
+ * @param target {number}
  * @param speed [1 - 100]
  * @param el {HTMLElement | Window}
+ * @param [direct='vertical'] {'vertical'|'horizontal'}
  */
-export function scrollTo(y = 0, speed = 10, el: HTMLElement | Window = window) {
+export function scrollTo(target = 0, speed = 10, el: HTMLElement | Window = window, direct: 'vertical' | 'horizontal' = "vertical") {
     stopScrollTo && stopScrollTo();
     speed = getSafeNum(speed, 1, 100);
-    let top: number = 0;
-    const element = el === window ? (document.body.scrollTop ? document.body : document.documentElement) : el as HTMLElement;
-    const getTop = () => top = element.scrollTop;
-    getTop();
-    let lastTop: number = Infinity;
+    const vertical = {
+        scrollTo: 'scrollTop',
+        scrollSize: 'scrollHeight',
+        inner: 'innerHeight',
+        offset: 'offsetHeight'
+    };
+    const horizontal = {
+        scrollTo: 'scrollLeft',
+        scrollSize: 'scrollWidth',
+        inner: 'innerWidth',
+        offset: 'offsetWidth'
+    };
+    const directKey = direct === 'vertical' ? vertical : horizontal;
+    const topOrLeft = directKey.scrollTo;
+    let current: number = 0;
+    const element = el === window ? (document.body[topOrLeft] ? document.body : document.documentElement) : el as HTMLElement;
+    const getPos = () => current = element[topOrLeft];
+    getPos();
+    let lastPos: number = Infinity;
     let isOver: () => boolean;
-    if (top > y) {
+    if (current > target) {
         // 往上
-        isOver = () => getTop() <= y;
-    } else if (top < y) {
+        isOver = () => getPos() <= target;
+    } else if (current < target) {
         // 往下
-        y = Math.min(y, element.scrollHeight - (el === window ? window.innerHeight : element.offsetHeight));
+        target = Math.min(target, element[directKey.scrollSize] - (el === window ? window[directKey.inner] : element[directKey.offset]));
         speed *= -1;
-        isOver = () => getTop() >= y;
+        isOver = () => getPos() >= target;
     } else {
         return;
     }
@@ -716,14 +731,14 @@ export function scrollTo(y = 0, speed = 10, el: HTMLElement | Window = window) {
 
     function scroll() {
         if (stop) return; // 不单独拿出来的话，未滚动完成马上再次滚动的话会先到达上次的目标点在滚动
-        if (!isOver() && lastTop !== top) {
-            const abs = Math.abs(y - top);
+        if (!isOver() && lastPos !== current) {
+            const abs = Math.abs(target - current);
             const move = Number((speed + abs / 50 * speed / 10).toFixed(1));
-            element.scrollTop = top - move;
-            lastTop = top;
+            element[topOrLeft] = current - move;
+            lastPos = current;
             window.requestAnimationFrame(scroll);
         } else {
-            element.scrollTop = y;
+            element[topOrLeft] = target;
             clear();
         }
     }
