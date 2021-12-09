@@ -695,7 +695,7 @@ export function scrollTo(target = 0, speed = 10, el: HTMLElement | Window = wind
         inner: 'innerWidth',
         offset: 'offsetWidth'
     };
-    const directKey = direct === 'vertical' ? vertical : horizontal;
+    const directKey = direct === 'horizontal' ? horizontal : vertical;
     const topOrLeft = directKey.scrollTo;
     let current: number = 0;
     const element = el === window ? (document.body[topOrLeft] ? document.body : document.documentElement) : el as HTMLElement;
