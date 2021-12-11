@@ -3,15 +3,30 @@ import {sleep} from "../src/core/time";
 import {strPadStart} from "../src/core/string";
 
 test("forEachByLen", () => {
+    const fn = cm.forEachByLen;
     const arr: number[] = [];
-    cm.forEachByLen(3, (index) => arr.push(index));
+    fn(3, (index) => arr.push(index));
     expect(arr).toEqual([0, 1, 2]);
-    cm.forEachByLen(7, (index) => arr.push(index));
+    fn(7, (index) => arr.push(index));
     expect(arr.length).toEqual(10);
-    cm.forEachByLen(3, (index): any | false => {
+    fn(3, (index): any | false => {
         arr.push(index);
         if (index === 1) return false;
     });
+    expect(arr).toEqual([0, 1, 2, 0, 1, 2, 3, 4, 5, 6, 0, 1]);
+});
+test("forEachByLenRight", () => {
+    const fn = cm.forEachByLenRight;
+    const arr: number[] = [];
+    fn(3, (index) => arr.push(index));
+    expect(arr).toEqual([0, 1, 2].reverse());
+    fn(7, (index) => arr.push(index));
+    expect(arr.length).toEqual(10);
+    fn(3, (index): any | false => {
+        arr.push(index);
+        if (index === 1) return false;
+    });
+    expect(arr).toEqual([...[0, 1, 2].reverse(), ...[0, 1, 2, 3, 4, 5, 6].reverse(), 2, 1]);
 });
 
 test("debounce", async (done) => {
@@ -267,7 +282,7 @@ test("throttle", async () => {
     });
 
     const now = Date.now();
-    await new Promise<void>(((resolve, reject) => {
+    await new Promise<void>(((resolve) => {
         // TODO 可以使用OneByOne代替
         th();
 
