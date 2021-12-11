@@ -233,7 +233,7 @@ export function pick(originObj, picks, cb) {
  * @param verify
  */
 export function pickDiff(origin: object, objs: object[], verify?: (originV: any, objV: any, k: string | number, origin: object, obj: object) => boolean): { [k: string]: any } {
-    const verifyFn = verify || ((originV, objV, k, origin, obj) => {
+    const verifyFn = verify || ((originV, objV, k, origin) => {
         return origin.hasOwnProperty(k) && originV === objV || isNaN(originV) && isNaN(objV);
     });
     return objs.reduce((result, obj) => {

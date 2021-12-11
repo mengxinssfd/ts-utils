@@ -89,7 +89,7 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(call
 export function throttle<CB extends (...args: any[]) => (void | any)>(
     callback: CB,
     delay: number,
-    invalidCB: (interval: number) => void = (v) => void 0
+    invalidCB: (interval: number) => void = () => void 0
 ): CB {
     let countDown = () => 0;
     return function (...args: any[]) {
@@ -233,9 +233,10 @@ export function forEachByLen(len: number, callback: (index: number) => (any | fa
         break;
     }
 }
+
 // 代替for循环
 export function forEachByLenRight(len: number, callback: (index: number) => (any | false)) {
-    for (let i = len; i >= 0; i--) {
+    for (let i = len - 1; i >= 0; i--) {
         if (callback(i) === false) break;
     }
 }
@@ -408,7 +409,7 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
                 });
             }
             !list.length && reject("AggregateError: All promises were rejected");
-        } catch (e:any) {
+        } catch (e: any) {
             reject(e.toString());
         }
 
@@ -424,6 +425,7 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
 export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T) {
     return queue.reduce((p, next) => p.then(res => next(res)), Promise.resolve(initValue) as Promise<unknown>);
 }
+
 /*export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T) {
     let lastValue: unknown = initValue;
     await forEachAsync(async (promise) => {
@@ -563,13 +565,3 @@ export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "defaul
     }
     return map;
 }
-
-/**
- * 返回函数绑定this后的函数
- * @param fn
- * @param thisTarget
- */
-export function getBoundFn<T extends Function>(fn: T, thisTarget: object): T {
-    return fn.bind(thisTarget);
-}
-// getBoundFn(formatDate, new Date())('yyyy mm');

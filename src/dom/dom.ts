@@ -37,7 +37,7 @@ function name2List(className: string[] | string): string[] {
     if (isString(className)) {
         list = [className.trim()];
     }
-    return list.reduce((init, v, k) => {
+    return list.reduce((init, v) => {
         const split = v.trim().split(/ +/);
         init.push(...split);
         return init;
@@ -304,7 +304,7 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
     const el = document.createElement(tagName);
     const {attrs = {}, props = {}, parent, children} = params;
     // set props
-    forEachObj(props, (v, k, o) => {
+    forEachObj(props, (v, k) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
             // 未添加到body中，不会触发重绘
@@ -314,7 +314,7 @@ export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
         el[k] = v;
     });
     // set attrs
-    forEachObj(attrs, (v, k, o) => {
+    forEachObj(attrs, (v, k) => {
         const isObjValue = typeof v === "object";
         el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
     });

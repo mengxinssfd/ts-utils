@@ -10,14 +10,14 @@ interface OneByOneConfig {
     callback?: (word: string, joinWord: string, sayWord: string) => boolean | undefined
 }
 
-enum ONEBYONE_STATE { 'default', 'pause', 'stop'}
+enum ONE_BY_ONE_STATE { 'default', 'pause', 'stop'}
 
 
 export class OneByOne {
     sayWord: string;
     private wordArr: string[];
     private timer!: number;
-    status = ONEBYONE_STATE.default;
+    status = ONE_BY_ONE_STATE.default;
     config: OneByOneConfig;
     joinWord: string = "";
 
@@ -29,7 +29,7 @@ export class OneByOne {
 
     private run() {
         const handler = () => {
-            if (this.status !== ONEBYONE_STATE.default) return;
+            if (this.status !== ONE_BY_ONE_STATE.default) return;
             const word = this.wordArr.shift() as string;
             this.joinWord += word;
             let len = this.wordArr.length;
@@ -37,7 +37,7 @@ export class OneByOne {
             if (this.config.callback) {
                 const flag = this.config.callback.call(this, word, this.joinWord, this.sayWord);
                 if (len && flag === false) {
-                    this.status = ONEBYONE_STATE.pause;
+                    this.status = ONE_BY_ONE_STATE.pause;
                 }
                 keepRun = !!len && flag !== false;
             } else {
@@ -45,7 +45,7 @@ export class OneByOne {
             }
             // 播放过一遍后，设为停止状态
             if (!len) {
-                this.status = ONEBYONE_STATE.stop;
+                this.status = ONE_BY_ONE_STATE.stop;
                 if (this.config.loop) {
                     this.replay();
                 }
@@ -57,28 +57,28 @@ export class OneByOne {
     }
 
     public play() {
-        if (this.status === ONEBYONE_STATE.stop) return;
-        this.status = ONEBYONE_STATE.default;
+        if (this.status === ONE_BY_ONE_STATE.stop) return;
+        this.status = ONE_BY_ONE_STATE.default;
         this.run();
     }
 
     public replay() {
         clearTimeout(this.timer);
-        this.status = ONEBYONE_STATE.default;
+        this.status = ONE_BY_ONE_STATE.default;
         this.wordArr = this.sayWord.split("");
         this.joinWord = "";
         this.run();
     }
 
     public pause() {
-        if (this.status === ONEBYONE_STATE.stop) return;
-        this.status = ONEBYONE_STATE.pause;
+        if (this.status === ONE_BY_ONE_STATE.stop) return;
+        this.status = ONE_BY_ONE_STATE.pause;
         clearTimeout(this.timer);
     }
 
     public stop() {
-        if (this.status !== ONEBYONE_STATE.default) return;
-        this.status = ONEBYONE_STATE.stop;
+        if (this.status !== ONE_BY_ONE_STATE.default) return;
+        this.status = ONE_BY_ONE_STATE.stop;
         clearTimeout(this.timer);
     }
 
