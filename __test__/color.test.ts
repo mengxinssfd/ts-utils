@@ -1,13 +1,15 @@
 import * as  color from "../src/core/color";
 import {randomColor} from "../src/core/random";
 
-test("isRGB", () => {
+test("isRGBColor", () => {
     const fn = color.isRGBColor;
     expect(fn("rgb(0,0,0)")).toBeTruthy();
     expect(fn("rgb(0, 0, 0)")).toBeTruthy();
     expect(fn("rgba(0,0,0,0)")).toBeTruthy();
     expect(fn("rgba(255,255,255,0)")).toBeTruthy();
     expect(fn("rgba(255, 255, 255, 0)")).toBeTruthy();
+    expect(fn("rgba(100,100,255,0.123123)")).toBeTruthy();
+
     expect(fn("rgba(-1,0,0,1)")).toBeFalsy();
     expect(fn("rgba(0,-1,0,1)")).toBeFalsy();
     expect(fn("rgba(0,0,-1,1)")).toBeFalsy();
@@ -25,8 +27,13 @@ test("isRGB", () => {
     expect(fn("rgba(256,100,100)")).toBeFalsy();
     expect(fn("rgba(100,256,100)")).toBeFalsy();
     expect(fn("rgba(100,100,256)")).toBeFalsy();
+    expect(fn("rgba(256,256,256)")).toBeFalsy();
+    expect(fn("rgba(256, 256, 256)")).toBeFalsy();
 
     expect(fn("rgba(100,100,256,0)")).toBeFalsy();
+    expect(fn("rgba((100,100,255,0)")).toBeFalsy();
+    expect(fn("rgba0(100,100,255,0)")).toBeFalsy();
+    expect(fn("rgba (100,100,255,0)")).toBeFalsy();
 });
 test("isHEXColor", () => {
     const fn = color.isHEXColor;
