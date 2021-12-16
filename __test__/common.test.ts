@@ -548,19 +548,28 @@ test("createIdGenerator", () => {
     const fn = cm.createIdGenerator;
 
     const id = fn();
-
     expect(id.next().value).toBe(0);
     expect(id.next().value).toBe(1);
     expect(id.next().value).toBe(2);
-
     expect(id.next(10).value).toBe(12);
     expect(id.next().value).toBe(13);
 
-    const id2 = fn(10,2);
-
+    const id2 = fn(10, 2);
     expect(id2.next().value).toBe(10);
     expect(id2.next(3).value).toBe(13);
-
     expect(id2.next(10).value).toBe(23);
     expect(id2.next().value).toBe(25);
+
+    const id3 = fn();
+    expect(id3.next(11).value).toBe(0); // 第一次next传值无效,因为next只能传给下一个yield，而第一次之前没有yield
+    expect(id3.next().value).toBe(1);
+
+    const iter = fn();
+    let _id = 0;
+    for (const id of iter) {
+        expect(id).toBe(_id++);
+        if (id > 10) {
+            iter.return();
+        }
+    }
 });
