@@ -565,3 +565,31 @@ export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "defaul
     }
     return map;
 }
+
+// 用下面的生成器代替
+// /**
+//  * 创建一个自增id的闭包函数
+//  * @param init {number} 初始值
+//  * @param step {number} 每次增加的值
+//  */
+// export function createIdFn(init = 0, step = 1) {
+//     let id = init;
+//     return function getId(_step = step) {
+//         const current = id;
+//         id += _step;
+//         return current;
+//     };
+// }
+
+/**
+ * 创建一个自增id生成器
+ * @param init {number} 初始值
+ * @param step {number} 每次增加的值
+ */
+export function* createIdGenerator(init = 0, step = 1): Generator<number, void, number> {
+    let id = init;
+    while (true) {
+        const _step = (yield id) || step;
+        id += _step;
+    }
+}
