@@ -544,3 +544,23 @@ test("parseCmdParams", () => {
         a: "=123=333=444=555"
     });
 });
+test("createIdGenerator", () => {
+    const fn = cm.createIdGenerator;
+
+    const id = fn();
+
+    expect(id.next().value).toBe(0);
+    expect(id.next().value).toBe(1);
+    expect(id.next().value).toBe(2);
+
+    expect(id.next(10).value).toBe(12);
+    expect(id.next().value).toBe(13);
+
+    const id2 = fn(10,2);
+
+    expect(id2.next().value).toBe(10);
+    expect(id2.next(3).value).toBe(13);
+
+    expect(id2.next(10).value).toBe(23);
+    expect(id2.next().value).toBe(25);
+});

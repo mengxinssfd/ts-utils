@@ -566,7 +566,7 @@ export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "defaul
     return map;
 }
 
-// 用下面的生成器代替
+// 使用下面的生成器代替
 // /**
 //  * 创建一个自增id的闭包函数
 //  * @param init {number} 初始值
