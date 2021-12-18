@@ -745,3 +745,18 @@ export function scrollTo(target = 0, speed = 10, el: HTMLElement | Window = wind
 
     scroll();
 }
+
+/**
+ * 获取当前js所在的script标签
+ * @notice 只能在script引入的js中使用
+ */
+export function getCurrentScriptTag(): HTMLScriptElement | null {
+    // 除了ie都支持document.currentScript
+    if (document.currentScript) {
+        return document.currentScript as HTMLScriptElement;
+    }
+    // 由于script加载会中断浏览器渲染(未设置async和defer的情况下)，所以当前的script一定是最后一个script
+    const scripts = document.scripts;
+    if (!scripts.length) return null;
+    return scripts[scripts.length - 1];
+}
