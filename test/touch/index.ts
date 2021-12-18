@@ -1,6 +1,8 @@
 import * as utils from "../../src";
 import {createHtmlElement} from "../../src";
 
+console.log(utils.getCurrentScriptTag());
+
 utils.setStyle({height: "32000px"}, {el: document.body});
 declare global {
     interface Window {
@@ -203,4 +205,3 @@ utils.copy2Clipboard.interceptor({
     format: "Text",
     capture: false
 });
-
