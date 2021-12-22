@@ -31,24 +31,25 @@ export class UrlModel {
         this.query = urlUtils.getUrlParamObj(url);
     }
 
-    toString() {
-        let url = this.host;
-        if (this.protocol) {
-            url = `${this.protocol}://${url}`;
+    toString(template = "{protocol}{host}{port}{pathname}{params}{hash}") {
+        const match = {
+            '{protocol}': () => this.protocol ? `${this.protocol}://` : '',
+            '{host}': () => this.host || "",
+            '{port}': () => this.port ? `:${this.port}` : '',
+            '{pathname}': () => this.path || "",
+            '{params}': () => {
+                const query = urlUtils.stringifyUrlSearch(this.query);
+                if (query) {
+                    return "?" + query;
+                }
+                return "";
+            },
+            '{hash}': () => this.hash || "",
+        };
+        for (let k in match) {
+            const fn = match[k];
+            template = template.replace(new RegExp(k, "g"), fn());
         }
-        if (this.port) {
-            url += ":" + this.port;
-        }
-        if (this.path) {
-            url += this.path;
-        }
-        const query = urlUtils.stringifyUrlSearch(this.query);
-        if (query) {
-            url += "?" + query;
-        }
-        if (this.hash) {
-            url += this.hash;
-        }
-        return url;
+        return template;
     }
 }
