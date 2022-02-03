@@ -351,7 +351,7 @@ test("pickUpdated", () => {
     expect(fn(obj1, [{a: 12}, {b: undefined}, {c: 3}])).toEqual({});
     expect(fn({}, [{a: 1}, {b: 2}, {d: 3}])).toEqual({});
     expect(fn({a: NaN}, [{a: 1}, {a: NaN}])).toEqual({});
-    expect(fn({a: NaN}, [{a: 1}, null as any])).toEqual({a:1});
+    expect(fn({a: NaN}, [{a: 1}, null as any])).toEqual({a: 1});
     expect(fn({a: NaN}, [null as any])).toEqual({});
     expect(fn({a: NaN}, [undefined as any])).toEqual({});
 });
@@ -525,6 +525,13 @@ test("pickDiff", () => {
         return v1 && v1.id === v2.id;
     })).toEqual({a: {id: 1}, b: {id: 11}});
 
+});
+test("pickAdditional", () => {
+    const fn = cm.pickAdditional;
+    expect(fn({a: 1}, {a: 2})).toEqual({});
+    expect(fn({a: 1}, {b: 2})).toEqual({b: 2});
+    expect(fn({a: 1}, {b: 2, c: 3})).toEqual({b: 2, c: 3});
+    expect(fn({a: 1, b: 2}, {b: 2, c: 3})).toEqual({c: 3});
 });
 test("revertObjFromPath", () => {
     const fn = cm.revertObjFromPath;
