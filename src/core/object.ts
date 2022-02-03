@@ -245,6 +245,24 @@ export function pickDiff(origin: object, objs: object[], verify?: (originV: any,
     }, {});
 }
 
+
+export function pickAdditional<T extends object, K extends object>(origin: T, other: K): Omit<K, keyof T>
+export function pickAdditional(origin: object, ...others: object[]): { [k: string]: any }
+/**
+ * 从其他对象中挑出与原对象中不存在的键值对所组成的新对象
+ */
+export function pickAdditional(origin: object, ...others: object[]) {
+    // return others.reduce((result, obj) => {
+    //     objForEach(obj, (v, k) => {
+    //         if (!origin.hasOwnProperty(k))
+    //             result[k] = v;
+    //     });
+    //     return result;
+    // }, {});
+
+    return pickDiff(origin, others, (originV, objV, k) => origin.hasOwnProperty(k));
+}
+
 /**
  * 根据新键值对重命名对象的key，并生成一个新的对象
  * @param originObj
