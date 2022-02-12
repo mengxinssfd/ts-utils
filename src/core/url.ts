@@ -119,14 +119,14 @@ export function getUrlParam(name: string, url = location.href/* node也有 */, n
 /**
  * 修改url参数，不能新增或删除参数
  * @param param
- * @param url
- * @param noDecode
+ * @param [url=location.href]
+ * @param [encode=true]
  */
-export function updateUrlParam(param: { [k: string]: any }, url = location.href, noDecode = false): string {
+export function updateUrlParam(param: { [k: string]: any }, url = location.href, encode = true): string {
     objForEach(param, (value, name) => {
         const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i");
         if (re.test(url)) {
-            const s = noDecode ? value : encodeURIComponent(value);
+            const s = encode ? encodeURIComponent(value) : value;
             url = url.replace(`${name}=${RegExp.$1}`, `${name}=${s}`);
         }
     });

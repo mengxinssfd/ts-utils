@@ -137,7 +137,7 @@ test("updateUrlParam", () => {
 
     const encoded = encodeURIComponent(url);
     expect(fn({"id": url}, url)).toEqual(`https://www.test.com/Openapi/api_detail?id=${encoded}#api-parameter`);
-    expect(fn({"id": url}, url, true)).toEqual(`https://www.test.com/Openapi/api_detail?id=${url}#api-parameter`);
+    expect(fn({"id": url}, url, false)).toEqual(`https://www.test.com/Openapi/api_detail?id=${url}#api-parameter`);
 
 });
 test("setUrlParam", () => {
