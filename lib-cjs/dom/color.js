@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getReverseRGB = exports.getAverageRGB = void 0;
+exports.getAverageRGB = void 0;
 // TODO 未测
 /**
  * 获取平均色
@@ -38,6 +38,7 @@ function getAverageRGB(imgEl) {
     return rgb;
 }
 exports.getAverageRGB = getAverageRGB;
-function getReverseRGB() {
-}
-exports.getReverseRGB = getReverseRGB;
+/*
+export function getReverseRGB() {
+
+}*/

@@ -34,5 +34,7 @@ export function getAverageRGB(imgEl) {
     rgb.b = ~~(rgb.b / count);
     return rgb;
 }
+/*
 export function getReverseRGB() {
-}
+
+}*/

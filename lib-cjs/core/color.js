@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.hslToRgb = exports.rgbToHex = exports.isHEXColor = exports.isRGBColor = void 0;
 function isRGBColor(color) {
-    const reg = /^[rR][gG][Bb][Aa]?[\(]([\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?),){2}[\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)(,[\s]*(0\.\d{1,2}|1|0))?[\)]{1}$/g;
+    const reg = /^[rR][gG][Bb][Aa]?\((\s*(2[0-4]\d|25[0-5]|[01]?\d{1,2}),){2}\s*(2[0-4]\d|25[0-5]|[01]?\d{1,2})(,\s*(0\.\d+|1|0))?\)$/;
     return reg.test(color);
 }
 exports.isRGBColor = isRGBColor;

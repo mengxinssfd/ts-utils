@@ -9,7 +9,7 @@ interface OneByOneConfig {
     loop?: boolean;
     callback?: (word: string, joinWord: string, sayWord: string) => boolean | undefined;
 }
-declare enum ONEBYONE_STATE {
+declare enum ONE_BY_ONE_STATE {
     'default' = 0,
     'pause' = 1,
     'stop' = 2
@@ -18,7 +18,7 @@ export declare class OneByOne {
     sayWord: string;
     private wordArr;
     private timer;
-    status: ONEBYONE_STATE;
+    status: ONE_BY_ONE_STATE;
     config: OneByOneConfig;
     joinWord: string;
     constructor(sayWord: string, config: OneByOneConfig);

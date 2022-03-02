@@ -14,6 +14,13 @@ export declare function isSupportedClipboardCommand<T extends "cut" | "copy">(ac
 export declare function copy2Clipboard<T extends HTMLElement | string>(target: T): Promise<T>;
 export declare namespace copy2Clipboard {
     var once: (el: HTMLElement, target: () => string | HTMLElement, eventType?: keyof HTMLElementEventMap, capture?: boolean) => Promise<string | HTMLElement>;
+    var interceptor: ({ cb, el, capture, type, format, }: {
+        cb: (e: ClipboardEvent, data: string) => string;
+        el: HTMLElement | Window;
+        capture?: boolean | undefined;
+        type?: "copy" | "cut" | undefined;
+        format?: string | undefined;
+    }) => () => void;
 }
 export declare function supportClipboardWrite(): boolean;
 export declare function setData2Clipboard(data: any, el?: HTMLElement, format?: string): boolean;

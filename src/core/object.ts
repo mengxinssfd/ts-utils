@@ -1,7 +1,7 @@
 import {forEachRight} from "./array";
 import {isArray, isBroadlyObj, isNaN, isObject, typeOf} from "./dataType";
-import type {TransferPath, TypeOfPath, TransferPathOf} from "./ObjPath";
-import {DotTrim, RemoveStrStart} from "../TsTypes";
+import type {TransferPath, TypeOfPath, TransferPathOf} from "../types/ObjPath";
+import {DotTrim, RemoveStrStart} from "../types/TsTypes";
 
 // 获取object树的最大层数 tree是object的话，tree就是层数1
 export function getTreeMaxDeep(tree: object): number {

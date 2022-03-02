@@ -1,7 +1,7 @@
 import {castArray, includes, unique} from "../core/array";
 import {divide, getSafeNum, times} from "../core/number";
 import {assign, forEachObj, objReduce, pickByKeys} from "../core/object";
-import type {SettableProps, SettableStyle} from "../TsTypes";
+import type {SettableProps, SettableStyle} from "../types/TsTypes";
 import {isArray, isString} from "../core/dataType";
 import {isDom, isNodeList} from "./domType";
 import {root} from "../core/common";

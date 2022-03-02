@@ -78,15 +78,22 @@ export declare function createEnumByObj<T extends object, K extends keyof T, O e
     [k: string]: K;
 };
 /**
- * Promise.prototype.any list中任意一个promise resolve都会resolve
+ * Promise.prototype.any list中任意一个promise resolve都会resolve，如果全是reject，那么reject
  * @param list
  */
 export declare function promiseAny<T>(list: Promise<T>[]): Promise<T>;
 /**
+ * 串行版promise.all，执行完一个才会去执行下一个
+ * @param {((list: T[]) => Promise<T>)[]} list
+ * @returns {Promise<T[]>}
+ */
+export declare function syncPromiseAll<T>(list: ((list: T[]) => Promise<T>)[]): Promise<T[]>;
+/**
  * promise队列  任何一个reject都会中断队列 (跟reduceAsync类似)
  * 队列第一个会接收initValue作为参数，其余会接收上一个promise返回值作为参数
- * @param queue
- * @param initValue
+ * @param {Array<(lastValue: unknown) => Promise<unknown>>} queue
+ * @param {T} initValue
+ * @returns {Promise<unknown>}
  */
 export declare function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T): Promise<unknown>;
 export declare const root: any;
@@ -122,9 +129,10 @@ export declare function likeKeys(target: object | Map<string, any>, key: string 
  */
 export declare function parseCmdParams(arr: string[], prefix?: string, defaultKey?: string): Map<string, string[] | string | boolean>;
 /**
- * 返回函数绑定this后的函数
- * @param fn
- * @param thisTarget
+ * 创建一个自增id生成器
+ * @notice 第一次next传值是无效的 解决方法参考https://es6.ruanyifeng.com/#docs/generator#next-%E6%96%B9%E6%B3%95%E7%9A%84%E5%8F%82%E6%95%B0
+ * @param init {number} 初始值
+ * @param step {number} 每次增加的值
  */
-export declare function getBoundFn<T extends Function>(fn: T, thisTarget: object): T;
+export declare function createIdGenerator(init?: number, step?: number): Generator<number, void, void | number>;
 export {};

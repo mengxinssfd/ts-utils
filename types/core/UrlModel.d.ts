@@ -16,5 +16,5 @@ export declare class UrlModel {
     }>;
     constructor(url: string);
     private parseAll;
-    toString(): string;
+    toString(template?: string): string;
 }

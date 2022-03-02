@@ -81,7 +81,7 @@ export function debounceAsync(callback, delay) {
  * @param delay
  * @param invalidCB {function?}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
  */
-export function throttle(callback, delay, invalidCB = (v) => void 0) {
+export function throttle(callback, delay, invalidCB = () => void 0) {
     let countDown = () => 0;
     return function (...args) {
         const interval = countDown();
@@ -222,7 +222,7 @@ export function forEachByLen(len, callback) {
 }
 // 代替for循环
 export function forEachByLenRight(len, callback) {
-    for (let i = len; i >= 0; i--) {
+    for (let i = len - 1; i >= 0; i--) {
         if (callback(i) === false)
             break;
     }
@@ -363,7 +363,7 @@ export function createEnumByObj(obj) {
 // omit({a: 123, b: "bbb", c: true}, ["a", "b", "d"]);
 // type O = Omit<{ a: 123, b: "bbb", c: true }, "a" | "c">
 /**
- * Promise.prototype.any list中任意一个promise resolve都会resolve
+ * Promise.prototype.any list中任意一个promise resolve都会resolve，如果全是reject，那么reject
  * @param list
  */
 export function promiseAny(list) {
@@ -390,10 +390,22 @@ export function promiseAny(list) {
     }));
 }
 /**
+ * 串行版promise.all，执行完一个才会去执行下一个
+ * @param {((list: T[]) => Promise<T>)[]} list
+ * @returns {Promise<T[]>}
+ */
+export function syncPromiseAll(list) {
+    return list.reduce((p, next) => p.then((resList) => next(resList).then(res => {
+        resList.push(res);
+        return resList;
+    })), Promise.resolve([]));
+}
+/**
  * promise队列  任何一个reject都会中断队列 (跟reduceAsync类似)
  * 队列第一个会接收initValue作为参数，其余会接收上一个promise返回值作为参数
- * @param queue
- * @param initValue
+ * @param {Array<(lastValue: unknown) => Promise<unknown>>} queue
+ * @param {T} initValue
+ * @returns {Promise<unknown>}
  */
 export async function promiseQueue(queue, initValue) {
     return queue.reduce((p, next) => p.then(res => next(res)), Promise.resolve(initValue));
@@ -516,12 +528,30 @@ export function parseCmdParams(arr, prefix = "-", defaultKey = "default") {
     }
     return map;
 }
+// 使用下面的生成器代替
+// /**
+//  * 创建一个自增id的闭包函数
+//  * @param init {number} 初始值
+//  * @param step {number} 每次增加的值
+//  */
+// export function createIdFn(init = 0, step = 1) {
+//     let id = init;
+//     return function getId(_step = step) {
+//         const current = id;
+//         id += _step;
+//         return current;
+//     };
+// }
 /**
- * 返回函数绑定this后的函数
- * @param fn
- * @param thisTarget
+ * 创建一个自增id生成器
+ * @notice 第一次next传值是无效的 解决方法参考https://es6.ruanyifeng.com/#docs/generator#next-%E6%96%B9%E6%B3%95%E7%9A%84%E5%8F%82%E6%95%B0
+ * @param init {number} 初始值
+ * @param step {number} 每次增加的值
  */
-export function getBoundFn(fn, thisTarget) {
-    return fn.bind(thisTarget);
+export function* createIdGenerator(init = 0, step = 1) {
+    let id = init;
+    while (true) {
+        const _step = (yield id) || step;
+        id += _step;
+    }
 }
-// getBoundFn(formatDate, new Date())('yyyy mm');

@@ -1,5 +1,5 @@
 // reference https://mp.weixin.qq.com/s/KJdUdwbLN4g4M7xy34m-fA
-import type {BracketsToEmpty, DotTrim, EmptyNotDef, RemoveStrStart} from "../TsTypes";
+import type {BracketsToEmpty, DotTrim, EmptyNotDef, RemoveStrStart} from "./TsTypes";
 
 type OneLevelPathOf<T> = keyof T & (string | number)
 type PathForHint<T> = OneLevelPathOf<T>;

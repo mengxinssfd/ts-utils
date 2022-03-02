@@ -77,3 +77,33 @@ export type BracketsToEmpty<T> = T extends `[]${infer U}` ? BracketsToEmpty<U> :
 export type RemoveStrStart<S extends string, START extends string> = S extends `${START}${infer U}` ? U : S;
 // type rss1 = RemoveStrStart<"anyScript", "any">; // Script
 // type rss2 = RemoveStrStart<"anyScript", "Any">; // anyScript
+
+/**
+ * 获取两个Object中重复的key name
+ * @example
+ * DuplicateKeys<{a:string}, {b:string}>; // never
+ * DuplicateKeys<{a:string}, {a:string}>; // "a"
+ * DuplicateKeys<{a:string;b:string}, {a:string}>; // "a"
+ * DuplicateKeys<{a:string;b:string}, {a:string;b:string}>; // "a"|"b"
+ */
+export type DuplicateKeys<A, B> = { [P in keyof A]-?: P extends keyof B ? P : never }[keyof A];
+
+/**
+ * 排查两个Object中是否有重复的key name，有就返回重复的key name集合，否则返回合并之后的Object
+ * @example
+ * CheckDuplicateKey2<{a:string},{b:string}>; // A & B
+ * CheckDuplicateKey2<{a:string},{a:string}>; // never
+ */
+type CheckDuplicateKey2<A, B> = DuplicateKeys<A, B> extends never ? A & B : DuplicateKeys<A, B>;
+
+type CheckDuplicateKey3<A, B, C> = CheckDuplicateKey2<A, B> extends A & B ? CheckDuplicateKey2<C, CheckDuplicateKey2<A, B>> : CheckDuplicateKey2<A, B>;
+type CheckDuplicateKey4<A, B, C, D> = CheckDuplicateKey3<A, B, C> extends A & B & C ? CheckDuplicateKey2<D, CheckDuplicateKey3<A, B, C>> : CheckDuplicateKey3<A, B, C>;
+type CheckDuplicateKey5<A, B, C, D, E> = CheckDuplicateKey4<A, B, C, D> extends A & B & C & D ? CheckDuplicateKey2<E, CheckDuplicateKey4<A, B, C, D>> : CheckDuplicateKey4<A, B, C, D>;
+
+/**
+ * 排查最多5个最少2个Object中是否有重复的key name，有就返回重复的key name集合，否则返回合并之后的Object
+ * @tips 多个object key重复时不一定会全部显示重复的key name出来，可能会去掉一个重复的key才会出现下一个重复的
+ * @example
+ * CheckDuplicateKey<{ a: 1 }, { b: 2, e: 5 }, { c: 3 }, { d: 4 }, { e: 5, c: 3, d: 4 }> // 'e' | 'c' | 'd'
+ */
+export type CheckDuplicateKey<A, B = {}, C = {}, D = {}, E = {}> = CheckDuplicateKey5<A, B, C, D, E>;

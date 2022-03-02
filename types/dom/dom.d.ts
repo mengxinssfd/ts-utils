@@ -1,4 +1,4 @@
-import type { SettableProps, SettableStyle } from "../TsTypes";
+import type { SettableProps, SettableStyle } from "../types/TsTypes";
 export declare function supportClassList(): boolean;
 export declare function hasClassIe8(target: HTMLElement, className: string[] | string): boolean;
 export declare function hasClassStandard(target: HTMLElement, className: string[] | string): boolean;
@@ -172,9 +172,15 @@ export declare function animateTo({ from, to, callback, speed, immediate, minSte
 };
 /**
  * 滚动到目标处
- * @param y
+ * @param target {number}
  * @param speed [1 - 100]
  * @param el {HTMLElement | Window}
+ * @param [direct='vertical'] {'vertical'|'horizontal'}
  */
-export declare function scrollTo(y?: number, speed?: number, el?: HTMLElement | Window): void;
+export declare function scrollTo(target?: number, speed?: number, el?: HTMLElement | Window, direct?: 'vertical' | 'horizontal'): void;
+/**
+ * 获取当前js所在的script标签
+ * @notice 只能在script引入的js中使用
+ */
+export declare function getCurrentScriptTag(): HTMLScriptElement | null;
 export {};
