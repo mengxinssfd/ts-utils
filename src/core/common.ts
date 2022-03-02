@@ -422,7 +422,10 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
  * @returns {Promise<T[]>}
  */
 export function syncPromiseAll<T>(list: ((list: T[]) => Promise<T>)[]): Promise<T[]> {
-    return list.reduce((p, next) => p.then((resList) => next(resList).then(res => (resList.push(res), resList))), Promise.resolve([] as T[]));
+    return list.reduce((p, next) => p.then((resList) => next(resList).then(res => {
+        resList.push(res);
+        return resList;
+    })), Promise.resolve([] as T[]));
 }
 
 /**

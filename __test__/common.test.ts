@@ -413,6 +413,37 @@ test("promiseQueue", async () => {
     ] as any, "hello");
     expect(v2).toBe("hello thank you im fine");
 });
+test("syncPromiseAll", async () => {
+    const fn = cm.syncPromiseAll;
+
+    let timeStart = Date.now();
+    let timeEnd = timeStart;
+    let num = 0;
+    const list = [
+        () => new Promise<number>(res => {
+            setTimeout(() => {
+                timeEnd = Date.now();
+                num = 200;
+                res(200);
+            }, 200);
+        }),
+        () => (num = 2, Promise.resolve(2))
+    ];
+    const res = await fn(list);
+
+    expect(timeEnd - timeStart).toBeGreaterThanOrEqual(200);
+    expect(timeEnd - timeStart).toBeLessThanOrEqual(300);
+    expect(res).toEqual([200, 2]);
+    expect(num).toBe(2);
+
+    // 对比Promise.all, 是先执行的快的那一个
+    timeStart = Date.now();
+    const res2 = await Promise.all(list.map(i=>i()));
+    expect(timeEnd - timeStart).toBeGreaterThanOrEqual(200);
+    expect(timeEnd - timeStart).toBeLessThanOrEqual(300);
+    expect(res2).toEqual([200, 2]);
+    expect(num).toBe(200);
+});
 test("root", () => {
     expect(cm.root).toBe(window);
 });
