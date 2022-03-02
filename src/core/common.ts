@@ -390,7 +390,7 @@ export function createEnumByObj<T extends object, K extends keyof T, O extends {
 // type O = Omit<{ a: 123, b: "bbb", c: true }, "a" | "c">
 
 /**
- * Promise.prototype.any list中任意一个promise resolve都会resolve
+ * Promise.prototype.any list中任意一个promise resolve都会resolve，如果全是reject，那么reject
  * @param list
  */
 export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
@@ -417,10 +417,20 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
 }
 
 /**
+ * 串行版promise.all，执行完一个才会去执行下一个
+ * @param {((list: T[]) => Promise<T>)[]} list
+ * @returns {Promise<T[]>}
+ */
+export function syncPromiseAll<T>(list: ((list: T[]) => Promise<T>)[]): Promise<T[]> {
+    return list.reduce((p, next) => p.then((resList) => next(resList).then(res => (resList.push(res), resList))), Promise.resolve([] as T[]));
+}
+
+/**
  * promise队列  任何一个reject都会中断队列 (跟reduceAsync类似)
  * 队列第一个会接收initValue作为参数，其余会接收上一个promise返回值作为参数
- * @param queue
- * @param initValue
+ * @param {Array<(lastValue: unknown) => Promise<unknown>>} queue
+ * @param {T} initValue
+ * @returns {Promise<unknown>}
  */
 export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T) {
     return queue.reduce((p, next) => p.then(res => next(res)), Promise.resolve(initValue) as Promise<unknown>);
@@ -587,7 +597,7 @@ export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "defaul
  * @param init {number} 初始值
  * @param step {number} 每次增加的值
  */
-export function* createIdGenerator(init = 0, step = 1): Generator<number, void, void|number> {
+export function* createIdGenerator(init = 0, step = 1): Generator<number, void, void | number> {
     let id = init;
     while (true) {
         const _step = (yield id) || step;
