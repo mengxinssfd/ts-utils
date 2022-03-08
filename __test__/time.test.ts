@@ -36,10 +36,10 @@ test("str2Date", () => {
     const t1 = (t.str2Date("2020-02-02 10:10:10") as Date).getTime();
     const t2 = (t.str2Date("2020-02-20 10:10:10") as Date).getTime();
     expect(t2).toBeGreaterThan(t1);
-    expect(t.str2Date("abcd")).toBeNull();
+    expect(t.str2Date("abcd" as any)).toBeNull();
 
     function fn(date: string, format?: string): string {
-        return t.formatDate(t.str2Date(date) as Date, format);
+        return t.formatDate(t.str2Date(date as any) as Date, format);
     }
 
     expect(fn("2020-02-02", "yyyy")).toBe("2020");
@@ -65,12 +65,12 @@ test("getDateFromStr", () => {
         "2020/02-02-10-10-10",
         "2020/02/02 10/10/10",
         "2020/02/02/10/10/10",
-    ].forEach((time: string) => {
+    ].forEach((time: any) => {
         expect(t.formatDate(fn(time) as Date)).toBe("2020-02-02 10:10:10");
     });
-    expect(fn("")).toBe(null);
-    expect(fn("123cvsd213")).toBe(null);
-    expect(fn("2020l02/02/10/10/10")).toBe(null);
+    expect(fn("" as any)).toBe(null);
+    expect(fn("123cvsd213" as any)).toBe(null);
+    expect(fn("2020l02/02/10/10/10" as any)).toBe(null);
     expect(fn(undefined as any)).toBe(null);
 });
 test("formatDate", () => {
