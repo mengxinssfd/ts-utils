@@ -160,12 +160,16 @@ export const formatDate: formatDateInterface = function (
 formatDate.weekText = ["日", "一", "二", "三", "四", "五", "六"];
 formatDate.seasonText = ["春", "夏", "秋", "冬"];
 
+type FormattedTimeStr = `${number}-${number}-${number}`
+    | `${number}-${number}-${number} ${number}:${number}`
+    | `${number}-${number}-${number} ${number}:${number}:${number}`;
+
 /**
  * 字符串转为date对象 因为苹果手机无法直接new Date("2018-08-01 10:20:10")获取date
  * @param date 格式：yyyy-MM-dd hh:mm:ss
  * @returns {Date}
  */
-export function getDateFromStr(date: string): Date | null {
+export function getDateFromStr(date: FormattedTimeStr): Date | null {
     // 检测非数字、非/、非:、非-
     if (!date || /[^\/\d: -]/.test(date)) return null; // 去除不符合规范的字符串
     const arr: number[] = date.split(/[- :\/]/).map(item => Number(item));
