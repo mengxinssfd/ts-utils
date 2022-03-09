@@ -150,6 +150,9 @@ export type TypeOfPath<T, K extends string> =
         ? A extends keyof T ? TypeOfPath<T[A], B> : (T extends Array<infer I> ? TypeOfPath<I, B> : never)
         : K extends keyof T ? T[K] : (T extends Array<infer I> ? I : never);
 
+// type testTypeOfPath = TypeOfPath<{a:number},"a">; // number
+// type testTypeOfPath = TypeOfPath<{a: {b: {c: number}}},TransferPath<"[a][b][c]">>; // number
+
 // type Test2 = `names.${number}.firstName.lastName.${number}`;
 type SplitTemplateStringTypeToTuple<T> =
     T extends `${infer First}.${infer Rest}`

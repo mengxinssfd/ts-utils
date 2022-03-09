@@ -484,16 +484,11 @@ export function translateObjPath<P extends string, S extends string = "">(path: 
  * @param path
  * @param [objName = ""]
  */
-export function getObjValueByPath<T extends object,
-    P extends string,
-    S extends string = "",
-    NO_START extends string = DotTrim<RemoveStrStart<P, S>>,
-    Path extends string = TransferPath<NO_START>>
-(
+export function getObjValueByPath<T extends object, P extends string, S extends string = "">(
     obj: T,
     path: TransferPathOf<T, P, S>,
     objName: S = "" as S
-): TypeOfPath<T, Path> {
+): TypeOfPath<T, TransferPath<DotTrim<RemoveStrStart<P, S>>>> {
     const p = translateObjPath(path, objName);
     return p.split(".").reduce((init, v) => {
         if (!isBroadlyObj(init)) return undefined;
@@ -501,9 +496,9 @@ export function getObjValueByPath<T extends object,
     }, obj as any);
 }
 
-// getObjValueByPath({a: {b: {b_c: 123}}}, "a.b.b_c");
-// getObjValueByPath({a: {b: {c: 123}}}, "obj[a][b][c]", "obj");
-// getObjValueByPath({a: 123, b: {c: false}}, "obj[b][c]", "obj");
+// getObjValueByPath({a: {b: {b_c: 123,d:'d'}}}, "a.b.b_c"); // number
+// getObjValueByPath({a: {b: {c: 123}}}, "obj[a][b][c]", "obj"); // number
+// getObjValueByPath({a: 123, b: {c: false}}, "obj[b][c]", "obj"); // boolean
 
 type SetObjValueByPathOnExist = (a: any, b: any, isEnd: boolean, path: string) => any
 
