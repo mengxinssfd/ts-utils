@@ -13,7 +13,7 @@ export function getUrlProtocol(url = location.href) {
     }
     return schema;
 }
-const hostReg = /(?:(?:\w+):\/\/|\/\/)((?:(?:[\w\-\u4e00-\u9fa5])+\.?)+\w+)/;
+export const hostReg = /(?:\w+:\/\/|\/\/)((?:[\w\-\u4e00-\u9fa5]+\.?)+\w+)/;
 /**
  * @param {string} [url = location.href]
  */
@@ -73,7 +73,7 @@ export function getUrlParamObj(url = location.href) {
 }
 export const getUrlQuery = getUrlParamObj;
 export function stringifyUrlSearch(query) {
-    return reduceObj(query, (initValue, v, k, obj) => {
+    return reduceObj(query, (initValue, v, k) => {
         if (v === undefined)
             return initValue;
         if (typeof v === "object") {
@@ -108,14 +108,14 @@ export function getUrlParam(name, url = location.href /* node也有 */, noDecode
 /**
  * 修改url参数，不能新增或删除参数
  * @param param
- * @param url
- * @param noDecode
+ * @param [url=location.href]
+ * @param [encode=true]
  */
-export function updateUrlParam(param, url = location.href, noDecode = false) {
+export function updateUrlParam(param, url = location.href, encode = true) {
     objForEach(param, (value, name) => {
         const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i");
         if (re.test(url)) {
-            const s = noDecode ? value : encodeURIComponent(value);
+            const s = encode ? encodeURIComponent(value) : value;
             url = url.replace(`${name}=${RegExp.$1}`, `${name}=${s}`);
         }
     });
@@ -132,7 +132,7 @@ export function setUrlParam(param, url = location.href) {
     return model.toString();
 }
 // 参考async-validator
-export const UrlRegExp = new RegExp("^(?!mailto:)(?:(?:http|https|ftp)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$", "i");
+export const UrlRegExp = new RegExp("^(?!mailto:)(?:(?:http|https|ftp)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4])|(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)*\\.[a-z\\u00a1-\\uffff]{2,})|localhost)(?::\\d{2,5})?(?:([/?#])[^\\s]*)?$", "i");
 export function isUrl(url) {
     return UrlRegExp.test(url);
 }

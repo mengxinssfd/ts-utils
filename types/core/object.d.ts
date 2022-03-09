@@ -1,5 +1,5 @@
-import type { TransferPath, TypeOfPath, TransferPathOf } from "./ObjPath";
-import { DotTrim, RemoveStrStart } from "../TsTypes";
+import type { TransferPath, TypeOfPath, TransferPathOf } from "../types/ObjPath";
+import { DotTrim, RemoveStrStart } from "../types/TsTypes";
 export declare function getTreeMaxDeep(tree: object): number;
 export declare function getTreeNodeLen(tree: object, nodeNumber?: number): number;
 export declare function deepMerge<T extends object, U extends object>(first: T, second: U): T & U;
@@ -73,6 +73,10 @@ export declare function pick<T extends object, K extends keyof T, O extends {
  * @param verify
  */
 export declare function pickDiff(origin: object, objs: object[], verify?: (originV: any, objV: any, k: string | number, origin: object, obj: object) => boolean): {
+    [k: string]: any;
+};
+export declare function pickAdditional<T extends object, K extends object>(origin: T, other: K): Omit<K, keyof T>;
+export declare function pickAdditional(origin: object, ...others: object[]): {
     [k: string]: any;
 };
 /**

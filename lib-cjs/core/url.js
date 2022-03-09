@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isUrl = exports.UrlRegExp = exports.setUrlParam = exports.updateUrlParam = exports.getUrlParam = exports.stringifyUrlSearch = exports.getUrlQuery = exports.getUrlParamObj = exports.getUrlHashParam = exports.getUrlHash = exports.getUrlPath = exports.getUrlPort = exports.getUrlHost = exports.getUrlProtocol = void 0;
+exports.isUrl = exports.UrlRegExp = exports.setUrlParam = exports.updateUrlParam = exports.getUrlParam = exports.stringifyUrlSearch = exports.getUrlQuery = exports.getUrlParamObj = exports.getUrlHashParam = exports.getUrlHash = exports.getUrlPath = exports.getUrlPort = exports.getUrlHost = exports.hostReg = exports.getUrlProtocol = void 0;
 const object_1 = require("./object");
 const UrlModel_1 = require("./UrlModel");
 // url规则文档：https://datatracker.ietf.org/doc/html/rfc3986
@@ -17,12 +17,12 @@ function getUrlProtocol(url = location.href) {
     return schema;
 }
 exports.getUrlProtocol = getUrlProtocol;
-const hostReg = /(?:(?:\w+):\/\/|\/\/)((?:(?:[\w\-\u4e00-\u9fa5])+\.?)+\w+)/;
+exports.hostReg = /(?:\w+:\/\/|\/\/)((?:[\w\-\u4e00-\u9fa5]+\.?)+\w+)/;
 /**
  * @param {string} [url = location.href]
  */
 function getUrlHost(url = location.href) {
-    const exec = new RegExp(hostReg).exec(url);
+    const exec = new RegExp(exports.hostReg).exec(url);
     return exec ? exec[1] : "";
 }
 exports.getUrlHost = getUrlHost;
@@ -44,7 +44,7 @@ function getUrlPath(url = location.href) {
     // 去掉query、hash
     url = url.split(/[?#]/)[0];
     // 去掉schema
-    return url.replace(new RegExp(`(${hostReg.source}(?::\\d+)?)|${protocolReg.source}`), "");
+    return url.replace(new RegExp(`(${exports.hostReg.source}(?::\\d+)?)|${protocolReg.source}`), "");
 }
 exports.getUrlPath = getUrlPath;
 /**
@@ -83,7 +83,7 @@ function getUrlParamObj(url = location.href) {
 exports.getUrlParamObj = getUrlParamObj;
 exports.getUrlQuery = getUrlParamObj;
 function stringifyUrlSearch(query) {
-    return (0, object_1.reduceObj)(query, (initValue, v, k, obj) => {
+    return (0, object_1.reduceObj)(query, (initValue, v, k) => {
         if (v === undefined)
             return initValue;
         if (typeof v === "object") {
@@ -120,14 +120,14 @@ exports.getUrlParam = getUrlParam;
 /**
  * 修改url参数，不能新增或删除参数
  * @param param
- * @param url
- * @param noDecode
+ * @param [url=location.href]
+ * @param [encode=true]
  */
-function updateUrlParam(param, url = location.href, noDecode = false) {
+function updateUrlParam(param, url = location.href, encode = true) {
     (0, object_1.objForEach)(param, (value, name) => {
         const re = new RegExp("(?:\\?|#|&)" + name + "=([^&#]*)(?:$|&|#)", "i");
         if (re.test(url)) {
-            const s = noDecode ? value : encodeURIComponent(value);
+            const s = encode ? encodeURIComponent(value) : value;
             url = url.replace(`${name}=${RegExp.$1}`, `${name}=${s}`);
         }
     });
@@ -146,7 +146,7 @@ function setUrlParam(param, url = location.href) {
 }
 exports.setUrlParam = setUrlParam;
 // 参考async-validator
-exports.UrlRegExp = new RegExp("^(?!mailto:)(?:(?:http|https|ftp)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$", "i");
+exports.UrlRegExp = new RegExp("^(?!mailto:)(?:(?:http|https|ftp)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4])|(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)*\\.[a-z\\u00a1-\\uffff]{2,})|localhost)(?::\\d{2,5})?(?:([/?#])[^\\s]*)?$", "i");
 function isUrl(url) {
     return exports.UrlRegExp.test(url);
 }

@@ -19,10 +19,12 @@ class Pool {
     get length() {
         return this._aliveList.length;
     }
-    add(msg) {
-        const item = this.getRecycleOne() || new this.itemClass();
-        if (this._aliveList.indexOf(item) > -1)
-            return item;
+    push(item, msg) {
+        item = item !== null && item !== void 0 ? item : (this.getRecycleOne() || new this.itemClass());
+        const index = this._aliveList.indexOf(item);
+        if (index > -1) {
+            this._aliveList.splice(index, 1);
+        }
         this._aliveList.push(item);
         this.events.emit("add", item, msg);
         return item;
@@ -55,8 +57,8 @@ class Pool {
         this.events.emit("remove", item, msg);
         return item;
     }
-    unshift(msg) {
-        const item = this.getRecycleOne() || new this.itemClass();
+    unshift(item, msg) {
+        item = item !== null && item !== void 0 ? item : (this.getRecycleOne() || new this.itemClass());
         const acList = this._aliveList;
         const index = acList.indexOf(item);
         if (index > -1) {

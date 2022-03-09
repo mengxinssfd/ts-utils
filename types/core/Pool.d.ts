@@ -12,11 +12,11 @@ export declare class Pool<T> {
     private _recycleList;
     get recycleList(): T[];
     get length(): number;
-    add(msg?: any): T;
+    push(item?: T, msg?: any): T;
     remove(item: T, msg?: any): T | undefined;
     pop(msg?: any): void | T;
     shift(msg?: any): T | void;
-    unshift(msg?: any): T;
+    unshift(item?: T, msg?: any): T;
     getRecycleOne(): T | undefined;
     forEach(callbackFn: (value: T, index: number, array: T[]) => void): void;
     clear(): void;

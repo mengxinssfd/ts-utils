@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OneByOne = void 0;
-var ONEBYONE_STATE;
-(function (ONEBYONE_STATE) {
-    ONEBYONE_STATE[ONEBYONE_STATE["default"] = 0] = "default";
-    ONEBYONE_STATE[ONEBYONE_STATE["pause"] = 1] = "pause";
-    ONEBYONE_STATE[ONEBYONE_STATE["stop"] = 2] = "stop";
-})(ONEBYONE_STATE || (ONEBYONE_STATE = {}));
+var ONE_BY_ONE_STATE;
+(function (ONE_BY_ONE_STATE) {
+    ONE_BY_ONE_STATE[ONE_BY_ONE_STATE["default"] = 0] = "default";
+    ONE_BY_ONE_STATE[ONE_BY_ONE_STATE["pause"] = 1] = "pause";
+    ONE_BY_ONE_STATE[ONE_BY_ONE_STATE["stop"] = 2] = "stop";
+})(ONE_BY_ONE_STATE || (ONE_BY_ONE_STATE = {}));
 class OneByOne {
     constructor(sayWord, config) {
-        this.status = ONEBYONE_STATE.default;
+        this.status = ONE_BY_ONE_STATE.default;
         this.joinWord = "";
         this.sayWord = sayWord;
         this.wordArr = sayWord.split("");
@@ -17,7 +17,7 @@ class OneByOne {
     }
     run() {
         const handler = () => {
-            if (this.status !== ONEBYONE_STATE.default)
+            if (this.status !== ONE_BY_ONE_STATE.default)
                 return;
             const word = this.wordArr.shift();
             this.joinWord += word;
@@ -26,7 +26,7 @@ class OneByOne {
             if (this.config.callback) {
                 const flag = this.config.callback.call(this, word, this.joinWord, this.sayWord);
                 if (len && flag === false) {
-                    this.status = ONEBYONE_STATE.pause;
+                    this.status = ONE_BY_ONE_STATE.pause;
                 }
                 keepRun = !!len && flag !== false;
             }
@@ -35,7 +35,7 @@ class OneByOne {
             }
             // 播放过一遍后，设为停止状态
             if (!len) {
-                this.status = ONEBYONE_STATE.stop;
+                this.status = ONE_BY_ONE_STATE.stop;
                 if (this.config.loop) {
                     this.replay();
                 }
@@ -47,28 +47,28 @@ class OneByOne {
         this.timer = window.setTimeout(handler, this.config.delay);
     }
     play() {
-        if (this.status === ONEBYONE_STATE.stop)
+        if (this.status === ONE_BY_ONE_STATE.stop)
             return;
-        this.status = ONEBYONE_STATE.default;
+        this.status = ONE_BY_ONE_STATE.default;
         this.run();
     }
     replay() {
         clearTimeout(this.timer);
-        this.status = ONEBYONE_STATE.default;
+        this.status = ONE_BY_ONE_STATE.default;
         this.wordArr = this.sayWord.split("");
         this.joinWord = "";
         this.run();
     }
     pause() {
-        if (this.status === ONEBYONE_STATE.stop)
+        if (this.status === ONE_BY_ONE_STATE.stop)
             return;
-        this.status = ONEBYONE_STATE.pause;
+        this.status = ONE_BY_ONE_STATE.pause;
         clearTimeout(this.timer);
     }
     stop() {
-        if (this.status !== ONEBYONE_STATE.default)
+        if (this.status !== ONE_BY_ONE_STATE.default)
             return;
-        this.status = ONEBYONE_STATE.stop;
+        this.status = ONE_BY_ONE_STATE.stop;
         clearTimeout(this.timer);
     }
 }

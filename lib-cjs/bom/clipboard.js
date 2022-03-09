@@ -114,10 +114,27 @@ copy2Clipboard.once = function (el, target, eventType = "click", capture = false
         }, capture);
     }));
 };
-const cb = (_a = common_1.root === null || common_1.root === void 0 ? void 0 : common_1.root.navigator) === null || _a === void 0 ? void 0 : _a.clipboard;
+copy2Clipboard.interceptor = ({ cb, el = window, capture = true, type = "copy", format = 'text/plain', }) => {
+    const handler = (e) => {
+        const clipboardData = e.clipboardData;
+        if (!clipboardData)
+            return;
+        // CB?.readText().then((data) => {
+        //     clipboardData.setData(format, cb(e, data));
+        // });
+        const selection = window.getSelection();
+        clipboardData.setData(format, cb(e, selection.toString()));
+        e.preventDefault();
+    };
+    el.addEventListener("copy", handler, capture);
+    return () => {
+        el.removeEventListener(type, handler, capture);
+    };
+};
+const CB = (_a = common_1.root === null || common_1.root === void 0 ? void 0 : common_1.root.navigator) === null || _a === void 0 ? void 0 : _a.clipboard;
 function supportClipboardWrite() {
     var _a;
-    return Boolean((_a = cb) === null || _a === void 0 ? void 0 : _a.write);
+    return Boolean((_a = CB) === null || _a === void 0 ? void 0 : _a.write);
 }
 exports.supportClipboardWrite = supportClipboardWrite;
 function setData2Clipboard(data, el = document.documentElement, format = 'text/plain') {
@@ -145,6 +162,6 @@ async function write2Clipboard(contentList) {
             [blob.type]: blob,
         });
     });
-    await cb.write(clipboardItems);
+    await CB.write(clipboardItems);
 }
 exports.write2Clipboard = write2Clipboard;

@@ -37,7 +37,7 @@ function name2List(className) {
     if (isString(className)) {
         list = [className.trim()];
     }
-    return list.reduce((init, v, k) => {
+    return list.reduce((init, v) => {
         const split = v.trim().split(/ +/);
         init.push(...split);
         return init;
@@ -256,7 +256,7 @@ export function createHtmlElement(tagName, params = {}) {
     const el = document.createElement(tagName);
     const { attrs = {}, props = {}, parent, children } = params;
     // set props
-    forEachObj(props, (v, k, o) => {
+    forEachObj(props, (v, k) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
             // 未添加到body中，不会触发重绘
@@ -266,7 +266,7 @@ export function createHtmlElement(tagName, params = {}) {
         el[k] = v;
     });
     // set attrs
-    forEachObj(attrs, (v, k, o) => {
+    forEachObj(attrs, (v, k) => {
         const isObjValue = typeof v === "object";
         el.setAttribute(k, isObjValue ? JSON.stringify(v) : v);
     });
@@ -551,28 +551,43 @@ export function animateTo({ from, to, callback, speed = 0.5, immediate = true, m
 let stopScrollTo = null;
 /**
  * 滚动到目标处
- * @param y
+ * @param target {number}
  * @param speed [1 - 100]
  * @param el {HTMLElement | Window}
+ * @param [direct='vertical'] {'vertical'|'horizontal'}
  */
-export function scrollTo(y = 0, speed = 10, el = window) {
+export function scrollTo(target = 0, speed = 10, el = window, direct = "vertical") {
     stopScrollTo && stopScrollTo();
     speed = getSafeNum(speed, 1, 100);
-    let top = 0;
-    const element = el === window ? (document.body.scrollTop ? document.body : document.documentElement) : el;
-    const getTop = () => top = element.scrollTop;
-    getTop();
-    let lastTop = Infinity;
+    const vertical = {
+        scrollTo: 'scrollTop',
+        scrollSize: 'scrollHeight',
+        inner: 'innerHeight',
+        offset: 'offsetHeight'
+    };
+    const horizontal = {
+        scrollTo: 'scrollLeft',
+        scrollSize: 'scrollWidth',
+        inner: 'innerWidth',
+        offset: 'offsetWidth'
+    };
+    const directKey = direct === 'horizontal' ? horizontal : vertical;
+    const topOrLeft = directKey.scrollTo;
+    let current = 0;
+    const element = el === window ? (document.body[topOrLeft] ? document.body : document.documentElement) : el;
+    const getPos = () => current = element[topOrLeft];
+    getPos();
+    let lastPos = Infinity;
     let isOver;
-    if (top > y) {
+    if (current > target) {
         // 往上
-        isOver = () => getTop() <= y;
+        isOver = () => getPos() <= target;
     }
-    else if (top < y) {
+    else if (current < target) {
         // 往下
-        y = Math.min(y, element.scrollHeight - (el === window ? window.innerHeight : element.offsetHeight));
+        target = Math.min(target, element[directKey.scrollSize] - (el === window ? window[directKey.inner] : element[directKey.offset]));
         speed *= -1;
-        isOver = () => getTop() >= y;
+        isOver = () => getPos() >= target;
     }
     else {
         return;
@@ -592,17 +607,32 @@ export function scrollTo(y = 0, speed = 10, el = window) {
     function scroll() {
         if (stop)
             return; // 不单独拿出来的话，未滚动完成马上再次滚动的话会先到达上次的目标点在滚动
-        if (!isOver() && lastTop !== top) {
-            const abs = Math.abs(y - top);
+        if (!isOver() && lastPos !== current) {
+            const abs = Math.abs(target - current);
             const move = Number((speed + abs / 50 * speed / 10).toFixed(1));
-            element.scrollTop = top - move;
-            lastTop = top;
+            element[topOrLeft] = current - move;
+            lastPos = current;
             window.requestAnimationFrame(scroll);
         }
         else {
-            element.scrollTop = y;
+            element[topOrLeft] = target;
             clear();
         }
     }
     scroll();
+}
+/**
+ * 获取当前js所在的script标签
+ * @notice 只能在script引入的js中使用
+ */
+export function getCurrentScriptTag() {
+    // 除了ie都支持document.currentScript
+    if (document.currentScript) {
+        return document.currentScript;
+    }
+    // 由于script加载会中断浏览器渲染(未设置async和defer的情况下)，所以当前的script一定是最后一个script
+    const scripts = document.scripts;
+    if (!scripts.length)
+        return null;
+    return scripts[scripts.length - 1];
 }

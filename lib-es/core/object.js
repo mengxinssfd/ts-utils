@@ -166,7 +166,7 @@ export function pick(originObj, picks, cb) {
  * @param verify
  */
 export function pickDiff(origin, objs, verify) {
-    const verifyFn = verify || ((originV, objV, k, origin, obj) => {
+    const verifyFn = verify || ((originV, objV, k, origin) => {
         return origin.hasOwnProperty(k) && originV === objV || isNaN(originV) && isNaN(objV);
     });
     return objs.reduce((result, obj) => {
@@ -177,6 +177,19 @@ export function pickDiff(origin, objs, verify) {
         });
         return result;
     }, {});
+}
+/**
+ * 从其他对象中挑出与原对象中不存在的键值对所组成的新对象
+ */
+export function pickAdditional(origin, ...others) {
+    // return others.reduce((result, obj) => {
+    //     objForEach(obj, (v, k) => {
+    //         if (!origin.hasOwnProperty(k))
+    //             result[k] = v;
+    //     });
+    //     return result;
+    // }, {});
+    return pickDiff(origin, others, (originV, objV, k) => origin.hasOwnProperty(k));
 }
 /**
  * 根据新键值对重命名对象的key，并生成一个新的对象

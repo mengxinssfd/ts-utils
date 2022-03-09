@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.objFilter = exports.revertObjFromPath = exports.getObjPathEntries = exports.setObjValueByPath = exports.getObjValueByPath = exports.translateObjPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.pickUpdated = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pickDiff = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
+exports.objFilter = exports.revertObjFromPath = exports.getObjPathEntries = exports.setObjValueByPath = exports.getObjValueByPath = exports.translateObjPath = exports.objEntries = exports.objValues = exports.objKeys = exports.ObjFromEntries = exports.createObj = exports.pickUpdated = exports.objUpdate = exports.defaults = exports.assign = exports.omit = exports.renameObjKey = exports.pickAdditional = exports.pickDiff = exports.pick = exports.pickRename = exports.pickByKeys = exports.objReduce = exports.reduceObj = exports.getReverseObj = exports.objForEach = exports.forEachObj = exports.deepMerge = exports.getTreeNodeLen = exports.getTreeMaxDeep = void 0;
 const array_1 = require("./array");
 const dataType_1 = require("./dataType");
 // 获取object树的最大层数 tree是object的话，tree就是层数1
@@ -178,7 +178,7 @@ exports.pick = pick;
  * @param verify
  */
 function pickDiff(origin, objs, verify) {
-    const verifyFn = verify || ((originV, objV, k, origin, obj) => {
+    const verifyFn = verify || ((originV, objV, k, origin) => {
         return origin.hasOwnProperty(k) && originV === objV || (0, dataType_1.isNaN)(originV) && (0, dataType_1.isNaN)(objV);
     });
     return objs.reduce((result, obj) => {
@@ -191,6 +191,20 @@ function pickDiff(origin, objs, verify) {
     }, {});
 }
 exports.pickDiff = pickDiff;
+/**
+ * 从其他对象中挑出与原对象中不存在的键值对所组成的新对象
+ */
+function pickAdditional(origin, ...others) {
+    // return others.reduce((result, obj) => {
+    //     objForEach(obj, (v, k) => {
+    //         if (!origin.hasOwnProperty(k))
+    //             result[k] = v;
+    //     });
+    //     return result;
+    // }, {});
+    return pickDiff(origin, others, (originV, objV, k) => origin.hasOwnProperty(k));
+}
+exports.pickAdditional = pickAdditional;
 /**
  * 根据新键值对重命名对象的key，并生成一个新的对象
  * @param originObj

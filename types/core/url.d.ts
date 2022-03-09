@@ -2,6 +2,7 @@
  * @param {string} [url = location.href]
  */
 export declare function getUrlProtocol(url?: string): string;
+export declare const hostReg: RegExp;
 /**
  * @param {string} [url = location.href]
  */
@@ -50,12 +51,12 @@ export declare function getUrlParam(name: string, url?: string, noDecode?: boole
 /**
  * 修改url参数，不能新增或删除参数
  * @param param
- * @param url
- * @param noDecode
+ * @param [url=location.href]
+ * @param [encode=true]
  */
 export declare function updateUrlParam(param: {
     [k: string]: any;
-}, url?: string, noDecode?: boolean): string;
+}, url?: string, encode?: boolean): string;
 /**
  * 设置url参数，可新增或删除参数
  * @param param

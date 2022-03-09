@@ -1,7 +1,7 @@
 "use strict";
 var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scrollTo = exports.animateTo = exports.toggleWidthOrHeight = exports.percent2Rem = exports.rem2Percent = exports.px2Percent = exports.percent2px = exports.px2rem = exports.rem2px = exports.get1rem = exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createHiddenHtmlElement = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.setStyle = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
+exports.getCurrentScriptTag = exports.scrollTo = exports.animateTo = exports.toggleWidthOrHeight = exports.percent2Rem = exports.rem2Percent = exports.px2Percent = exports.percent2px = exports.px2rem = exports.rem2px = exports.get1rem = exports.scrollFixedWatcher = exports.inIframe = exports.getFontScale = exports.createHiddenHtmlElement = exports.createElement = exports.createHtmlElement = exports.noScroll = exports.loadScript = exports.loadImg = exports.setStyle = exports.cssSupport = exports.prefixStyle = exports.toggleClass = exports.removeClass = exports.removeClassStandard = exports.removeClassIe8 = exports.addClass = exports.addClassIe8 = exports.addClassStandard = exports.hasClass = exports.hasClassStandard = exports.hasClassIe8 = exports.supportClassList = void 0;
 const array_1 = require("../core/array");
 const number_1 = require("../core/number");
 const object_1 = require("../core/object");
@@ -41,7 +41,7 @@ function name2List(className) {
     if ((0, dataType_1.isString)(className)) {
         list = [className.trim()];
     }
-    return list.reduce((init, v, k) => {
+    return list.reduce((init, v) => {
         const split = v.trim().split(/ +/);
         init.push(...split);
         return init;
@@ -273,7 +273,7 @@ function createHtmlElement(tagName, params = {}) {
     const el = document.createElement(tagName);
     const { attrs = {}, props = {}, parent, children } = params;
     // set props
-    (0, object_1.forEachObj)(props, (v, k, o) => {
+    (0, object_1.forEachObj)(props, (v, k) => {
         const isObjValue = typeof v === "object";
         if (k === "style" && isObjValue) {
             // 未添加到body中，不会触发重绘
@@ -283,7 +283,7 @@ function createHtmlElement(tagName, params = {}) {
         el[k] = v;
     });
     // set attrs
-    (0, object_1.forEachObj)(attrs, (v, k, o) => {
+    (0, object_1.forEachObj)(attrs, (v, k) => {
         const isObjValue = typeof v === "object";
         el.setAttribute(k, isObjValue ? JSON.stringify(v) : v);
     });
@@ -582,28 +582,43 @@ exports.animateTo = animateTo;
 let stopScrollTo = null;
 /**
  * 滚动到目标处
- * @param y
+ * @param target {number}
  * @param speed [1 - 100]
  * @param el {HTMLElement | Window}
+ * @param [direct='vertical'] {'vertical'|'horizontal'}
  */
-function scrollTo(y = 0, speed = 10, el = window) {
+function scrollTo(target = 0, speed = 10, el = window, direct = "vertical") {
     stopScrollTo && stopScrollTo();
     speed = (0, number_1.getSafeNum)(speed, 1, 100);
-    let top = 0;
-    const element = el === window ? (document.body.scrollTop ? document.body : document.documentElement) : el;
-    const getTop = () => top = element.scrollTop;
-    getTop();
-    let lastTop = Infinity;
+    const vertical = {
+        scrollTo: 'scrollTop',
+        scrollSize: 'scrollHeight',
+        inner: 'innerHeight',
+        offset: 'offsetHeight'
+    };
+    const horizontal = {
+        scrollTo: 'scrollLeft',
+        scrollSize: 'scrollWidth',
+        inner: 'innerWidth',
+        offset: 'offsetWidth'
+    };
+    const directKey = direct === 'horizontal' ? horizontal : vertical;
+    const topOrLeft = directKey.scrollTo;
+    let current = 0;
+    const element = el === window ? (document.body[topOrLeft] ? document.body : document.documentElement) : el;
+    const getPos = () => current = element[topOrLeft];
+    getPos();
+    let lastPos = Infinity;
     let isOver;
-    if (top > y) {
+    if (current > target) {
         // 往上
-        isOver = () => getTop() <= y;
+        isOver = () => getPos() <= target;
     }
-    else if (top < y) {
+    else if (current < target) {
         // 往下
-        y = Math.min(y, element.scrollHeight - (el === window ? window.innerHeight : element.offsetHeight));
+        target = Math.min(target, element[directKey.scrollSize] - (el === window ? window[directKey.inner] : element[directKey.offset]));
         speed *= -1;
-        isOver = () => getTop() >= y;
+        isOver = () => getPos() >= target;
     }
     else {
         return;
@@ -623,18 +638,34 @@ function scrollTo(y = 0, speed = 10, el = window) {
     function scroll() {
         if (stop)
             return; // 不单独拿出来的话，未滚动完成马上再次滚动的话会先到达上次的目标点在滚动
-        if (!isOver() && lastTop !== top) {
-            const abs = Math.abs(y - top);
+        if (!isOver() && lastPos !== current) {
+            const abs = Math.abs(target - current);
             const move = Number((speed + abs / 50 * speed / 10).toFixed(1));
-            element.scrollTop = top - move;
-            lastTop = top;
+            element[topOrLeft] = current - move;
+            lastPos = current;
             window.requestAnimationFrame(scroll);
         }
         else {
-            element.scrollTop = y;
+            element[topOrLeft] = target;
             clear();
         }
     }
     scroll();
 }
 exports.scrollTo = scrollTo;
+/**
+ * 获取当前js所在的script标签
+ * @notice 只能在script引入的js中使用
+ */
+function getCurrentScriptTag() {
+    // 除了ie都支持document.currentScript
+    if (document.currentScript) {
+        return document.currentScript;
+    }
+    // 由于script加载会中断浏览器渲染(未设置async和defer的情况下)，所以当前的script一定是最后一个script
+    const scripts = document.scripts;
+    if (!scripts.length)
+        return null;
+    return scripts[scripts.length - 1];
+}
+exports.getCurrentScriptTag = getCurrentScriptTag;
