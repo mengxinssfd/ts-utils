@@ -201,6 +201,17 @@ test("createHiddenHtmlElement", () => {
     const img = fn({src: "test"}, "img");
     expect(img.nodeName).toBe("IMG");
 });
+// 没意义，像微信浏览器那样设置了缩放比例的才能测试出来
+test("getFontScale", () => {
+    const fn = dom.getFontScale;
+    expect(fn()).toBe(1);
+    expect(fn(true)).toBe(1);
+});
+// 需浏览器iframe
+test("inIframe", () => {
+    const fn = dom.inIframe;
+    expect(fn()).toBe(false);
+});
 test("setStyle", () => {
     const fn = dom.setStyle;
     const div = dom.createHiddenHtmlElement();
@@ -214,6 +225,16 @@ test("setStyle", () => {
     expect(div.style.position).toBe("static");
     ss({left: "0"});
     expect(div.style.left).toBe("0px");
+});
+test("loadImg", () => {
+    const fn = dom.loadImg;
+    // 这里加载会超时
+    fn("https://tse1-mm.cn.bing.net/th/id/OET.a488bf3ef5c54d899c335cb4991b0526?w=272&h=272&c=7&rs=1&o=5&dpr=2&pid=1.9");
+});
+test("loadScript", () => {
+    const fn = dom.loadScript;
+    // 这里加载会超时
+    fn("https://cdn.staticfile.org/vue/3.2.31/vue.global.min.js");
 });
 test("get1rem", () => {
     document.documentElement.style.fontSize = "16px";
@@ -283,4 +304,9 @@ test("percent2Rem", () => {
     expect(fn("0.0001%", fs)).toBe("0.000001rem");
     expect(fn("1000%", fs)).toBe("10rem");
     expect(fn("100000%", fs)).toBe("1000rem");
+});
+test("getCurrentScriptTag", () => {
+    const fn = dom.getCurrentScriptTag;
+    // expect(fn()).toBe(null)
+    expect(fn()?.src).toBe('https://cdn.staticfile.org/vue/3.2.31/vue.global.min.js');
 });
