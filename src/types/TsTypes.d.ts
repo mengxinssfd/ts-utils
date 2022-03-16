@@ -107,3 +107,16 @@ type CheckDuplicateKey5<A, B, C, D, E> = CheckDuplicateKey4<A, B, C, D> extends 
  * CheckDuplicateKey<{ a: 1 }, { b: 2, e: 5 }, { c: 3 }, { d: 4 }, { e: 5, c: 3, d: 4 }> // 'e' | 'c' | 'd'
  */
 export type CheckDuplicateKey<A, B = {}, C = {}, D = {}, E = {}> = CheckDuplicateKey5<A, B, C, D, E>;
+
+/**
+ * 从元组中移除第一个item的类型
+ * @example
+ * type t = ShiftTuple<[number, string]> // [string]
+ */
+type ShiftTuple<T> = T extends [unknown, ...infer Rest] ? Rest : never;
+/**
+ * 从函数参数中移除第一个参数类型
+ * @example
+ * type p = OmitFirstParameters<(a:number, b:string)=>any>; // [b:string]
+ */
+type OmitFirstParameters<T> = T extends (_: any, ...args: infer I) => any ? I : never;
