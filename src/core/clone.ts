@@ -24,7 +24,9 @@ const cloneStrategies: { [key: string]: (target: any) => any } = (function () {
             return new target.constructor();
         },
         "function": function (target) {
-            // 复制的函数作用域不再是原函数的作用域，不再复制函数
+            // 复制的函数作用域不再是原函数的作用域
+            // (如复制一个闭包函数，作用域会提升到script顶层，将不能访问原闭包函数外的变量)，
+            // 不再复制函数
             // return cloneFunction(target);
             return target;
         },
@@ -45,10 +47,11 @@ export function deepClone<T>(target: T): T {
     function _clone(value: any) {
         const type = typeOf(value);
         const isObject = isBroadlyObj(value as any);
-        if (isObject && cache.has(value)) {
-            return value;
+        if (isObject) {
+            if (cache.has(value)) return value;
+            // 非引用类型不缓存
+            cache.set(value);
         }
-        cache.set(value);
         // 使用策略模式
         const strategies = cloneStrategies[type];
         const result: any = strategies ? strategies(value) : value;
