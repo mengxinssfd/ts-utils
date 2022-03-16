@@ -1,4 +1,5 @@
-import {debounce} from "./common";
+import {debounce, throttle} from "./common";
+import type {OmitFirstParameters} from "../types/TsTypes";
 
 export function decoratorfy(callback: (descriptor: PropertyDescriptor) => Function) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -12,15 +13,17 @@ export function decoratorfy(callback: (descriptor: PropertyDescriptor) => Functi
 
 /**
  * 防抖装饰器
- * @param delay
  * @constructor
  */
-export const Debounce = (delay: number) =>
-    decoratorfy(
-        descriptor => debounce(descriptor.value, delay)
-    );
+export const Debounce = (...args:OmitFirstParameters<typeof debounce>) => decoratorfy(descriptor => debounce(descriptor.value, ...args));
 
-
+/**
+ * 节流装饰器
+ * TODO 未测
+ * @constructor
+ */
+export const Throttle = (...args: OmitFirstParameters<typeof throttle>) => decoratorfy(descriptor => throttle(descriptor.value, ...args));
+// Throttle(1, () => 0);
 /**
  * 比setInterval好的地方在于使用promise判断一回执行完毕情况
  * @param interval
