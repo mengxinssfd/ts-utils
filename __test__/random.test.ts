@@ -137,6 +137,16 @@ test("randomItem", () => {
     });
     expect(results.includes(undefined as any)).toBeFalsy();
 });
+test("createRandomItemGen", () => {
+    const fn = cm.createRandomItemGen;
+    const list = [1, 2, 3, 4, 5];
+    const g = fn(list);
+    const res = list.map(() => g.next().value);
+    expect(g.next()).toEqual({done: true, value: undefined});
+    expect(list.every(it => res.includes(it))).toBeTruthy();
+    expect(res).not.toEqual(list);
+    expect(res.sort()).toEqual(list);
+});
 
 test("randomRGB", () => {
     const fn = cm.randomRGB;
