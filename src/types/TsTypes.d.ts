@@ -113,10 +113,26 @@ export type CheckDuplicateKey<A, B = {}, C = {}, D = {}, E = {}> = CheckDuplicat
  * @example
  * type t = ShiftTuple<[number, string]> // [string]
  */
-type ShiftTuple<T> = T extends [unknown, ...infer Rest] ? Rest : never;
+export type ShiftTuple<T> = T extends [unknown, ...infer Rest] ? Rest : never;
 /**
  * 从函数参数中移除第一个参数类型
  * @example
  * type p = OmitFirstParameters<(a:number, b:string)=>any>; // [b:string]
  */
-type OmitFirstParameters<T> = T extends (_: any, ...args: infer I) => any ? I : never;
+export type OmitFirstParameters<T> = T extends (_: any, ...args: infer I) => any ? I : never;
+
+/**
+ * 返回一个由单一类型组成的元组
+ * @example
+ * type T = Tuple<number, 3> // => [number, number, number]
+ * type T2 = Tuple<string, 2> // => [string, string]
+ */
+export type Tuple<T, N extends number, R extends unknown[] = []> = R['length'] extends N ? R : Tuple<T, N, [T, ...R]>;
+// export type Tuple<T, N extends number, R extends unknown[] = []> =
+//     N extends N  // 第一个是分发, N可能是个union
+//         ? number extends N // 第二个是N为any时降级
+//             ? T[]
+//             : R['length'] extends N ? R : Tuple<T, N, [T, ...R]>
+//         : never;
+
+// type T = Tuple<number, 1> // => [number, number, number]
