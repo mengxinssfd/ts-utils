@@ -258,12 +258,18 @@ export function fromCamel(value: string, delimiter: string = "_", toUpperCase = 
     return toUpperCase ? res.toUpperCase() : res;
 }
 
+/**
+ * 其他转驼峰
+ * @param {string} value
+ * @param {string | RegExp} delimiter
+ * @param {boolean} toUpperCamelCase
+ * @return {string}
+ */
 export function toCamel(value: string, delimiter: string | RegExp = "_", toUpperCamelCase: boolean = false) {
-    const split = value.split(typeof delimiter === "string" ? new RegExp(delimiter + "+") : delimiter);
-    const join = split.slice(1).map(i => capitalizeFirstChar(i));
-    if (toUpperCamelCase) {
-        split[0] = capitalizeFirstChar(split[0]);
+    delimiter = typeof delimiter === "string" ? new RegExp(delimiter + "+") : delimiter;
+    const join = value.split(delimiter).map(i => capitalizeFirstChar(i));
+    if (!toUpperCamelCase) {
+        join[0] = join[0].toLowerCase();
     }
-    join.unshift(split[0]);
     return join.join("");
 }
