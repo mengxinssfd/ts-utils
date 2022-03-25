@@ -234,15 +234,28 @@ export function smartRepeat(format: string): string {
     return format;
 }
 
+/**
+ * 第一个字符转为大写
+ * @param {string} value
+ * @return {string}
+ */
 export function capitalizeFirstChar(value: string): string {
     const first = value[0];
     return `${first.toUpperCase()}${value.substring(1).toLowerCase()}`;
 }
 
-export function fromCamel(value: string, delimiter: string = "_") {
-    return value.replace(/([A-Z]+)/g, (p1, p2, index) => {
+/**
+ * 从驼峰转其他命名格式
+ * @param {string} value
+ * @param [delimiter='_']
+ * @param [toUpperCase=false] // 为true时 转为全大写的格式
+ * @return {string}
+ */
+export function fromCamel(value: string, delimiter: string = "_", toUpperCase = false) {
+    const res = value.replace(/([A-Z]+)/g, (p1, p2, index) => {
         return (index > 0 ? delimiter : "") + p2.toLowerCase();
     });
+    return toUpperCase ? res.toUpperCase() : res;
 }
 
 export function toCamel(value: string, delimiter: string | RegExp = "_", toUpperCamelCase: boolean = false) {
