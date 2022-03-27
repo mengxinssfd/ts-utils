@@ -137,8 +137,8 @@ test("randomItem", () => {
     });
     expect(results.includes(undefined as any)).toBeFalsy();
 });
-test("createRandomItemGen", () => {
-    const fn = cm.createRandomItemGen;
+test("randomItemsGen", () => {
+    const fn = cm.randomItemsGen;
     const list = [1, 2, 3, 4, 5];
     const g = fn(list);
     const res = list.map(() => g.next().value);

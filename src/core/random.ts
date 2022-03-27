@@ -69,7 +69,7 @@ export function randomItem<T>(arr: T[]): T {
  * 创建一个数组随机item的生成器，直到遍历完为止
  * @param arr
  */
-export function* createRandomItemGen<T>(arr: T[]): Generator<T, any, never> {
+export function* randomItemsGen<T>(arr: T[]): Generator<T, any, never> {
     const list = arr.slice();
     while (list.length) {
         const index = randomInt(list.length);
