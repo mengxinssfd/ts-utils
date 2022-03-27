@@ -597,12 +597,14 @@ export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "defaul
 /**
  * 创建一个自增id生成器
  * @notice 第一次next传值是无效的 解决方法参考https://es6.ruanyifeng.com/#docs/generator#next-%E6%96%B9%E6%B3%95%E7%9A%84%E5%8F%82%E6%95%B0
- * @param init {number} 初始值
- * @param step {number} 每次增加的值
+ * @param [init = 0] 初始值
+ * @param [step = 1] 每次增加的值
+ * @param [end = Number.MAX_SAFE_INTEGER] 最大值；包左不包右原则，所以最后一个值是小于end的
  */
-export function* createIdGenerator(init = 0, step = 1): Generator<number, void, void | number> {
+export function* idGen(init = 0, step = 1, end = Number.MAX_SAFE_INTEGER): Generator<number, void, void | number> {
     let id = init;
-    while (true) {
+    const handle = init < end ? () => id < end : () => id > end;
+    while (handle()) {
         const _step = (yield id) || step;
         id += _step;
     }
