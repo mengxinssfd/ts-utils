@@ -438,7 +438,7 @@ test("syncPromiseAll", async () => {
 
     // 对比Promise.all, 是先执行的快的那一个
     timeStart = Date.now();
-    const res2 = await Promise.all(list.map(i=>i()));
+    const res2 = await Promise.all(list.map(i => i()));
     expect(timeEnd - timeStart).toBeGreaterThanOrEqual(200);
     expect(timeEnd - timeStart).toBeLessThanOrEqual(300);
     expect(res2).toEqual([200, 2]);
@@ -575,32 +575,64 @@ test("parseCmdParams", () => {
         a: "=123=333=444=555"
     });
 });
-test("createIdGenerator", () => {
-    const fn = cm.createIdGenerator;
+describe("idGen", () => {
+    const fn = cm.idGen;
 
-    const id = fn();
-    expect(id.next().value).toBe(0);
-    expect(id.next().value).toBe(1);
-    expect(id.next().value).toBe(2);
-    expect(id.next(10).value).toBe(12);
-    expect(id.next().value).toBe(13);
+    test("什么参数都不传", () => {
+        const id = fn();
+        expect(id.next().value).toBe(0);
+        expect(id.next().value).toBe(1);
+        expect(id.next().value).toBe(2);
+        expect(id.next(10).value).toBe(12);
+        expect(id.next().value).toBe(13);
+    });
 
-    const id2 = fn(10, 2);
-    expect(id2.next().value).toBe(10);
-    expect(id2.next(3).value).toBe(13);
-    expect(id2.next(10).value).toBe(23);
-    expect(id2.next().value).toBe(25);
+    test("传init与step", () => {
+        const id = fn(10, 2);
+        expect(id.next().value).toBe(10);
+        expect(id.next(3).value).toBe(13);
+        expect(id.next(10).value).toBe(23);
+        expect(id.next().value).toBe(25);
+    });
 
-    const id3 = fn();
-    expect(id3.next(11).value).toBe(0); // 第一次next传值无效,因为next只能传给下一个yield，而第一次之前没有yield
-    expect(id3.next().value).toBe(1);
+    test("next第一次传值无效", () => {
+        const id = fn();
+        expect(id.next(11).value).toBe(0); // 第一次next传值无效,因为next只能传给下一个yield，而第一次之前没有yield
+        expect(id.next().value).toBe(1);
+        expect(id.next().value).toBe(2);
+    });
 
-    const iter = fn();
-    let _id = 0;
-    for (const id of iter) {
-        expect(id).toBe(_id++);
-        if (id > 10) {
-            iter.return();
+    test("使用for of迭代", () => {
+        const iter = fn();
+        let curId = 0;
+        for (const id of iter) {
+            expect(id).toBe(curId++);
+            if (id > 10) {
+                iter.return(); // 使用Generator.prototype.return强制中断生成器
+            }
         }
-    }
+    });
+
+    test("设置max", () => {
+        const idGen = fn(0, 1, 3);
+        const ids: number[] = [];
+        for (let id of idGen) {
+            ids.push(id);
+        }
+
+        expect(ids).toEqual([0, 1, 2]);
+        expect(idGen.next()).toEqual({done: true, value: undefined});
+    });
+
+
+    test("倒序生成", () => {
+        const idGen = fn(2, -1, -1);
+        const ids: number[] = [];
+        for (let id of idGen) {
+            ids.push(id);
+        }
+
+        expect(ids).toEqual([0, 1, 2].reverse());
+        expect(idGen.next()).toEqual({done: true, value: undefined});
+    });
 });
