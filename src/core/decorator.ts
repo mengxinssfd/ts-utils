@@ -19,7 +19,6 @@ export const Debounce = (...args:OmitFirstParameters<typeof debounce>) => decora
 
 /**
  * 节流装饰器
- * TODO 未测
  * @constructor
  */
 export const Throttle = (...args: OmitFirstParameters<typeof throttle>) => decoratorfy(descriptor => throttle(descriptor.value, ...args));

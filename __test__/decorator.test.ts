@@ -35,6 +35,40 @@ test("Debounce", async (done) => {
     expect(t.value).toBeGreaterThanOrEqual(6);
     done();
 });
+test("Throttle", async (done) => {
+    const Throttle = dc.Throttle;
+
+    const now = Date.now();
+
+    class Test {
+        times = 0;
+        time = 0;
+        value: string | number = "";
+
+        @Throttle(100)
+        test(value: string | number) {
+            this.times++;
+            this.time = Date.now();
+            this.value = value;
+        }
+    }
+
+    const t = new Test();
+
+    t.test(1);
+    t.test(2);
+    t.test(3);
+    t.test(4);
+    t.test(5);
+    t.test(6);
+
+    await sleep(100);
+
+    expect(t.times).toBe(1);
+    expect(t.time - now).toBe(0);
+    expect(t.value).toBeGreaterThanOrEqual(1);
+    done();
+});
 
 test("Polling", async (done) => {
     const Polling = dc.Polling;
