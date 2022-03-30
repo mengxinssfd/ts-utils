@@ -418,6 +418,7 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
 
 /**
  * 串行版promise.all，执行完一个才会去执行下一个
+ * @template T
  * @param {((list: T[]) => Promise<T>)[]} list
  * @returns {Promise<T[]>}
  */
@@ -431,6 +432,7 @@ export function syncPromiseAll<T>(list: ((list: T[]) => Promise<T>)[]): Promise<
 /**
  * promise队列  任何一个reject都会中断队列 (跟reduceAsync类似)
  * 队列第一个会接收initValue作为参数，其余会接收上一个promise返回值作为参数
+ * @template T
  * @param {Array<(lastValue: unknown) => Promise<unknown>>} queue
  * @param {T} initValue
  * @returns {Promise<unknown>}
@@ -608,4 +610,40 @@ export function* idGen(init = 0, step = 1, end = Number.MAX_SAFE_INTEGER): Gener
         const _step = (yield id) || step;
         id += _step;
     }
+}
+
+export function lazy() {
+    let queue = Promise.resolve();
+
+    function then(cb: (done: Function) => void) {
+        const q = queue;
+        queue = new Promise((res) => {
+            q.then(() => cb(res));
+        });
+    }
+
+    const obj = {
+        /**
+         * @param {number} ms 等待毫秒数
+         */
+        wait(ms: number) {
+            then((done) => setTimeout(done, ms));
+            return obj;
+        },
+
+        /**
+         * @param {((done: Function) => void) | (() => Promise<any>)} cb 回调返回空或返回一个promise
+         */
+        do(cb: ((done: Function) => void) | (() => Promise<void>)) {
+            then((done) => {
+                const res = cb(done);
+                if (res) {
+                    res.then(() => done());
+                }
+            });
+            return obj;
+        },
+    };
+
+    return obj;
 }
