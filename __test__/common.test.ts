@@ -636,3 +636,63 @@ describe("idGen", () => {
         expect(idGen.next()).toEqual({done: true, value: undefined});
     });
 });
+
+
+describe("lazy", () => {
+    const fn = cm.lazy;
+    test("base", async () => {
+        const mock = jest.fn();
+
+        const start = Date.now();
+        let end = 0;
+        fn()
+            .do((done) => (mock('hello'), done()))
+            .wait(10)
+            .do(() => new Promise<void>(res => {
+                mock("hello");
+                res();
+            }))
+            .wait(20)
+            .do((done) => {
+                mock('world');
+                end = Date.now();
+                done();
+            });
+        await sleep(50);
+        expect(mock.mock.calls.length).toBe(3);
+        expect(mock.mock.calls.map(i => i[0])).toEqual(["hello", "hello", "world"]);
+        expect(end - start).toBeGreaterThanOrEqual(30);
+    });
+    test("promise中断", async () => {
+        const mock = jest.fn();
+
+        fn()
+            .wait(10)
+            .do(() => new Promise(() => {
+                mock("hello");
+            }))
+            .wait(20)
+            .do((done) => {
+                mock('world');
+                done();
+            });
+        await sleep(50);
+        expect(mock.mock.calls.length).toBe(1);
+        expect(mock.mock.calls.map(i => i[0])).toEqual(["hello"]);
+    });
+    test("done中断", async () => {
+        const mock = jest.fn();
+
+        fn()
+            .wait(10)
+            .do(() => mock("hello"))
+            .wait(20)
+            .do((done) => {
+                mock('world');
+                done();
+            });
+        await sleep(50);
+        expect(mock.mock.calls.length).toBe(1);
+        expect(mock.mock.calls.map(i => i[0])).toEqual(["hello"]);
+    });
+});
