@@ -136,3 +136,29 @@ export type Tuple<T, N extends number, R extends unknown[] = []> = R['length'] e
 //         : never;
 
 // type T = Tuple<number, 1> // => [number, number, number]
+
+/**
+ * 字符串模板
+ * @example
+ * type S1 = StrTemplate<'1%s3', ['2']>; // 123
+ * type S2 = StrTemplate<'%s23', ['1']>; // 123
+ * type S3 = StrTemplate<'123', ['1']>; // 123
+ * type SW = StrTemplate<'a%sc%se', ['b', 'd']>; // abcde
+ * type SW2 = StrTemplate<'a%sc%se', ['b', 'd', 'f']>; // abcde
+ * type S5 = StrTemplate<'hell%s worl%s'> // hell worl
+ */
+export type StrTemplate<T extends string, S extends any[] = []> = T extends `${infer L}%s${infer R}`
+    ? S['length'] extends 0
+        ? StrTemplate<`${L}${R}`>
+        : StrTemplate<`${L}${S[0]}${R}`, ShiftTuple<S>>
+    : T;
+
+// 区别
+// 上面的 StrTemplate<"hell%s worl%s"> => 'hell worl'
+// 下面的 StrTemplate<"hell%s worl%s"> => 'hell%s worl%s'
+
+// export type StrTemplate<T extends string, S extends any[] = []> = T extends `${infer L}%s${infer R}`
+//     ? S['length'] extends 0
+//         ? T
+//         : StrTemplate<`${L}${S[0]}${R}`, ShiftTuple<S>>
+//     : T;
