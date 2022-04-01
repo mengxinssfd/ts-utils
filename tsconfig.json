@@ -9,7 +9,7 @@
       "dom"
     ],
     "target": "esnext",
-    "sourceMap": false,
+    "sourceMap": true,
     "allowJs": true,
     // "jsx": "react",
     "moduleResolution": "node",

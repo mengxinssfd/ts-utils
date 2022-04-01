@@ -52,6 +52,7 @@ export default {
       // tsconfig:"tsconfig.webpack.json",
       tsconfigOverride: {
         compilerOptions: {
+          sourceMap: false,
           declaration: false // 输出时去除类型文件
         }
       }

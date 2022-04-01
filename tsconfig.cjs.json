@@ -6,7 +6,8 @@
     "declaration": false,
     "isolatedModules": true,
     "importHelpers": false, // 为true的时候会require一个tslib库
-    "outDir": "lib-cjs"
+    "outDir": "lib-cjs",
+    "sourceMap": false
   },
   "include": [
     "src"
