@@ -59,13 +59,20 @@ test("getChineseNumber", () => {
     expect(cm.number2Chinese(101)).toBe("一百零一");
     expect(cm.number2Chinese(111)).toBe("一百一十一");
     expect(cm.number2Chinese(1001)).toBe("一千零一");
-    expect(cm.number2Chinese(12345)).toBe("一万二千三百四十五");
-    expect(cm.number2Chinese(23456789)).toBe("二千三百四十五万六千七百八十九");
-    expect(cm.number2Chinese(123456789)).toBe("一亿二千三百四十五万六千七百八十九");
+    expect(cm.number2Chinese(1_2345)).toBe("一万二千三百四十五");
+    expect(cm.number2Chinese(2345_6789)).toBe("二千三百四十五万六千七百八十九");
+    expect(cm.number2Chinese(1_2345_6789)).toBe("一亿二千三百四十五万六千七百八十九");
+    expect(cm.number2Chinese(1_0345_6789)).toBe("一亿零三百四十五万六千七百八十九");
 });
 test("getFormatStr", () => {
-    expect(cm.strTemplate("hell%s worl%s", "o", "d")).toBe("hello world");
-    expect(cm.strTemplate("hell%s worl%s")).toBe("hell worl");
+    const s = cm.strTemplate("1%s3", "2")
+    expect(s).toBe("123");
+    const s1 = cm.strTemplate("hell%s worl%s", "o", "d")
+    expect(s1).toBe("hello world");
+    const s2 = cm.strTemplate("hell%s worl%s")
+    expect(s2).toBe("hell worl");
+    const s3 = cm.strTemplate("1%s%s86",0,'0')
+    expect(s3).toBe("10086");
 });
 test("chinese2Number", () => {
     expect(cm.chinese2Number("一")).toBe(1);
