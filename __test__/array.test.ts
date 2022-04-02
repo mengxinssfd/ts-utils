@@ -709,3 +709,17 @@ test("groupBy", () => {
         b: [{code: "b"}, {code: "b_a"}, {code: "b_b"}]
     });
 });
+test("someInList", () => {
+    const fn = arr.someInList;
+    expect(fn([0, 20, 100], [...Array(10).keys()])).toBeTruthy();
+    expect(fn([500, 20], Array.from({length: 10}))).toBeFalsy();
+    expect(fn([{id: 1}], [{id: 1}, {id: 2}, {id2: 3}])).toBeFalsy();
+    expect(fn(
+            [{id: 1}],
+            [{id: 1}, {id: 2}, {id: 3}],
+            (item, i, list) => {
+                return list.some(s => s.id === item.id);
+            }
+        )
+    ).toBeTruthy();
+});
