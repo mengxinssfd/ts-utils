@@ -310,3 +310,34 @@ test("getCurrentScriptTag", () => {
     // expect(fn()).toBe(null)
     expect(fn()?.src).toBe('https://cdn.staticfile.org/vue/3.2.31/vue.global.min.js');
 });
+test("isChildHTMLElement", () => {
+    const fn = dom.isChildHTMLElement;
+    const h = dom.createHiddenHtmlElement({className: "hello world"});
+
+    expect(fn(h)).toBeTruthy();
+
+    const child = dom.createElement("span", {props: {className: "span-child"},});
+    const parent = dom.createElement("div", {
+        props: {className: "div-parent"},
+        children: [child],
+        parent: document.body
+    });
+
+    expect(fn(child, parent)).toBeTruthy();
+    expect(fn(child)).toBeTruthy();
+    expect(fn(parent)).toBeTruthy();
+
+    expect(fn(".span-child")).toBeTruthy();
+    expect(fn(".div-parent")).toBeTruthy();
+    expect(fn(".span-child", ".div-parent")).toBeTruthy();
+
+    expect(fn(".div-parent", ".span-child")).toBeFalsy();
+    expect(fn(document.documentElement, ".span-child")).toBeFalsy();
+
+    expect(() => fn("")).toThrow();
+    expect(() => fn(".span-child", "")).toThrow();
+    expect(() => fn("", "")).toThrow();
+
+    document.body.removeChild(h);
+    document.body.removeChild(parent);
+});
