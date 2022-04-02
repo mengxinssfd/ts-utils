@@ -760,3 +760,28 @@ export function getCurrentScriptTag(): HTMLScriptElement | null {
     if (!scripts.length) return null;
     return scripts[scripts.length - 1];
 }
+
+/**
+ * 判断是否子元素
+ * @param {HTMLElement | string} child
+ * @param {HTMLElement | string} [parent=document.documentElement]
+ * @return {boolean}
+ */
+export function isChildHTMLElement(child: HTMLElement | string, parent: HTMLElement | string = document.documentElement): boolean {
+    const childNode: HTMLElement | null = typeof child === "string" ? document.querySelector(child) : child;
+    if (!childNode) throw "child not founded";
+    const parentNode: HTMLElement | null = typeof parent === "string" ? document.querySelector(parent) : parent;
+    if (!parentNode) throw "parent not founded";
+
+    const root = document.documentElement;
+
+    function find(child: ParentNode | null, parent: HTMLElement): boolean {
+        if (!child) return false;
+        if (child === parent) return false;
+        if (child === root) return false;
+        if (child.parentNode === parent) return true;
+        return find(child.parentNode, parent);
+    }
+
+    return find(childNode, parentNode);
+}
