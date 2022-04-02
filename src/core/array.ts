@@ -506,3 +506,21 @@ export function groupBy(arr, key, defaultKey: number | string = "*") {
         return result;
     }, {});
 }
+
+/**
+ * 查找是否items中任何一个在list中
+ * @template T
+ * @param {T[]} items
+ * @param {T[]} list
+ * @param {(item: T) => boolean} cb
+ * @return {boolean}
+ */
+export function someInList<T>(
+    items: T[],
+    list: T[],
+    cb = (item: T, index: number, list: T[]) => includes(list, item)
+): boolean {
+    return items.some((item, index) => {
+        return cb(item, index, list);
+    });
+}
