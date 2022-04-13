@@ -22,7 +22,7 @@ test("deepClone", () => {
 
     const arr2 = [
         () => 100,
-        () => 200,
+        () => 200
     ];
     const newArr2 = clone.deepClone(arr2);
     // copy == arr2
@@ -127,7 +127,7 @@ test("cloneFunction", () => {
         },
         fn3: function () {
             return this.a++;
-        },
+        }
     };
     obj.clone1 = fn(obj.fn1);
     expect(obj.fn1()).toBe(1);
@@ -179,4 +179,7 @@ test("deepCloneBfs", () => {
     const obj2 = {a: 1, b: [1, 2]};
     expect(clone.deepCloneBfs(obj2)).toEqual({a: 1, b: [1, 2]});
     expect(obj2 !== clone.deepCloneBfs(obj2)).toBeTruthy();
+
+    const obj3 = {a: null, b: undefined, c: NaN};
+    expect(clone.deepCloneBfs(obj3)).toEqual({a: null, b: undefined, c: NaN});
 });

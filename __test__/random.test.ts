@@ -210,6 +210,9 @@ test("shuffle", () => {
     expect(unique(shuffleValues).length).toBe(6);
 
     expect(values.every(it => shuffleValues.includes(it))).toBeTruthy();
+
+    const arr2 = [{test: null}, {test: 1}];
+    fn(arr2);
 });
 
 
