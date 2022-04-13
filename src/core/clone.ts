@@ -92,7 +92,7 @@ export function deepCloneBfs<T>(target: T): T {
 
         const type = typeof v;
         // console.log(type);
-        if (type !== "object") {
+        if (type !== "object" || v === null) {
             parent[k] = v;
             continue;
         }
