@@ -696,3 +696,16 @@ describe("lazy", () => {
         expect(mock.mock.calls.map(i => i[0])).toEqual(["hello"]);
     });
 });
+
+test("swap", () => {
+    const fn = cm.swap;
+
+
+    expect(fn({a: 1, b: 2}, "a", "b")).toEqual({b: 1, a: 2});
+    expect(fn({a: 1, b: 2}, "a", "c" as any)).toEqual({c: 1, b: 2, a: undefined});
+
+    expect(fn([1, 2], 1, 0)).toEqual([2, 1]);
+    expect(fn([1, 2], 1, 2)).toEqual([1, undefined, 2]);
+
+
+});
