@@ -162,3 +162,17 @@ export type StrTemplate<T extends string, S extends any[] = []> = T extends `${i
 //         ? T
 //         : StrTemplate<`${L}${S[0]}${R}`, ShiftTuple<S>>
 //     : T;
+
+
+type PickRest<T extends any[] = any[]> = T extends [any?, ...infer U] ? U : never;
+export type Join<T extends string[], U extends string | number> =
+    T[0] extends void
+        ? ''
+        : PickRest<T>['length'] extends 0
+            ? T[0]
+            : `${T[0]}${U}${Join<PickRest<T>, U>}`
+
+// type Res = Join<["a", "p", "p", "l", "e"], "-">; // expected to be 'a-p-p-l-e'
+// type Res1 = Join<["Hello", "World"], " ">; // expected to be 'Hello World'
+// type Res2 = Join<["2", "2", "2"], 1>; // expected to be '21212'
+// type Res3 = Join<["o"], "u">; // expected to be 'o'
