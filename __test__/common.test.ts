@@ -669,6 +669,7 @@ describe("lazy", () => {
         fn()
             .wait(10)
             .do(() => new Promise(() => {
+                // promise不resolve，那么后面的永远不会执行
                 mock("hello");
             }))
             .wait(20)
@@ -685,6 +686,7 @@ describe("lazy", () => {
 
         fn()
             .wait(10)
+            // 不done的话，后面的永远不会执行
             .do(() => mock("hello"))
             .wait(20)
             .do((done) => {
@@ -695,7 +697,27 @@ describe("lazy", () => {
         expect(mock.mock.calls.length).toBe(1);
         expect(mock.mock.calls.map(i => i[0])).toEqual(["hello"]);
     });
-});
+    test("value chain", async () => {
+        const mock = jest.fn();
+
+        fn()
+            .wait(10)
+            .do((done) => done('hello '))
+            .wait(20)
+            .do((done, value) => done(value + 'world'))
+            .do((_, value) => Promise.resolve(value + ' foo bar'))
+            .do((done, value) => {
+                mock(value);
+                done();
+            })
+            .do((_, value) => mock(value));
+        await sleep(50);
+        expect(mock.mock.calls.length).toBe(2);
+        expect(mock.mock.calls.map(i => i[0])).toEqual(["hello world foo bar", undefined]);
+    });
+
+})
+;
 
 test("swap", () => {
     const fn = cm.swap;
