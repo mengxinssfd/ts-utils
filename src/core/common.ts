@@ -615,10 +615,12 @@ export function* idGen(init = 0, step = 1, end = Number.MAX_SAFE_INTEGER): Gener
 export function lazy() {
     let queue = Promise.resolve();
 
-    function then(cb: (done: Function) => void) {
+    function then(cb: (done: Function, value: any) => void) {
         const q = queue;
         queue = new Promise((res) => {
-            q.then(() => cb(res));
+            q.then((value) => {
+                return cb(res, value);
+            });
         });
     }
 
@@ -627,18 +629,18 @@ export function lazy() {
          * @param {number} ms 等待毫秒数
          */
         wait(ms: number) {
-            then((done) => setTimeout(done, ms));
+            then((done, value) => setTimeout(() => done(value), ms));
             return obj;
         },
 
         /**
-         * @param {((done: Function) => void) | (() => Promise<any>)} cb 回调返回空或返回一个promise
+         * @param {((done: Function) => void) | (() => Promise<any>)} cb 回调返回一个值或返回一个promise 供下一个do回调调用
          */
-        do(cb: ((done: Function) => void) | (() => Promise<void>)) {
-            then((done) => {
-                const res = cb(done);
-                if (res) {
-                    res.then(() => done());
+        do(cb: ((done: Function, value) => void) | ((done: Function, value) => Promise<any>)) {
+            then((done, value) => {
+                const res = cb(done, value);
+                if (res && res.then) {
+                    res.then((val) => done(val));
                 }
             });
             return obj;
