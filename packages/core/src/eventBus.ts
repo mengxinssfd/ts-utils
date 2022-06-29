@@ -1,73 +1,72 @@
-import {findIndex} from "./array";
+import { findIndex } from './array';
 
-type Callback = (...args: any[]) => void
+type Callback = (...args: any[]) => void;
 
 export class EventBus {
-    private static instance?: EventBus;
-    private events: { [key: string]: Array<Callback> } = {};
+  private static instance?: EventBus;
+  private events: { [key: string]: Array<Callback> } = {};
 
-    constructor() {
+  constructor() {}
+
+  public static get Ins(): EventBus {
+    if (!EventBus.instance) {
+      EventBus.instance = new EventBus();
     }
+    return EventBus.instance;
+  }
 
-    public static get Ins(): EventBus {
-        if (!EventBus.instance) {
-            EventBus.instance = new EventBus();
+  public getCallbackList(eventName: string): Callback[] {
+    if (!Array.isArray(this.events[eventName])) {
+      this.events[eventName] = [];
+    }
+    return this.events[eventName];
+  }
+
+  on(eventName: string, callback: Callback) {
+    const list = this.getCallbackList(eventName);
+    list.push(callback);
+  }
+
+  once(eventName: string, callback: Callback) {
+    const callbackWra = (...params: any[]) => {
+      callback(...params);
+      this.off(eventName, callbackWra);
+    };
+    const list = this.getCallbackList(eventName);
+    list.push(callbackWra);
+  }
+
+  times(times: number, eventName: string, callback: Callback) {
+    const callbackWra = () => {
+      let count = 0;
+      const newCallBack = (...params: any[]) => {
+        callback(...params);
+        count++;
+        if (count === times) {
+          this.off(eventName, newCallBack);
         }
-        return EventBus.instance;
-    }
+      };
+      return newCallBack;
+    };
+    const list = this.getCallbackList(eventName);
+    list.push(callbackWra());
+  }
 
-    public getCallbackList(eventName: string): Callback[] {
-        if (!Array.isArray(this.events[eventName])) {
-            this.events[eventName] = [];
-        }
-        return this.events[eventName];
-    }
+  emit(eventName: string, ...params: any[]) {
+    // console.log('eventBus emit', eventName);
+    const list = this.getCallbackList(eventName);
+    list.forEach((item) => {
+      item(...params);
+    });
+  }
 
-    on(eventName: string, callback: Callback) {
-        const list = this.getCallbackList(eventName);
-        list.push(callback);
-    }
+  off(eventName: string, callback: Callback) {
+    const list = this.getCallbackList(eventName);
+    const index = findIndex((i) => i === callback, list);
+    index > -1 && list.splice(index, 1);
+  }
 
-    once(eventName: string, callback: Callback) {
-        const callbackWra = (...params: any[]) => {
-            callback(...params);
-            this.off(eventName, callbackWra);
-        };
-        const list = this.getCallbackList(eventName);
-        list.push(callbackWra);
-    }
-
-    times(times: number, eventName: string, callback: Callback) {
-        const callbackWra = () => {
-            let count = 0;
-            const newCallBack = (...params: any[]) => {
-                callback(...params);
-                count++;
-                if (count === times) {
-                    this.off(eventName, newCallBack);
-                }
-            };
-            return newCallBack;
-        };
-        const list = this.getCallbackList(eventName);
-        list.push(callbackWra());
-    }
-
-    emit(eventName: string, ...params: any[]) {
-        // console.log('eventBus emit', eventName);
-        const list = this.getCallbackList(eventName);
-        list.forEach(item => {
-            item(...params);
-        });
-    }
-
-    off(eventName: string, callback: Callback) {
-        const list = this.getCallbackList(eventName);
-        let index = findIndex(i => i === callback, list);
-        (index > -1) && list.splice(index, 1);
-    }
-
-    offAll() {
-        this.events = {};
-    }
+  offAll() {
+    this.events = {};
+  }
 }

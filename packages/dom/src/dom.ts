@@ -1,113 +1,117 @@
-import {castArray, includes, unique} from "../../core/src/array";
-import {divide, getSafeNum, times} from "../../core/src/number";
-import {assign, forEachObj, objReduce, pickByKeys} from "../../core/src/object";
-import type {SettableProps, SettableStyle} from "../../types/src/TsTypes";
-import {isArray, isString} from "../../core/src/dataType";
-import {isDom, isNodeList} from "./domType";
-import {root} from "../../core/src/common";
-import {fromCamel} from "../../core/src/string";
-import {onceEvent} from "./event";
+import { castArray, includes, unique } from '../../core/src/array';
+import { divide, getSafeNum, times } from '../../core/src/number';
+import { assign, forEachObj, objReduce, pickByKeys } from '../../core/src/object';
+import type { SettableProps, SettableStyle } from '../../types/src/TsTypes';
+import { isArray, isString } from '../../core/src/dataType';
+import { isDom, isNodeList } from './domType';
+import { root } from '../../core/src/common';
+import { fromCamel } from '../../core/src/string';
+import { onceEvent } from './event';
 // 所有主要浏览器都支持 createElement() 方法
-let elementStyle: CSSStyleDeclaration = root?.document?.createElement("div").style ?? {};
+const elementStyle: CSSStyleDeclaration = root?.document?.createElement('div').style ?? {};
 const vendor: string | false = (() => {
-    let transformName: any = {
-        webkit: "webkitTransform",
-        Moz: "MozTransform",
-        O: "OTransform",
-        ms: "msTransform",
-        standard: "transform",
-    };
-    for (let key in transformName) {
-        const transform = transformName[key];
-        if (elementStyle[transform] !== undefined) {
-            return key;
-        }
+  const transformName: any = {
+    webkit: 'webkitTransform',
+    Moz: 'MozTransform',
+    O: 'OTransform',
+    ms: 'msTransform',
+    standard: 'transform',
+  };
+  for (const key in transformName) {
+    const transform = transformName[key];
+    if (elementStyle[transform] !== undefined) {
+      return key;
     }
-    return false;
+  }
+  return false;
 })();
 
 export function supportClassList(): boolean {
-    // classList ie9以上支持
-    return !!root?.document?.documentElement.classList;
+  // classList ie9以上支持
+  return !!root?.document?.documentElement.classList;
 }
 
 function name2List(className: string[] | string): string[] {
-    if (!className) return [];
-    let list = className as string[];
-    if (isString(className)) {
-        list = [className.trim()];
-    }
-    return list.reduce((init, v) => {
-        const split = v.trim().split(/ +/);
-        init.push(...split);
-        return init;
-    }, [] as string[]);
+  if (!className) return [];
+  let list = className as string[];
+  if (isString(className)) {
+    list = [className.trim()];
+  }
+  return list.reduce((init, v) => {
+    const split = v.trim().split(/ +/);
+    init.push(...split);
+    return init;
+  }, [] as string[]);
 }
 
 export function hasClassIe8(target: HTMLElement, className: string[] | string): boolean {
-    const list = name2List(className);
-    const originClass = target.className;
-    const classList = originClass.split(/ +/);
-    return list.every(i => includes(classList, i));
+  const list = name2List(className);
+  const originClass = target.className;
+  const classList = originClass.split(/ +/);
+  return list.every((i) => includes(classList, i));
 }
 
 export function hasClassStandard(target: HTMLElement, className: string[] | string): boolean {
-    const list = name2List(className);
-    const classList = target.classList;
-    return list.every(i => includes(classList, i));
+  const list = name2List(className);
+  const classList = target.classList;
+  return list.every((i) => includes(classList, i));
 }
 
 /**
  * 判断是否有class  必须全都存在才为true
  */
-export const hasClass: (target: HTMLElement, className: string[] | string) => boolean = supportClassList() ? hasClassStandard : hasClassIe8;
+export const hasClass: (target: HTMLElement, className: string[] | string) => boolean =
+  supportClassList() ? hasClassStandard : hasClassIe8;
 
 export function addClassStandard(target: HTMLElement, className: string[] | string): string {
-    const list = name2List(className);
-    const classList = target.classList;
-    list.forEach(i => classList.add(i));
+  const list = name2List(className);
+  const classList = target.classList;
+  list.forEach((i) => classList.add(i));
 
-    return target.className;
+  return target.className;
 }
 
 export function addClassIe8(target: HTMLElement, className: string[] | string): string {
-    let names = name2List(className);
-    const oldClass = target.className + " " + names.join(" ");
-    names = oldClass.split(" ");
-    names = unique(names);
-    names = names.filter(it => Boolean(it));
-    target.className = names.join(" ");
-    return target.className;
+  let names = name2List(className);
+  const oldClass = target.className + ' ' + names.join(' ');
+  names = oldClass.split(' ');
+  names = unique(names);
+  names = names.filter((it) => Boolean(it));
+  target.className = names.join(' ');
+  return target.className;
 }
 
-export const addClass: (target: HTMLElement, className: string[] | string) => string = supportClassList() ? addClassStandard : addClassIe8;
+export const addClass: (target: HTMLElement, className: string[] | string) => string =
+  supportClassList() ? addClassStandard : addClassIe8;
 
 export function removeClassIe8(target: HTMLElement, className: string[] | string): string {
-    const list = name2List(className);
-    const classList = unique(target.className.split(/ +/).filter(i => {
-            return !includes(list, i);
-        },
-    ));
+  const list = name2List(className);
+  const classList = unique(
+    target.className.split(/ +/).filter((i) => {
+      return !includes(list, i);
+    }),
+  );
 
-    return target.className = classList.join(" ");
+  return (target.className = classList.join(' '));
 }
 
 export function removeClassStandard(target: HTMLElement, className: string[] | string): string {
-    const list = name2List(className);
-    list.forEach(i => {
-        target.classList.remove(i);
-    });
-    return target.className;
+  const list = name2List(className);
+  list.forEach((i) => {
+    target.classList.remove(i);
+  });
+  return target.className;
 }
 
-export const removeClass: (dom: HTMLElement, className: string[] | string) => string = supportClassList() ? removeClassStandard : removeClassIe8;
+export const removeClass: (dom: HTMLElement, className: string[] | string) => string =
+  supportClassList() ? removeClassStandard : removeClassIe8;
 
 export function toggleClass(target: HTMLElement, className: string): string {
-    if (hasClass(target, className)) {
-        return removeClass(target, className);
-    } else {
-        return addClass(target, className);
-    }
+  if (hasClass(target, className)) {
+    return removeClass(target, className);
+  } else {
+    return addClass(target, className);
+  }
 }
 
 /**
@@ -116,13 +120,13 @@ export function toggleClass(target: HTMLElement, className: string): string {
  * @returns {string}
  */
 export function prefixStyle<T extends keyof CSSStyleDeclaration>(style: T): T | null {
-    if (vendor === false) {
-        return null;
-    }
-    if (vendor === "standard") {
-        return style;
-    }
-    return vendor + (style as string).charAt(0).toUpperCase() + (style as string).substr(1) as any;
+  if (vendor === false) {
+    return null;
+  }
+  if (vendor === 'standard') {
+    return style;
+  }
+  return (vendor + (style as string).charAt(0).toUpperCase() + (style as string).substr(1)) as any;
 }
 
 /**
@@ -131,13 +135,16 @@ export function prefixStyle<T extends keyof CSSStyleDeclaration>(style: T): T | 
  * @param value
  * @returns {boolean}
  */
-export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSStyleDeclaration[K]>(key: K, value: V) {
-    if (key in elementStyle) {
-        elementStyle[key] = value;
-        return elementStyle[key] === value;
-    } else {
-        return false;
-    }
+export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSStyleDeclaration[K]>(
+  key: K,
+  value: V,
+) {
+  if (key in elementStyle) {
+    elementStyle[key] = value;
+    return elementStyle[key] === value;
+  } else {
+    return false;
+  }
 }
 
 // export function setStyle(this: HTMLElement, style: SettableStyle);
@@ -150,31 +157,36 @@ export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSSty
  * @returns setStyle.bind(el)
  */
 export function setStyle(
-    style: Array<SettableStyle> | SettableStyle, {
-        toCssText = true,
-        el,
-    }: { toCssText?: boolean; el?: HTMLElement | string } = {},
+  style: Array<SettableStyle> | SettableStyle,
+  { toCssText = true, el }: { toCssText?: boolean; el?: HTMLElement | string } = {},
 ): typeof setStyle {
-    if (isString(el)) el = document.querySelector(el) as HTMLDivElement;
-    let target: HTMLElement = el || this;
-    if (!isDom(target)) throw new TypeError("setStyle param el | this is not HTMLElement");
-    toCssText = isArray(style) ? false : toCssText;
-    if (toCssText) {
-        const cssText = target.style.cssText;
-        const cssTextObj = cssText.replace(/; ?$/, "").split(";").reduce((init, v) => {
-            const [key, value] = v.split(/: ?/);
-            init[key] = value;
-            return init;
-        }, {});
-        assign(cssTextObj, style);
-        target.style.cssText = objReduce(cssTextObj, (result, v, k) => {
-            return result + `${fromCamel(k as string, "-")}: ${v};`;
-        }, "");
-    } else {
-        const styleList = castArray(style);
-        styleList.forEach(style => assign(target.style, style));
-    }
-    return setStyle.bind(target);
+  if (isString(el)) el = document.querySelector(el) as HTMLDivElement;
+  const target: HTMLElement = el || this;
+  if (!isDom(target)) throw new TypeError('setStyle param el | this is not HTMLElement');
+  toCssText = isArray(style) ? false : toCssText;
+  if (toCssText) {
+    const cssText = target.style.cssText;
+    const cssTextObj = cssText
+      .replace(/; ?$/, '')
+      .split(';')
+      .reduce((init, v) => {
+        const [key, value] = v.split(/: ?/);
+        init[key] = value;
+        return init;
+      }, {});
+    assign(cssTextObj, style);
+    target.style.cssText = objReduce(
+      cssTextObj,
+      (result, v, k) => {
+        return result + `${fromCamel(k as string, '-')}: ${v};`;
+      },
+      '',
+    );
+  } else {
+    const styleList = castArray(style);
+    styleList.forEach((style) => assign(target.style, style));
+  }
+  return setStyle.bind(target);
 }
 
 /**
@@ -182,44 +194,53 @@ export function setStyle(
  * @param url
  * @param [props = {}] img标签的属性
  */
-export function loadImg(url: string, props: Partial<HTMLImageElement> = {}): Promise<HTMLImageElement> {
-    return new Promise<HTMLImageElement>(function (resolve, reject) {
-        // const img = new Image();
-        const onerror = (ev) => {
-            reject(ev);
-        };
-        const img = createHtmlElement("img", {
-            props: assign({
-                // 不支持crossOrigin的浏览器（IE 10及以下版本不支持，Android 4.3 及以下版本不支持）
-                // 可以使用 XMLHttprequest 和 URL.createObjectURL() 来做兼容
-                // 不是所有的图片都支持 如http://gchat.qpic.cn/gchatpic_new/0/0-0-58CAD4E2605562E55627B37C15FACB65/0?term=2
-                crossOrigin: "anonymous",
-                onload() {
-                    resolve(img);
-                },
-                onabort: onerror,
-                onerror,
-            }, props),
-        });
-        img.src = url;
+export function loadImg(
+  url: string,
+  props: Partial<HTMLImageElement> = {},
+): Promise<HTMLImageElement> {
+  return new Promise<HTMLImageElement>(function (resolve, reject) {
+    // const img = new Image();
+    const onerror = (ev) => {
+      reject(ev);
+    };
+    const img = createHtmlElement('img', {
+      props: assign(
+        {
+          // 不支持crossOrigin的浏览器（IE 10及以下版本不支持，Android 4.3 及以下版本不支持）
+          // 可以使用 XMLHttprequest 和 URL.createObjectURL() 来做兼容
+          // 不是所有的图片都支持 如http://gchat.qpic.cn/gchatpic_new/0/0-0-58CAD4E2605562E55627B37C15FACB65/0?term=2
+          crossOrigin: 'anonymous',
+          onload() {
+            resolve(img);
+          },
+          onabort: onerror,
+          onerror,
+        },
+        props,
+      ),
     });
+    img.src = url;
+  });
 }
 
 export function loadScript(url: string): Promise<HTMLScriptElement>;
-export function loadScript(url: string, props: Partial<HTMLScriptElement>): Promise<HTMLScriptElement>;
+export function loadScript(
+  url: string,
+  props: Partial<HTMLScriptElement>,
+): Promise<HTMLScriptElement>;
 export function loadScript(param: {
-    url: string;
-    props?: Partial<HTMLScriptElement>;
-    attrs?: object;
-    onLoad: (el: HTMLScriptElement) => void;
-    onError?: Function
+  url: string;
+  props?: Partial<HTMLScriptElement>;
+  attrs?: object;
+  onLoad: (el: HTMLScriptElement) => void;
+  onError?: Function;
 }): void;
 export function loadScript(param: {
-    url: string;
-    props?: Partial<HTMLScriptElement>;
-    attrs?: object;
-    onLoad?: (el: HTMLScriptElement) => void;
-    onError: Function
+  url: string;
+  props?: Partial<HTMLScriptElement>;
+  attrs?: object;
+  onLoad?: (el: HTMLScriptElement) => void;
+  onError: Function;
 }): void;
 /**
  * 手动添加script
@@ -227,33 +248,33 @@ export function loadScript(param: {
  * @param props
  */
 export function loadScript(param, props?) {
-    let url = "";
-    let onLoad, onError, attrs;
-    if (typeof param === "string") {
-        url = param;
-    } else {
-        ({url, onLoad, onError, props, attrs} = param);
-    }
-    const cb = (successFn, errorFn) => {
-        const script = createElement("script", {
-            props: {
-                onload: () => successFn && successFn(script),
-                onabort: errorFn,
-                onerror: errorFn,
-                src: url,
-                ...props,
-            },
-            attrs: attrs,
-            parent: document.body, // 插到body上是最后执行的，未插到dom上是不会下载的，所以不用在意props的设置顺序
-        });
-    };
-    if (onLoad || onError) {
-        cb(onLoad, onError);
-        return;
-    }
-    return new Promise(function (resolve, reject) {
-        cb(resolve as any, reject);
+  let url = '';
+  let onLoad, onError, attrs;
+  if (typeof param === 'string') {
+    url = param;
+  } else {
+    ({ url, onLoad, onError, props, attrs } = param);
+  }
+  const cb = (successFn, errorFn) => {
+    const script = createElement('script', {
+      props: {
+        onload: () => successFn && successFn(script),
+        onabort: errorFn,
+        onerror: errorFn,
+        src: url,
+        ...props,
+      },
+      attrs: attrs,
+      parent: document.body, // 插到body上是最后执行的，未插到dom上是不会下载的，所以不用在意props的设置顺序
     });
+  };
+  if (onLoad || onError) {
+    cb(onLoad, onError);
+    return;
+  }
+  return new Promise(function (resolve, reject) {
+    cb(resolve as any, reject);
+  });
 }
 
 /**
@@ -261,28 +282,28 @@ export function loadScript(param, props?) {
  * @return {}
  */
 export function noScroll(el: Window | HTMLElement | string = window) {
-    let scroller: HTMLElement = el as HTMLElement;
-    if (isString(el)) {
-        scroller = document.querySelector(el) as HTMLElement;
-        if (!scroller) throw new Error(`el not found`);
-    } else if (el === window) {
-        if (document.body.scrollTop) {
-            scroller = document.body;
-        } else {
-            scroller = document.documentElement;
-        }
+  let scroller: HTMLElement = el as HTMLElement;
+  if (isString(el)) {
+    scroller = document.querySelector(el) as HTMLElement;
+    if (!scroller) throw new Error(`el not found`);
+  } else if (el === window) {
+    if (document.body.scrollTop) {
+      scroller = document.body;
+    } else {
+      scroller = document.documentElement;
     }
+  }
 
-    const last = pickByKeys(getComputedStyle(scroller), ["marginTop", "overflow"]);
-    const scrollTop = scroller.scrollTop;
-    scroller.scrollTop = 0;
-    scroller.style.overflow = "hidden";
-    scroller.style.marginTop = (-scrollTop + parseInt(last.marginTop)) + "px";
-    return function () {
-        assign(scroller.style, last);
-        // scrollTop必须最后传 否则可能不能回到原位
-        scroller.scrollTop = scrollTop;
-    };
+  const last = pickByKeys(getComputedStyle(scroller), ['marginTop', 'overflow']);
+  const scrollTop = scroller.scrollTop;
+  scroller.scrollTop = 0;
+  scroller.style.overflow = 'hidden';
+  scroller.style.marginTop = -scrollTop + parseInt(last.marginTop) + 'px';
+  return function () {
+    assign(scroller.style, last);
+    // scrollTop必须最后传 否则可能不能回到原位
+    scroller.scrollTop = scrollTop;
+  };
 }
 
 /**
@@ -291,48 +312,50 @@ export function noScroll(el: Window | HTMLElement | string = window) {
  * @param tagName
  * @param params
  */
-export function createHtmlElement<K extends keyof HTMLElementTagNameMap,
-    R extends HTMLElementTagNameMap[K]>(
-    tagName: K,
-    params: {
-        attrs?: { [k: string]: any };
-        props?: SettableProps<R>;
-        parent?: HTMLElement | string;
-        children?: HTMLElement[] | NodeList
-    } = {},
+export function createHtmlElement<
+  K extends keyof HTMLElementTagNameMap,
+  R extends HTMLElementTagNameMap[K],
+>(
+  tagName: K,
+  params: {
+    attrs?: { [k: string]: any };
+    props?: SettableProps<R>;
+    parent?: HTMLElement | string;
+    children?: HTMLElement[] | NodeList;
+  } = {},
 ): R {
-    const el = document.createElement(tagName);
-    const {attrs = {}, props = {}, parent, children} = params;
-    // set props
-    forEachObj(props, (v, k) => {
-        const isObjValue = typeof v === "object";
-        if (k === "style" && isObjValue) {
-            // 未添加到body中，不会触发重绘
-            assign(el.style, v);
-            return;
-        }
-        el[k] = v;
-    });
-    // set attrs
-    forEachObj(attrs, (v, k) => {
-        const isObjValue = typeof v === "object";
-        el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
-    });
-    // set children
-    if (isArray(children) || isNodeList(children)) {
-        children.forEach(child => el.appendChild(child));
+  const el = document.createElement(tagName);
+  const { attrs = {}, props = {}, parent, children } = params;
+  // set props
+  forEachObj(props, (v, k) => {
+    const isObjValue = typeof v === 'object';
+    if (k === 'style' && isObjValue) {
+      // 未添加到body中，不会触发重绘
+      assign(el.style, v);
+      return;
     }
-    // set parent
-    if (parent) {
-        if (isDom(parent)) {
-            parent.appendChild(el);
-        } else if (isString(parent)) {
-            const pr = document.querySelector(parent);
-            if (!pr) throw new TypeError(`createHtmlElement param 'parent' => "${parent}" not founded`);
-            pr.appendChild(el);
-        }
+    el[k] = v;
+  });
+  // set attrs
+  forEachObj(attrs, (v, k) => {
+    const isObjValue = typeof v === 'object';
+    el.setAttribute(k as string, isObjValue ? JSON.stringify(v) : v);
+  });
+  // set children
+  if (isArray(children) || isNodeList(children)) {
+    children.forEach((child) => el.appendChild(child));
+  }
+  // set parent
+  if (parent) {
+    if (isDom(parent)) {
+      parent.appendChild(el);
+    } else if (isString(parent)) {
+      const pr = document.querySelector(parent);
+      if (!pr) throw new TypeError(`createHtmlElement param 'parent' => "${parent}" not founded`);
+      pr.appendChild(el);
     }
-    return el as any;
+  }
+  return el as any;
 }
 
 /**
@@ -342,28 +365,28 @@ export const createElement = createHtmlElement;
 
 export function createHiddenHtmlElement<E extends HTMLDivElement>(): E;
 export function createHiddenHtmlElement<E extends HTMLDivElement>(props: SettableProps<E>): E;
-export function createHiddenHtmlElement<K extends keyof HTMLElementTagNameMap, E extends HTMLElementTagNameMap[K]>(
-    props: SettableProps<E>,
-    tagName: K,
-): E;
+export function createHiddenHtmlElement<
+  K extends keyof HTMLElementTagNameMap,
+  E extends HTMLElementTagNameMap[K],
+>(props: SettableProps<E>, tagName: K): E;
 /**
  * 创建一个隐藏的html元素
  * @param props
  * @param tagName
  */
-export function createHiddenHtmlElement(props?, tagName = "div") {
-    return createHtmlElement(tagName as keyof HTMLElementTagNameMap, {
-        props: {
-            ...props,
-            style: {
-                position: "fixed",
-                left: "-10000px",
-                visibility: "hidden",
-                ...props?.style,
-            },
-        },
-        parent: document.body,
-    });
+export function createHiddenHtmlElement(props?, tagName = 'div') {
+  return createHtmlElement(tagName as keyof HTMLElementTagNameMap, {
+    props: {
+      ...props,
+      style: {
+        position: 'fixed',
+        left: '-10000px',
+        visibility: 'hidden',
+        ...props?.style,
+      },
+    },
+    parent: document.body,
+  });
 }
 
 /**
@@ -373,24 +396,24 @@ export function createHiddenHtmlElement(props?, tagName = "div") {
  * @return {number}
  */
 export function getFontScale(reverse = false) {
-    const fontSize = 10;
-    const div = createElement("div", {
-        props: {style: {fontSize: fontSize + "px"}},
-        parent: document.body,
-    });
-    const realFontSize = getComputedStyle(div).fontSize;
-    document.body.removeChild(div);
-    if (reverse) {
-        return fontSize / parseInt(realFontSize);
-    }
-    return parseInt(realFontSize) / fontSize;
+  const fontSize = 10;
+  const div = createElement('div', {
+    props: { style: { fontSize: fontSize + 'px' } },
+    parent: document.body,
+  });
+  const realFontSize = getComputedStyle(div).fontSize;
+  document.body.removeChild(div);
+  if (reverse) {
+    return fontSize / parseInt(realFontSize);
+  }
+  return parseInt(realFontSize) / fontSize;
 }
 
 /**
  * 是否在iframe中
  */
 export function inIframe(): boolean {
-    /* // 方式1
+  /* // 方式1
      if (self.frameElement && self.frameElement.tagName == "IFRAME") {
          alert('在iframe中');
      }
@@ -403,11 +426,11 @@ export function inIframe(): boolean {
          alert('在iframe中');
      } */
 
-    return Boolean(
-        root.self.frameElement && root.self.frameElement.tagName === "IFRAME"
-        || root.frames.length !== parent.frames.length
-        || root.self !== root.top,
-    );
+  return Boolean(
+    (root.self.frameElement && root.self.frameElement.tagName === 'IFRAME') ||
+      root.frames.length !== parent.frames.length ||
+      root.self !== root.top,
+  );
 }
 
 /**
@@ -419,32 +442,36 @@ export function inIframe(): boolean {
  * @return {function(): void}
  */
 export function scrollFixedWatcher(
-    target: HTMLElement,
-    cb: (reach: boolean) => void,
-    top = 0,
-    container: HTMLElement | Window = window,
+  target: HTMLElement,
+  cb: (reach: boolean) => void,
+  top = 0,
+  container: HTMLElement | Window = window,
 ): () => void {
-    const getScrollTop = container === window
-        ? () => document.documentElement.scrollTop || document.body.scrollTop
-        : () => (container as HTMLElement).scrollTop;
+  const getScrollTop =
+    container === window
+      ? () => document.documentElement.scrollTop || document.body.scrollTop
+      : () => (container as HTMLElement).scrollTop;
 
-    const rect = target.getBoundingClientRect();
-    const distanceTop = rect.top + getScrollTop() - top;
-    let handler;
-    // 立即判断一次
-    cb(getScrollTop() >= distanceTop);
-    container.addEventListener("scroll", handler = function () {
-        // 当滑动距离大于等于分类距离顶部位置时，则固定定位
-        cb(getScrollTop() >= distanceTop);
-    });
-    return function () {
-        container.removeEventListener("scroll", handler);
-    };
+  const rect = target.getBoundingClientRect();
+  const distanceTop = rect.top + getScrollTop() - top;
+  let handler;
+  // 立即判断一次
+  cb(getScrollTop() >= distanceTop);
+  container.addEventListener(
+    'scroll',
+    (handler = function () {
+      // 当滑动距离大于等于分类距离顶部位置时，则固定定位
+      cb(getScrollTop() >= distanceTop);
+    }),
+  );
+  return function () {
+    container.removeEventListener('scroll', handler);
+  };
 }
 
-type Rem = "rem";
-type Px = "px";
-type Percent = "%";
+type Rem = 'rem';
+type Px = 'px';
+type Percent = '%';
 
 type RemVal = `${number}${Rem}`;
 type PxVal = `${number}${Px}`;
@@ -456,17 +483,17 @@ type PercentVal = `${number}${Percent}`;
 const fractionDigits = 6;
 
 const tempToFixed = (num: number) => {
-    const f = num.toFixed(fractionDigits);
-    // 经toFixed后一定会有"."，所以不需要担心10000这种会变成1
-    return f.replace(/\.?0+$/, "");
+  const f = num.toFixed(fractionDigits);
+  // 经toFixed后一定会有"."，所以不需要担心10000这种会变成1
+  return f.replace(/\.?0+$/, '');
 };
 
 /**
  * 获取等于1rem的像素值
  */
 export function get1rem(): number {
-    const computed = getComputedStyle(document.documentElement);
-    return parseInt(computed.fontSize);
+  const computed = getComputedStyle(document.documentElement);
+  return parseInt(computed.fontSize);
 }
 
 /**
@@ -474,8 +501,8 @@ export function get1rem(): number {
  * @param rem
  */
 export function rem2px(rem: RemVal): PxVal {
-    const fs = get1rem();
-    return (fs * parseFloat(rem) + "px") as PxVal;
+  const fs = get1rem();
+  return (fs * parseFloat(rem) + 'px') as PxVal;
 }
 
 /**
@@ -483,14 +510,14 @@ export function rem2px(rem: RemVal): PxVal {
  * @param px
  */
 export function px2rem(px: PxVal): RemVal {
-    const fs = get1rem();
-    const result = divide(parseFloat(px), fs);
-    return (tempToFixed(result) + "rem") as RemVal;
+  const fs = get1rem();
+  const result = divide(parseFloat(px), fs);
+  return (tempToFixed(result) + 'rem') as RemVal;
 }
 
 export function percent2px(p: PercentVal, relativePx: number | PxVal): PxVal {
-    const t = times(parseFloat(relativePx as string), parseFloat(p));
-    return (divide(t, 100) + "px") as PxVal;
+  const t = times(parseFloat(relativePx as string), parseFloat(p));
+  return (divide(t, 100) + 'px') as PxVal;
 }
 
 /**
@@ -500,9 +527,9 @@ export function percent2px(p: PercentVal, relativePx: number | PxVal): PxVal {
  * @returns {string} PercentVal 保留fractionDigits位小数
  */
 export function px2Percent(px: PxVal, relativePx: number | PxVal): PercentVal {
-    const val = (parseFloat(px) * 100 / parseFloat(relativePx as string));
-    const toFixed = tempToFixed(val);
-    return (toFixed + "%") as PercentVal;
+  const val = (parseFloat(px) * 100) / parseFloat(relativePx as string);
+  const toFixed = tempToFixed(val);
+  return (toFixed + '%') as PercentVal;
 }
 
 /**
@@ -511,7 +538,7 @@ export function px2Percent(px: PxVal, relativePx: number | PxVal): PercentVal {
  * @param relativePx
  */
 export function rem2Percent(rem: RemVal, relativePx: number | PxVal): PercentVal {
-    return px2Percent(rem2px(rem), relativePx);
+  return px2Percent(rem2px(rem), relativePx);
 }
 
 /**
@@ -520,7 +547,7 @@ export function rem2Percent(rem: RemVal, relativePx: number | PxVal): PercentVal
  * @param relativePx
  */
 export function percent2Rem(p: PercentVal, relativePx: number | PxVal): RemVal {
-    return px2rem(percent2px(p, relativePx));
+  return px2rem(percent2px(p, relativePx));
 }
 
 /*export function toPx(from: CSSLenUnit, relativePx: number): string {
@@ -550,125 +577,133 @@ export function translateCssLenUnit(from: `${number}${CSSLenUnit}`, to: CSSLenUn
  * @param type
  * @param transition
  */
-export function toggleWidthOrHeight(el: HTMLElement, type: "width" | "height", transition: {
+export function toggleWidthOrHeight(
+  el: HTMLElement,
+  type: 'width' | 'height',
+  transition: {
     duration?: string;
     delay?: string;
-    timingFunction?: string
-} = {}) {
-    const trans = "transition";
-    const prefixTransition = prefixStyle(trans)!;
+    timingFunction?: string;
+  } = {},
+) {
+  const trans = 'transition';
+  const prefixTransition = prefixStyle(trans)!;
 
-    const isHide = el.getAttribute("toggle-status") === "hide";
-    const transitionValue = `${type} ${transition.duration || ".3s"} ${transition.timingFunction || ""} ${transition.delay || ""}`.trim();
-    if (!isHide) {
-        el.setAttribute("toggle-status", "hide");
-        const set = setStyle([
-            {[trans]: "none"},
-            {[type]: (type === "height" ? el.scrollHeight : el.scrollWidth) + "px"},
-        ], {el});
-        set({
-            [prefixTransition]: transitionValue,
-            [trans]: transitionValue,
-        });
-        setTimeout(function () {
-            set({[type]: "0"});
-        });
-    } else {
-        el.removeAttribute("toggle-status");
-        const set = setStyle({
-            [trans]: "none",
-            [type]: "0",
-        }, {el})({
-            [prefixTransition]: transitionValue,
-            [trans]: transitionValue,
-        });
-        setTimeout(function () {
-            set({[type]: (type === "height" ? el.scrollHeight : el.scrollWidth) + "px"});
-        });
-        onceEvent(el, "transitionend", function () {
-            set({[type]: ""});
-        });
-    }
+  const isHide = el.getAttribute('toggle-status') === 'hide';
+  const transitionValue = `${type} ${transition.duration || '.3s'} ${
+    transition.timingFunction || ''
+  } ${transition.delay || ''}`.trim();
+  if (!isHide) {
+    el.setAttribute('toggle-status', 'hide');
+    const set = setStyle(
+      [
+        { [trans]: 'none' },
+        { [type]: (type === 'height' ? el.scrollHeight : el.scrollWidth) + 'px' },
+      ],
+      { el },
+    );
+    set({
+      [prefixTransition]: transitionValue,
+      [trans]: transitionValue,
+    });
+    setTimeout(function () {
+      set({ [type]: '0' });
+    });
+  } else {
+    el.removeAttribute('toggle-status');
+    const set = setStyle(
+      {
+        [trans]: 'none',
+        [type]: '0',
+      },
+      { el },
+    )({
+      [prefixTransition]: transitionValue,
+      [trans]: transitionValue,
+    });
+    setTimeout(function () {
+      set({ [type]: (type === 'height' ? el.scrollHeight : el.scrollWidth) + 'px' });
+    });
+    onceEvent(el, 'transitionend', function () {
+      set({ [type]: '' });
+    });
+  }
 }
 
+export function animateTo({
+  from,
+  to,
+  callback,
+  speed = 0.5,
+  immediate = true,
+  minStepDenominator = 50,
+}: {
+  from: number;
+  to: number;
+  speed?: number;
+  minStepDenominator?: number;
+  immediate?: boolean;
+  callback: (num: number) => void;
+}) {
+  const originSpeed = speed;
+  let isStopped: boolean;
+  let current: number;
+  let isOver: () => boolean;
+  let direct: 1 | -1 = 1;
+  let minMove: number;
 
-export function animateTo(
-    {
-        from,
-        to,
-        callback,
-        speed = 0.5,
-        immediate = true,
-        minStepDenominator = 50
-    }: {
-        from: number;
-        to: number;
-        speed?: number;
-        minStepDenominator?: number;
-        immediate?: boolean;
-        callback: (num: number) => void
+  function init() {
+    const isUp = to > from;
+    isStopped = false;
+    current = from;
+    direct = isUp ? 1 : -1;
+    speed = originSpeed;
+    minMove = Math.max(Math.abs(to), Math.abs(from)) / minStepDenominator;
+    isOver = from > to ? () => current <= to : () => current >= to;
+    immediate && callback(current);
+  }
+
+  function run() {
+    if (isStopped) return;
+    if (!isOver()) {
+      const abs = Math.max(Math.abs(current - to), 1);
+      const move = Math.min((abs / 10) * speed, minMove) * direct;
+      current += move;
+      callback(current);
+      window.requestAnimationFrame(run);
+    } else {
+      stop();
+      current = to;
+      callback(current);
     }
-) {
-    const originSpeed = speed;
-    let isStopped: boolean;
-    let current: number;
-    let isOver: () => boolean;
-    let direct: 1 | -1 = 1;
-    let minMove: number;
+  }
 
-    function init() {
-        const isUp = to > from;
-        isStopped = false;
-        current = from;
-        direct = isUp ? 1 : -1;
-        speed = originSpeed;
-        minMove = Math.max(Math.abs(to), Math.abs(from)) / minStepDenominator;
-        isOver = from > to ? () => current <= to : () => current >= to;
-        immediate && callback(current);
-    }
+  function stop() {
+    isStopped = true;
+  }
 
-    function run() {
-        if (isStopped) return;
-        if (!isOver()) {
-            const abs = Math.max(Math.abs(current - to), 1);
-            const move = Math.min(abs / 10 * speed, minMove) * direct;
-            current += move;
-            callback(current);
-            window.requestAnimationFrame(run);
-        } else {
-            stop();
-            current = to;
-            callback(current);
-        }
-    }
+  init();
+  run();
 
-    function stop() {
-        isStopped = true;
-    }
-
-    init();
-    run();
-
-    return {
-        isStop() {
-            return isStopped;
-        },
-        reset() {
-            init();
-            run();
-        },
-        reverse() {
-            [to, from] = [from, to];
-            init();
-            run();
-        },
-        run() {
-            isStopped = false;
-            run();
-        },
-        stop
-    };
-
+  return {
+    isStop() {
+      return isStopped;
+    },
+    reset() {
+      init();
+      run();
+    },
+    reverse() {
+      [to, from] = [from, to];
+      init();
+      run();
+    },
+    run() {
+      isStopped = false;
+      run();
+    },
+    stop,
+  };
 }
 
 let stopScrollTo: Function | null = null;
@@ -680,70 +715,84 @@ let stopScrollTo: Function | null = null;
  * @param el {HTMLElement | Window}
  * @param [direct='vertical'] {'vertical'|'horizontal'}
  */
-export function scrollTo(target = 0, speed = 10, el: HTMLElement | Window = window, direct: 'vertical' | 'horizontal' = "vertical") {
-    stopScrollTo && stopScrollTo();
-    speed = getSafeNum(speed, 1, 100);
-    const vertical = {
-        scrollTo: 'scrollTop',
-        scrollSize: 'scrollHeight',
-        inner: 'innerHeight',
-        offset: 'offsetHeight'
-    };
-    const horizontal = {
-        scrollTo: 'scrollLeft',
-        scrollSize: 'scrollWidth',
-        inner: 'innerWidth',
-        offset: 'offsetWidth'
-    };
-    const directKey = direct === 'horizontal' ? horizontal : vertical;
-    const topOrLeft = directKey.scrollTo;
-    let current: number = 0;
-    const element = el === window ? (document.body[topOrLeft] ? document.body : document.documentElement) : el as HTMLElement;
-    const getPos = () => current = element[topOrLeft];
-    getPos();
-    let lastPos: number = Infinity;
-    let isOver: () => boolean;
-    if (current > target) {
-        // 往上
-        isOver = () => getPos() <= target;
-    } else if (current < target) {
-        // 往下
-        target = Math.min(target, element[directKey.scrollSize] - (el === window ? window[directKey.inner] : element[directKey.offset]));
-        speed *= -1;
-        isOver = () => getPos() >= target;
+export function scrollTo(
+  target = 0,
+  speed = 10,
+  el: HTMLElement | Window = window,
+  direct: 'vertical' | 'horizontal' = 'vertical',
+) {
+  stopScrollTo && stopScrollTo();
+  speed = getSafeNum(speed, 1, 100);
+  const vertical = {
+    scrollTo: 'scrollTop',
+    scrollSize: 'scrollHeight',
+    inner: 'innerHeight',
+    offset: 'offsetHeight',
+  };
+  const horizontal = {
+    scrollTo: 'scrollLeft',
+    scrollSize: 'scrollWidth',
+    inner: 'innerWidth',
+    offset: 'offsetWidth',
+  };
+  const directKey = direct === 'horizontal' ? horizontal : vertical;
+  const topOrLeft = directKey.scrollTo;
+  let current = 0;
+  const element =
+    el === window
+      ? document.body[topOrLeft]
+        ? document.body
+        : document.documentElement
+      : (el as HTMLElement);
+  const getPos = () => (current = element[topOrLeft]);
+  getPos();
+  let lastPos = Infinity;
+  let isOver: () => boolean;
+  if (current > target) {
+    // 往上
+    isOver = () => getPos() <= target;
+  } else if (current < target) {
+    // 往下
+    target = Math.min(
+      target,
+      element[directKey.scrollSize] -
+        (el === window ? window[directKey.inner] : element[directKey.offset]),
+    );
+    speed *= -1;
+    isOver = () => getPos() >= target;
+  } else {
+    return;
+  }
+
+  let stop = false;
+  stopScrollTo = () => {
+    stop = true;
+    stopScrollTo = null;
+  };
+  const eventTypes = ['wheel', 'touchstart', 'mousedown'];
+  const clear = () => {
+    stop = true;
+    eventTypes.forEach((type) => window.removeEventListener(type, clear));
+    stopScrollTo = null;
+  };
+
+  eventTypes.forEach((type) => window.addEventListener(type, clear));
+
+  function scroll() {
+    if (stop) return; // 不单独拿出来的话，未滚动完成马上再次滚动的话会先到达上次的目标点在滚动
+    if (!isOver() && lastPos !== current) {
+      const abs = Math.abs(target - current);
+      const move = Number((speed + ((abs / 50) * speed) / 10).toFixed(1));
+      element[topOrLeft] = current - move;
+      lastPos = current;
+      window.requestAnimationFrame(scroll);
     } else {
-        return;
+      element[topOrLeft] = target;
+      clear();
     }
+  }
 
-    let stop = false;
-    stopScrollTo = () => {
-        stop = true;
-        stopScrollTo = null;
-    };
-    const eventTypes = ["wheel", "touchstart", "mousedown"];
-    const clear = () => {
-        stop = true;
-        eventTypes.forEach(type => window.removeEventListener(type, clear));
-        stopScrollTo = null;
-    };
-
-    eventTypes.forEach(type => window.addEventListener(type, clear));
-
-    function scroll() {
-        if (stop) return; // 不单独拿出来的话，未滚动完成马上再次滚动的话会先到达上次的目标点在滚动
-        if (!isOver() && lastPos !== current) {
-            const abs = Math.abs(target - current);
-            const move = Number((speed + abs / 50 * speed / 10).toFixed(1));
-            element[topOrLeft] = current - move;
-            lastPos = current;
-            window.requestAnimationFrame(scroll);
-        } else {
-            element[topOrLeft] = target;
-            clear();
-        }
-    }
-
-    scroll();
+  scroll();
 }
 
 /**
@@ -751,14 +800,14 @@ export function scrollTo(target = 0, speed = 10, el: HTMLElement | Window = wind
  * @notice 只能在script引入的js中使用
  */
 export function getCurrentScriptTag(): HTMLScriptElement | null {
-    // 除了ie都支持document.currentScript
-    if (document.currentScript) {
-        return document.currentScript as HTMLScriptElement;
-    }
-    // 由于script加载会中断浏览器渲染(未设置async和defer的情况下)，所以当前的script一定是最后一个script
-    const scripts = document.scripts;
-    if (!scripts.length) return null;
-    return scripts[scripts.length - 1];
+  // 除了ie都支持document.currentScript
+  if (document.currentScript) {
+    return document.currentScript as HTMLScriptElement;
+  }
+  // 由于script加载会中断浏览器渲染(未设置async和defer的情况下)，所以当前的script一定是最后一个script
+  const scripts = document.scripts;
+  if (!scripts.length) return null;
+  return scripts[scripts.length - 1];
 }
 
 /**
@@ -767,21 +816,26 @@ export function getCurrentScriptTag(): HTMLScriptElement | null {
  * @param {HTMLElement | string} [parent=document.documentElement]
  * @return {boolean}
  */
-export function isChildHTMLElement(child: HTMLElement | string, parent: HTMLElement | string = document.documentElement): boolean {
-    const childNode: HTMLElement | null = typeof child === "string" ? document.querySelector(child) : child;
-    if (!childNode) throw "child not founded";
-    const parentNode: HTMLElement | null = typeof parent === "string" ? document.querySelector(parent) : parent;
-    if (!parentNode) throw "parent not founded";
+export function isChildHTMLElement(
+  child: HTMLElement | string,
+  parent: HTMLElement | string = document.documentElement,
+): boolean {
+  const childNode: HTMLElement | null =
+    typeof child === 'string' ? document.querySelector(child) : child;
+  if (!childNode) throw 'child not founded';
+  const parentNode: HTMLElement | null =
+    typeof parent === 'string' ? document.querySelector(parent) : parent;
+  if (!parentNode) throw 'parent not founded';
 
-    const root = document.documentElement;
+  const root = document.documentElement;
 
-    function find(child: ParentNode | null, parent: HTMLElement): boolean {
-        if (!child) return false;
-        if (child === parent) return false;
-        if (child === root) return false;
-        if (child.parentNode === parent) return true;
-        return find(child.parentNode, parent);
-    }
+  function find(child: ParentNode | null, parent: HTMLElement): boolean {
+    if (!child) return false;
+    if (child === parent) return false;
+    if (child === root) return false;
+    if (child.parentNode === parent) return true;
+    return find(child.parentNode, parent);
+  }
 
-    return find(childNode, parentNode);
+  return find(childNode, parentNode);
 }

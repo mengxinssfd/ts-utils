@@ -1,8 +1,8 @@
-import {strPadEnd} from "./string";
-import {createTimeCountDown} from "./time";
-import {isArray, isString, isPromiseLike, isNumber, typeOf} from "./dataType";
-import {assign, getReverseObj, objKeys} from "./object";
-import {inRange} from "./array";
+import { strPadEnd } from './string';
+import { createTimeCountDown } from './time';
+import { isArray, isString, isPromiseLike, isNumber, typeOf } from './dataType';
+import { assign, getReverseObj, objKeys } from './object';
+import { inRange } from './array';
 
 /**
  * 防抖函数
@@ -13,45 +13,49 @@ import {inRange} from "./array";
  *
  * @returns {Function}
  */
-export function debounce<CB extends (...args: any[]) => any>(callback: CB, delay: number, immediate = false): CB & { cancel(): void; flush: CB } {
-    let lastThis: any;
-    let lastArgs: any;
-    let lastResult: any;
-    let timer: any;
-    let canImmediateRun = true;
-    const cancel = () => {
-        clearTimeout(timer);
-        timer = undefined;
-    };
-    const debounced = function (...args: any[]) {
-        if (timer) {
-            cancel();
-        }
-        lastThis = this;
-        lastArgs = args;
-        if (canImmediateRun && immediate) {
-            debounced.flush();
-            canImmediateRun = false;
-            timer = setTimeout(() => {
-                canImmediateRun = true;
-            }, delay);
-            return lastResult;
-        }
-        timer = setTimeout(() => {
-            cancel();
-            debounced.flush();
-            canImmediateRun = true;
-        }, delay);
+export function debounce<CB extends (...args: any[]) => any>(
+  callback: CB,
+  delay: number,
+  immediate = false,
+): CB & { cancel(): void; flush: CB } {
+  let lastThis: any;
+  let lastArgs: any;
+  let lastResult: any;
+  let timer: any;
+  let canImmediateRun = true;
+  const cancel = () => {
+    clearTimeout(timer);
+    timer = undefined;
+  };
+  const debounced = function (...args: any[]) {
+    if (timer) {
+      cancel();
+    }
+    lastThis = this;
+    lastArgs = args;
+    if (canImmediateRun && immediate) {
+      debounced.flush();
+      canImmediateRun = false;
+      timer = setTimeout(() => {
+        canImmediateRun = true;
+      }, delay);
+      return lastResult;
+    }
+    timer = setTimeout(() => {
+      cancel();
+      debounced.flush();
+      canImmediateRun = true;
+    }, delay);
 
-        return lastResult;
-    } as ReturnType<typeof debounce>;
-    debounced.cancel = cancel;
-    debounced.flush = () => {
-        lastResult = callback.apply(lastThis, lastArgs);
-        lastThis = lastArgs = undefined;
-        return lastResult;
-    };
-    return debounced as any;
+    return lastResult;
+  } as ReturnType<typeof debounce>;
+  debounced.cancel = cancel;
+  debounced.flush = () => {
+    lastResult = callback.apply(lastThis, lastArgs);
+    lastThis = lastArgs = undefined;
+    return lastResult;
+  };
+  return debounced as any;
 }
 
 /**
@@ -59,25 +63,28 @@ export function debounce<CB extends (...args: any[]) => any>(callback: CB, delay
  * @param callback
  * @param delay
  */
-export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(callback: CB, delay: number): CB {
-    let timer: any = null;
-    let rej;
+export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(
+  callback: CB,
+  delay: number,
+): CB {
+  let timer: any = null;
+  let rej;
 
-    return function (...args: any[]) {
-        return new Promise<T>((resolve, reject) => {
-            if (timer !== null) {
-                clearTimeout(timer);
-                timer = null;
-                rej("debounceAsync reject");
-            }
-            rej = reject;
-            timer = setTimeout(async () => {
-                timer = null;
-                const result = await callback.apply(this, args);
-                resolve(result);
-            }, delay);
-        });
-    } as CB;
+  return function (...args: any[]) {
+    return new Promise<T>((resolve, reject) => {
+      if (timer !== null) {
+        clearTimeout(timer);
+        timer = null;
+        rej('debounceAsync reject');
+      }
+      rej = reject;
+      timer = setTimeout(async () => {
+        timer = null;
+        const result = await callback.apply(this, args);
+        resolve(result);
+      }, delay);
+    });
+  } as CB;
 }
 
 /**
@@ -86,21 +93,21 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(call
  * @param delay
  * @param invalidCB {function?}间隔期间调用throttle返回的函数执行的回调  例如一个按钮5秒点击一次，不可点击时执行该函数
  */
-export function throttle<CB extends (...args: any[]) => (void | any)>(
-    callback: CB,
-    delay: number,
-    invalidCB: (interval: number) => void = () => void 0
+export function throttle<CB extends (...args: any[]) => void | any>(
+  callback: CB,
+  delay: number,
+  invalidCB: (interval: number) => void = () => void 0,
 ): CB {
-    let countDown = () => 0;
-    return function (...args: any[]) {
-        const interval = countDown();
-        if (interval > 0) {
-            invalidCB(interval);
-            return;
-        }
-        countDown = createTimeCountDown(delay);
-        return callback.apply(this, args);
-    } as CB;
+  let countDown = () => 0;
+  return function (...args: any[]) {
+    const interval = countDown();
+    if (interval > 0) {
+      invalidCB(interval);
+      return;
+    }
+    countDown = createTimeCountDown(delay);
+    return callback.apply(this, args);
+  } as CB;
 }
 
 // 第1种实现方式
@@ -148,22 +155,22 @@ export function throttle<CB extends (...args: any[]) => (void | any)>(
  * @returns {Function}
  */
 export function debounceCancelable(callback: (...args: any[]) => void, delay: number) {
-    let timer: any = null;
+  let timer: any = null;
 
-    function cancel() {
-        if (!timer) return;
-        clearTimeout(timer);
-        timer = null;
-    }
+  function cancel() {
+    if (!timer) return;
+    clearTimeout(timer);
+    timer = null;
+  }
 
-    return function (...args: any[]) {
-        cancel();
-        timer = setTimeout(() => {
-            timer = null;
-            callback.apply(this, args);
-        }, delay);
-        return cancel;
-    };
+  return function (...args: any[]) {
+    cancel();
+    timer = setTimeout(() => {
+      timer = null;
+      callback.apply(this, args);
+    }, delay);
+    return cancel;
+  };
 }
 
 /**
@@ -172,15 +179,16 @@ export function debounceCancelable(callback: (...args: any[]) => void, delay: nu
  * @param callback
  */
 export function debounceByPromise<T, CB extends (...args: any[]) => Promise<T>>(callback: CB): CB {
-    let rejectFn;
-    return function (...args: any[]): Promise<T> {
-        rejectFn && rejectFn();
-        return new Promise(async (res, rej) => {
-            rejectFn = rej;
-            const result = await callback.apply(this, args);
-            res(result);
-        });
-    } as CB;
+  let rejectFn;
+  return function (...args: any[]): Promise<T> {
+    rejectFn && rejectFn();
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (res, rej) => {
+      rejectFn = rej;
+      const result = await callback.apply(this, args);
+      res(result);
+    });
+  } as CB;
 }
 
 /**
@@ -189,56 +197,63 @@ export function debounceByPromise<T, CB extends (...args: any[]) => Promise<T>>(
  * @param interval  间隔
  * @param [immediate=true] 是否马上执行第一次
  */
-export function polling(callback: (times: number) => void | Promise<any>, interval: number, immediate = true): () => void {
-    enum state {running, stopped}
+export function polling(
+  callback: (times: number) => void | Promise<any>,
+  interval: number,
+  immediate = true,
+): () => void {
+  enum state {
+    running,
+    stopped,
+  }
 
-    let timer: number;
-    let status: state;
-    let times = 0;
-    let lastTime = Date.now();
-    let diff = 0;
+  let timer: number;
+  let status: state;
+  let times = 0;
+  let lastTime = Date.now();
+  let diff = 0;
 
-    function run() {
-        const back = callback(times++);
-        (back instanceof Promise) ? back.then(timeout) : timeout();
-    }
+  function run() {
+    const back = callback(times++);
+    back instanceof Promise ? back.then(timeout) : timeout();
+  }
 
-    function timeout() {
-        const delay = interval - diff;
-        timer = setTimeout(() => {
-            if (status !== state.running) return;
-            const now = Date.now();
-            diff = now - lastTime - delay;
-            lastTime = now;
-            run();
-        }, delay) as any;
-    }
+  function timeout() {
+    const delay = interval - diff;
+    timer = setTimeout(() => {
+      if (status !== state.running) return;
+      const now = Date.now();
+      diff = now - lastTime - delay;
+      lastTime = now;
+      run();
+    }, delay) as any;
+  }
 
-    status = state.running;
-    if (immediate) {
-        run();
-    } else {
-        timeout();
-    }
-    return function () {
-        status = state.stopped;
-        clearTimeout(timer);
-    };
+  status = state.running;
+  if (immediate) {
+    run();
+  } else {
+    timeout();
+  }
+  return function () {
+    status = state.stopped;
+    clearTimeout(timer);
+  };
 }
 
 // 代替for循环
-export function forEachByLen(len: number, callback: (index: number) => (any | false)) {
-    for (let i = 0; i < len; i++) {
-        if (callback(i) !== false) continue;
-        break;
-    }
+export function forEachByLen(len: number, callback: (index: number) => any | false) {
+  for (let i = 0; i < len; i++) {
+    if (callback(i) !== false) continue;
+    break;
+  }
 }
 
 // 代替for循环
-export function forEachByLenRight(len: number, callback: (index: number) => (any | false)) {
-    for (let i = len - 1; i >= 0; i--) {
-        if (callback(i) === false) break;
-    }
+export function forEachByLenRight(len: number, callback: (index: number) => any | false) {
+  for (let i = len - 1; i >= 0; i--) {
+    if (callback(i) === false) break;
+  }
 }
 
 /**
@@ -247,43 +262,50 @@ export function forEachByLenRight(len: number, callback: (index: number) => (any
  * @param delay
  * @param callback
  */
-export function oneByOne(words: string, delay: number, callback?: (word: string, index: number, words: string) => false | void) {
-    let cancel: () => void;
-    const wordArr = words.split("");
-    cancel = polling((index) => {
-        const word = wordArr.shift();
-        let keepRun = !!wordArr.length;
-        if (callback) {
-            const flag = callback(word as string, index, words);
-            keepRun = keepRun && flag !== false;
-        } else {
-            // console.log(word);
-        }
-        if (!keepRun) cancel();
-    }, delay);
-    return cancel;
+export function oneByOne(
+  words: string,
+  delay: number,
+  callback?: (word: string, index: number, words: string) => false | void,
+): () => void {
+  const wordArr = words.split('');
+  const cancel = polling((index) => {
+    const word = wordArr.shift();
+    let keepRun = !!wordArr.length;
+    if (callback) {
+      const flag = callback(word as string, index, words);
+      keepRun = keepRun && flag !== false;
+    } else {
+      // console.log(word);
+    }
+    if (!keepRun) cancel();
+  }, delay);
+  return cancel;
 }
 
 // 代替扩展符"...", 实现apply的时候可以使用此方法
 export function generateFunctionCode(argsArrayLength: number) {
-    let code = "return arguments[0][arguments[1]](";
-    // 拼接args
-    for (let i = 0; i < argsArrayLength; i++) {
-        if (i > 0) {
-            code += ",";
-        }
-        code += "arguments[2][" + i + "]";
+  let code = 'return arguments[0][arguments[1]](';
+  // 拼接args
+  for (let i = 0; i < argsArrayLength; i++) {
+    if (i > 0) {
+      code += ',';
     }
-    code += ")";
-    // return object.property(args)
-    // return arguments[0][arguments[1]](arg1, arg2, arg3...)
-    return code;
+    code += 'arguments[2][' + i + ']';
+  }
+  code += ')';
+  // return object.property(args)
+  // return arguments[0][arguments[1]](arg1, arg2, arg3...)
+  return code;
 }
 
 // const args = [1, 2, 3];
 // (new Function(generateFunctionCode(args.length)))(object, property, args);
-export function functionApply<T extends object, K extends keyof T>(obj: T, property: K, args: any[]) {
-    return (new Function(generateFunctionCode(args.length)))(obj, property, args);
+export function functionApply<T extends object, K extends keyof T>(
+  obj: T,
+  property: K,
+  args: any[],
+) {
+  return new Function(generateFunctionCode(args.length))(obj, property, args);
 }
 
 /**
@@ -292,16 +314,16 @@ export function functionApply<T extends object, K extends keyof T>(obj: T, prope
  * @returns {string}
  */
 export function createUUID(length: number): string {
-    const uuidArr: string[] = [];
-    const hexDigits = "0123456789abcdef";
-    for (let i = 0; i < length; i++) {
-        uuidArr[i] = hexDigits.substr(Math.random() * 0x10, 1);
-    }
+  const uuidArr: string[] = [];
+  const hexDigits = '0123456789abcdef';
+  for (let i = 0; i < length; i++) {
+    uuidArr[i] = hexDigits.substr(Math.random() * 0x10, 1);
+  }
 
-    // uuidArr[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-    // uuidArr[19] = hexDigits.substr(((uuidArr[19] as any) & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+  // uuidArr[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+  // uuidArr[19] = hexDigits.substr(((uuidArr[19] as any) & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
 
-    return uuidArr.join("");
+  return uuidArr.join('');
 }
 
 /**
@@ -310,71 +332,74 @@ export function createUUID(length: number): string {
  * @param [indent=2] tab空格占位
  */
 export function formatJSON(json: object | string, indent = 2): string {
-    if (typeof json === "string") {
-        try {
-            json = JSON.parse(json);
-        } catch (e) {
-            throw new TypeError();
-        }
-
+  if (typeof json === 'string') {
+    try {
+      json = JSON.parse(json);
+    } catch (e) {
+      throw new TypeError();
     }
+  }
 
-    function foreach(js: any, floor = 0): string {
-        switch (typeof js) {
-            case "object":
-                const isArr = isArray(js);
+  function foreach(js: any, floor = 0): string {
+    switch (typeof js) {
+      case 'object':
+        const isArr = isArray(js);
 
-                let space = " ".repeat(indent * floor);
-                const start = isArr ? "[\r\n" : "{\r\n";
-                const end = "\r\n" + space + (isArr ? "]" : "}");
-                let times = 0;
+        const space = ' '.repeat(indent * floor);
+        const start = isArr ? '[\r\n' : '{\r\n';
+        const end = '\r\n' + space + (isArr ? ']' : '}');
+        let times = 0;
 
-                let result = start;
-                for (const key in js) {
-                    if (!js.hasOwnProperty(key)) continue;
-                    const value = js[key];
+        let result = start;
+        for (const key in js) {
+          if (!js.hasOwnProperty(key)) continue;
+          const value = js[key];
 
-                    // 如果改行不是第一行，则给上一行的末尾添加逗号，并且换行
-                    if (times) result += ",\r\n";
+          // 如果改行不是第一行，则给上一行的末尾添加逗号，并且换行
+          if (times) result += ',\r\n';
 
-                    // 拼接空格
-                    const childSpace = " ".repeat(indent * floor + indent);
-                    const child = foreach(value, floor + 1);
+          // 拼接空格
+          const childSpace = ' '.repeat(indent * floor + indent);
+          const child = foreach(value, floor + 1);
 
-                    if (isArr) {
-                        result += `${childSpace}${child}`;
-                    } else {
-                        result += `${childSpace}"${key}":${child}`;
-                    }
+          if (isArr) {
+            result += `${childSpace}${child}`;
+          } else {
+            result += `${childSpace}"${key}":${child}`;
+          }
 
-                    times++;
-                }
-                return result + end;
-            case "function":
-                // 函数的}位置有点对不上
-                return `"${js.toString()}"`;
-            default:
-                return isString(js) ? ("\"" + js + "\"") : js;
+          times++;
         }
+        return result + end;
+      case 'function':
+        // 函数的}位置有点对不上
+        return `"${js.toString()}"`;
+      default:
+        return isString(js) ? '"' + js + '"' : js;
     }
+  }
 
-    return foreach(json);
+  return foreach(json);
 }
 
 // TODO 暂时无法手动设置值 未添加测试用例
-export function createEnum<T extends string>(items: T[]): { [k in T]: number } & { [k: number]: T } {
-    const result: any = {};
-    items.forEach((item, index) => {
-        result[item] = index;
-        result[index] = item;
-    });
-    Object.freeze(result); // freeze值不可变
-    // Object.seal(result); // seal值可以变
-    return result;
+export function createEnum<T extends string>(
+  items: T[],
+): { [k in T]: number } & { [k: number]: T } {
+  const result: any = {};
+  items.forEach((item, index) => {
+    result[item] = index;
+    result[index] = item;
+  });
+  Object.freeze(result); // freeze值不可变
+  // Object.seal(result); // seal值可以变
+  return result;
 }
 
-export function createEnumByObj<T extends object, K extends keyof T, O extends { [k: string]: K }>(obj: T): T & { [k: string]: K } {
-    /* const res: any = {};
+export function createEnumByObj<T extends object, K extends keyof T>(
+  obj: T,
+): T & { [k: string]: K } {
+  /* const res: any = {};
      for (let k in obj) {
          if (res.hasOwnProperty(k)) throw new Error("key multiple");
          res[res[k] = obj[k]] = k;
@@ -383,7 +408,7 @@ export function createEnumByObj<T extends object, K extends keyof T, O extends {
      Object.freeze(res); // freeze值不可变
      // Object.seal(result); // seal值可以变
      return res;*/
-    return assign({}, obj, getReverseObj(obj as any)) as any;
+  return assign({}, obj, getReverseObj(obj as any)) as any;
 }
 
 // omit({a: 123, b: "bbb", c: true}, ["a", "b", "d"]);
@@ -394,26 +419,28 @@ export function createEnumByObj<T extends object, K extends keyof T, O extends {
  * @param list
  */
 export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
-    return new Promise<T>(((resolve, reject) => {
-        let rejectTimes = 0;
-        try {
-            for (const p of list) {
-                if (!isPromiseLike(p)) {
-                    resolve(p);
-                    break;
-                }
-                p.then(res => resolve(res), () => {
-                    rejectTimes++;
-                    if (rejectTimes !== list.length) return;
-                    reject("AggregateError: All promises were rejected");
-                });
-            }
-            !list.length && reject("AggregateError: All promises were rejected");
-        } catch (e: any) {
-            reject(e.toString());
+  return new Promise<T>((resolve, reject) => {
+    let rejectTimes = 0;
+    try {
+      for (const p of list) {
+        if (!isPromiseLike(p)) {
+          resolve(p);
+          break;
         }
-
-    }));
+        p.then(
+          (res) => resolve(res),
+          () => {
+            rejectTimes++;
+            if (rejectTimes !== list.length) return;
+            reject('AggregateError: All promises were rejected');
+          },
+        );
+      }
+      !list.length && reject('AggregateError: All promises were rejected');
+    } catch (e: any) {
+      reject(e.toString());
+    }
+  });
 }
 
 /**
@@ -423,10 +450,16 @@ export function promiseAny<T>(list: Promise<T>[]): Promise<T> {
  * @returns {Promise<T[]>}
  */
 export function syncPromiseAll<T>(list: ((list: T[]) => Promise<T>)[]): Promise<T[]> {
-    return list.reduce((p, next) => p.then((resList) => next(resList).then(res => {
-        resList.push(res);
-        return resList;
-    })), Promise.resolve([] as T[]));
+  return list.reduce(
+    (p, next) =>
+      p.then((resList) =>
+        next(resList).then((res) => {
+          resList.push(res);
+          return resList;
+        }),
+      ),
+    Promise.resolve([] as T[]),
+  );
 }
 
 /**
@@ -437,8 +470,14 @@ export function syncPromiseAll<T>(list: ((list: T[]) => Promise<T>)[]): Promise<
  * @param {T} initValue
  * @returns {Promise<unknown>}
  */
-export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T) {
-    return queue.reduce((p, next) => p.then(res => next(res)), Promise.resolve(initValue) as Promise<unknown>);
+export async function promiseQueue<T>(
+  queue: Array<(lastValue: unknown) => Promise<unknown>>,
+  initValue: T,
+) {
+  return queue.reduce(
+    (p, next) => p.then((res) => next(res)),
+    Promise.resolve(initValue) as Promise<unknown>,
+  );
 }
 
 /*export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promise<unknown>>, initValue: T) {
@@ -449,7 +488,7 @@ export async function promiseQueue<T>(queue: Array<(lastValue: unknown) => Promi
     return lastValue;
 }*/
 
-export const root = Function("return this")();
+export const root = Function('return this')();
 
 /**
  * 原来的函数四舍五入不准确
@@ -459,24 +498,25 @@ export const root = Function("return this")();
  * @param [rounding = false] 是否四舍五入
  */
 export function numToFixed(num: number, fractionDigits = 0, rounding = false): string {
-    if (!isNumber(fractionDigits) || !inRange(fractionDigits, [0, 100])) {
-        throw new TypeError("numToFixed() fractionDigits argument must be between 0 and 100");
-    }
+  if (!isNumber(fractionDigits) || !inRange(fractionDigits, [0, 100])) {
+    throw new TypeError('numToFixed() fractionDigits argument must be between 0 and 100');
+  }
 
-    if (fractionDigits === 0) return String(~~num);
+  if (fractionDigits === 0) return String(~~num);
 
-    const base = 10;
-    // 加1 四舍五入
-    const pow = base ** (fractionDigits + 1);
-    num = ~~(num * pow);
-    if (rounding && num) { // num为0的时候位数已经不对了
-        num += 5;
-    }
-    num /= pow;
+  const base = 10;
+  // 加1 四舍五入
+  const pow = base ** (fractionDigits + 1);
+  num = ~~(num * pow);
+  if (rounding && num) {
+    // num为0的时候位数已经不对了
+    num += 5;
+  }
+  num /= pow;
 
-    const split = String(num).split(".");
-    const digits = strPadEnd((split[1] || "").substr(0, fractionDigits), fractionDigits, "0");
-    return split[0] + "." + digits;
+  const split = String(num).split('.');
+  const digits = strPadEnd((split[1] || '').substr(0, fractionDigits), fractionDigits, '0');
+  return split[0] + '.' + digits;
 }
 
 /**
@@ -485,23 +525,21 @@ export function numToFixed(num: number, fractionDigits = 0, rounding = false): s
  * @param index
  * @param def
  */
-export function at<V extends ArrayLike<any>,
-    K extends (keyof V | number),
-    T extends ArrayLikeType<V>,
-    D extends any | void>(
-    arr: V,
-    index: K,
-    def: D = undefined as never
-): In<V, K, D extends never ? T | void : T | D> {
-    if (index < 0) {
-        index = (arr.length + (index as number)) as any;
-    }
-    // if (typeof arr === "string") return (arr[index] ?? def) as any;
-    return (arr.hasOwnProperty(index) ? arr[index] : def) as any;
+export function at<
+  V extends ArrayLike<any>,
+  K extends keyof V | number,
+  T extends ArrayLikeType<V>,
+  D extends any | void,
+>(arr: V, index: K, def: D = undefined as never): In<V, K, D extends never ? T | void : T | D> {
+  if (typeof index === 'number' && index < 0) {
+    index = (arr.length + (index as number)) as any;
+  }
+  // if (typeof arr === "string") return (arr[index] ?? def) as any;
+  return (arr.hasOwnProperty(index) ? arr[index] : def) as any;
 }
 
-type In<A, K, D> = K extends keyof A ? A[K] extends void ? D : A[K] : D;
-type ArrayLikeType<T> = T extends ArrayLike<infer R> ? R : never
+type In<A, K, D> = K extends keyof A ? (A[K] extends void ? D : A[K]) : D;
+type ArrayLikeType<T> = T extends ArrayLike<infer R> ? R : never;
 
 // type A = In<[1, 2, 3], 7, 1>
 // type B = In<[1, 2, 3], (-1), 1>
@@ -514,17 +552,17 @@ type ArrayLikeType<T> = T extends ArrayLike<infer R> ? R : never
  * @param key
  */
 export function likeKeys(target: object | Map<string, any>, key: string | RegExp): string[] {
-    const reg = new RegExp(key);
-    if ("undefined" !== typeof Map && target instanceof Map) {
-        // keys = [...obj.keys()]; // babel编译成es5会编译成[].concat，无法使用
-        const keys: string[] = [];
-        for (const k of target.keys()) {
-            if (reg.test(k)) keys.push(k);
-        }
-        return keys;
+  const reg = new RegExp(key);
+  if ('undefined' !== typeof Map && target instanceof Map) {
+    // keys = [...obj.keys()]; // babel编译成es5会编译成[].concat，无法使用
+    const keys: string[] = [];
+    for (const k of target.keys()) {
+      if (reg.test(k)) keys.push(k);
     }
+    return keys;
+  }
 
-    return objKeys(target).filter(key => reg.test(key));
+  return objKeys(target).filter((key) => reg.test(key));
 }
 
 /**
@@ -534,51 +572,55 @@ export function likeKeys(target: object | Map<string, any>, key: string | RegExp
  * @param prefix 前缀 --d --f 前缀是"--"
  * @param defaultKey 如果前面没有变量名那么使用默认
  */
-export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "default"): Map<string, string[] | string | boolean> {
-    const eqReg = /([^=]+)=([\s\S]+)?/;
-    const isKeyReg = new RegExp(`^${prefix}`);
-    const list = arr.slice();
-    const map: ReturnType<typeof parseCmdParams> = new Map();
-    let currentKey = defaultKey;
-    let item: string;
+export function parseCmdParams(
+  arr: string[],
+  prefix = '-',
+  defaultKey = 'default',
+): Map<string, string[] | string | boolean> {
+  const eqReg = /([^=]+)=([\s\S]+)?/;
+  const isKeyReg = new RegExp(`^${prefix}`);
+  const list = arr.slice();
+  const map: ReturnType<typeof parseCmdParams> = new Map();
+  let currentKey = defaultKey;
+  let item: string;
 
-    function setKey(): void {
-        let key = item.replace(isKeyReg, "");
-        if (eqReg.test(key)) {
-            key = RegExp.$1;
-            const value = RegExp.$2;
-            value && list.unshift(value);
-        }
-        currentKey = key;
-        if (!map.has(currentKey)) {
-            map.set(currentKey, true);
-        }
+  function setKey(): void {
+    let key = item.replace(isKeyReg, '');
+    if (eqReg.test(key)) {
+      key = RegExp.$1;
+      const value = RegExp.$2;
+      value && list.unshift(value);
     }
+    currentKey = key;
+    if (!map.has(currentKey)) {
+      map.set(currentKey, true);
+    }
+  }
 
-    // fullFight
-    function setValue() {
-        const existValue = map.get(currentKey);
-        switch (typeOf(existValue)) {
-            case "undefined":
-            case "boolean":
-                map.set(currentKey, item);
-                break;
-            case "array":
-                (existValue as Array<string>).push(item);
-                break;
-            default:
-                map.set(currentKey, [existValue as string, item]);
-        }
+  // fullFight
+  function setValue() {
+    const existValue = map.get(currentKey);
+    switch (typeOf(existValue)) {
+      case 'undefined':
+      case 'boolean':
+        map.set(currentKey, item);
+        break;
+      case 'array':
+        (existValue as Array<string>).push(item);
+        break;
+      default:
+        map.set(currentKey, [existValue as string, item]);
     }
+  }
 
-    while (item = list.shift()!) {
-        if (isKeyReg.test(item)) {
-            setKey();
-            continue;
-        }
-        setValue();
+  while ((item = list.shift()!)) {
+    if (isKeyReg.test(item)) {
+      setKey();
+      continue;
     }
-    return map;
+    setValue();
+  }
+  return map;
 }
 
 // 使用下面的生成器代替
@@ -603,56 +645,64 @@ export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "defaul
  * @param [step = 1] 每次增加的值
  * @param [end = Number.MAX_SAFE_INTEGER] 最大值；包左不包右原则，所以最后一个值是小于end的
  */
-export function* idGen(init = 0, step = 1, end = Number.MAX_SAFE_INTEGER): Generator<number, void, void | number> {
-    let id = init;
-    const handle = init < end ? () => id < end : () => id > end;
-    while (handle()) {
-        const _step = (yield id) || step;
-        id += _step;
-    }
+export function* idGen(
+  init = 0,
+  step = 1,
+  end = Number.MAX_SAFE_INTEGER,
+): Generator<number, void, void | number> {
+  let id = init;
+  const handle = init < end ? () => id < end : () => id > end;
+  while (handle()) {
+    const _step = (yield id) || step;
+    id += _step;
+  }
 }
 
 export function lazy() {
-    let queue = Promise.resolve();
+  let queue = Promise.resolve();
 
-    function then(cb: (done: Function, value: any) => void) {
-        const q = queue;
-        queue = new Promise((res) => {
-            q.then((value) => {
-                return cb(res, value);
-            });
-        });
-    }
+  function then(cb: (done: Function, value: any) => void) {
+    const q = queue;
+    queue = new Promise((res) => {
+      q.then((value) => {
+        return cb(res, value);
+      });
+    });
+  }
 
-    const obj = {
-        /**
-         * @param {number} ms 等待毫秒数
-         */
-        wait(ms: number) {
-            then((done, value) => setTimeout(() => done(value), ms));
-            return obj;
-        },
+  const obj = {
+    /**
+     * @param {number} ms 等待毫秒数
+     */
+    wait(ms: number) {
+      then((done, value) => setTimeout(() => done(value), ms));
+      return obj;
+    },
 
-        /**
-         * @param {((done: Function) => void) | (() => Promise<any>)} cb 回调返回一个值或返回一个promise 供下一个do回调调用
-         */
-        do(cb: ((done: Function, value) => void) | ((done: Function, value) => Promise<any>)) {
-            then((done, value) => {
-                const res = cb(done, value);
-                if (res && res.then) {
-                    res.then((val) => done(val));
-                }
-            });
-            return obj;
-        },
-    };
+    /**
+     * @param {((done: Function) => void) | (() => Promise<any>)} cb 回调返回一个值或返回一个promise 供下一个do回调调用
+     */
+    do(cb: ((done: Function, value) => void) | ((done: Function, value) => Promise<any>)) {
+      then((done, value) => {
+        const res = cb(done, value);
+        if (res && res.then) {
+          res.then((val) => done(val));
+        }
+      });
+      return obj;
+    },
+  };
 
-    return obj;
+  return obj;
 }
 
-export function swap<T extends object, K1 extends keyof T, K2 extends keyof T>(obj: T, k1: K1, k2: K2): T {
-    const temp = obj[k1];
-    obj[k1] = obj[k2] as any;
-    obj[k2] = temp as any;
-    return obj;
+export function swap<T extends object, K1 extends keyof T, K2 extends keyof T>(
+  obj: T,
+  k1: K1,
+  k2: K2,
+): T {
+  const temp = obj[k1];
+  obj[k1] = obj[k2] as any;
+  obj[k2] = temp as any;
+  return obj;
 }

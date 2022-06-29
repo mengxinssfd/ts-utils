@@ -1,31 +1,31 @@
 // 与坐标相关的
 
 // 坐标点
-import CalcChain from "./CalcChain";
+import CalcChain from './CalcChain';
 
-export type Point = [number, number]
+export type Point = [number, number];
 
 // 判断是否在范围内
 function inRange(a: number, [x1, x2]: Point): boolean {
-    return (x1 <= a && a <= x2) || (x2 <= a && a <= x1);
+  return (x1 <= a && a <= x2) || (x2 <= a && a <= x1);
 }
 
 // 判断某个点是否在某个线上
 export function isPointInPath(point: Point, path: Point[]): boolean {
-    const [x, y] = point;
-    for (let i = 1; i < path.length; i++) {
-        const [x1, y1] = path[i - 1];
-        const [x2, y2] = path[i];
+  const [x, y] = point;
+  for (let i = 1; i < path.length; i++) {
+    const [x1, y1] = path[i - 1];
+    const [x2, y2] = path[i];
 
-        // 根据向量的坐标运算  判断是否平行
-        // 对于非0向量a,b 设a=(x1,y1) b=(x2,y2) 则a平行b <=>  x1/x2 = y1/y2
-        const vector1 = (y2 - y1) / (x2 - x1);
-        const vector2 = (y - y1) / (x - x1);
+    // 根据向量的坐标运算  判断是否平行
+    // 对于非0向量a,b 设a=(x1,y1) b=(x2,y2) 则a平行b <=>  x1/x2 = y1/y2
+    const vector1 = (y2 - y1) / (x2 - x1);
+    const vector2 = (y - y1) / (x - x1);
 
-        // 判断是否在范围内
-        if (vector2 === vector1 && inRange(x, [x1, x2]) && inRange(y, [y1, y2])) return true;
-    }
-    return false;
+    // 判断是否在范围内
+    if (vector2 === vector1 && inRange(x, [x1, x2]) && inRange(y, [y1, y2])) return true;
+  }
+  return false;
 }
 
 /**
@@ -34,18 +34,18 @@ export function isPointInPath(point: Point, path: Point[]): boolean {
  * @param target
  */
 export function getDistance(origin: Point, target: Point): number {
-    const [x1, y1] = origin;
-    const [x2, y2] = target;
-    const x = x1 - x2;
-    const y = y1 - y2;
-    return Math.sqrt(x * x + y * y);
+  const [x1, y1] = origin;
+  const [x2, y2] = target;
+  const x = x1 - x2;
+  const y = y1 - y2;
+  return Math.sqrt(x * x + y * y);
 }
 
 export enum Direct {
-    top = "top",
-    left = "left",
-    right = "right",
-    bottom = "bottom"
+  top = 'top',
+  left = 'left',
+  right = 'right',
+  bottom = 'bottom',
 }
 
 /**
@@ -57,34 +57,33 @@ export enum Direct {
  * @param [direct=Direct.top] 需要上下左右哪个方向指向目标
  */
 export function getAngle(origin: Point, target: Point, direct = Direct.top): number {
-    const [x1, y1] = origin;
-    const [x2, y2] = target;
+  const [x1, y1] = origin;
+  const [x2, y2] = target;
 
-    // 相对数学坐标系是对的，对于屏幕坐标系不对
-    // x = x1 - x2
-    // y = y1 - y2
-    // r = Math.sqrt(x * x + y * y)
-    // angle = Math.round(Math.asin(y / r) / Math.pi * 180)
+  // 相对数学坐标系是对的，对于屏幕坐标系不对
+  // x = x1 - x2
+  // y = y1 - y2
+  // r = Math.sqrt(x * x + y * y)
+  // angle = Math.round(Math.asin(y / r) / Math.pi * 180)
 
-    // 在两点x轴相同时不对
-    // const x = x1 - x2;
-    // const y = y1 - y2;
-    // const r = Math.sqrt(x * x + y * y);
-    // if (r === 0) return 0;
-    // return Math.round(Math.acos(x / r) / Math.PI * 180) - 90;
+  // 在两点x轴相同时不对
+  // const x = x1 - x2;
+  // const y = y1 - y2;
+  // const r = Math.sqrt(x * x + y * y);
+  // if (r === 0) return 0;
+  // return Math.round(Math.acos(x / r) / Math.PI * 180) - 90;
 
-    // https://blog.csdn.net/chelen_jak/article/details/80518973
-    const angle = Math.atan2((x2 - x1), (y2 - y1)); //弧度  0.9272952180016122
-    const theta = angle * (180 / Math.PI); //角度  53.13010235415598
+  // https://blog.csdn.net/chelen_jak/article/details/80518973
+  const angle = Math.atan2(x2 - x1, y2 - y1); //弧度  0.9272952180016122
+  const theta = angle * (180 / Math.PI); //角度  53.13010235415598
 
-    return ({
-        [Direct.top]: 180 - theta,
-        [Direct.right]: theta,
-        [Direct.bottom]: 360 - theta,
-        [Direct.left]: theta + 180,
-    })[direct];
+  return {
+    [Direct.top]: 180 - theta,
+    [Direct.right]: theta,
+    [Direct.bottom]: 360 - theta,
+    [Direct.left]: theta + 180,
+  }[direct];
 }
-
 
 /**
  * 根据半径与角度获取点
@@ -93,17 +92,17 @@ export function getAngle(origin: Point, target: Point, direct = Direct.top): num
  * @param rotate
  */
 export function getRotatePoint(center: Point, radius: number, rotate: number): Point {
-    const angle = Math.PI / 180 * rotate;
-    // const angle = NumberCalc.init(Math.PI)["/"](180)["*"](rotate).curVal;
+  const angle = (Math.PI / 180) * rotate;
+  // const angle = NumberCalc.init(Math.PI)["/"](180)["*"](rotate).curVal;
 
-    // 圆的参数方程 圆心(a,b) x = a + r * cos; y = b + r * sin;
-    // 或正弦定理 a/sinA = b/sinB
-    // 因为屏幕上的坐标系与数学上的坐标系不同，所以x，y有所变化
-    // let x = center[0] + radius * Math.sin(angle);
-    // let y = center[1] - radius * Math.cos(angle);
-    let x = CalcChain.init(radius)["*"](Math.sin(angle))["+"](center[0]).value;
-    let y = CalcChain.init(radius)["*"](Math.cos(angle)).by(center[1], "-").value;
-    return [x, y];
+  // 圆的参数方程 圆心(a,b) x = a + r * cos; y = b + r * sin;
+  // 或正弦定理 a/sinA = b/sinB
+  // 因为屏幕上的坐标系与数学上的坐标系不同，所以x，y有所变化
+  // let x = center[0] + radius * Math.sin(angle);
+  // let y = center[1] - radius * Math.cos(angle);
+  const x = CalcChain.init(radius)['*'](Math.sin(angle))['+'](center[0]).value;
+  const y = CalcChain.init(radius)['*'](Math.cos(angle)).by(center[1], '-').value;
+  return [x, y];
 }
 
 /**
@@ -115,16 +114,15 @@ export function getRotatePoint(center: Point, radius: number, rotate: number): P
  * @param {Array} controlPoint 控制点
  */
 export function twoBezier(t: number, startPos: Point, endPos: Point, controlPoint: Point): Point {
-    const [x1, y1] = startPos;
-    const [cx, cy] = controlPoint;
-    const [x2, y2] = endPos;
-    let x = (1 - t) * (1 - t) * x1 + 2 * t * (1 - t) * cx + t * t * x2;
-    let y = (1 - t) * (1 - t) * y1 + 2 * t * (1 - t) * cy + t * t * y2;
-    // x = Math.floor(x);
-    // y = Math.floor(y);
-    return [x, y];
+  const [x1, y1] = startPos;
+  const [cx, cy] = controlPoint;
+  const [x2, y2] = endPos;
+  const x = (1 - t) * (1 - t) * x1 + 2 * t * (1 - t) * cx + t * t * x2;
+  const y = (1 - t) * (1 - t) * y1 + 2 * t * (1 - t) * cy + t * t * y2;
+  // x = Math.floor(x);
+  // y = Math.floor(y);
+  return [x, y];
 }
-
 
 /**
  * 根据余弦定理(c^2 = a^2 + b^2 - 2 * a * b * cosA)获取任意边长
@@ -133,10 +131,10 @@ export function twoBezier(t: number, startPos: Point, endPos: Point, controlPoin
  * @param angle 要获取的边长对应的角度
  */
 export function getBorderWidthByCos(a: number, b: number, angle: number) {
-    // 角度化弧度
-    const C = angle * Math.PI / 180;
-    const c2 = a ** 2 + b ** 2 - 2 * a * b * Math.cos(C);
-    return Math.sqrt(c2);
+  // 角度化弧度
+  const C = (angle * Math.PI) / 180;
+  const c2 = a ** 2 + b ** 2 - 2 * a * b * Math.cos(C);
+  return Math.sqrt(c2);
 }
 
 /**
@@ -146,10 +144,10 @@ export function getBorderWidthByCos(a: number, b: number, angle: number) {
  * @param angleB 要获取的边长对应的角度
  */
 export function getBorderWidthBySin(a: number, angleA: number, angleB: number) {
-    // 角度化弧度
-    const rad = Math.PI / 180;
-    const radA = rad * angleA;
-    const radB = rad * angleB;
-    const resA = a / Math.sin(radA);
-    return resA * Math.sin(radB);
+  // 角度化弧度
+  const rad = Math.PI / 180;
+  const radA = rad * angleA;
+  const radB = rad * angleB;
+  const resA = a / Math.sin(radA);
+  return resA * Math.sin(radB);
 }
