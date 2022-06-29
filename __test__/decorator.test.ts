@@ -1,5 +1,5 @@
-import {sleep} from "../src/core/time";
-import * as dc from "../src/core/decorator";
+import {sleep} from "../packages/core/src/time";
+import * as dc from "../packages/core/src/decorator";
 
 test("Debounce", async (done) => {
     const Debounce = dc.Debounce;

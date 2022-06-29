@@ -1,8 +1,8 @@
-import {isDom, isInputElement, isSelectElement, isTextAreaElement} from "../dom/domType";
-import {createHiddenHtmlElement} from "../dom/dom";
-import {castArray} from "../core/array";
-import {onceEvent} from "../dom/event";
-import {root} from "../core/common";
+import {isDom, isInputElement, isSelectElement, isTextAreaElement} from "../../dom/src/domType";
+import {createHiddenHtmlElement} from "../../dom/src/dom";
+import {castArray} from "../../core/src/array";
+import {onceEvent} from "../../dom/src/event";
+import {root} from "../../core/src/common";
 
 /**
  * @param element

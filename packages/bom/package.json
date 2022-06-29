@@ -1,0 +1,7 @@
+{
+  "name": "@mxssfd/ts-utils_bom",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "@mxssfd/ts-utils_dom": "^1.0.0"
+  }
+}

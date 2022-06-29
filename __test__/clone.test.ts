@@ -1,4 +1,4 @@
-import * as clone from "../src/core/clone";
+import * as clone from "../packages/core/src/clone";
 
 test("deepClone", () => {
     const arr = [1, 2, 3];

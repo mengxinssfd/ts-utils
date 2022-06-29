@@ -1,5 +1,5 @@
-import {ResponsibilityChain} from "../src/core/ResponsibilityChain";
-import {sleep} from "../src/core/time";
+import {ResponsibilityChain} from "../packages/core/src/ResponsibilityChain";
+import {sleep} from "../packages/core/src/time";
 
 test("ResponsibilityChain", () => {
     const rc = new ResponsibilityChain([

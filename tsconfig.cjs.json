@@ -10,7 +10,7 @@
     "sourceMap": false
   },
   "include": [
-    "src"
+    "packages"
   ],
   "exclude": [
   ]

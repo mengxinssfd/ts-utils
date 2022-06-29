@@ -1,5 +1,5 @@
-import * as type from "../src/core/dataType";
-import * as cm from "../src/core/common";
+import * as type from "../packages/core/src/dataType";
+import * as cm from "../packages/core/src/common";
 
 test("typeOf", () => {
     const fn = type.typeOf;

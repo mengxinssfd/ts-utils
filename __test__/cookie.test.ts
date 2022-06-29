@@ -1,5 +1,5 @@
-import {Cookie} from "../src/bom/cookie";
-import {sleep} from "../src/core/time";
+import {Cookie} from "../packages/bom/src/cookie";
+import {sleep} from "../packages/core/src/time";
 
 describe("cookie", () => {
     test("base", async () => {

@@ -1,4 +1,4 @@
-import * as domType from "../src/dom/domType";
+import * as domType from "../packages/dom/src/domType";
 
 test("isDomIe8", () => {
     const fn = domType.isDomIe8;

@@ -1,6 +1,6 @@
-import * as cm from "../src/core/common";
-import {sleep} from "../src/core/time";
-import {strPadStart} from "../src/core/string";
+import * as cm from "../packages/core/src/common";
+import {sleep} from "../packages/core/src/time";
+import {strPadStart} from "../packages/core/src/string";
 
 test("forEachByLen", () => {
     const fn = cm.forEachByLen;

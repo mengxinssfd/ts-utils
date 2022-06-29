@@ -1,5 +1,5 @@
-import * as ev from "../src/dom/event";
-import {createElement} from "../src/dom/dom";
+import * as ev from "../packages/dom/src/event";
+import {createElement} from "../packages/dom/src/dom";
 
 test("onceEvent", () => {
     const fn = ev.onceEvent;

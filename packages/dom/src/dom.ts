@@ -1,11 +1,11 @@
-import {castArray, includes, unique} from "../core/array";
-import {divide, getSafeNum, times} from "../core/number";
-import {assign, forEachObj, objReduce, pickByKeys} from "../core/object";
-import type {SettableProps, SettableStyle} from "../types/TsTypes";
-import {isArray, isString} from "../core/dataType";
+import {castArray, includes, unique} from "../../core/src/array";
+import {divide, getSafeNum, times} from "../../core/src/number";
+import {assign, forEachObj, objReduce, pickByKeys} from "../../core/src/object";
+import type {SettableProps, SettableStyle} from "../../types/src/TsTypes";
+import {isArray, isString} from "../../core/src/dataType";
 import {isDom, isNodeList} from "./domType";
-import {root} from "../core/common";
-import {fromCamel} from "../core/string";
+import {root} from "../../core/src/common";
+import {fromCamel} from "../../core/src/string";
 import {onceEvent} from "./event";
 // 所有主要浏览器都支持 createElement() 方法
 let elementStyle: CSSStyleDeclaration = root?.document?.createElement("div").style ?? {};

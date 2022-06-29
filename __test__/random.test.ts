@@ -1,9 +1,9 @@
-import {isHEXColor, isRGBColor} from "../src/core/color";
-import * as cm from "../src/core/random";
-import {forEachByLen} from "../src/core/common";
-import {createArray, unique} from "../src/core/array";
-import {isArrayLike} from "../src/core/dataType";
-import {omit} from "../src/core/object";
+import {isHEXColor, isRGBColor} from "../packages/core/src/color";
+import * as cm from "../packages/core/src/random";
+import {forEachByLen} from "../packages/core/src/common";
+import {createArray, unique} from "../packages/core/src/array";
+import {isArrayLike} from "../packages/core/src/dataType";
+import {omit} from "../packages/core/src/object";
 
 test("randomFloat", () => {
     const rand = cm.randomFloat(0, 10);

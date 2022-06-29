@@ -1,5 +1,5 @@
-import * as  color from "../src/core/color";
-import {randomColor} from "../src/core/random";
+import * as  color from "../packages/core/src/color";
+import {randomColor} from "../packages/core/src/random";
 
 test("isRGBColor", () => {
     const fn = color.isRGBColor;

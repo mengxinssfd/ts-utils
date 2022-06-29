@@ -1,7 +1,7 @@
-import {includes} from "../core/array";
-import {getDistance} from "../core/coordinate";
+import {includes} from "../../core/src/array";
+import {getDistance} from "../../core/src/coordinate";
 import {isDom} from "./domType";
-import {isFunction, isString} from "../core/dataType";
+import {isFunction, isString} from "../../core/src/dataType";
 
 type xy = { x: number, y: number }
 type OnDown = (e: MouseEvent | TouchEvent, currentXY: xy) => any

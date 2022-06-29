@@ -1,4 +1,4 @@
-import * as cd from "../src/core/coordinate";
+import * as cd from "../packages/core/src/coordinate";
 
 test("isPointInPath", () => {
     expect(cd.isPointInPath([1, 2], [[0, 0], [2, 4]])).toBe(true);

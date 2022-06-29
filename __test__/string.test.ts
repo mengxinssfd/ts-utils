@@ -1,4 +1,4 @@
-import * as cm from "../src/core/string";
+import * as cm from "../packages/core/src/string";
 
 test("strPadStart", () => {
     const fn = cm.strPadStart;

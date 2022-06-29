@@ -32,6 +32,6 @@
   },
   // "include": ["src/**/*", "src/global.d.ts"],
   "include": [
-    "src"
+    "packages"
   ]
 }

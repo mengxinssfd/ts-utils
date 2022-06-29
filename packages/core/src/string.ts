@@ -1,4 +1,4 @@
-import type {StrTemplate} from "../types/TsTypes";
+import type {StrTemplate} from "../../types/src/TsTypes";
 
 /**
  * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
