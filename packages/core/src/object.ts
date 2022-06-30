@@ -40,7 +40,7 @@ export function getTreeNodeLen(tree: object, nodeNumber = 1): number {
 export function deepMerge<T extends object, U extends object>(first: T, second: U): T & U {
   function assign(receive: object, obj: any) {
     for (const k in obj) {
-      if (!obj.hasOwnProperty(k)) continue;
+      if (!hasOwn(obj, k)) continue;
       const v = obj[k];
       if (v && typeof v === 'object') {
         receive[k] = new v.constructor();
@@ -68,7 +68,7 @@ export function forEachObj<T extends object>(
   elseCB?: () => any,
 ): boolean {
   for (const k in obj) {
-    if (!obj.hasOwnProperty(k)) continue;
+    if (!hasOwn(obj, k)) continue;
     const v = obj[k];
     if (callbackFn(v, k, obj) === false) return false;
   }
@@ -124,14 +124,14 @@ export const objReduce = reduceObj;
  * @param pickKeys
  * @param cb
  */
-export function pickByKeys<T extends object, K extends keyof T, O extends Pick<T, K>>(
+export function pickByKeys<T extends object, K extends keyof T>(
   originObj: T,
   pickKeys: K[],
   cb?: (value: T[K], key: K, originObj: T) => Pick<T, K>[K],
 ): Pick<T, K> {
   const callback = cb || ((v) => v);
   return pickKeys.reduce((res, key) => {
-    if (originObj.hasOwnProperty(key)) res[key] = callback(originObj[key], key, originObj);
+    if (hasOwn(originObj, key)) res[key] = callback(originObj[key], key, originObj);
     return res;
   }, {} as any);
 }
@@ -162,7 +162,7 @@ export function pickRename<T extends object, K extends keyof T, O extends { [k: 
   return reduceObj(
     pickKeyMap,
     (result, pick, rename) => {
-      if (originObj.hasOwnProperty(pick)) {
+      if (hasOwn(originObj, pick)) {
         result[rename] = callback(originObj[pick], pick, originObj);
       }
       return result;
@@ -247,7 +247,7 @@ export function pickDiff(
   const verifyFn =
     verify ||
     ((originV, objV, k, origin) => {
-      return (origin.hasOwnProperty(k) && originV === objV) || (isNaN(originV) && isNaN(objV));
+      return (hasOwn(origin, k) && originV === objV) || (isNaN(originV) && isNaN(objV));
     });
   return objs.reduce((result, obj) => {
     objForEach(obj, (v, k) => {
@@ -275,7 +275,7 @@ export function pickAdditional(origin: object, ...others: object[]) {
   //     return result;
   // }, {});
 
-  return pickDiff(origin, others, (originV, objV, k) => origin.hasOwnProperty(k));
+  return pickDiff(origin, others, (originV, objV, k) => hasOwn(origin, k));
 }
 
 /**
@@ -294,7 +294,7 @@ export function renameObjKey<
   const newKeys: string[] = [];
 
   forEachObj(keyMap, (originKey, k) => {
-    if (result.hasOwnProperty(originKey)) {
+    if (hasOwn(result, originKey)) {
       result[k] = result[originKey];
       delKeys.push(originKey);
       newKeys.push(k as string);
@@ -385,7 +385,7 @@ export function defaults(target, ...args) {
 export function objUpdate<T extends object>(target: T, ...args: T[]): T {
   objForEach(target, (v, k) => {
     forEachRight(function (item): void | false {
-      if (item && item.hasOwnProperty(k)) {
+      if (item && hasOwn(item, k)) {
         target[k] = item[k];
         return false;
       }
@@ -409,7 +409,7 @@ export function pickUpdated<T extends object>(
     target,
     (result, v, k) => {
       forEachRight(function (item: any): void | false {
-        if (item && item.hasOwnProperty(k)) {
+        if (item && hasOwn(item, k)) {
           if (!compareFn(target[k], item[k])) {
             result[k] = item[k];
           }
@@ -574,7 +574,7 @@ export function setObjValueByPath<
     ([init, currentPath], key, index) => {
       currentPath = currentPath + (currentPath ? '.' + key : key);
       if (index === end) {
-        if (init.hasOwnProperty(key)) {
+        if (hasOwn(init, key)) {
           value = onExist(init[key], value, true, currentPath);
         }
         init[key] = value;
@@ -582,11 +582,11 @@ export function setObjValueByPath<
       }
 
       if (!isBroadlyObj(init[key])) {
-        init[key] = init.hasOwnProperty(key) ? onExist(init[key], {}, false, currentPath) : {};
+        init[key] = hasOwn(init, key) ? onExist(init[key], {}, false, currentPath) : {};
       }
-      return [init[key], currentPath] as any;
+      return [init[key], currentPath];
     },
-    [obj, ''],
+    [obj, ''] as [object, string],
   );
   return obj;
 }
@@ -618,9 +618,10 @@ export function getObjPathEntries(obj: object, objName = ''): Array<[string, any
 // 根据路径还原整个object
 export function revertObjFromPath(pathArr: string[]): object {
   function getKV(path: string): { key: string; value: string; innerKey: string } {
-    let [key, value] = path.split('=').map((item) => decodeURIComponent(item));
+    const [k, value] = path.split('=').map((item) => decodeURIComponent(item));
+    let key = k;
     let innerKey = '';
-    const reg = /(?:\[([^\[\]]*)])|(?:\.\[?([^\[\]]*)]?)/g;
+    const reg = /(?:\[([^[\]]*)])|(?:\.\[?([^[\]]*)]?)/g;
     if (reg.test(key)) {
       innerKey = RegExp.$1 || RegExp.$2;
       key = key.replace(reg, '');
@@ -633,6 +634,7 @@ export function revertObjFromPath(pathArr: string[]): object {
     const { key, value, innerKey } = getKV(path);
     const resultValue = result[key];
 
+    // no-fallthrough
     switch (typeOf(resultValue)) {
       case 'undefined':
         if (!innerKey) {
@@ -645,6 +647,7 @@ export function revertObjFromPath(pathArr: string[]): object {
         break;
       case 'string':
         result[key] = [resultValue];
+      // eslint-disable-next-line no-fallthrough
       case 'array':
         if (!innerKey) {
           result[key].push(value);
