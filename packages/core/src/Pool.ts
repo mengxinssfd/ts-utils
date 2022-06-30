@@ -80,5 +80,5 @@ export class Pool<T> {
     this._aliveList.forEach(callbackFn);
   }
 
-  clear() {}
+  // clear() {}
 }

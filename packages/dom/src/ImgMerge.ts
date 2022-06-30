@@ -348,7 +348,7 @@ export class MergeImg {
   }
 
   clear() {
-    this._ctx!.clearRect(0, 0, this.width, this.height);
+    this._ctx?.clearRect(0, 0, this.width, this.height);
   }
 
   // base64

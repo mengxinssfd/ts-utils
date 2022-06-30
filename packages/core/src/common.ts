@@ -1,7 +1,7 @@
 import { strPadEnd } from './string';
 import { createTimeCountDown } from './time';
 import { isArray, isString, isPromiseLike, isNumber, typeOf } from './dataType';
-import { assign, getReverseObj, objKeys } from './object';
+import { assign, getReverseObj, hasOwn, objKeys } from './object';
 import { inRange } from './array';
 
 /**
@@ -352,7 +352,7 @@ export function formatJSON(json: object | string, indent = 2): string {
 
         let result = start;
         for (const key in js) {
-          if (!js.hasOwnProperty(key)) continue;
+          if (!hasOwn(js, key)) continue;
           const value = js[key];
 
           // 如果改行不是第一行，则给上一行的末尾添加逗号，并且换行
@@ -535,7 +535,7 @@ export function at<
     index = (arr.length + (index as number)) as any;
   }
   // if (typeof arr === "string") return (arr[index] ?? def) as any;
-  return (arr.hasOwnProperty(index) ? arr[index] : def) as any;
+  return (hasOwn(arr, index) ? arr[index] : def) as any;
 }
 
 type In<A, K, D> = K extends keyof A ? (A[K] extends void ? D : A[K]) : D;

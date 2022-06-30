@@ -1,4 +1,5 @@
 import { typeOf, isNaN, isArray, isArrayLike, isFunction } from './dataType';
+import { hasOwn } from './object';
 
 /**
  * @description len与end两个都有值时，以小的为准
@@ -118,7 +119,7 @@ export async function mapAsync<T, R, A extends ArrayLike<T>>(
  * @param initValue
  * @param thisArg
  */
-export async function reduceAsync<T, R, A extends ArrayLike<T>, I = A>(
+export async function reduceAsync<T, A extends ArrayLike<T>, I = A>(
   callbackfn: (initValue: I, value: T, index: number, array: A) => Promise<I>,
   initValue?: I,
   thisArg?: A | Iterable<T>,
@@ -513,7 +514,7 @@ export function groupBy(arr, key, defaultKey: number | string = '*') {
   const cb = isFunction(key) ? key : (item) => item[key];
   return arr.reduce((result, item) => {
     const k = cb(item, result) ?? defaultKey;
-    if (!result.hasOwnProperty(k)) {
+    if (!hasOwn(result, k)) {
       result[k] = [item];
     } else {
       result[k].push(item);

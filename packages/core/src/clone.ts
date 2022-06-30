@@ -1,5 +1,6 @@
 import { Stack } from './Stack';
 import { isBroadlyObj, typeOf } from './dataType';
+import { hasOwn } from './object';
 
 // 如果要复制函数属性的话，使用deepClone
 // 不建议复制函数，因为复制的函数不能访问原函数外面的变量
@@ -18,8 +19,11 @@ export function cloneFunction<T extends Function>(fn: T): T {
   return new Function('return ' + str)();
 }
 
-const cloneStrategies: { [key: string]: (target: any) => any } = (function () {
-  const st: typeof cloneStrategies = {
+interface CloneStrategies {
+  [key: string]: (target: any) => any;
+}
+const cloneStrategies: CloneStrategies = (function () {
+  const st: CloneStrategies = {
     array(target) {
       return new target.constructor();
     },
@@ -60,7 +64,7 @@ export function deepClone<T>(target: T): T {
     // 虽然array使用for i++比for in遍历快，但是如果在数组里面有非number类型的键的话，就无法复制，所以统一用for in遍历
     for (const k in tar) {
       //prototype继承的不复制  es6继承的不会被拦截
-      if (!tar.hasOwnProperty(k)) continue;
+      if (!hasOwn(tar, k)) continue;
       result[k] = _clone(tar[k]); // 递归复制
     }
     return result;
@@ -82,7 +86,7 @@ export function deepCloneBfs<T>(target: T): T {
 
   function getChildren(tar: object, parent: any) {
     for (const k in tar) {
-      if (!tar.hasOwnProperty(k)) continue;
+      if (!hasOwn(tar, k)) continue;
       queue.push([k, tar[k], parent]);
     }
   }

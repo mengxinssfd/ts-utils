@@ -164,8 +164,8 @@ type FormattedTimeStr =
  */
 export function getDateFromStr(date: FormattedTimeStr): Date | null {
   // 检测非数字、非/、非:、非-
-  if (!date || /[^\/\d: -]/.test(date)) return null; // 去除不符合规范的字符串
-  const arr: number[] = date.split(/[- :\/]/).map((item) => Number(item));
+  if (!date || /[^/\d: -]/.test(date)) return null; // 去除不符合规范的字符串
+  const arr: number[] = date.split(/[- :/]/).map((item) => Number(item));
   if (arr.length < 6) {
     for (let i = arr.length; i < 6; i++) {
       arr[i] = i < 3 ? 1 : 0; // 年月日最小为1
@@ -243,13 +243,12 @@ export function getMonthTheNthWeekday(month: Date, nth: number, weekday = 0) {
   }
   weekday = weekday === 0 ? 7 : weekday;
   const diff = weekday - date.getDay();
-  let dayDate: number;
   if (nth > 0) {
     diff >= 0 && nth--;
   } else {
     diff <= 0 && nth++;
   }
-  dayDate = nth * 7 + date.getDate() + diff;
+  const dayDate = nth * 7 + date.getDate() + diff;
   if (dayDate > endDate.getDate() || dayDate < 1) {
     return null;
   }

@@ -6,8 +6,6 @@ export class EventBus {
   private static instance?: EventBus;
   private events: { [key: string]: Array<Callback> } = {};
 
-  constructor() {}
-
   public static get Ins(): EventBus {
     if (!EventBus.instance) {
       EventBus.instance = new EventBus();

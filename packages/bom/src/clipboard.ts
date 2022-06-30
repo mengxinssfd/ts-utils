@@ -43,7 +43,7 @@ export function isSupportedClipboardCommand<T extends 'cut' | 'copy'>(
 ): boolean {
   const actions = castArray(action) as T[];
 
-    if (!!document.queryCommandSupported) return false;
+  if (!document.queryCommandSupported) return false;
 
   return actions.every((act) => document.queryCommandSupported(act));
 }

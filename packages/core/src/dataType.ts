@@ -171,7 +171,8 @@ export function isSameType(a: any, b: any): boolean {
 
 export function isIterable(target: any): target is Iterable<any> {
   try {
-    for (const {} of target) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const _ of target) {
       break;
     }
     return true;

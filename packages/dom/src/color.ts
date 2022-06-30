@@ -4,28 +4,25 @@
  * @param imgEl
  */
 export function getAverageRGB(imgEl: HTMLImageElement) {
-  let blockSize = 5, // only visit every 5 pixels
-    defaultRGB = { r: 0, g: 0, b: 0 }, // for non-supporting envs
-    canvas = document.createElement('canvas'),
-    context = canvas.getContext && canvas.getContext('2d'),
-    data,
-    width,
-    height,
-    i = -4,
-    length,
-    rgb = { r: 0, g: 0, b: 0 },
-    count = 0;
+  const blockSize = 5; // only visit every 5 pixels
+  const defaultRGB = { r: 0, g: 0, b: 0 }; // for non-supporting envs
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext && canvas.getContext('2d');
+  let i = -4;
+  const rgb = { r: 0, g: 0, b: 0 };
+  let count = 0;
 
   if (!context) {
     return defaultRGB;
   }
 
-  height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
-  width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
+  const height = (canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height);
+  const width = (canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width);
 
   context.drawImage(imgEl, 0, 0);
 
   // context.createImageData(width, height);
+  let data: ImageData;
   try {
     data = context.getImageData(0, 0, width, height);
   } catch (e) {
@@ -33,7 +30,7 @@ export function getAverageRGB(imgEl: HTMLImageElement) {
     return defaultRGB;
   }
 
-  length = data.data.length;
+  const length = data.data.length;
 
   while ((i += blockSize * 4) < length) {
     ++count;
