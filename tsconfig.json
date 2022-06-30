@@ -4,10 +4,7 @@
     // "outDir": "lib-es",
     // "module": "commonjs",
     // "target": "es5",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "target": "esnext",
     "sourceMap": true,
     "allowJs": true,
@@ -31,7 +28,7 @@
     // "allowSyntheticDefaultImports": true,
   },
   // "include": ["src/**/*", "src/global.d.ts"],
-  "include": [
-    "packages"
-  ]
+  "paths": {
+    "@mxssfd/ts-utils_*": ["packages/*"]
+  }
 }
