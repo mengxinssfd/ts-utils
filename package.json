@@ -1,5 +1,4 @@
 {
-  "name": "@mxssfd/ts-utils",
   "version": "5.0.0",
   "description": "utils工具函数ts/js库",
   "jsdelivr": "./lib-umd/index.js",
@@ -62,8 +61,10 @@
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
     "babel-loader": "^8.0.6",
+    "chalk": "^5.0.1",
     "clean-webpack-plugin": "^3.0.0",
     "core-js": "^3.3.4",
+    "enquirer": "^2.3.6",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.1.0",
