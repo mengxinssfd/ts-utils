@@ -1,5 +1,13 @@
 {
   "name": "@mxssfd/ts-utils_core",
   "version": "1.0.0",
-  "dependencies": {}
+  "buildOptions": {
+    "name": "tsUtilsCore",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "cjs",
+      "global"
+    ]
+  }
 }

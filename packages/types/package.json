@@ -1,10 +1,13 @@
 {
   "name": "@mxssfd/ts-utils_types",
   "version": "1.0.0",
-  "dependencies": {
-    "@mxssfd/ts-utils_core": "workspace",
-    "@mxssfd/ts-utils_dome": "workspace",
-    "@mxssfd/ts-utils_bom": "workspace",
-    "@mxssfd/ts-utils_types": "workspace"
+  "buildOptions": {
+    "name": "tsUtilsTypes",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "cjs",
+      "global"
+    ]
   }
 }

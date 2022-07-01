@@ -1,6 +1,14 @@
 {
   "name": "@mxssfd/ts-utils_bom",
   "version": "1.0.0",
+  "buildOptions": {
+    "name": "tsUtilsBom",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "global"
+    ]
+  },
   "peerDependencies": {
     "@mxssfd/ts-utils_core": "workspace"
   }

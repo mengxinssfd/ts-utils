@@ -35,5 +35,11 @@ module.exports = {
         '@typescript-eslint/no-empty-function': 'off',
       },
     },
+    {
+      files: ['**/scripts/**.js'],
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+      },
+    },
   ],
 };

@@ -1,5 +1,20 @@
 {
   "name": "@mxssfd/ts-utils",
   "version": "1.0.0",
-  "dependencies": {}
+  "description": "utils工具函数ts/js库",
+  "buildOptions": {
+    "name": "tsUtils",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "cjs",
+      "global"
+    ]
+  },
+  "dependencies": {
+    "@mxssfd/ts-utils_core": "workspace",
+    "@mxssfd/ts-utils_dom": "workspace",
+    "@mxssfd/ts-utils_bom": "workspace",
+    "@mxssfd/ts-utils_types": "workspace"
+  }
 }

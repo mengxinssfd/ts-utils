@@ -1,5 +1,13 @@
 {
   "name": "@mxssfd/ts-utils_dom",
   "version": "1.0.0",
+  "buildOptions": {
+    "name": "tsUtilsDom",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "global"
+    ]
+  },
   "dependencies": {}
 }
