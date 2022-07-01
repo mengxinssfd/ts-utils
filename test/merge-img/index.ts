@@ -189,7 +189,7 @@ declare const Vue: any;
     );
 })();
 */
-import {debounce} from "../../packages";
+import {debounce} from "../../packages/ts-utils";
 
 let time = Date.now();
 addEventListener("keyup", debounce(() => {

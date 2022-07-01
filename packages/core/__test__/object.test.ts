@@ -212,7 +212,6 @@ test('forEachObj', () => {
   });
   expect(done).toBeFalsy();
   expect(times).toBe(2);
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   expect(fn([], () => {})).toBeTruthy();
   let ec = 0;
   expect(
@@ -226,7 +225,6 @@ test('forEachObj', () => {
   expect(
     fn(
       [1, 2],
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
       () => {},
       () => (ec = 2),
     ),

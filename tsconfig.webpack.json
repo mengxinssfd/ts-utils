@@ -7,6 +7,6 @@
     "declarationDir": "types"
   },
   "exclude": [
-    "packages/index.ts"
+    "packages/ts-utils/index.ts"
   ]
 }

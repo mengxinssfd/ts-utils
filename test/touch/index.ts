@@ -1,5 +1,5 @@
-import * as utils from "../../packages";
-import {createHtmlElement} from "../../packages";
+import * as utils from "../../packages/ts-utils";
+import {createHtmlElement} from "../../packages/ts-utils";
 
 console.log(utils.getCurrentScriptTag());
 

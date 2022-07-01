@@ -201,7 +201,6 @@ test('forEachRight', () => {
 
   expect(arr3).toEqual([5, 4, 3, 2]);
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   expect(() => fn(() => {})).toThrowError();
 
   const result: any = {};
@@ -655,7 +654,6 @@ test('findIndex', () => {
   expect(fn((v) => v.v === 2, [{ v: 1 }, { v: 2 }])).toEqual(1);
   const nFn = fn.bind(undefined as any);
   expect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     nFn(function () {} as any);
   }).toThrowError();
   expect(fn(undefined as any, [])).toBe(-1);
@@ -676,7 +674,6 @@ test('findIndexRight', () => {
   expect(fn((v) => v.v === 2, [{ v: 1 }, { v: 2 }])).toEqual(1);
   const nFn = fn.bind(undefined as any);
   expect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     nFn(function () {} as any);
   }).toThrowError();
   expect(fn(undefined as any, [])).toBe(-1);

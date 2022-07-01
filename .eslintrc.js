@@ -28,4 +28,12 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-this-alias': 'off',
   },
+  overrides: [
+    {
+      files: ['**/__test__/**'],
+      rules: {
+        '@typescript-eslint/no-empty-function': 'off',
+      },
+    },
+  ],
 };
