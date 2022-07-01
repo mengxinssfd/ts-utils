@@ -220,7 +220,7 @@ class Layer extends Node {
       return insertToArray(
         el,
         (v, k) => {
-          return v.style.zIndex! <= el.style.zIndex! || k === 0;
+          return (v.style.zIndex as number) <= (el.style.zIndex as number) || k === 0;
         },
         list,
         { after: true, reverse: true },
@@ -317,7 +317,7 @@ export class MergeImg {
       insertToArray(
         layer,
         (v, k) => {
-          return v.style.zIndex! <= layer.style.zIndex! || k === 0;
+          return (v.style.zIndex as number) <= (layer.style.zIndex as number) || k === 0;
         },
         list,
         { after: true, reverse: true },

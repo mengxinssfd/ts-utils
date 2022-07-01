@@ -587,7 +587,7 @@ export function toggleWidthOrHeight(
   } = {},
 ) {
   const trans = 'transition';
-  const prefixTransition = prefixStyle(trans)!;
+  const prefixTransition = prefixStyle(trans) as string;
 
   const isHide = el.getAttribute('toggle-status') === 'hide';
   const transitionValue = `${type} ${transition.duration || '.3s'} ${

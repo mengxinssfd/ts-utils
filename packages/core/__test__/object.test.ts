@@ -1,6 +1,6 @@
-import * as cm from '../packages/core/src/object';
-import * as arr from '../packages/core/src/array';
-import { forEachByLen } from '../packages/core/src/common';
+import * as cm from '../src/object';
+import * as arr from '../src/array';
+import { forEachByLen } from '../src/common';
 
 function TestExtends() {
   this.a = 1;

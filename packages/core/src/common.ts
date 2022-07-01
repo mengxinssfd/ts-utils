@@ -613,7 +613,7 @@ export function parseCmdParams(
     }
   }
 
-  while ((item = list.shift()!)) {
+  while ((item = list.shift() as string)) {
     if (isKeyReg.test(item)) {
       setKey();
       continue;

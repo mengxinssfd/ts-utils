@@ -45,8 +45,8 @@ export class Pool<T> {
   pop(msg?: any): void | T {
     const acList = this._aliveList;
     if (acList.length === 0) return;
-    const item = acList.pop();
-    this._recycleList.push(item!);
+    const item = acList.pop() as T;
+    this._recycleList.push(item);
     this.events.emit('remove', item, msg);
     return item;
   }
