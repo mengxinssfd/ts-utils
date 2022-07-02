@@ -1,7 +1,8 @@
 import { sleep } from '../src/time';
 import * as dc from '../src/decorator';
 
-test('Debounce', async (done) => {
+test('Debounce', async () => {
+  expect.assertions(3);
   const Debounce = dc.Debounce;
 
   const now = Date.now();
@@ -33,9 +34,9 @@ test('Debounce', async (done) => {
   expect(t.times).toBe(1);
   expect(t.time - now).toBeGreaterThanOrEqual(100);
   expect(t.value).toBeGreaterThanOrEqual(6);
-  done();
 });
-test('Throttle', async (done) => {
+test('Throttle', async () => {
+  expect.assertions(3);
   const Throttle = dc.Throttle;
 
   const now = Date.now();
@@ -66,11 +67,11 @@ test('Throttle', async (done) => {
 
   expect(t.times).toBe(1);
   expect(t.time - now).toBe(0);
-  expect(t.value).toBeGreaterThanOrEqual(1);
-  done();
+  expect(t.value).toBe(1);
 });
 
-test('Polling', async (done) => {
+test('Polling', async () => {
+  expect.assertions(1);
   const Polling = dc.Polling;
 
   class Test {
@@ -95,9 +96,9 @@ test('Polling', async (done) => {
   expect(t.times).toBe(5);
 
   // await sleep(5000);
-  done();
 });
-test('Polling 2', async (done) => {
+test('Polling 2', async () => {
+  expect.assertions(2);
   const Polling = dc.Polling;
 
   class Test {
@@ -121,5 +122,4 @@ test('Polling 2', async (done) => {
   expect(t.times).toBe(3);
 
   // await sleep(5000);
-  done();
 });

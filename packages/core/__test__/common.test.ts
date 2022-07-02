@@ -29,7 +29,8 @@ test('forEachByLenRight', () => {
   expect(arr).toEqual([...[0, 1, 2].reverse(), ...[0, 1, 2, 3, 4, 5, 6].reverse(), 2, 1]);
 });
 
-test('debounce', async (done) => {
+test('debounce', async () => {
+  expect.assertions(3);
   let times = 0;
   const d = cm.debounce(() => times++, 100);
   d();
@@ -46,10 +47,11 @@ test('debounce', async (done) => {
   setTimeout(() => {
     expect(times).toBe(2);
     // 异步代码需要调用done()
-    done();
   }, 500);
+  await sleep(500);
 });
-test('debounce immediate', async (done) => {
+test('debounce immediate', async () => {
+  expect.assertions(4);
   let times = 0;
   const d = cm.debounce(() => times++, 100, true);
   d();
@@ -72,8 +74,8 @@ test('debounce immediate', async (done) => {
   setTimeout(() => {
     expect(times).toBe(1);
     // 异步代码需要调用done()
-    done();
   }, 500);
+  await sleep(500);
 });
 
 test('oneByOne', (done) => {
