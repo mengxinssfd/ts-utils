@@ -1,6 +1,6 @@
-import * as u from "../../packages/ts-utils";
-import * as utils from "../../packages/ts-utils";
-import {animateTo, createHtmlElement} from "../../packages/ts-utils";
+import * as u from "../../packages/ts-utils/src";
+import * as utils from "../../packages/ts-utils/src";
+import {animateTo, createHtmlElement} from "../../packages/ts-utils/src";
 
 let endTime;
 let countDown;

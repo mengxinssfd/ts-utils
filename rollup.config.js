@@ -1,69 +1,195 @@
-import typescript from 'rollup-plugin-typescript2';
-import babel from '@rollup/plugin-babel';
-import {terser} from 'rollup-plugin-terser';
-import commonjs from "rollup-plugin-commonjs";
-import resolve from 'rollup-plugin-node-resolve';
+// @ts-check
+import path from 'path';
+import ts from 'rollup-plugin-typescript2';
+import json from '@rollup/plugin-json';
 
-const {version, author, homepage} = require('./package.json');
-const libraryName = "tsUtils";
-const date = new Date();
-
-
-function intro(lib, libraryName, version) {
-  function getCurrentScript() {
-    if(document.currentScript) {
-      return document.currentScript;
-    }
-    return document.getElementById(libraryName + version);
-  }
-
-  if(typeof document === "undefined") {
-    return;
-  }
-  var alias, currentScript;
-  // 如果当前script绑定了${libraryName + version}为id则认为这是当前script
-  if((currentScript = getCurrentScript()) && (alias = currentScript.getAttribute("alias"))) {
-    self[alias] = lib;
-  }
-  var vk = libraryName + "Versions";
-  if("undefined" === typeof self[vk]) self[vk] = {};
-  self[vk][version] = lib;
+if (!process.env.TARGET) {
+  throw new Error('TARGET package must be specified via --environment flag.');
 }
 
-export default {
-  input: 'src/index.ts',  // 入口文件
-  output: {
-    name: libraryName, // umd 模式必须要有 name  此属性作为全局变量访问打包结果
-    file: `lib-umd/index.js`,
-    format: 'umd',
-    sourcemap: false,
-    banner:
-      "/*!\n" +
-      ` * ${libraryName} v${version}\n` +
-      ` * Author: ${author}\n` +
-      ` * Documentation: ${homepage}\n` +
-      ` * Date: ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}\n` +
-      ` */\n`,
-    intro: // window.tsUtilsVersions = tsUtils & <script alias="tu"></script> window.tu = tsUtils
-      `(${intro.toString()})(${libraryName},"${libraryName}","${version}");`
+const packagesDir = path.resolve(__dirname, 'packages');
+const packageDir = path.resolve(packagesDir, process.env.TARGET);
+const resolve = (p) => path.resolve(packageDir, p);
+const pkg = require(resolve(`package.json`));
+const packageOptions = pkg.buildOptions || {};
+const name = packageOptions.filename || path.basename(packageDir);
+
+// ensure TS checks only once for each build
+let hasTSChecked = false;
+
+const outputConfigs = {
+  'esm-bundler': {
+    file: resolve(`dist/${name}.esm-bundler.js`),
+    format: `es`,
   },
-  plugins: [
-    typescript({
-      // tsconfig:"tsconfig.webpack.json",
-      tsconfigOverride: {
-        compilerOptions: {
-          sourceMap: false,
-          declaration: false // 输出时去除类型文件
-        }
-      }
-    }),
-    babel({
-      extensions: [".ts"],
-      exclude: "node_modules/*",
-      babelHelpers: "runtime"
-    }),
-    terser(),
-    resolve(),
-    commonjs()
-  ]
+  'esm-browser': {
+    file: resolve(`dist/${name}.esm-browser.js`),
+    format: `es`,
+  },
+  cjs: {
+    file: resolve(`dist/${name}.cjs.js`),
+    format: `cjs`,
+  },
+  global: {
+    file: resolve(`dist/${name}.global.js`),
+    format: `iife`,
+  },
+  // runtime-only builds, for main "vue" package only
+  'esm-bundler-runtime': {
+    file: resolve(`dist/${name}.runtime.esm-bundler.js`),
+    format: `es`,
+  },
+  'esm-browser-runtime': {
+    file: resolve(`dist/${name}.runtime.esm-browser.js`),
+    format: 'es',
+  },
+  'global-runtime': {
+    file: resolve(`dist/${name}.runtime.global.js`),
+    format: 'iife',
+  },
 };
+
+const defaultFormats = ['esm-bundler', 'cjs'];
+const inlineFormats = process.env.FORMATS && process.env.FORMATS.split(',');
+const packageFormats = inlineFormats || packageOptions.formats || defaultFormats;
+const packageConfigs = process.env.PROD_ONLY
+  ? []
+  : packageFormats.map((format) => createConfig(format, outputConfigs[format]));
+
+if (process.env.NODE_ENV === 'production') {
+  packageFormats.forEach((format) => {
+    if (packageOptions.prod === false) {
+      return;
+    }
+    if (format === 'cjs') {
+      packageConfigs.push(createProductionConfig(format));
+    }
+    if (/^(global|esm-browser)(-runtime)?/.test(format)) {
+      packageConfigs.push(createMinifiedConfig(format));
+    }
+  });
+}
+
+export default packageConfigs;
+
+function createConfig(format, output, plugins = []) {
+  if (!output) {
+    console.log(require('chalk').yellow(`invalid format: "${format}"`));
+    process.exit(1);
+  }
+
+  const isBundlerESMBuild = /esm-bundler/.test(format);
+  const isBrowserESMBuild = /esm-browser/.test(format);
+  const isServerRenderer = name === 'server-renderer';
+  const isNodeBuild = format === 'cjs';
+  const isGlobalBuild = /global/.test(format);
+  const isCompatPackage = pkg.name === '@vue/compat';
+
+  output.exports = isCompatPackage ? 'auto' : 'named';
+  output.sourcemap = !!process.env.SOURCE_MAP;
+  output.externalLiveBindings = false;
+
+  if (isGlobalBuild) {
+    output.name = packageOptions.name;
+  }
+
+  const shouldEmitDeclarations = pkg.types && process.env.TYPES != null && !hasTSChecked;
+
+  const tsPlugin = ts({
+    check: process.env.NODE_ENV === 'production' && !hasTSChecked,
+    tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+    cacheRoot: path.resolve(__dirname, 'node_modules/.rts2_cache'),
+    tsconfigOverride: {
+      compilerOptions: {
+        target: isServerRenderer || isNodeBuild ? 'es2019' : 'es2015',
+        sourceMap: output.sourcemap,
+        declaration: shouldEmitDeclarations,
+        declarationMap: shouldEmitDeclarations,
+      },
+      exclude: ['**/__tests__', 'test-dts'],
+    },
+  });
+  // we only need to check TS and generate declarations once for each build.
+  // it also seems to run into weird issues when checking multiple times
+  // during a single build.
+  hasTSChecked = true;
+
+  let entryFile = /runtime$/.test(format) ? `src/runtime.ts` : `src/index.ts`;
+
+  // the compat build needs both default AND named exports. This will cause
+  // Rollup to complain for non-ESM targets, so we use separate entries for
+  // esm vs. non-esm builds.
+  if (isCompatPackage && (isBrowserESMBuild || isBundlerESMBuild)) {
+    entryFile = /runtime$/.test(format) ? `src/esm-runtime.ts` : `src/esm-index.ts`;
+  }
+
+  let external = [];
+
+  if (isGlobalBuild || isBrowserESMBuild || isCompatPackage) {
+    if (!packageOptions.enableNonBrowserBranches) {
+      // normal browser builds - non-browser only imports are tree-shaken,
+      // they are only listed here to suppress warnings.
+      external = ['source-map', '@babel/parser', 'estree-walker'];
+    }
+  } else {
+    // Node / esm-bundler builds.
+    // externalize all direct deps unless it's the compat build.
+    external = [
+      ...Object.keys(pkg.dependencies || {}),
+      ...Object.keys(pkg.peerDependencies || {}),
+      ...['path', 'url', 'stream'], // for @vue/compiler-sfc / server-renderer
+    ];
+  }
+
+
+  return {
+    input: resolve(entryFile),
+    // Global and Browser ESM builds inlines everything so that they can be
+    // used alone.
+    external,
+    plugins: [
+      json({
+        namedExports: false,
+      }),
+      tsPlugin,
+      ...plugins,
+    ],
+    output,
+    onwarn: (msg, warn) => {
+      if (!/Circular/.test(msg)) {
+        warn(msg);
+      }
+    },
+    treeshake: {
+      moduleSideEffects: false,
+    },
+  };
+}
+
+function createProductionConfig(format) {
+  return createConfig(format, {
+    file: resolve(`dist/${name}.${format}.prod.js`),
+    format: outputConfigs[format].format,
+  });
+}
+
+function createMinifiedConfig(format) {
+  const { terser } = require('rollup-plugin-terser');
+  return createConfig(
+    format,
+    {
+      file: outputConfigs[format].file.replace(/\.js$/, '.prod.js'),
+      format: outputConfigs[format].format,
+    },
+    [
+      terser({
+        module: /^esm/.test(format),
+        compress: {
+          ecma: 2015,
+          pure_getters: true,
+        },
+        safari10: true,
+      }),
+    ],
+  );
+}

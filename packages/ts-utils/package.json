@@ -1,5 +1,6 @@
 {
   "name": "@mxssfd/ts-utils",
+  "private": true,
   "version": "1.0.0",
   "description": "utils工具函数ts/js库",
   "buildOptions": {

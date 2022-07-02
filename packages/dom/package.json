@@ -1,6 +1,7 @@
 {
   "name": "@mxssfd/ts-utils_dom",
   "version": "1.0.0",
+  "sideEffects": false,
   "buildOptions": {
     "name": "tsUtilsDom",
     "formats": [
@@ -9,5 +10,7 @@
       "global"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "@mxssfd/ts-utils_core": "workspace"
+  }
 }

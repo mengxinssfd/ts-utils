@@ -10,6 +10,6 @@
     "test"
   ],
   "exclude": [
-    "packages/ts-utils/index.ts"
+    "packages/ts-utils/src/index.ts"
   ]
 }

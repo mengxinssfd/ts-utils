@@ -169,7 +169,7 @@ export type TypeOfPath<T, K extends string> = K extends `${infer A}.${infer B}`
 // type testTypeOfPath = TypeOfPath<{a: {b: {c: number}}},TransferPath<"[a][b][c]">>; // number
 
 // type Test2 = `names.${number}.firstName.lastName.${number}`;
-type SplitTemplateStringTypeToTuple<T> = T extends `${infer First}.${infer Rest}`
+export type SplitTemplateStringTypeToTuple<T> = T extends `${infer First}.${infer Rest}`
   ? // 此分支表示需要继续递归
     First extends `${number}`
     ? [number, ...SplitTemplateStringTypeToTuple<Rest>] // 完全类似 JS 数组构造

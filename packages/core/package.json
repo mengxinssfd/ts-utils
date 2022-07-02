@@ -1,6 +1,7 @@
 {
   "name": "@mxssfd/ts-utils_core",
   "version": "1.0.0",
+  "sideEffects": false,
   "buildOptions": {
     "name": "tsUtilsCore",
     "formats": [

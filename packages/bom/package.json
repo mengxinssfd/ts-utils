@@ -1,6 +1,7 @@
 {
   "name": "@mxssfd/ts-utils_bom",
   "version": "1.0.0",
+  "sideEffects": false,
   "buildOptions": {
     "name": "tsUtilsBom",
     "formats": [
@@ -9,7 +10,7 @@
       "global"
     ]
   },
-  "peerDependencies": {
+  "dependencies": {
     "@mxssfd/ts-utils_core": "workspace"
   }
 }
