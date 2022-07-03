@@ -13,9 +13,9 @@
     ]
   },
   "dependencies": {
-    "@mxssfd/ts-utils_core": "workspace",
-    "@mxssfd/ts-utils_dom": "workspace",
-    "@mxssfd/ts-utils_bom": "workspace",
-    "@mxssfd/ts-utils_types": "workspace"
+    "@mxssfd/core": "workspace",
+    "@mxssfd/dom": "workspace",
+    "@mxssfd/bom": "workspace",
+    "@mxssfd/types": "workspace"
   }
 }

@@ -1,5 +1,5 @@
 import { debounce, throttle } from './common';
-import type { OmitFirstParameters } from '../../types/src/TsTypes';
+import type { OmitFirstParameters } from '@mxssfd/types';
 
 export function decoratorfy(callback: (descriptor: PropertyDescriptor) => Function) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {

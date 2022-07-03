@@ -1,5 +1,4 @@
 const path = require('path');
-const fse = require('fs-extra');
 const chalk = require('chalk');
 const fs = require('fs-extra');
 const { targets: allTargets, fuzzyMatchTarget } = require('./utils');
@@ -40,10 +39,10 @@ async function runParallel(maxConcurrency, source, iteratorFn) {
  * @return {Promise<void>}
  */
 async function build(target) {
-  const pkgDir = path.resolve(`packages/${target}`);
+  const pkgDir = path.resolve(__dirname, `../packages/${target}`);
   const pkg = require(`${pkgDir}/package.json`);
   if (pkg.private) return;
-  await fse.remove(path.resolve(pkgDir, '/dist'));
+  await fs.remove(path.resolve(pkgDir, 'dist'));
 
   const env = pkg.buildOptions?.env || 'production';
 

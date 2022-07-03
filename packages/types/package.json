@@ -1,14 +1,12 @@
 {
-  "name": "@mxssfd/ts-utils_types",
+  "name": "@mxssfd/types",
   "version": "1.0.0",
   "sideEffects": false,
+  "types": "dist/types.d.ts",
   "buildOptions": {
     "name": "tsUtilsTypes",
     "formats": [
-      "esm-bundler",
-      "esm-browser",
-      "cjs",
-      "global"
+      "esm-bundler"
     ]
   }
 }

@@ -1,7 +1,9 @@
 {
-  "name": "@mxssfd/ts-utils_bom",
+  "name": "@mxssfd/bom",
   "version": "1.0.0",
   "sideEffects": false,
+  "types": "dist/bom.d.ts",
+  "private": true,
   "buildOptions": {
     "name": "tsUtilsBom",
     "formats": [
@@ -10,7 +12,11 @@
       "global"
     ]
   },
+  "scripts": {
+    "apie": "api-extractor run"
+  },
   "dependencies": {
-    "@mxssfd/ts-utils_core": "workspace"
+    "@mxssfd/core": "workspace",
+    "@mxssfd/dom": "workspace"
   }
 }

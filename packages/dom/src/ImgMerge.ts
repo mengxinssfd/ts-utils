@@ -1,7 +1,5 @@
-import { arrayRemoveItem, insertToArray } from '../../core/src/array';
+import { isNumber, isPromiseLike, assign, arrayRemoveItem, insertToArray } from '@mxssfd/core';
 import { isImgElement } from './domType';
-import { assign } from '../../core/src/object';
-import { isNumber, isPromiseLike } from '../../core/src/dataType';
 import { loadImg, createElement } from './dom';
 
 // TODO 加上百分比和rem

@@ -1,7 +1,8 @@
 {
-  "name": "@mxssfd/ts-utils_core",
+  "name": "@mxssfd/core",
   "version": "1.0.0",
   "sideEffects": false,
+  "types": "dist/core.d.ts",
   "buildOptions": {
     "name": "tsUtilsCore",
     "formats": [
@@ -10,5 +11,8 @@
       "cjs",
       "global"
     ]
+  },
+  "dependencies": {
+    "@mxssfd/types": "workspace"
   }
 }

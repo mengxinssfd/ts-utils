@@ -1,8 +1,12 @@
-import { isDom, isInputElement, isSelectElement, isTextAreaElement } from '../../dom/src/domType';
-import { createHiddenHtmlElement } from '../../dom/src/dom';
-import { castArray } from '../../core/src/array';
-import { onceEvent } from '../../dom/src/event';
-import { root } from '../../core/src/common';
+import { castArray, root } from '@mxssfd/core';
+import {
+  onceEvent,
+  createHiddenHtmlElement,
+  isDom,
+  isInputElement,
+  isSelectElement,
+  isTextAreaElement,
+} from '@mxssfd/dom';
 
 /**
  * @param element

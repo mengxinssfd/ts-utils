@@ -1,7 +1,5 @@
-import { includes } from '../../core/src/array';
-import { getDistance } from '../../core/src/coordinate';
+import { includes, getDistance, isFunction, isString } from '@mxssfd/core';
 import { isDom } from './domType';
-import { isFunction, isString } from '../../core/src/dataType';
 
 interface xy {
   x: number;

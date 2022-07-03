@@ -1,7 +1,8 @@
 {
-  "name": "@mxssfd/ts-utils_dom",
+  "name": "@mxssfd/dom",
   "version": "1.0.0",
   "sideEffects": false,
+  "types": "dist/dom.d.ts",
   "buildOptions": {
     "name": "tsUtilsDom",
     "formats": [
@@ -11,6 +12,7 @@
     ]
   },
   "dependencies": {
-    "@mxssfd/ts-utils_core": "workspace"
+    "@mxssfd/core": "workspace",
+    "@mxssfd/types": "workspace"
   }
 }

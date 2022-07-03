@@ -1,11 +1,21 @@
-import { castArray, includes, unique } from '../../core/src/array';
-import { divide, getSafeNum, times } from '../../core/src/number';
-import { assign, forEachObj, objReduce, pickByKeys } from '../../core/src/object';
-import type { SettableProps, SettableStyle } from '../../types/src/TsTypes';
-import { isArray, isString } from '../../core/src/dataType';
+import {
+  root,
+  castArray,
+  includes,
+  unique,
+  fromCamel,
+  isArray,
+  isString,
+  assign,
+  forEachObj,
+  objReduce,
+  pickByKeys,
+  divide,
+  getSafeNum,
+  times,
+} from '@mxssfd/core';
+import type { SettableProps, SettableStyle } from '@mxssfd/types';
 import { isDom, isNodeList } from './domType';
-import { root } from '../../core/src/common';
-import { fromCamel } from '../../core/src/string';
 import { onceEvent } from './event';
 // 所有主要浏览器都支持 createElement() 方法
 const elementStyle: CSSStyleDeclaration = root?.document?.createElement('div').style ?? {};
