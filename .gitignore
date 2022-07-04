@@ -26,3 +26,5 @@ yarn-error.log*
 
 /lib-*
 /types
+
+temp

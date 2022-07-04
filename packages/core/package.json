@@ -2,6 +2,8 @@
   "name": "@mxssfd/core",
   "version": "1.0.0",
   "sideEffects": false,
+  "main": "index.js",
+  "module": "dist/core.esm-bundler.js",
   "types": "dist/core.d.ts",
   "buildOptions": {
     "name": "tsUtilsCore",

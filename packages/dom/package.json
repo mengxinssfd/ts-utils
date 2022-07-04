@@ -2,6 +2,7 @@
   "name": "@mxssfd/dom",
   "version": "1.0.0",
   "sideEffects": false,
+  "module": "dist/dom.esm-bundler.js",
   "types": "dist/dom.d.ts",
   "buildOptions": {
     "name": "tsUtilsDom",

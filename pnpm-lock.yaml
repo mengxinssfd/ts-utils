@@ -9,7 +9,7 @@ importers:
       '@babel/preset-env': ^7.18.6
       '@babel/preset-typescript': ^7.18.6
       '@babel/runtime': ^7.18.6
-      '@microsoft/api-extractor': ^7.28.2
+      '@microsoft/api-extractor': 7.20.1
       '@rollup/plugin-babel': ^5.3.1
       '@rollup/plugin-commonjs': ^22.0.1
       '@rollup/plugin-json': ^4.1.0
@@ -50,7 +50,7 @@ importers:
       '@babel/preset-env': 7.18.6_@babel+core@7.18.6
       '@babel/preset-typescript': 7.18.6_@babel+core@7.18.6
       '@babel/runtime': 7.18.6
-      '@microsoft/api-extractor': 7.28.2
+      '@microsoft/api-extractor': 7.20.1
       '@rollup/plugin-babel': 5.3.1_fb3qe53zzddvqjqqltveoanfhe
       '@rollup/plugin-commonjs': 22.0.1_rollup@2.75.7
       '@rollup/plugin-json': 4.1.0_rollup@2.75.7
@@ -88,30 +88,37 @@ importers:
 
   packages/bom:
     specifiers:
-      '@mxssfd/ts-utils_core': workspace
+      '@mxssfd/core': workspace
+      '@mxssfd/dom': workspace
     dependencies:
-      '@mxssfd/ts-utils_core': link:../core
+      '@mxssfd/core': link:../core
+      '@mxssfd/dom': link:../dom
 
   packages/core:
-    specifiers: {}
+    specifiers:
+      '@mxssfd/types': workspace
+    dependencies:
+      '@mxssfd/types': link:../types
 
   packages/dom:
     specifiers:
-      '@mxssfd/ts-utils_core': workspace
+      '@mxssfd/core': workspace
+      '@mxssfd/types': workspace
     dependencies:
-      '@mxssfd/ts-utils_core': link:../core
+      '@mxssfd/core': link:../core
+      '@mxssfd/types': link:../types
 
   packages/ts-utils:
     specifiers:
-      '@mxssfd/ts-utils_bom': workspace
-      '@mxssfd/ts-utils_core': workspace
-      '@mxssfd/ts-utils_dom': workspace
-      '@mxssfd/ts-utils_types': workspace
+      '@mxssfd/bom': workspace
+      '@mxssfd/core': workspace
+      '@mxssfd/dom': workspace
+      '@mxssfd/types': workspace
     dependencies:
-      '@mxssfd/ts-utils_bom': link:../bom
-      '@mxssfd/ts-utils_core': link:../core
-      '@mxssfd/ts-utils_dom': link:../dom
-      '@mxssfd/ts-utils_types': link:../types
+      '@mxssfd/bom': link:../bom
+      '@mxssfd/core': link:../core
+      '@mxssfd/dom': link:../dom
+      '@mxssfd/types': link:../types
 
   packages/types:
     specifiers: {}
@@ -1659,43 +1666,43 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@microsoft/api-extractor-model/7.21.0:
-    resolution: {integrity: sha512-NN4mXzoQWTuzznIcnLWeV6tGyn6Os9frDK6M/mmTXZ73vUYOvSWoKQ5SYzyzP7HF3YtvTmr1Rs+DsBb0HRx7WQ==}
+  /@microsoft/api-extractor-model/7.16.0:
+    resolution: {integrity: sha512-0FOrbNIny8mzBrzQnSIkEjAXk0JMSnPmWYxt3ZDTPVg9S8xIPzB6lfgTg9+Mimu0RKCpGKBpd+v2WcR5vGzyUQ==}
     dependencies:
-      '@microsoft/tsdoc': 0.14.1
-      '@microsoft/tsdoc-config': 0.16.1
-      '@rushstack/node-core-library': 3.49.0
+      '@microsoft/tsdoc': 0.13.2
+      '@microsoft/tsdoc-config': 0.15.2
+      '@rushstack/node-core-library': 3.45.1
     dev: true
 
-  /@microsoft/api-extractor/7.28.2:
-    resolution: {integrity: sha512-sl97erZ5Zh3ov5dvV/rMSt45//dYf7C5Y6PCpIXpFidDYMyRwN+pizZ543g2d8D5/WbthGvsZoYcYSzG7CkjHQ==}
+  /@microsoft/api-extractor/7.20.1:
+    resolution: {integrity: sha512-T7cqcK+JpvHGOj7cD2ZCCWS7Xgru1uOqZwrV/FSUdyKVs5fopZcbBSuetwD/akst3O7Ypryg3UOLP54S/vnVmA==}
     hasBin: true
     dependencies:
-      '@microsoft/api-extractor-model': 7.21.0
-      '@microsoft/tsdoc': 0.14.1
-      '@microsoft/tsdoc-config': 0.16.1
-      '@rushstack/node-core-library': 3.49.0
-      '@rushstack/rig-package': 0.3.13
-      '@rushstack/ts-command-line': 4.12.1
+      '@microsoft/api-extractor-model': 7.16.0
+      '@microsoft/tsdoc': 0.13.2
+      '@microsoft/tsdoc-config': 0.15.2
+      '@rushstack/node-core-library': 3.45.1
+      '@rushstack/rig-package': 0.3.8
+      '@rushstack/ts-command-line': 4.10.7
       colors: 1.2.5
       lodash: 4.17.21
       resolve: 1.17.0
       semver: 7.3.7
       source-map: 0.6.1
-      typescript: 4.6.4
+      typescript: 4.5.5
     dev: true
 
-  /@microsoft/tsdoc-config/0.16.1:
-    resolution: {integrity: sha512-2RqkwiD4uN6MLnHFljqBlZIXlt/SaUT6cuogU1w2ARw4nKuuppSmR0+s+NC+7kXBQykd9zzu0P4HtBpZT5zBpQ==}
+  /@microsoft/tsdoc-config/0.15.2:
+    resolution: {integrity: sha512-mK19b2wJHSdNf8znXSMYVShAHktVr/ib0Ck2FA3lsVBSEhSI/TfXT7DJQkAYgcztTuwazGcg58ZjYdk0hTCVrA==}
     dependencies:
-      '@microsoft/tsdoc': 0.14.1
+      '@microsoft/tsdoc': 0.13.2
       ajv: 6.12.6
       jju: 1.4.0
       resolve: 1.19.0
     dev: true
 
-  /@microsoft/tsdoc/0.14.1:
-    resolution: {integrity: sha512-6Wci+Tp3CgPt/B9B0a3J4s3yMgLNSku6w5TV6mN+61C71UqsRBv2FUibBf3tPGlNxebgPHMEUzKpb1ggE8KCKw==}
+  /@microsoft/tsdoc/0.13.2:
+    resolution: {integrity: sha512-WrHvO8PDL8wd8T2+zBGKrMwVL5IyzR3ryWUsl0PXgEV0QHup4mTLi0QcATefGI6Gx9Anu7vthPyyyLpY0EpiQg==}
     dev: true
 
   /@nodelib/fs.scandir/2.1.5:
@@ -1817,8 +1824,8 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /@rushstack/node-core-library/3.49.0:
-    resolution: {integrity: sha512-yBJRzGgUNFwulVrwwBARhbGaHsxVMjsZ9JwU1uSBbqPYCdac+t2HYdzi4f4q/Zpgb0eNbwYj2yxgHYpJORNEaw==}
+  /@rushstack/node-core-library/3.45.1:
+    resolution: {integrity: sha512-BwdssTNe007DNjDBxJgInHg8ePytIPyT0La7ZZSQZF9+rSkT42AygXPGvbGsyFfEntjr4X37zZSJI7yGzL16cQ==}
     dependencies:
       '@types/node': 12.20.24
       colors: 1.2.5
@@ -1831,15 +1838,15 @@ packages:
       z-schema: 5.0.3
     dev: true
 
-  /@rushstack/rig-package/0.3.13:
-    resolution: {integrity: sha512-4/2+yyA/uDl7LQvtYtFs1AkhSWuaIGEKhP9/KK2nNARqOVc5eCXmu1vyOqr5mPvNq7sHoIR+sG84vFbaKYGaDA==}
+  /@rushstack/rig-package/0.3.8:
+    resolution: {integrity: sha512-MDWg1xovea99PWloSiYMjFcCLsrdjFtYt6aOyHNs5ojn5mxrzR6U9F83hvbQjTWnKPMvZtr0vcek+4n+OQOp3Q==}
     dependencies:
       resolve: 1.17.0
       strip-json-comments: 3.1.1
     dev: true
 
-  /@rushstack/ts-command-line/4.12.1:
-    resolution: {integrity: sha512-S1Nev6h/kNnamhHeGdp30WgxZTA+B76SJ/P721ctP7DrnC+rrjAc6h/R80I4V0cA2QuEEcMdVOQCtK2BTjsOiQ==}
+  /@rushstack/ts-command-line/4.10.7:
+    resolution: {integrity: sha512-CjS+DfNXUSO5Ab2wD1GBGtUTnB02OglRWGqfaTcac9Jn45V5MeUOsq/wA8wEeS5Y/3TZ2P1k+IWdVDiuOFP9Og==}
     dependencies:
       '@types/argparse': 1.0.38
       argparse: 1.0.10
@@ -5199,8 +5206,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /typescript/4.6.4:
-    resolution: {integrity: sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg==}
+  /typescript/4.5.5:
+    resolution: {integrity: sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true

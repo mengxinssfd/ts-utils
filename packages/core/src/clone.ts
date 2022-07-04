@@ -76,13 +76,8 @@ export function deepClone<T>(target: T): T {
 // 对象深拷贝办法(广度优先)
 export function deepCloneBfs<T>(target: T): T {
   if (typeof target !== 'object' || !target) return target;
-  type key = string;
-  type value = any;
-  type parent = any;
-  type queItem = [key, value, parent];
+  type QueItem = [string, any, any];
   const result: any = new (target as any).constructor();
-  const queue: queItem[] = [];
-  getChildren(target as any, result);
 
   function getChildren(tar: object, parent: any) {
     for (const k in tar) {
@@ -91,8 +86,11 @@ export function deepCloneBfs<T>(target: T): T {
     }
   }
 
+  const queue: QueItem[] = [];
+  getChildren(target as any, result);
+
   while (queue.length) {
-    const [k, v, parent] = queue.shift() as queItem;
+    const [k, v, parent] = queue.shift() as QueItem;
 
     const type = typeof v;
     // console.log(type);

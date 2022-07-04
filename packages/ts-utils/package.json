@@ -1,8 +1,10 @@
 {
   "name": "@mxssfd/ts-utils",
-  "private": true,
   "version": "1.0.0",
   "description": "utils工具函数ts/js库",
+  "main": "index.js",
+  "module": "dist/ts-utils.esm-bundler.js",
+  "types": "dist/ts-utils.d.ts",
   "buildOptions": {
     "name": "tsUtils",
     "formats": [
@@ -11,6 +13,9 @@
       "cjs",
       "global"
     ]
+  },
+  "scripts": {
+    "apie": "api-extractor run"
   },
   "dependencies": {
     "@mxssfd/core": "workspace",
