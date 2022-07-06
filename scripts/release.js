@@ -9,11 +9,20 @@ const currentVersion = pkg.version;
 
 const pkgs = fs.readdirSync(path.resolve(__dirname, '../packages'));
 
-let targetVersion = args._;
+let targetVersion = args._[0];
+
+console.log(targetVersion);
 
 async function main() {
-  if(!targetVersion){
-
+  if (!targetVersion) {
+    const { release } = await prompt({
+      type: 'select',
+      name: 'release',
+      choices: ['patch', 'minor', 'major']
+        .map((i) => `${i} (${currentVersion})`)
+        .concat(['custom']),
+    });
+    console.log(release);
   }
 }
 
