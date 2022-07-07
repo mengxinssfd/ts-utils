@@ -35,8 +35,8 @@
     "dev": "set NODE_ENV=development&webpack-dev-server --config webpack.dev.config.js --host 0.0.0.0 --open \"http://localhost:8080/touch.html\"",
     "clear_jest": "jest --clearCache",
     "lint": "eslint packages",
-    "prettier-check": "prettier src __test__ --check",
-    "lint-check": "run-p eslint prettier-check",
+    "prettier-check": "prettier packages __test__ --check",
+    "lint-check": "run-p lint prettier-check",
     "build_new": "node scripts/build.js -t",
     "ts-check": "tsc --noEmit"
   },
