@@ -295,3 +295,31 @@ export function isSameTime(format: string, date: Date, ...dates: Date[]): boolea
   const dt = formatDate(date, format);
   return dates.every((date) => formatDate(date, format) === dt);
 }
+
+/**
+ * 判断两个日期是否在同一个星期内
+ * @param date 要对比的日期
+ * @param weekStart 每个星期开始为星期几，范围[0-6] 默认星期一也就是1
+ * @param now 对比的日期 默认为当天
+ */
+export function inSameWeek({
+  date,
+  weekStart = 1,
+  now = new Date(),
+}: {
+  date: Date;
+  weekStart?: number;
+  now?: Date;
+}): boolean {
+  const timeStamp = date.getTime();
+  const day = now.getDay();
+  const dateNum = now.getDate();
+  // 时分秒归零
+  const start = new Date(now.getFullYear(), now.getMonth(), dateNum);
+  const end = new Date(start);
+
+  start.setDate(dateNum - (day + 1) + weekStart);
+  end.setDate(dateNum + (7 - day + weekStart));
+
+  return start.getTime() < timeStamp && timeStamp < end.getTime();
+}
