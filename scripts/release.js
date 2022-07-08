@@ -3,6 +3,7 @@ const fs = require('fs');
 const pkg = require('../package.json');
 const { prompt } = require('enquirer');
 const execa = require('execa');
+const semver = require('semver');
 
 const args = require('minimist')(process.argv.slice(2));
 
@@ -38,19 +39,26 @@ const baseConfig = {
   skipTest: args.skipTest,
   skipBuild: args.skipBuild,
   currentVersion: pkg.version,
+  // semver.prerelease('1.2.3-alpha.3') -> [ 'alpha', 3 ]
+  preId: args.preId || semver.prerelease(pkg.version)?.[0],
 };
 
 async function getConfig() {
   const config = {
     ...baseConfig,
   };
+
+  const versionIncrements = [
+    'patch',
+    'minor',
+    'major',
+    ...(config.preId ? ['prepatch', 'preminor', 'premajor', 'prerelease'] : []),
+  ];
   if (!config.targetVersion) {
     ({ release: config.targetVersion } = await prompt({
       type: 'select',
       name: 'release',
-      choices: ['patch', 'minor', 'major']
-        .map((i) => `${i} (${config.currentVersion})`)
-        .concat(['custom']),
+      choices: versionIncrements.map((i) => `${i} (${config.currentVersion})`).concat(['custom']),
     }));
   }
   return config;
