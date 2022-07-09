@@ -298,6 +298,10 @@ export function isSameTime(format: string, date: Date, ...dates: Date[]): boolea
 
 /**
  * 判断两个日期是否在同一个星期内
+ *
+ * @example
+ * inSameWeek({date:new Date('2022-07-09'),now:new Date('2022-07-08')}) // true
+ *
  * @param date 要对比的日期
  * @param weekStart 每个星期开始为星期几，范围[0-6] 默认星期一也就是1
  * @param now 对比的日期 默认为当天
