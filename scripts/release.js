@@ -57,6 +57,7 @@ const actions = {
   release(config) {
     // todo
   },
+  genChangeLog: () => exec(npmTool, ['changelog']),
 };
 
 const baseConfig = {
@@ -133,12 +134,17 @@ async function setup() {
   //  }
 
   step('\nRunning update versions...');
-  await actions.updateVersions(config.pkgs, config.targetVersion);
+//  await actions.updateVersions(config.pkgs, config.targetVersion);
 
   step('\nRunning build...');
   //  if (!config.skipBuild) {
   //    await actions.build();
   //  }
+
+  // generate changelog
+  step('\nGenerating changelog...');
+  actions.genChangeLog();
+
   await actions.release(config);
   console.log(config);
 
