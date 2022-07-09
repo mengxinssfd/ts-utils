@@ -26,17 +26,33 @@ const exec = (
   },
 ) => execa(bin, args, { stdio: 'inherit', ...opts });
 
-const updateVersions = {
-  updatePackage() {},
-  updateDeps() {},
-};
-
 const actions = {
   lintCheck: () => exec(npmTool, ['lint']),
   jestCheck: () => exec(bin('jest'), ['--no-cache']),
   build: () => exec(npmTool, ['build_new']),
-  updateVersions() {
-    // todo
+  updateVersions(pkgs, version) {
+    function updateDeps(json, depType, version) {
+      const dep = json[depType];
+      for (const k in dep) {
+        if (k.startsWith('@mxssfd')) {
+          console.log(chalk.yellow(`${json.name} -> ${depType} -> ${k}@${version}`));
+          dep[k] = version;
+        }
+      }
+    }
+    function updatePackage(pkgPath, version) {
+      const file = fs.readFileSync(pkgPath).toString();
+      const json = JSON.parse(file);
+      json.version = version;
+      updateDeps(json, 'devDependencies', version);
+      updateDeps(json, 'dependencies', version);
+      updateDeps(json, 'peerDependencies', version);
+      fs.writeFileSync(pkgPath, JSON.stringify(json, null, 2));
+    }
+    for (const pkg of pkgs) {
+      updatePackage(path.resolve(__dirname, `../packages/${pkg}/package.json`), version);
+    }
+    updatePackage(path.resolve(__dirname, `../package.json`), version);
   },
   release(config) {
     // todo
@@ -68,7 +84,7 @@ async function getVersion(preId, currentVersion) {
     name: 'release',
     choices: versionIncrements
       .map((i) => ({ hint: i, value: inc(i) }))
-      .concat([{ hint: 'custom', value: 'custom' }]),
+      .concat([{ hint: `custom cur(${currentVersion})`, value: 'custom' }]),
   });
   if (release === 'custom') {
     ({ version: targetVersion } = await prompt({
@@ -111,22 +127,24 @@ async function setup() {
   const config = await getConfig();
   //    const config = {};
   step('\nRunning tests...');
-  if (!config.skipTest) {
-    await actions.lintCheck();
-    await actions.jestCheck();
-  }
+  //  if (!config.skipTest) {
+  //    await actions.lintCheck();
+  //    await actions.jestCheck();
+  //  }
 
   step('\nRunning update versions...');
-  await actions.updateVersions(config.targetVersion);
+  await actions.updateVersions(config.pkgs, config.targetVersion);
 
   step('\nRunning build...');
-  if (!config.skipBuild) {
-    await actions.build();
-  }
+  //  if (!config.skipBuild) {
+  //    await actions.build();
+  //  }
   await actions.release(config);
   console.log(config);
 
   console.log('end');
 }
 
-setup();
+setup().catch(() => {
+  actions.updateVersions(baseConfig.pkgs, baseConfig.currentVersion);
+});
