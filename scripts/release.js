@@ -227,14 +227,18 @@ async function setup() {
   await actions.release(config);
   console.log(config);
 
-  // push to GitHub
-  step('\nPushing to GitHub...');
-  await actions.gitPush(config.targetVersion);
-
-  console.log('end');
+  return config;
 }
 
-setup().catch((e) => {
-  console.log(e);
-  actions.updateVersions(baseConfig.pkgs, baseConfig.currentVersion);
-});
+setup().then(
+  async (config) => {
+    // push to GitHub
+    step('\nPushing to GitHub...');
+    await actions.gitPush(config.targetVersion);
+    console.log('end');
+  },
+  (e) => {
+    console.log(e);
+    actions.updateVersions(baseConfig.pkgs, baseConfig.currentVersion);
+  },
+);
