@@ -193,7 +193,7 @@ async function setup() {
   console.log('start');
 
   const config = await getConfig();
-  //    const config = {};
+
   step('\nRunning tests...');
   if (!config.skipTest) {
     await actions.lintCheck();
@@ -203,7 +203,7 @@ async function setup() {
   }
 
   step('\nRunning update versions...');
-  //  await actions.updateVersions(config.pkgs, config.targetVersion);
+  await actions.updateVersions(config.pkgs, config.targetVersion);
 
   step('\nRunning build...');
   if (!config.skipBuild) {
