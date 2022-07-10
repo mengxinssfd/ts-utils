@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "rootDir": ".",
     // "outDir": "lib-es",
     // "module": "commonjs",
     // "target": "es5",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "target": "esnext",
     "sourceMap": true,
     "allowJs": true,
     // "jsx": "react",
     "moduleResolution": "node",
     // "removeComments": true,
-    "declaration": true,
     //    "rootDir": "src",
     "forceConsistentCasingInFileNames": false,
     "noImplicitReturns": true,
@@ -26,12 +23,17 @@
     "noUnusedLocals": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+    "resolveJsonModule": true,
     // "incremental": true // 增量编译tsc，除第一次编译全部之外，其余时候只编译有改动部分，但不会删除掉改名前的文件和d.ts
     // "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@mxssfd/*": ["packages/*/src"]
+    }
   },
-  // "include": ["src/**/*", "src/global.d.ts"],
   "include": [
-    "src"
-  ]
+    "packages/*/src",
+    "packages/*/__tests__",
+  ],
+
 }

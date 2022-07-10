@@ -9,6 +9,6 @@
     "sourceMap": false
   },
   "exclude": [
-    "src/index.umd.ts"
+    "packages/index.umd.ts"
   ]
 }

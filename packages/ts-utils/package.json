@@ -1,0 +1,48 @@
+{
+  "name": "@mxssfd/ts-utils",
+  "version": "1.0.0",
+  "description": "utils工具函数ts/js库",
+  "main": "index.js",
+  "module": "dist/ts-utils.esm-bundler.js",
+  "types": "dist/ts-utils.d.ts",
+  "keywords": [
+    "typscript",
+    "javascript",
+    "utils",
+    "utility function",
+    "工具函数"
+  ],
+  "files": [
+    "index.js",
+    "index.mjs",
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mengxinssfd/ts-utils.git",
+  },
+  "buildOptions": {
+    "name": "tsUtils",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "cjs",
+      "global"
+    ]
+  },
+  "scripts": {
+    "apie": "api-extractor run"
+  },
+  "dependencies": {
+    "@mxssfd/core": "workspace",
+    "@mxssfd/dom": "workspace",
+    "@mxssfd/bom": "workspace",
+    "@mxssfd/types": "workspace"
+  },
+  "author": "dyh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mengxinssfd/ts-utils/issues"
+  },
+  "homepage": "https://github.com/mengxinssfd/ts-utils#readme"
+}

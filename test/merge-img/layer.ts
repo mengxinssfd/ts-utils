@@ -1,4 +1,4 @@
-import {createElement, MergeImg, loadScript, blobToBase64, imgToBlob} from "../../src";
+import {createElement, MergeImg, loadScript, blobToBase64, imgToBlob} from "../../packages/ts-utils/src";
 
 loadScript({
     props: {defer: true},

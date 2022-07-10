@@ -1,0 +1,33 @@
+{
+  "name": "@mxssfd/types",
+  "version": "1.0.0",
+  "sideEffects": false,
+  "types": "dist/types.d.ts",
+  "keywords": [
+    "typscript",
+    "javascript",
+    "utils",
+    "utility function",
+    "工具函数"
+  ],
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mengxinssfd/ts-utils.git",
+    "directory": "packages/types"
+  },
+  "buildOptions": {
+    "name": "tsUtilsTypes",
+    "formats": [
+      "esm-bundler"
+    ]
+  },
+  "author": "dyh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mengxinssfd/ts-utils/issues"
+  },
+  "homepage": "https://github.com/mengxinssfd/ts-utils#readme"
+}
