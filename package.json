@@ -1,7 +1,7 @@
 {
   "private": true,
   "version": "5.0.0",
-  "description": "utils工具函数ts/js库",
+  "description": "utility function工具函数 ts/js 库",
   "jsdelivr": "./lib-umd/index.js",
   "main": "./lib-cjs/index.js",
   "module": "./lib-es/index.js",
@@ -46,12 +46,11 @@
     "url": "git+https://github.com/mengxinssfd/ts-utils.git"
   },
   "keywords": [
-    "ts",
     "typscript",
-    "js",
     "javascript",
     "utils",
-    "工具"
+    "utility function",
+    "工具函数"
   ],
   "devDependencies": {
     "@babel/core": "^7.18.6",
