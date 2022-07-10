@@ -62,7 +62,7 @@ const actions = {
       const json = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
       if (json.private) return;
 
-      let releaseTag = null;
+      /*let releaseTag = null;
       if (config.tag) {
         releaseTag = config.tag;
       } else if (config.targetVersion.includes('alpha')) {
@@ -71,11 +71,11 @@ const actions = {
         releaseTag = 'beta';
       } else if (config.targetVersion.includes('rc')) {
         releaseTag = 'rc';
-      }
+      }*/
 
       step(`Publishing ${json.name}...`);
       try {
-        await exec(
+        /*await exec(
           // note: use of yarn is intentional here as we rely on its publishing
           // behavior.
           'yarn',
@@ -91,7 +91,8 @@ const actions = {
             cwd: pkgPath,
             stdio: 'pipe',
           },
-        );
+        );*/
+        await exec('npm', ['publish', '--access=public']);
         console.log(chalk.green(`Successfully published ${json.name}@${config.targetVersion}`));
       } catch (e) {
         if (e.stderr.match(/previously published/)) {
@@ -238,7 +239,7 @@ setup().then(
     console.log('end');
   },
   (e) => {
-    console.log(e);
+    console.log('error', e);
     actions.updateVersions(baseConfig.pkgs, baseConfig.currentVersion);
   },
 );
