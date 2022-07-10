@@ -169,7 +169,7 @@ export function supportClipboardWrite() {
 
 export function setData2Clipboard(
   data: any,
-  el: HTMLElement = document.documentElement,
+  el: HTMLElement = root?.document?.documentElement,
   format = 'text/plain',
 ): boolean {
   function cb(event: ClipboardEvent) {
