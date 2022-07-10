@@ -1,8 +1,10 @@
 {
   "name": "@mxssfd/types",
-  "version": "1.0.0",
+  "version": "5.0.0-beta.2",
   "sideEffects": false,
   "types": "dist/types.d.ts",
+  "main": "index.js",
+  "module": "dist/types.esm-bundler.js",
   "keywords": [
     "typscript",
     "javascript",
@@ -11,6 +13,8 @@
     "工具函数"
   ],
   "files": [
+    "index.js",
+    "index.mjs",
     "dist"
   ],
   "repository": {
@@ -21,7 +25,8 @@
   "buildOptions": {
     "name": "tsUtilsTypes",
     "formats": [
-      "esm-bundler"
+      "esm-bundler",
+      "cjs"
     ]
   },
   "author": "dyh",

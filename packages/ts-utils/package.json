@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/ts-utils",
-  "version": "1.0.0",
+  "version": "5.0.0-beta.2",
   "description": "utils工具函数ts/js库",
   "main": "index.js",
   "module": "dist/ts-utils.esm-bundler.js",
@@ -19,7 +19,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mengxinssfd/ts-utils.git",
+    "url": "git+https://github.com/mengxinssfd/ts-utils.git"
   },
   "buildOptions": {
     "name": "tsUtils",
@@ -34,10 +34,10 @@
     "apie": "api-extractor run"
   },
   "dependencies": {
-    "@mxssfd/core": "workspace",
-    "@mxssfd/dom": "workspace",
-    "@mxssfd/bom": "workspace",
-    "@mxssfd/types": "workspace"
+    "@mxssfd/core": "5.0.0-beta.2",
+    "@mxssfd/dom": "5.0.0-beta.2",
+    "@mxssfd/bom": "5.0.0-beta.2",
+    "@mxssfd/types": "5.0.0-beta.2"
   },
   "author": "dyh",
   "license": "MIT",

@@ -30,7 +30,7 @@ const getPkgPath = (pkg) => path.resolve(__dirname, `../packages/${pkg}`);
 const actions = {
   lintCheck: () => exec(npmTool, ['lint']),
   jestCheck: () => exec(bin('jest'), ['--no-cache']),
-  build: () => exec(npmTool, ['build_new']),
+  build: () => exec(npmTool, ['build']),
   updateVersions(pkgs, version) {
     function updateDeps(json, depType, version) {
       const dep = json[depType];
@@ -58,11 +58,11 @@ const actions = {
   async release(config) {
     async function publishPkg(pkg) {
       if (config.skippedPackages.includes(pkg)) return;
-      const pkgPath = path.resolve(getPkgPath(pkg), 'package.json');
-      const json = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+      const pkgPath = getPkgPath(pkg);
+      const json = JSON.parse(fs.readFileSync(path.resolve(pkgPath, 'package.json'), 'utf-8'));
       if (json.private) return;
 
-      let releaseTag = null;
+      /*let releaseTag = null;
       if (config.tag) {
         releaseTag = config.tag;
       } else if (config.targetVersion.includes('alpha')) {
@@ -71,11 +71,11 @@ const actions = {
         releaseTag = 'beta';
       } else if (config.targetVersion.includes('rc')) {
         releaseTag = 'rc';
-      }
+      }*/
 
       step(`Publishing ${json.name}...`);
       try {
-        await exec(
+        /*await exec(
           // note: use of yarn is intentional here as we rely on its publishing
           // behavior.
           'yarn',
@@ -91,7 +91,8 @@ const actions = {
             cwd: pkgPath,
             stdio: 'pipe',
           },
-        );
+        );*/
+        await exec('npm', ['publish', '--access=public'], { cwd: pkgPath, stdio: 'pipe' });
         console.log(chalk.green(`Successfully published ${json.name}@${config.targetVersion}`));
       } catch (e) {
         if (e.stderr.match(/previously published/)) {
@@ -106,6 +107,22 @@ const actions = {
     }
   },
   genChangeLog: () => exec(npmTool, ['changelog']),
+  async gitCommit(targetVersion) {
+    const { stdout } = await exec('git', ['diff'], { stdio: 'pipe' });
+    if (stdout) {
+      step('\nCommitting changes...');
+      await exec('git', ['add', '-A']);
+      await exec('git', ['commit', '-m', `release: v${targetVersion}`]);
+    } else {
+      console.log('No changes to commit.');
+    }
+  },
+  async gitPush(targetVersion) {
+    // push to GitHub
+    await exec('git', ['tag', `v${targetVersion}`]);
+    await exec('git', ['push', 'origin', `refs/tags/v${targetVersion}`]);
+    await exec('git', ['push']);
+  },
 };
 
 const baseConfig = {
@@ -176,7 +193,7 @@ async function setup() {
   console.log('start');
 
   const config = await getConfig();
-  //    const config = {};
+
   step('\nRunning tests...');
   if (!config.skipTest) {
     await actions.lintCheck();
@@ -186,7 +203,7 @@ async function setup() {
   }
 
   step('\nRunning update versions...');
-  //  await actions.updateVersions(config.pkgs, config.targetVersion);
+  await actions.updateVersions(config.pkgs, config.targetVersion);
 
   step('\nRunning build...');
   if (!config.skipBuild) {
@@ -203,23 +220,26 @@ async function setup() {
   step('\nUpdating lockfile...');
   await exec(npmTool, ['install', '--prefer-offline']);
 
-  const { stdout } = await exec('git', ['diff'], { stdio: 'pipe' });
-  if (stdout) {
-    step('\nCommitting changes...');
-    await exec('git', ['add', '-A']);
-    await exec('git', ['commit', '-m', `release: v${config.targetVersion}`]);
-  } else {
-    console.log('No changes to commit.');
-  }
+  step('\ngit commit...');
+  await actions.gitCommit(config.targetVersion);
 
   // publish packages
   step('\nPublishing packages...');
   await actions.release(config);
   console.log(config);
 
-  console.log('end');
+  return config;
 }
 
-setup().catch(() => {
-  actions.updateVersions(baseConfig.pkgs, baseConfig.currentVersion);
-});
+setup().then(
+  async (config) => {
+    // push to GitHub
+    step('\nPushing to GitHub...');
+    await actions.gitPush(config.targetVersion);
+    console.log('end');
+  },
+  (e) => {
+    console.log('error', e);
+    actions.updateVersions(baseConfig.pkgs, baseConfig.currentVersion);
+  },
+);

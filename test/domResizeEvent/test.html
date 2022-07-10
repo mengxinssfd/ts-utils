@@ -1,75 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Document</title>
     <style>
-        #demo {
-            position: relative;
-            background: blue;
-            height: 200px;
-            width: 100%;
-        }
+      #demo {
+        position: relative;
+        background: blue;
+        height: 200px;
+        width: 100%;
+      }
 
-        .hide {
-            width: 100%;
-            height: 100%;
-            overflow: scroll;
-        }
+      .hide {
+        width: 100%;
+        height: 100%;
+        overflow: scroll;
+      }
 
-        .hide2 {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            background-color: red;
-            overflow: scroll;
-        }
+      .hide2 {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: red;
+        overflow: scroll;
+      }
 
-        .hide-content {
-            width: 200%;
-            height: 200%;
-        }
+      .hide-content {
+        width: 200%;
+        height: 200%;
+      }
 
-        .hide-content2 {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-        }
+      .hide-content2 {
+        position: absolute;
+        width: 200%;
+        height: 200%;
+      }
     </style>
-</head>
-<body>
-<div id="demo">
-    demo 内容
-    <div class="hide">
+  </head>
+  <body>
+    <div id="demo">
+      demo 内容
+      <div class="hide">
         <div class="hide-content"></div>
-    </div>
-    <div class="hide2">
+      </div>
+      <div class="hide2">
         <div class="hide-content2"></div>
+      </div>
     </div>
-</div>
-<script>
+    <script>
+      const hide = document.querySelector('.hide');
+      hide.scrollLeft = 1000000;
+      hide.scrollTop = 1000000;
+      const hide2 = document.querySelector('.hide2');
+      hide2.scrollLeft = 1000000;
+      hide2.scrollTop = 1000000;
 
-const hide = document.querySelector(".hide");
-hide.scrollLeft = 1000000;
-hide.scrollTop = 1000000;
-const hide2 = document.querySelector(".hide2");
-hide2.scrollLeft = 1000000;
-hide2.scrollTop = 1000000;
-
-hide.addEventListener("scroll", function (e) {
-    hide2.scrollTop = 10000000;
-    hide2.scrollLeft = 10000000;
-    hide2.width = hide.offsetWidth;
-    hide2.height = hide.offsetHeight;
-    console.log("hhhhhhhhhhhhhh");
-});
-hide2.addEventListener("scroll", function (e) {
-    hide.scrollTop = 10000000;
-    hide.scrollLeft = 10000000;
-    console.log("nnnnnnnnnnnnn");
-});
-</script>
-</body>
+      hide.addEventListener('scroll', function (e) {
+        hide2.scrollTop = 10000000;
+        hide2.scrollLeft = 10000000;
+        hide2.width = hide.offsetWidth;
+        hide2.height = hide.offsetHeight;
+        console.log('hhhhhhhhhhhhhh');
+      });
+      hide2.addEventListener('scroll', function (e) {
+        hide.scrollTop = 10000000;
+        hide.scrollLeft = 10000000;
+        console.log('nnnnnnnnnnnnn');
+      });
+    </script>
+  </body>
 </html>
