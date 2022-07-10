@@ -58,8 +58,8 @@ const actions = {
   async release(config) {
     async function publishPkg(pkg) {
       if (config.skippedPackages.includes(pkg)) return;
-      const pkgPath = path.resolve(getPkgPath(pkg), 'package.json');
-      const json = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+      const pkgPath = getPkgPath(pkg);
+      const json = JSON.parse(fs.readFileSync(path.resolve(pkgPath, 'package.json'), 'utf-8'));
       if (json.private) return;
 
       /*let releaseTag = null;
