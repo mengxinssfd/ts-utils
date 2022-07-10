@@ -92,7 +92,7 @@ const actions = {
             stdio: 'pipe',
           },
         );*/
-        await exec('npm', ['publish', '--access=public']);
+        await exec('npm', ['publish', '--access=public'], { cwd: pkgPath, stdio: 'pipe' });
         console.log(chalk.green(`Successfully published ${json.name}@${config.targetVersion}`));
       } catch (e) {
         if (e.stderr.match(/previously published/)) {
