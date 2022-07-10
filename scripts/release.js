@@ -30,7 +30,7 @@ const getPkgPath = (pkg) => path.resolve(__dirname, `../packages/${pkg}`);
 const actions = {
   lintCheck: () => exec(npmTool, ['lint']),
   jestCheck: () => exec(bin('jest'), ['--no-cache']),
-  build: () => exec(npmTool, ['build_new']),
+  build: () => exec(npmTool, ['build']),
   updateVersions(pkgs, version) {
     function updateDeps(json, depType, version) {
       const dep = json[depType];
