@@ -106,6 +106,22 @@ const actions = {
     }
   },
   genChangeLog: () => exec(npmTool, ['changelog']),
+  async gitCommit(targetVersion) {
+    const { stdout } = await exec('git', ['diff'], { stdio: 'pipe' });
+    if (stdout) {
+      step('\nCommitting changes...');
+      await exec('git', ['add', '-A']);
+      await exec('git', ['commit', '-m', `release: v${targetVersion}`]);
+    } else {
+      console.log('No changes to commit.');
+    }
+  },
+  async gitPush(targetVersion) {
+    // push to GitHub
+    await exec('git', ['tag', `v${targetVersion}`]);
+    await exec('git', ['push', 'origin', `refs/tags/v${targetVersion}`]);
+    await exec('git', ['push']);
+  },
 };
 
 const baseConfig = {
@@ -203,23 +219,22 @@ async function setup() {
   step('\nUpdating lockfile...');
   await exec(npmTool, ['install', '--prefer-offline']);
 
-  const { stdout } = await exec('git', ['diff'], { stdio: 'pipe' });
-  if (stdout) {
-    step('\nCommitting changes...');
-    await exec('git', ['add', '-A']);
-    await exec('git', ['commit', '-m', `release: v${config.targetVersion}`]);
-  } else {
-    console.log('No changes to commit.');
-  }
+  step('\ngit commit...');
+  await actions.gitCommit(config.targetVersion);
 
   // publish packages
   step('\nPublishing packages...');
   await actions.release(config);
   console.log(config);
 
+  // push to GitHub
+  step('\nPushing to GitHub...');
+  await actions.gitPush(config.targetVersion);
+
   console.log('end');
 }
 
-setup().catch(() => {
+setup().catch((e) => {
+  console.log(e);
   actions.updateVersions(baseConfig.pkgs, baseConfig.currentVersion);
 });
