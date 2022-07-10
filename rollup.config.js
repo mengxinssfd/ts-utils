@@ -89,6 +89,15 @@ function createConfig(format, output, plugins = []) {
   output.sourcemap = !!process.env.SOURCE_MAP;
   output.externalLiveBindings = false;
 
+  const date = new Date();
+  output.banner =
+    '/*!\n' +
+    ` * ${packageOptions.name}(${pkg.name}) v${pkg.version}\n` +
+    ` * Author: ${pkg.author}\n` +
+    ` * Documentation: ${pkg.homepage}\n` +
+    ` * Date: ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}\n` +
+    ` */\n`;
+
   if (isGlobalBuild) {
     output.name = packageOptions.name;
   }
