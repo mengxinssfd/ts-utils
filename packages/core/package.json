@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/core",
-  "version": "1.0.0",
+  "version": "5.0.0-beta.0",
   "sideEffects": false,
   "main": "index.js",
   "module": "dist/core.esm-bundler.js",
@@ -32,7 +32,7 @@
     ]
   },
   "dependencies": {
-    "@mxssfd/types": "workspace"
+    "@mxssfd/types": "5.0.0-beta.0"
   },
   "author": "dyh",
   "license": "MIT",

@@ -92,32 +92,32 @@ importers:
 
   packages/bom:
     specifiers:
-      '@mxssfd/core': workspace
-      '@mxssfd/dom': workspace
+      '@mxssfd/core': 5.0.0-beta.0
+      '@mxssfd/dom': 5.0.0-beta.0
     dependencies:
       '@mxssfd/core': link:../core
       '@mxssfd/dom': link:../dom
 
   packages/core:
     specifiers:
-      '@mxssfd/types': workspace
+      '@mxssfd/types': 5.0.0-beta.0
     dependencies:
       '@mxssfd/types': link:../types
 
   packages/dom:
     specifiers:
-      '@mxssfd/core': workspace
-      '@mxssfd/types': workspace
+      '@mxssfd/core': 5.0.0-beta.0
+      '@mxssfd/types': 5.0.0-beta.0
     dependencies:
       '@mxssfd/core': link:../core
       '@mxssfd/types': link:../types
 
   packages/ts-utils:
     specifiers:
-      '@mxssfd/bom': workspace
-      '@mxssfd/core': workspace
-      '@mxssfd/dom': workspace
-      '@mxssfd/types': workspace
+      '@mxssfd/bom': 5.0.0-beta.0
+      '@mxssfd/core': 5.0.0-beta.0
+      '@mxssfd/dom': 5.0.0-beta.0
+      '@mxssfd/types': 5.0.0-beta.0
     dependencies:
       '@mxssfd/bom': link:../bom
       '@mxssfd/core': link:../core

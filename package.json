@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "5.0.0",
+  "version": "5.0.0-beta.0",
   "description": "utility function工具函数 ts/js 库",
   "jsdelivr": "./lib-umd/index.js",
   "main": "./lib-cjs/index.js",
