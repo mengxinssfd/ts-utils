@@ -1,50 +1,49 @@
-import * as u from "../../packages/ts-utils/src";
-import * as utils from "../../packages/ts-utils/src";
-import {animateTo, createHtmlElement} from "../../packages/ts-utils/src";
+import * as utils from '@mxssfd/ts-utils';
+import { animateTo, createHtmlElement } from '@mxssfd/ts-utils';
 
 let endTime;
 let countDown;
-u.createHtmlElement("div", {
+utils.createHtmlElement('div', {
   parent: document.body,
   children: [
-    (endTime = u.createHtmlElement("div")),
-    (countDown = u.createHtmlElement("div"))
-  ]
+    (endTime = utils.createHtmlElement('div')),
+    (countDown = utils.createHtmlElement('div')),
+  ],
 });
 
-const rand = u.randomInt(1000 * 60 * 60 * 24 * 30);
+const rand = utils.randomInt(1000 * 60 * 60 * 24 * 30);
 console.log(rand);
 const date = new Date(Date.now() + rand);
-endTime.innerText = u.formatDate(date);
-u.polling(() => {
-  countDown.innerText = u.dateDiff(new Date(), date, "d天hh时mm分ss秒SSS毫秒");
+endTime.innerText = utils.formatDate(date);
+utils.polling(() => {
+  countDown.innerText = utils.dateDiff(new Date(), date, 'd天hh时mm分ss秒SSS毫秒');
 }, 1000 / 30);
 
-addEventListener("click", () => {
-  const r = u.randomInt(30);
+addEventListener('click', () => {
+  const r = utils.randomInt(30);
   console.log(r, r * 1000 * 60 * 60 * 24);
 });
 
-addEventListener("keydown", (e) => {
+addEventListener('keydown', (e) => {
   console.log(e.code);
   switch (e.code) {
-    case "KeyQ":
+    case 'KeyQ':
       utils.scrollTo(0, (window as any).scrollSpeed, parent);
       break;
-    case "KeyW":
+    case 'KeyW':
       utils.scrollTo(2000, (window as any).scrollSpeed, parent);
       break;
   }
 });
 
-const count = createHtmlElement("div", {parent: document.body});
+const count = createHtmlElement('div', { parent: document.body });
 
 (window as any).at = animateTo({
   from: 0,
   to: 100000,
-  minStepDenominator:500,
+  minStepDenominator: 500,
   speed: 0.5,
   callback(num) {
     count.innerText = String(~~num);
-  }
+  },
 });

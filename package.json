@@ -10,7 +10,7 @@
     "test": "jest",
     "cov": "jest --coverage",
     "cov-no-cache": "jest --coverage --no-cache",
-    "dev": "set NODE_ENV=development&webpack-dev-server --config webpack.dev.config.js --host 0.0.0.0 --open \"http://localhost:8080/touch.html\"",
+    "dev": "vite --port 8080",
     "clear_jest": "jest --clearCache",
     "lint": "eslint packages",
     "prettier-check": "prettier packages __test__ --check",
@@ -72,7 +72,8 @@
     "ts-jest": "^28.0.5",
     "ts-node": "^10.8.1",
     "tslib": "^2.4.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "vite": "^2.9.14"
   },
   "author": "dyh",
   "license": "MIT",
