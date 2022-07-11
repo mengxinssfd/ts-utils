@@ -331,14 +331,14 @@ export function inSameWeek({
 }
 
 /**
- * 计算两个日期间相差的年数
+ * 计算两个日期间相差的年数 a - b
  *
  * @example
  * yearDiff(new Date('2022-07-01'),new Date('2020-7-1')) // 2
  * yearDiff(new Date('2022-07-02'),new Date('2020-7-1')) // 2.002
  *
- * @param {Date} a
- * @param {Date} b
+ * @param a
+ * @param b
  * @returns {number}
  */
 export function yearDiff(a: Date, b: Date): number {
@@ -348,7 +348,7 @@ export function yearDiff(a: Date, b: Date): number {
 
   const dates = a.getDate() - b.getDate();
 
-  months += ~~((dates * 100) / 30) / 100;
+  months += ~~((dates * 100) / (getTheLastDateOfAMonth(a).getDate() - 1)) / 100;
 
   return ~~((months * 1000) / 12) / 1000;
 }
