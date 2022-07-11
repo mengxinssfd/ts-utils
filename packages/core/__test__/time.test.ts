@@ -319,3 +319,12 @@ test('inSameWeek', async () => {
   expect(fn({ now: monday, date: curSunday, weekStart: 'Mon' })).toBeTruthy();
   expect(fn({ now: monday, date: curSunday, weekStart: 'Sun' })).toBeFalsy();
 });
+
+test('yearDiff', () => {
+  const fn = t.yearDiff;
+  expect(fn(new Date('2022-07-01'), new Date('2020-7-1'))).toBe(2);
+  expect(fn(new Date('2022-07-02'), new Date('2020-7-1'))).toBe(2.002);
+  expect(fn(new Date('2022-07-01'), new Date('2022-1-1'))).toBe(0.5);
+  expect(fn(new Date('2022-1-1'), new Date('2022-07-01'))).toBe(-0.5);
+  expect(fn(new Date('2022-1-30'), new Date('2022-01-31'))).toBe(-0.002);
+});
