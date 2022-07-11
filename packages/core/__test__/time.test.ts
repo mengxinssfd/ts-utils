@@ -293,3 +293,29 @@ test('isSameTime', async () => {
   expect(fn('yyyy-MM-dd', date, date2)).toBe(false);
   expect(fn('yyyy hh:mm:ss', date, date2)).toBe(true);
 });
+test('inSameWeek', async () => {
+  const fn = t.inSameWeek;
+
+  // 星期一
+  const monday = new Date('2022-07-11');
+
+  // 上个星期天
+  const lastSunday = new Date('2022-07-10');
+  expect(fn({ now: monday, date: lastSunday })).toBeFalsy();
+  expect(fn({ now: monday, date: lastSunday, weekStart: 'Mon' })).toBeFalsy();
+  expect(fn({ now: monday, date: lastSunday, weekStart: 'Sun' })).toBeTruthy();
+
+  // 星期一到星期六
+  for (let i = 0; i < 6; i++) {
+    const time = new Date('2022-07-' + (11 + i));
+    expect(fn({ now: monday, date: time })).toBeTruthy();
+    expect(fn({ now: monday, date: time, weekStart: 'Mon' })).toBeTruthy();
+    expect(fn({ now: monday, date: time, weekStart: 'Sun' })).toBeTruthy();
+  }
+
+  // 这个星期天
+  const curSunday = new Date('2022-07-17');
+  expect(fn({ now: monday, date: curSunday })).toBeTruthy();
+  expect(fn({ now: monday, date: curSunday, weekStart: 'Mon' })).toBeTruthy();
+  expect(fn({ now: monday, date: curSunday, weekStart: 'Sun' })).toBeFalsy();
+});
