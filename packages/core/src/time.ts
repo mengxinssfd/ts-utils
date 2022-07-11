@@ -303,16 +303,16 @@ export function isSameTime(format: string, date: Date, ...dates: Date[]): boolea
  * inSameWeek({date:new Date('2022-07-09'),now:new Date('2022-07-08')}) // true
  *
  * @param date 要对比的日期
- * @param weekStart 每个星期开始为星期几，范围[0-6] 默认星期一也就是1
+ * @param  weekStart 每个星期开始为星期一或星期天， 默认星期一
  * @param now 对比的日期 默认为当天
  */
 export function inSameWeek({
   date,
-  weekStart = 1,
+  weekStart = 'Mon',
   now = new Date(),
 }: {
   date: Date;
-  weekStart?: number;
+  weekStart?: 'Mon' | 'Sun';
   now?: Date;
 }): boolean {
   const timeStamp = date.getTime();
@@ -322,8 +322,10 @@ export function inSameWeek({
   const start = new Date(now.getFullYear(), now.getMonth(), dateNum);
   const end = new Date(start);
 
-  start.setDate(dateNum - (day + 1) + weekStart);
-  end.setDate(dateNum + (7 - day + weekStart));
+  const weekStartValue = weekStart === 'Mon' ? 1 : 0;
+
+  start.setDate(dateNum - day + weekStartValue);
+  end.setDate(dateNum + (7 - day + weekStartValue));
 
   return start.getTime() < timeStamp && timeStamp < end.getTime();
 }
