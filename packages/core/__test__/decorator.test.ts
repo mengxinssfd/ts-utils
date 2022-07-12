@@ -36,10 +36,10 @@ test('Debounce', async () => {
   expect(t.value).toBeGreaterThanOrEqual(6);
 });
 test('Throttle', async () => {
-  expect.assertions(3);
+  expect.assertions(2);
   const Throttle = dc.Throttle;
 
-  const now = Date.now();
+  // const now = Date.now();
 
   class Test {
     times = 0;
@@ -66,7 +66,7 @@ test('Throttle', async () => {
   await sleep(100);
 
   expect(t.times).toBe(1);
-  expect(t.time - now).toBe(0);
+  // expect(t.time - now).toBe(0); // 不准确 各种设备上结果不一样
   expect(t.value).toBe(1);
 });
 
