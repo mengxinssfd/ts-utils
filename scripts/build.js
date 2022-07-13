@@ -103,6 +103,13 @@ async function buildType(target, pkgDir, pkg) {
     process.exitCode = 1;
   }
 
+  const nsPath = path.resolve(pkgDir, 'src/namespace.d.ts');
+  if (await fs.exists(nsPath)) {
+    const distNsPath = path.resolve(pkgDir, 'dist/namespace.d.ts');
+    console.log(chalk.bold(chalk.green(`copy '${nsPath}' to '${distNsPath}'`)));
+    await fs.copy(nsPath, distNsPath);
+  }
+
   await fs.remove(`${pkgDir}/dist/packages`);
 }
 

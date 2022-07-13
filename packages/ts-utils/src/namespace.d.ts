@@ -1,5 +1,5 @@
-import * as all from './index';
-export * from './index';
+import * as all from '@mxssfd/ts-utils';
+export * from '@mxssfd/ts-utils';
 
 declare global {
   interface Window {
