@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "5.0.0-beta.8",
+  "version": "5.0.0-beta.9",
   "description": "utility function工具函数 ts/js 库",
   "sideEffects": false,
   "scripts": {

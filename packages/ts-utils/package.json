@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/ts-utils",
-  "version": "5.0.0-beta.8",
+  "version": "5.0.0-beta.9",
   "description": "utils工具函数ts/js库",
   "main": "index.js",
   "module": "dist/ts-utils.esm-bundler.js",
@@ -41,10 +41,10 @@
     "apie": "api-extractor run"
   },
   "dependencies": {
-    "@mxssfd/core": "5.0.0-beta.8",
-    "@mxssfd/dom": "5.0.0-beta.8",
-    "@mxssfd/bom": "5.0.0-beta.8",
-    "@mxssfd/types": "5.0.0-beta.8"
+    "@mxssfd/core": "5.0.0-beta.9",
+    "@mxssfd/dom": "5.0.0-beta.9",
+    "@mxssfd/bom": "5.0.0-beta.9",
+    "@mxssfd/types": "5.0.0-beta.9"
   },
   "author": "dyh",
   "license": "MIT",
