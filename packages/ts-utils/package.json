@@ -4,6 +4,13 @@
   "description": "utils工具函数ts/js库",
   "main": "index.js",
   "module": "dist/ts-utils.esm-bundler.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ts-utils.esm-bundler.js",
+      "require": "./index.js"
+    },
+    "./": "./dist"
+  },
   "types": "dist/ts-utils.d.ts",
   "keywords": [
     "typscript",
