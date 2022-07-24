@@ -17,7 +17,8 @@
     "lint-check": "run-p lint prettier-check",
     "build": "node scripts/build.js -t",
     "ts-check": "tsc --noEmit",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "release": "node scripts/release.js"
   },
   "repository": {
     "type": "git",
