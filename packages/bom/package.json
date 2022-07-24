@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/bom",
-  "version": "5.0.0-beta.5",
+  "version": "5.0.0-beta.6",
   "sideEffects": false,
   "main": "index.js",
   "module": "dist/bom.esm-bundler.js",
@@ -33,8 +33,8 @@
     "apie": "api-extractor run"
   },
   "dependencies": {
-    "@mxssfd/core": "5.0.0-beta.5",
-    "@mxssfd/dom": "5.0.0-beta.5"
+    "@mxssfd/core": "5.0.0-beta.6",
+    "@mxssfd/dom": "5.0.0-beta.6"
   },
   "author": "dyh",
   "license": "MIT",

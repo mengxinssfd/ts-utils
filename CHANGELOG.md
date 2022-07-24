@@ -1,3 +1,9 @@
+## 5.0.0-beta.6 (2022-07-24)
+
+* chore(package.json): 加上exports ([48709f7](https://github.com/mengxinssfd/ts-utils/commit/48709f7))
+
+
+
 ## 5.0.0-beta.5 (2022-07-24)
 
 * feat: bom dom都加上cjs打包 ([24a220f](https://github.com/mengxinssfd/ts-utils/commit/24a220f))
