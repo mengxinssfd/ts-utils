@@ -94,32 +94,32 @@ importers:
 
   packages/bom:
     specifiers:
-      '@mxssfd/core': 5.0.0-beta.6
-      '@mxssfd/dom': 5.0.0-beta.6
+      '@mxssfd/core': 5.0.0-beta.7
+      '@mxssfd/dom': 5.0.0-beta.7
     dependencies:
       '@mxssfd/core': link:../core
       '@mxssfd/dom': link:../dom
 
   packages/core:
     specifiers:
-      '@mxssfd/types': 5.0.0-beta.6
+      '@mxssfd/types': 5.0.0-beta.7
     dependencies:
       '@mxssfd/types': link:../types
 
   packages/dom:
     specifiers:
-      '@mxssfd/core': 5.0.0-beta.6
-      '@mxssfd/types': 5.0.0-beta.6
+      '@mxssfd/core': 5.0.0-beta.7
+      '@mxssfd/types': 5.0.0-beta.7
     dependencies:
       '@mxssfd/core': link:../core
       '@mxssfd/types': link:../types
 
   packages/ts-utils:
     specifiers:
-      '@mxssfd/bom': 5.0.0-beta.6
-      '@mxssfd/core': 5.0.0-beta.6
-      '@mxssfd/dom': 5.0.0-beta.6
-      '@mxssfd/types': 5.0.0-beta.6
+      '@mxssfd/bom': 5.0.0-beta.7
+      '@mxssfd/core': 5.0.0-beta.7
+      '@mxssfd/dom': 5.0.0-beta.7
+      '@mxssfd/types': 5.0.0-beta.7
     dependencies:
       '@mxssfd/bom': link:../bom
       '@mxssfd/core': link:../core

@@ -1,3 +1,9 @@
+## 5.0.0-beta.7 (2022-07-24)
+
+* feat: 所有package.json加上exports ([c3a3985](https://github.com/mengxinssfd/ts-utils/commit/c3a3985))
+
+
+
 ## 5.0.0-beta.6 (2022-07-24)
 
 * chore(package.json): 加上exports ([48709f7](https://github.com/mengxinssfd/ts-utils/commit/48709f7))
