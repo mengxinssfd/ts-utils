@@ -4,6 +4,13 @@
   "sideEffects": false,
   "main": "index.js",
   "module": "dist/core.esm-bundler.js",
+  "exports": {
+    ".": {
+      "import": "./dist/core.esm-bundler.js",
+      "require": "./index.js"
+    },
+    "./": "./dist"
+  },
   "types": "dist/core.d.ts",
   "keywords": [
     "typscript",

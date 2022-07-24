@@ -5,6 +5,13 @@
   "types": "dist/types.d.ts",
   "main": "index.js",
   "module": "dist/types.esm-bundler.js",
+  "exports": {
+    ".": {
+      "import": "./types.esm-bundler.js",
+      "require": "./index.js"
+    },
+    "./": "./dist"
+  },
   "keywords": [
     "typscript",
     "javascript",
