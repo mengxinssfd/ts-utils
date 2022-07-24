@@ -2,6 +2,7 @@
   "name": "@mxssfd/bom",
   "version": "5.0.0-beta.4",
   "sideEffects": false,
+  "main": "index.js",
   "module": "dist/bom.esm-bundler.js",
   "types": "dist/bom.d.ts",
   "keywords": [
@@ -24,7 +25,8 @@
     "formats": [
       "esm-bundler",
       "esm-browser",
-      "global"
+      "global",
+      "cjs"
     ]
   },
   "scripts": {
