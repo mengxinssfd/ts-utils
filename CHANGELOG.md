@@ -1,3 +1,9 @@
+## 5.0.0-beta.5 (2022-07-24)
+
+* feat: bom dom都加上cjs打包 ([24a220f](https://github.com/mengxinssfd/ts-utils/commit/24a220f))
+
+
+
 # [5.0.0-beta.4](https://github.com/mengxinssfd/ts-utils/compare/v5.0.0-beta.3...v5.0.0-beta.4) (2022-07-24)
 
 
