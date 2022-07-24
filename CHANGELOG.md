@@ -1,3 +1,9 @@
+## 5.0.0-beta.8 (2022-07-24)
+
+* feat: types的package.json不能用exports 移除exports ([5af6e10](https://github.com/mengxinssfd/ts-utils/commit/5af6e10))
+
+
+
 ## 5.0.0-beta.7 (2022-07-24)
 
 * feat: 所有package.json加上exports ([c3a3985](https://github.com/mengxinssfd/ts-utils/commit/c3a3985))
