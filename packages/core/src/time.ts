@@ -352,3 +352,13 @@ export function yearDiff(a: Date, b: Date): number {
 
   return ~~((months * 1000) / 12) / 1000;
 }
+
+/**
+ * 比如根据服务器与本地时间的差值计算实际日期
+ * @param init 服务器日期
+ * @return {() => Date} 返回一个闭包，闭包返回实际日期，每次调用都返回实际日期
+ */
+export function calcRelativeDate(init: Date) {
+  const diff = init.getTime() - Date.now();
+  return () => new Date(Date.now() + diff);
+}
