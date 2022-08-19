@@ -168,6 +168,23 @@ export type TupleToUnion<T extends unknown[]> = T extends [infer F, ...infer RES
 // type ttu = TupleToUnion<[number, string]>;
 
 /**
+ * 返回length为M到N的联合数组类型
+ *
+ * @example
+ * type a = TupleM2N<number, 0, 2>;// [] | [number] | [number, number]
+ */
+export type TupleM2N<
+  T,
+  M extends number,
+  N extends number,
+  I extends T[] = Tuple<T, M>,
+  R extends unknown[] = [],
+> = I['length'] extends N ? TupleToUnion<[...R, I]> : TupleM2N<T, M, N, [...I, T], [...R, I]>;
+
+// [] | [number] | [number, number]
+// type a = TupleM2N<number, 0, 2>;
+
+/**
  * 字符串模板
  * @example
  * type S1 = StrTemplate<'1%s3', ['2']>; // 123
