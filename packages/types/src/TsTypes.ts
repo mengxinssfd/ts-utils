@@ -146,6 +146,7 @@ export type OmitFirstParameters<T> = T extends (_: any, ...args: infer I) => any
 export type Tuple<T, N extends number, R extends unknown[] = []> = R['length'] extends N
   ? R
   : Tuple<T, N, [T, ...R]>;
+
 // export type Tuple<T, N extends number, R extends unknown[] = []> =
 //     N extends N  // 第一个是分发, N可能是个union
 //         ? number extends N // 第二个是N为any时降级
@@ -154,6 +155,17 @@ export type Tuple<T, N extends number, R extends unknown[] = []> = R['length'] e
 //         : never;
 
 // type T = Tuple<number, 1> // => [number, number, number]
+
+/**
+ * 把元组转成联合类型
+ * @example
+ * type ttu = TupleToUnion<[number, string]>; // string | number
+ */
+export type TupleToUnion<T extends unknown[]> = T extends [infer F, ...infer REST]
+  ? F | TupleToUnion<REST>
+  : never;
+// string | number
+// type ttu = TupleToUnion<[number, string]>;
 
 /**
  * 字符串模板
