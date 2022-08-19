@@ -139,6 +139,9 @@ export type OmitFirstParameters<T> = T extends (_: any, ...args: infer I) => any
 
 /**
  * 返回一个由单一类型组成的元组
+ *
+ * 注意：N最多为999，多了会报错
+ *
  * @example
  * type T = Tuple<number, 3> // => [number, number, number]
  * type T2 = Tuple<string, 2> // => [string, string]
