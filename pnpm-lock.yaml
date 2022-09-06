@@ -96,15 +96,24 @@ importers:
     specifiers:
       '@mxssfd/core': 5.0.0-beta.9
       '@mxssfd/dom': 5.0.0-beta.9
+      crypto-js: ^4.1.1
     dependencies:
       '@mxssfd/core': link:../core
       '@mxssfd/dom': link:../dom
+    devDependencies:
+      crypto-js: 4.1.1
 
   packages/core:
     specifiers:
       '@mxssfd/types': 5.0.0-beta.9
     dependencies:
       '@mxssfd/types': link:../types
+
+  packages/core_test:
+    specifiers:
+      '@mxssfd/core': ../core
+    dependencies:
+      '@mxssfd/core': link:../core
 
   packages/dom:
     specifiers:
@@ -2822,6 +2831,10 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+    dev: true
+
+  /crypto-js/4.1.1:
+    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
     dev: true
 
   /cssom/0.3.8:
