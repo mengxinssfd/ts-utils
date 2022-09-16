@@ -208,7 +208,7 @@ test('smartRepeat', () => {
   expect(fn('2[1[1]3[b]2[1[1]4[d]]]')).toBe('1bbb1dddd1dddd1bbb1dddd1dddd');
 });
 test('capitalizeFirstChar', () => {
-  const fn = cm.capitalizeFirstChar;
+  const fn = cm.capitalize;
   expect(fn('A')).toBe('A');
   expect(fn('1')).toBe('1');
   expect(fn('ab')).toBe('Ab');

@@ -261,7 +261,7 @@ export function smartRepeat(format: string): string {
  * 首字母大写
  * @param  value
  */
-export function capitalizeFirstChar<S extends string>(value: S): Capitalize<S> {
+export function capitalize<S extends string>(value: S): Capitalize<S> {
   const first = value[0];
   return `${first.toUpperCase()}${value.substring(1).toLowerCase()}` as any;
 }
@@ -301,7 +301,7 @@ export function toCamel<
     : ToCamelCase<S, D>
   : string {
   const reg = typeof delimiter === 'string' ? new RegExp(delimiter + '+') : (delimiter as RegExp);
-  const join = value.split(reg).map((i) => capitalizeFirstChar(i));
+  const join = value.split(reg).map((i) => capitalize(i));
   if (!toUpperCamelCase) {
     join[0] = join[0].toLowerCase();
   }
