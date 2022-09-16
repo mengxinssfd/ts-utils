@@ -257,13 +257,12 @@ export function smartRepeat(format: string): string {
 }
 
 /**
- * 第一个字符转为大写
- * @param {string} value
- * @return {string}
+ * 首字母大写
+ * @param  value
  */
-export function capitalizeFirstChar(value: string): string {
+export function capitalizeFirstChar<S extends string>(value: S): Capitalize<S> {
   const first = value[0];
-  return `${first.toUpperCase()}${value.substring(1).toLowerCase()}`;
+  return `${first.toUpperCase()}${value.substring(1).toLowerCase()}` as any;
 }
 
 /**
