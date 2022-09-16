@@ -1,4 +1,5 @@
 import type { StrTemplate } from '@mxssfd/types';
+import { ToCamelCase } from '@mxssfd/types';
 
 /**
  * Number.prototype.toLocaleString 也能转成千位分隔数字字符串
@@ -286,11 +287,23 @@ export function fromCamel(value: string, delimiter = '_', toUpperCase = false) {
  * @param {boolean} toUpperCamelCase
  * @return {string}
  */
-export function toCamel(value: string, delimiter: string | RegExp = '_', toUpperCamelCase = false) {
-  delimiter = typeof delimiter === 'string' ? new RegExp(delimiter + '+') : delimiter;
-  const join = value.split(delimiter).map((i) => capitalizeFirstChar(i));
+export function toCamel<
+  S extends string,
+  D extends string | RegExp = '_',
+  U extends boolean = false,
+>(
+  value: S,
+  delimiter: D = '_' as D,
+  toUpperCamelCase: U = false as U,
+): D extends string
+  ? U extends true
+    ? Capitalize<ToCamelCase<S, D>>
+    : ToCamelCase<S, D>
+  : string {
+  const reg = typeof delimiter === 'string' ? new RegExp(delimiter + '+') : (delimiter as RegExp);
+  const join = value.split(reg).map((i) => capitalizeFirstChar(i));
   if (!toUpperCamelCase) {
     join[0] = join[0].toLowerCase();
   }
-  return join.join('');
+  return join.join('') as any;
 }
