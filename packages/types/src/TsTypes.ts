@@ -224,3 +224,18 @@ export type Join<T extends string[], U extends string | number> = T[0] extends v
 // type Res1 = Join<["Hello", "World"], " ">; // expected to be 'Hello World'
 // type Res2 = Join<["2", "2", "2"], 1>; // expected to be '21212'
 // type Res3 = Join<["o"], "u">; // expected to be 'o'
+
+/**
+ * 字符串转换为小驼峰
+ * @example
+ *
+ * type t = ToCamelCase<'string-string-string', '-'>; // stringStringString
+ * type t2 = ToCamelCase<'string_string-String', '_'>; // stringString-string
+ * type t3 = ToCamelCase<'string_string-String'>; // stringString-string
+ */
+export type ToCamelCase<
+  S extends string,
+  D extends string = '_',
+> = S extends `${infer F}${D}${infer Rest}`
+  ? `${Lowercase<F>}${Capitalize<ToCamelCase<Rest, D>>}`
+  : Lowercase<S>;
