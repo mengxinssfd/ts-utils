@@ -1,5 +1,5 @@
 import type { Tuple } from '@mxssfd/types';
-import type { OptionWeightsTuple, OptionList, WeightFn, WeightsFnItem, WeightsItem } from './types';
+import type { OptionWeightsTuple, OptionList, WeightFn, OptionListItem } from './types';
 import { OptionsPool } from './OptionsPool';
 
 /**
@@ -47,7 +47,7 @@ export class RandomPicker<T> {
     // 如果需要增减那么直接再new一个实例就好
     this.seed = seed.slice();
 
-    this.handleSeed();
+    this.optionList = this.transformOptions();
     this.refreshPool();
   }
 
@@ -63,22 +63,24 @@ export class RandomPicker<T> {
    * 转换初始选项为普通选项
    * @protected
    */
-  protected handleSeed(): void {
-    this.optionList = this.seed.map((item) => {
-      return Array.isArray(item)
-        ? { option: item[0], weights: item[1] ?? 1 }
-        : { item, weights: 1 };
-    }) as Array<WeightsFnItem<T> | WeightsItem<T>>;
+  protected transformOptions(options = this.seed): OptionList<T> {
+    return options.map((item) => {
+      return (
+        Array.isArray(item)
+          ? { option: item[0], weights: item[1] ?? 1 }
+          : { option: item, weights: 1 }
+      ) as OptionListItem<T>;
+    });
   }
 
   /**
    * 添加单个选项，如果需要添加多个则推荐使用options
    * @param option 选项
-   * @param weights 权重
+   * @param [weights = 1] 权重
    * @return {this}
    */
-  option(option: T, weights: number | WeightFn): this {
-    this.optionList.push({ weights, option } as WeightsFnItem<T> | WeightsItem<T>);
+  option(option: T, weights: number | WeightFn = 1): this {
+    this.optionList.push({ weights, option } as OptionListItem<T>);
     this.refreshPool();
     return this;
   }
@@ -87,10 +89,8 @@ export class RandomPicker<T> {
    * @param options [[选项, 权重], [选项, 权重], ...]
    * @return {this}
    */
-  options(options: OptionWeightsTuple<T>[]): this {
-    options.forEach(([option, weights]) =>
-      this.optionList.push({ weights, option } as WeightsFnItem<T> | WeightsItem<T>),
-    );
+  options(options: Array<OptionWeightsTuple<T> | T>): this {
+    this.optionList.push(...this.transformOptions(options));
     this.refreshPool();
     return this;
   }
@@ -174,7 +174,7 @@ export class RandomPicker<T> {
    * @return {this}
    */
   resetWithSeed(): this {
-    this.handleSeed();
+    this.optionList = this.transformOptions();
     this.refreshPool();
     return this;
   }
@@ -212,7 +212,7 @@ export class RandomPicker<T> {
   /**
    * 获取选项选中的几率
    * @param  option 选项
-   * @return {number} 几率
+   * @return 几率：100分满值
    */
   rateOf(option: T): number {
     return this.pool.rateOf(option);

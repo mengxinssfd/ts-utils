@@ -52,7 +52,8 @@ export class OptionsPool<T> {
     this.pool = list.map((item) => {
       const weight = typeof item.weights === 'number' ? item.weights : item.weights(staticWeights);
       reduceWeight += weight;
-      return { ...item, range: ~~((reduceWeight / weights) * 1000_000) / 10_000 };
+      const range = ~~((reduceWeight / weights) * 1_000_000) / 10_000;
+      return { ...item, range };
     });
   }
   /**
@@ -60,7 +61,7 @@ export class OptionsPool<T> {
    * @protected
    */
   get randomOption(): T {
-    const range = ~~(Math.random() * 1000_000) / 10_000;
+    const range = Math.random() * 100;
     return (this.pool.find((item) => item.range > range) as PoolItem<T>).option;
   }
 
@@ -89,13 +90,17 @@ export class OptionsPool<T> {
   /**
    * 获取选项选中的几率
    * @param  option 选项
-   * @return {number} 几率
+   * @return @return 几率：100分满值
    */
   rateOf(option: T): number {
     const pool = this.pool;
     const index = pool.findIndex((it) => it.option === option);
     if (index === -1) return 0;
-    return pool[index].range - (pool[index - 1]?.range ?? 0);
+    const w = 10_000;
+    const currentRange = ~~(pool[index].range * w);
+    const prevRange = ~~((pool[index - 1]?.range ?? 0) * w);
+    const diff = currentRange - prevRange;
+    return diff / w;
   }
 
   /**

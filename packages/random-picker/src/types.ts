@@ -14,7 +14,8 @@ export type PoolItem<T> = {
   range: number;
 } & (WeightsFnItem<T> | WeightsItem<T>);
 
-export type OptionList<T> = Array<WeightsFnItem<T> | WeightsItem<T>>;
+export type OptionListItem<T> = WeightsFnItem<T> | WeightsItem<T>;
+export type OptionList<T> = Array<OptionListItem<T>>;
 
 /**
  * [option, weights] 元组
