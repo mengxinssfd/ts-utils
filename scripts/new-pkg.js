@@ -76,15 +76,18 @@ async function getConfig() {
   ({ value: config.deps } = await prompt({
     type: 'multiselect',
     name: 'value',
-    message: '选择依赖(deps)(按空格键选中，enter键确定)',
+    message: '选择依赖(deps)(按空格键选中/取消，enter键确定)',
     choices: deps,
+    initial: ['types'],
   }));
 
+  const formatsChoices = ['esm-bundler', 'esm-browser', 'cjs', 'global'];
   ({ value: config.formats } = await prompt({
     type: 'multiselect',
     name: 'value',
-    message: '选择打包类型(formats)(按空格键选中，enter键确定)',
-    choices: ['esm-bundler', 'esm-browser', 'cjs', 'global'],
+    message: '选择打包类型(formats)(按空格键选中/取消，enter键确定)',
+    choices: formatsChoices,
+    initial: formatsChoices,
   }));
 
   ({ value: config.addToTsUtils } = await prompt({
