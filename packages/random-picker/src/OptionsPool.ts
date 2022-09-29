@@ -60,7 +60,8 @@ export class OptionsPool<T> {
    * 从选项池中获取随机选项
    * @protected
    */
-  get randomOption(): T {
+  get randomOption(): T | null {
+    if (!this.pool.length) return null;
     const range = Math.random() * 100;
     return (this.pool.find((item) => item.range > range) as PoolItem<T>).option;
   }

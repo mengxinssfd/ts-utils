@@ -50,7 +50,7 @@ describe('random-picker', function () {
     expect(picker.poolLen).toBe(0);
 
     expect(seed.includes(picker.take() as number)).toBeFalsy();
-    expect(picker.take()).toBeUndefined();
+    expect(picker.take()).toBeNull();
     expect(picker.len).toBe(3);
     expect(picker.poolLen).toBe(0);
 
@@ -139,10 +139,14 @@ describe('random-picker', function () {
   });
   test('edge', () => {
     // empty seed
-    const p = new RandomPicker();
+    const p = new RandomPicker<number>();
     p.option(1);
     expect(p.rateOf(1)).toBe(100);
     expect(p.pick()).toBe(1);
+    expect(p.pick(10)).toEqual(Array(10).fill(1));
+    expect(p.take(10)).toEqual(Array(1).fill(1));
+    expect(p.take(10 as number)).toEqual([]);
+    expect(p.pick()).toBe(null);
 
     // empty options rateOf
     p.resetWithSeed();

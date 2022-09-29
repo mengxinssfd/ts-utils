@@ -100,25 +100,25 @@ export class RandomPicker<T> {
    *
    * 会被take影响到
    */
-  pick(): T;
+  pick(): T | null;
   /**
    * @see {@link RandomPicker.pick}
    */
-  pick<N extends 1>(count: N): T;
+  pick<N extends 1>(count: N): T | null;
   /**
    * 获取随机可能会重复的count个选项
    *
    * @see {@link RandomPicker.pick}
    */
-  pick<N extends number>(count: N): Tuple<T, N>;
-  pick(count = 1): T[] | T {
+  pick<N extends number>(count: N): Tuple<T | null, N>;
+  pick(count = 1): T[] | T | null {
     if (count === 1) {
       return this.pool.randomOption;
     }
 
     return Array(count)
       .fill(void 0)
-      .map(() => this.pool.randomOption);
+      .map(() => this.pool.randomOption) as T[];
   }
 
   /**
@@ -128,21 +128,20 @@ export class RandomPicker<T> {
    *
    * 会影响到pick
    */
-  take(): T | void;
+  take(): T | null;
   /**
    * @see {@link RandomPicker.take}
    */
-  take<N extends 1>(count: N): T | void;
+  take<N extends 1>(count: N): T | null;
   /**
    * 获取随机不会重复的count个选项
    * @see {@link RandomPicker.take}
    */
-  take<N extends number>(count: N): Tuple<T | void, N>;
-  take(count = 1): void | T | T[] {
-    if (!this.poolLen) return;
-
+  take<N extends number>(count: N): Tuple<T | null, N>;
+  take(count = 1): null | T | T[] {
     if (count === 1) {
       const option = this.pool.randomOption;
+      if (option === null) return option;
       this.pool.remove(option);
       return option;
     }
@@ -150,7 +149,7 @@ export class RandomPicker<T> {
     return Array(Math.min(count, this.poolLen))
       .fill(void 0)
       .map(() => {
-        const option = this.pool.randomOption;
+        const option = this.pool.randomOption as T;
         this.pool.remove(option);
         return option;
       });
