@@ -1,6 +1,23 @@
 import { RandomPicker } from '../src';
 
 describe('random-picker', function () {
+  test('take/rateOf', () => {
+    const seed = [1, 2, 3];
+    const picker = new RandomPicker(seed);
+
+    // take以后选中几率依次增加
+    expect(picker.rateOf(1)).toBe(33.3333);
+    const t = picker.take() as number;
+    expect(picker.rateOf(seed.find((i) => i !== t) as number)).toBe(50);
+    const t2 = picker.take();
+    expect(picker.rateOf(seed.find((i) => i !== t && i !== t2) as number)).toBe(100);
+
+    // take完以后，几率全部为0
+    picker.take();
+    expect(picker.rateOf(1)).toBe(0);
+    expect(picker.rateOf(2)).toBe(0);
+    expect(picker.rateOf(3)).toBe(0);
+  });
   test('calc rate', () => {
     const picker = new RandomPicker([
       [1, 1],
