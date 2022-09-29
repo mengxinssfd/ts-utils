@@ -14,7 +14,17 @@
   "types": "dist/random-picker.d.ts",
   "keywords": [
     "random",
-    "picker"
+    "choose",
+    "array",
+    "select",
+    "items",
+    "sequential",
+    "unique",
+    "pick-some",
+    "pick",
+    "picker",
+    "take",
+    "weights"
   ],
   "files": [
     "index.js",
