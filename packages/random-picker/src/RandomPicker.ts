@@ -65,11 +65,13 @@ export class RandomPicker<T> {
    */
   protected transformOptions(options = this.seed): OptionList<T> {
     return options.map((item) => {
-      return (
-        Array.isArray(item)
-          ? { option: item[0], weights: item[1] ?? 1 }
-          : { option: item, weights: 1 }
-      ) as OptionListItem<T>;
+      if (!Array.isArray(item)) return { option: item, weights: 1 };
+
+      const [option, weightsRaw] = item;
+      // 空权重默认为1
+      const weights = weightsRaw ?? 1;
+
+      return { option, weights } as OptionListItem<T>;
     });
   }
 
@@ -80,7 +82,7 @@ export class RandomPicker<T> {
    * @return {this}
    */
   option(option: T, weights: number | WeightFn = 1): this {
-    this.optionList.push({ weights, option } as OptionListItem<T>);
+    this.optionList.push(this.transformOptions([[option, weights]])[0]);
     this.refreshPool();
     return this;
   }
@@ -138,7 +140,7 @@ export class RandomPicker<T> {
    * @see {@link RandomPicker.take}
    */
   take<N extends number>(count: N): Tuple<T | null, N>;
-  take(count = 1): null | T | T[] {
+  take(count = 1): null | T | (T | null)[] {
     if (count === 1) {
       const option = this.pool.randomOption;
       if (option === null) return option;
@@ -147,7 +149,7 @@ export class RandomPicker<T> {
     }
 
     return Array(Math.min(count, this.poolLen))
-      .fill(void 0)
+      .fill(null)
       .map(() => {
         const option = this.pool.randomOption as T;
         this.pool.remove(option);

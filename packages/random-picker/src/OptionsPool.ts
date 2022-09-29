@@ -45,14 +45,19 @@ export class OptionsPool<T> {
    */
   protected generatePool(list: OptionList<T>): void {
     // 计算权重
-    const [weights, staticWeights] = this.computeWeights(list);
+    const [weightsTotal, staticWeightsTotal] = this.computeWeights(list);
 
     // 生成选项池
     let reduceWeight = 0;
     this.pool = list.map((item) => {
-      const weight = typeof item.weights === 'number' ? item.weights : item.weights(staticWeights);
-      reduceWeight += weight;
-      const range = ~~((reduceWeight / weights) * 1_000_000) / 10_000;
+      const weights =
+        typeof item.weights === 'number' ? item.weights : item.weights(staticWeightsTotal);
+      // 权重为0或负数的强制抛出异常
+      if (weights <= 0) {
+        throw new RangeError(`权重不能小于等于0，weights: ${weights}`);
+      }
+      reduceWeight += weights;
+      const range = ~~((reduceWeight / weightsTotal) * 1_000_000) / 10_000;
       return { ...item, range };
     });
   }

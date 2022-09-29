@@ -147,6 +147,7 @@ describe('random-picker', function () {
     expect(p.take(10)).toEqual(Array(1).fill(1));
     expect(p.take(10 as number)).toEqual([]);
     expect(p.pick()).toBe(null);
+    expect(p.pick(10)).toEqual(Array(10).fill(null));
 
     // empty options rateOf
     p.resetWithSeed();
@@ -156,5 +157,42 @@ describe('random-picker', function () {
     const p2 = new RandomPicker([1, [2]]);
     expect(p2.rateOf(1)).toBe(50);
     expect(p2.rateOf(2)).toBe(50);
+
+    // 0 weights
+    expect(() => {
+      p2.option(5, 0);
+    }).toThrowError('权重不能小于等于0，weights: 0');
+
+    // option负权重
+    p2.resetWithSeed();
+    expect(() => {
+      p2.option(6, -10);
+    }).toThrowError('权重不能小于等于0，weights: -10');
+
+    // option函数负权重
+    p2.resetWithSeed();
+    expect(() => {
+      p2.option(6, () => -2);
+    }).toThrowError('权重不能小于等于0，weights: -2');
+
+    // options 负权重
+    p2.resetWithSeed();
+    expect(() => {
+      p2.options([[6, -5]]);
+    }).toThrowError('权重不能小于等于0，weights: -5');
+
+    // options 函数负权重
+    p2.resetWithSeed();
+    expect(() => {
+      p2.options([[6, () => -6]]);
+    }).toThrowError('权重不能小于等于0，weights: -6');
+
+    // 权重为负为0
+    expect(() => {
+      new RandomPicker([
+        [1, 0],
+        [2, -10],
+      ]);
+    }).toThrowError('权重不能小于等于0，weights: 0');
   });
 });
