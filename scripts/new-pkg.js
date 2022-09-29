@@ -221,7 +221,19 @@ ${config.description}
 
     // 添加__test__目录
     step('创建__test__目录');
-    fs.mkdirSync(path.resolve(pkgPath, '__test__'));
+    const testDir = path.resolve(pkgPath, '__test__');
+    fs.mkdirSync(testDir);
+    step('添加__test__/index.test.ts');
+    const testContent = `
+import * as testTarget from '../src';
+
+describe('${config.pkgName}', function () {
+  test('base', () => {
+    expect(1).toBe(1);
+  });
+});
+`.trim();
+    fs.writeFileSync(path.resolve(testDir, 'index.test.ts'), testContent);
 
     // 添加到ts-utils
     if (config.addToTsUtils) {
@@ -243,7 +255,7 @@ ${config.description}
       step('更新ts-utils src/index.ts');
       const indexPath = path.resolve(tsUtilsPath, 'src/index.ts');
       const indexContent = fs.readFileSync(indexPath).toString();
-      fs.writeFileSync(indexPath, indexContent + `\nexport * from '@mxssfd/${config.name}';`);
+      fs.writeFileSync(indexPath, indexContent + `export * from '@mxssfd/${config.name}';\n`);
     }
 
     step('finish');
