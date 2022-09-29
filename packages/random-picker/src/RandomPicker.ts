@@ -1,6 +1,7 @@
 import type { Tuple } from '@mxssfd/types';
-import type { OptionWeightsTuple, OptionList, WeightFn, OptionListItem } from './types';
+import type { OptionWeightsTuple, WeightFn } from './types';
 import { OptionsPool } from './OptionsPool';
+import { OptionsStore } from './OptionsStore';
 
 /**
  * 工具类库：从选项池中随机挑选n个选项
@@ -33,9 +34,10 @@ export class RandomPicker<T> {
    */
   protected pool!: OptionsPool<T>;
   /**
+   * 选项存储
    * 全部选项，包含后面option添加的
    */
-  protected optionList: OptionList<T> = [];
+  protected store!: OptionsStore<T>;
 
   constructor(
     /**
@@ -47,32 +49,24 @@ export class RandomPicker<T> {
     // 如果需要增减那么直接再new一个实例就好
     this.seed = seed.slice();
 
-    this.optionList = this.transformOptions();
+    this.refreshStore();
     this.refreshPool();
+  }
+
+  /**
+   * 刷新选项存储
+   * @protected
+   */
+  protected refreshStore(): void {
+    this.store = new OptionsStore(this.seed);
   }
 
   /**
    * 刷新选项池
    * @protected
    */
-  protected refreshPool(options = this.optionList): void {
-    this.pool = new OptionsPool(options);
-  }
-
-  /**
-   * 转换初始选项为普通选项
-   * @protected
-   */
-  protected transformOptions(options = this.seed): OptionList<T> {
-    return options.map((item) => {
-      if (!Array.isArray(item)) return { option: item, weights: 1 };
-
-      const [option, weightsRaw] = item;
-      // 空权重默认为1
-      const weights = weightsRaw ?? 1;
-
-      return { option, weights } as OptionListItem<T>;
-    });
+  protected refreshPool(): void {
+    this.pool = new OptionsPool(this.store.list);
   }
 
   /**
@@ -82,9 +76,7 @@ export class RandomPicker<T> {
    * @return {this}
    */
   option(option: T, weights: number | WeightFn = 1): this {
-    this.optionList.push(this.transformOptions([[option, weights]])[0]);
-    this.refreshPool();
-    return this;
+    return this.options([[option, weights]]);
   }
   /**
    * 添加多个选项
@@ -92,7 +84,7 @@ export class RandomPicker<T> {
    * @return {this}
    */
   options(options: Array<OptionWeightsTuple<T> | T>): this {
-    this.optionList.push(...this.transformOptions(options));
+    this.store.add(options);
     this.refreshPool();
     return this;
   }
@@ -141,20 +133,19 @@ export class RandomPicker<T> {
    */
   take<N extends number>(count: N): Tuple<T | null, N>;
   take(count = 1): null | T | (T | null)[] {
-    if (count === 1) {
+    const next = () => {
       const option = this.pool.randomOption;
       if (option === null) return option;
       this.pool.remove(option);
       return option;
+    };
+    if (count === 1) {
+      return next();
     }
 
     return Array(Math.min(count, this.poolLen))
       .fill(null)
-      .map(() => {
-        const option = this.pool.randomOption as T;
-        this.pool.remove(option);
-        return option;
-      });
+      .map(() => next());
   }
 
   /**
@@ -163,11 +154,9 @@ export class RandomPicker<T> {
    * @return 操作成功或失败
    */
   remove(option: T): boolean {
-    const index = this.optionList.findIndex((it) => it.option === option);
-    if (index === -1) return false;
-    this.optionList.splice(index, 1);
-    this.refreshPool();
-    return true;
+    const flag = this.store.remove(option);
+    flag && this.refreshPool();
+    return flag;
   }
 
   /**
@@ -175,7 +164,7 @@ export class RandomPicker<T> {
    * @return {this}
    */
   resetWithSeed(): this {
-    this.optionList = this.transformOptions();
+    this.refreshStore();
     this.refreshPool();
     return this;
   }
@@ -193,7 +182,7 @@ export class RandomPicker<T> {
    * @return 选项数组长度
    */
   get len(): number {
-    return this.optionList.length;
+    return this.store.len;
   }
 
   /**
@@ -224,7 +213,7 @@ export class RandomPicker<T> {
    * @returns 由option、weights组成的元组所组成的选项数组，可以用于new RandomPicker(picker.export())
    */
   export(): OptionWeightsTuple<T>[] {
-    return this.optionList.map((item) => [item.option, item.weights]);
+    return this.store.export();
   }
 
   /**

@@ -9,6 +9,7 @@ export class OptionsPool<T> {
    * @protected
    */
   protected pool: PoolItem<T>[] = [];
+
   constructor(options: OptionList<T>) {
     this.generatePool(options);
   }
@@ -38,6 +39,7 @@ export class OptionsPool<T> {
       staticWeights,
     ];
   }
+
   /**
    * 生成选项池
    * 计算各个选项的所占的百分比及所处位置，并生成选项池
@@ -61,6 +63,7 @@ export class OptionsPool<T> {
       return { ...item, range };
     });
   }
+
   /**
    * 从选项池中获取随机选项
    * @protected
