@@ -15,3 +15,8 @@ export type PoolItem<T> = {
 } & (WeightsFnItem<T> | WeightsItem<T>);
 
 export type OptionList<T> = Array<WeightsFnItem<T> | WeightsItem<T>>;
+
+/**
+ * [option, weights] 元组
+ */
+export type OptionWeightsTuple<T> = [option: T, weights: number | WeightFn];
