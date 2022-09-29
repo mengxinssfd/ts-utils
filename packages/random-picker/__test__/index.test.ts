@@ -18,6 +18,51 @@ describe('random-picker', function () {
     expect(picker.rateOf(2)).toBe(0);
     expect(picker.rateOf(3)).toBe(0);
   });
+  test('option/rateOf', () => {
+    const picker = new RandomPicker([1]);
+    expect(picker.rateOf(1)).toBe(100);
+
+    picker.option(2);
+    expect(picker.rateOf(1)).toBe(50);
+    expect(picker.rateOf(2)).toBe(50);
+
+    picker.option(3, 2);
+    expect(picker.rateOf(1)).toBe(25);
+    expect(picker.rateOf(2)).toBe(25);
+    expect(picker.rateOf(3)).toBe(50);
+
+    picker.option(4, (weightTotal) => weightTotal);
+    expect(picker.rateOf(1)).toBe(12.5);
+    expect(picker.rateOf(2)).toBe(12.5);
+    expect(picker.rateOf(3)).toBe(25);
+    expect(picker.rateOf(4)).toBe(50);
+
+    picker.option(5, (weightTotal) => weightTotal);
+    expect(picker.rateOf(1)).toBe(8.3333);
+    expect(picker.rateOf(2)).toBe(8.3333);
+    expect(picker.rateOf(3)).toBe(16.6667);
+    expect(picker.rateOf(4)).toBe(33.3333);
+    expect(picker.rateOf(5)).toBe(33.3334);
+  });
+  test('options/rateOf', () => {
+    const picker = new RandomPicker([1]);
+    expect(picker.rateOf(1)).toBe(100);
+
+    picker.options([2, [3, 2]]);
+    expect(picker.rateOf(1)).toBe(25);
+    expect(picker.rateOf(2)).toBe(25);
+    expect(picker.rateOf(3)).toBe(50);
+
+    picker.options([
+      [4, (weightTotal) => weightTotal],
+      [5, (weightTotal) => weightTotal],
+    ]);
+    expect(picker.rateOf(1)).toBe(8.3333);
+    expect(picker.rateOf(2)).toBe(8.3333);
+    expect(picker.rateOf(3)).toBe(16.6667);
+    expect(picker.rateOf(4)).toBe(33.3333);
+    expect(picker.rateOf(5)).toBe(33.3334);
+  });
   test('calc rate', () => {
     const picker = new RandomPicker([
       [1, 1],
