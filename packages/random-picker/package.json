@@ -1,23 +1,20 @@
 {
-  "name": "@mxssfd/ts-utils",
+  "name": "@mxssfd/random-picker",
   "version": "5.0.0-beta.9",
-  "description": "utils工具函数ts/js库",
+  "description": "从数组中随机挑选出n个选项的js工具类库",
   "main": "index.js",
-  "module": "dist/ts-utils.esm-bundler.js",
+  "module": "dist/random-picker.esm-bundler.js",
   "exports": {
     ".": {
-      "import": "./dist/ts-utils.esm-bundler.js",
+      "import": "./dist/random-picker.esm-bundler.js",
       "require": "./index.js"
     },
     "./": "./dist"
   },
-  "types": "dist/ts-utils.d.ts",
+  "types": "dist/random-picker.d.ts",
   "keywords": [
-    "typscript",
-    "javascript",
-    "utils",
-    "utility function",
-    "工具函数"
+    "random",
+    "picker"
   ],
   "files": [
     "index.js",
@@ -29,7 +26,7 @@
     "url": "git+https://github.com/mengxinssfd/ts-utils.git"
   },
   "buildOptions": {
-    "name": "tsUtils",
+    "name": "tsUtilsRandomPicker",
     "formats": [
       "esm-bundler",
       "esm-browser",
@@ -41,16 +38,12 @@
     "apie": "api-extractor run"
   },
   "dependencies": {
-    "@mxssfd/core": "5.0.0-beta.9",
-    "@mxssfd/dom": "5.0.0-beta.9",
-    "@mxssfd/bom": "5.0.0-beta.9",
-    "@mxssfd/types": "5.0.0-beta.9",
-    "@mxssfd/random-picker": "5.0.0-beta.9"
+    "@mxssfd/types": "5.0.0-beta.9"
   },
   "author": "dyh",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mengxinssfd/ts-utils/issues"
   },
-  "homepage": "https://github.com/mengxinssfd/ts-utils#readme"
+  "homepage": "https://github.com/mengxinssfd/ts-utils/tree/master/packages/random-picker"
 }
