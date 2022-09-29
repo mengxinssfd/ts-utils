@@ -16,12 +16,22 @@ interface WeightFnItem<T> {
 // TODO 可独立出来
 /**
  * 随机挑选组件
+ *
+ * @example
+ * const picker = new RandomPicker([1,2,3,4,5]);
+ *
+ * picker.pick() // 返回1,2,3,4,5中的1个
+ * picker.pick(2) // 返回1,2,3,4,5中的2个
+ *
+ * picker.take() // 返回1,2,3,4,5中的1个，之后pick或take可供选择的只剩下4个
+ * picker.take(2) // 返回1,2,3,4,5中的2个，之后pick或take可供选择的只剩下2个
+ *
  */
 export class RandomPicker<T> {
   protected rangeList: RangeItem<T>[] = [];
   protected list: Array<WeightFnItem<T> | WeightItem<T>> = [];
 
-  constructor(protected readonly seed: [item: T, weights: number | WeightFn][] | T[]) {
+  constructor(protected readonly seed: [item: T, weights: number | WeightFn][] | T[] = []) {
     this.handleSeed();
     this.computeRange();
   }
