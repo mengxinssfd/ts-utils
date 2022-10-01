@@ -349,27 +349,3 @@ File                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered L
 ```
 
 测试覆盖率达到 100%请放心食用
-
-## 案例
-
-```ts
-const picker = new RandomPicker([1, 2, 3, 4, 5]);
-
-// 从选项池中随机挑选1个选项
-picker.pick(); // 返回1,2,3,4,5中的1个
-// 从选项池中随机挑选2个选项
-picker.pick(2); // 返回1,2,3,4,5中的2个,可供选则的有5个，多个可能会出现重复的
-
-// 从中随机拿走选项。每拿走一个选项，都会对剩余的选项重新计算选中几率，可选数量减1
-picker.take(); // 返回1,2,3,4,5中的1个，之后pick或take可供选择的只剩下4个
-picker.take(2); // 返回1,2,3,4,5中的2个，之后pick或take可供选择的只剩下2个，多个不会出现重复的
-
-// 重置后，会恢复选项池
-picker.reset();
-
-// 添加选项
-picker.option(6);
-
-// 恢复初始选项，去除picker.option方法添加的选项
-picker.resetBySeed();
-```
