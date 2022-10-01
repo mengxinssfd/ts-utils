@@ -111,12 +111,6 @@ importers:
     dependencies:
       '@mxssfd/types': link:../types
 
-  packages/core_test:
-    specifiers:
-      '@mxssfd/core': ../core
-    dependencies:
-      '@mxssfd/core': link:../core
-
   packages/dom:
     specifiers:
       '@mxssfd/core': 5.0.0-beta.9
@@ -125,16 +119,24 @@ importers:
       '@mxssfd/core': link:../core
       '@mxssfd/types': link:../types
 
+  packages/random-picker:
+    specifiers:
+      '@mxssfd/types': 5.0.0-beta.9
+    dependencies:
+      '@mxssfd/types': link:../types
+
   packages/ts-utils:
     specifiers:
       '@mxssfd/bom': 5.0.0-beta.9
       '@mxssfd/core': 5.0.0-beta.9
       '@mxssfd/dom': 5.0.0-beta.9
+      '@mxssfd/random-picker': 5.0.0-beta.9
       '@mxssfd/types': 5.0.0-beta.9
     dependencies:
       '@mxssfd/bom': link:../bom
       '@mxssfd/core': link:../core
       '@mxssfd/dom': link:../dom
+      '@mxssfd/random-picker': link:../random-picker
       '@mxssfd/types': link:../types
 
   packages/types:
