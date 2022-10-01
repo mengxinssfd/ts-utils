@@ -1,4 +1,4 @@
-import { RandomPicker } from '../src';
+import { Seed, RandomPicker } from '../src';
 
 describe('random-picker', function () {
   test('take/rateOf', () => {
@@ -198,6 +198,86 @@ describe('random-picker', function () {
     expect(picker.rateOf(3)).toBe(33.3333);
     expect(picker.rateOf(1)).toBe(16.6666);
     expect(picker.rateOf(2)).toBe(16.6667);
+  });
+  test('take/export', () => {
+    const seed: Seed<number> = [1, 2, [3, (weights: number) => weights]];
+    const picker = new RandomPicker(seed);
+
+    // export 导出所有选项
+    const exp1 = picker.export();
+    expect(exp1.slice(0, -1)).toEqual([
+      [1, 1],
+      [2, 1],
+    ]);
+    expect(exp1[2][0]).toBe(3);
+    expect(exp1[2][1]).toBe(seed[2][1]);
+
+    // take过的也会导出
+    picker.take(3);
+    const exp2 = picker.export();
+    expect(exp2.slice(0, -1)).toEqual([
+      [1, 1],
+      [2, 1],
+    ]);
+    expect(exp2[2][0]).toBe(3);
+    expect(exp2[2][1]).toBe(seed[2][1]);
+
+    // 不会导出remove过的选项
+    picker.remove(3);
+    const exp3 = picker.export();
+    expect(exp3).toEqual([
+      [1, 1],
+      [2, 1],
+    ]);
+  });
+  test('take/exportPool', () => {
+    const seed: Seed<number> = [1, 2, [3, (weights: number) => weights]];
+    const picker = new RandomPicker(seed);
+
+    // exportPool 导出剩余选项
+    const exp1 = picker.exportPool();
+    expect(exp1.slice(0, -1)).toEqual([
+      [1, 1],
+      [2, 1],
+    ]);
+    expect(exp1[2][0]).toBe(3);
+    expect(exp1[2][1]).toBe(seed[2][1]);
+
+    // take过的选项不会导出
+    picker.take(3);
+    const exp2 = picker.exportPool();
+    expect(exp2.slice(0, -1)).toEqual([]);
+
+    picker.reset();
+    // 不会导出remove过的选项
+    picker.remove(3);
+    const exp3 = picker.exportPool();
+    expect(exp3).toEqual([
+      [1, 1],
+      [2, 1],
+    ]);
+  });
+  test('选项唯一且动态权重的选择器', () => {
+    const picker = new RandomPicker([[1, (w) => w]]);
+
+    expect(picker.rateOf(1)).toBe(100);
+    expect(picker.pick()).toBe(1);
+    expect(picker.pick(10)).toEqual(Array(10).fill(1));
+  });
+  test('len/poolLen', () => {
+    const picker = new RandomPicker([1, 2, 3]);
+
+    // 初始都有3个
+    expect([picker.len, picker.poolLen]).toEqual([3, 3]);
+
+    picker.take(2); // 拿走两个
+    expect([picker.len, picker.poolLen]).toEqual([3, 1]);
+
+    picker.remove(3); // 移除3
+    expect([picker.len, picker.poolLen]).toEqual([2, 2]);
+
+    picker.take(2); // 拿走两个
+    expect([picker.len, picker.poolLen]).toEqual([2, 0]);
   });
   test('edge', () => {
     // empty seed
