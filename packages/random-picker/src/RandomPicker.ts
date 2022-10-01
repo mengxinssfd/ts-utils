@@ -1,5 +1,5 @@
 import type { Tuple } from '@mxssfd/types';
-import type { OptionWeightsTuple, WeightFn } from './types';
+import type { OptionWeightsTuple, Seed, WeightFn } from './types';
 import { OptionsPool } from './OptionsPool';
 import { OptionsStore } from './OptionsStore';
 
@@ -43,7 +43,7 @@ export class RandomPicker<T> {
     /**
      * 初始选项，不包含后面option添加的
      */
-    protected readonly seed: Array<OptionWeightsTuple<T> | T> = [],
+    protected readonly seed: Seed<T> = [],
   ) {
     // 禁止在new RandomPicker([1,2,3])后继续对seed数组增减，
     // 如果需要增减那么直接再new一个实例就好
@@ -83,7 +83,7 @@ export class RandomPicker<T> {
    * @param options [[选项, 权重], [选项, 权重], ...]
    * @return {this}
    */
-  options(options: Array<OptionWeightsTuple<T> | T>): this {
+  options(options: Seed<T>): this {
     this.store.add(options);
     this.refreshPool();
     return this;

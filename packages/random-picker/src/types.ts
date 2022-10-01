@@ -21,3 +21,5 @@ export type OptionList<T> = Array<OptionListItem<T>>;
  * [option, weights] 元组
  */
 export type OptionWeightsTuple<T> = [option: T, weights: number | WeightFn];
+
+export type Seed<T> = Array<OptionWeightsTuple<T> | T>;

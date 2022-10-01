@@ -1,4 +1,4 @@
-import { OptionList, OptionListItem, OptionWeightsTuple } from './types';
+import type { OptionList, OptionListItem, OptionWeightsTuple, Seed } from './types';
 
 /**
  * 选项存储类
@@ -9,7 +9,7 @@ export class OptionsStore<T> {
    */
   list: OptionList<T> = [];
 
-  constructor(options: Array<OptionWeightsTuple<T> | T>) {
+  constructor(options: Seed<T>) {
     this.list = this.transformOptions(options);
   }
 
@@ -17,7 +17,7 @@ export class OptionsStore<T> {
    * 转换初始选项为普通选项
    * @protected
    */
-  protected transformOptions(options: Array<OptionWeightsTuple<T> | T>): OptionList<T> {
+  protected transformOptions(options: Seed<T>): OptionList<T> {
     return options.map((item) => {
       if (!Array.isArray(item)) return { option: item, weights: 1 };
 
@@ -44,7 +44,7 @@ export class OptionsStore<T> {
   /**
    * 添加选项
    */
-  add(options: Array<OptionWeightsTuple<T> | T>): void {
+  add(options: Seed<T>): void {
     this.list.push(...this.transformOptions(options));
   }
 
