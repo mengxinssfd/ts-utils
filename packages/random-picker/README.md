@@ -12,6 +12,8 @@ npm install @mxssfd/random-picker
 
 ### `pick` / `take`
 
+随机选取单个/多个选项
+
 #### `pick`
 
 从选项池中随机选中一个
@@ -57,7 +59,7 @@ const v6 = picker.pick(); // 1 | 2
 const v7 = picker.take(); //
 ```
 
-#### 区别
+#### 两者区别
 
 |                                | `take` | `pick` |
 | ------------------------------ | ------ | ------ |
@@ -161,6 +163,8 @@ const picker = new RandomPicker([1, 2, 3]);
 picker.remove(1); // 此时会把选项1移除
 ```
 
+注意：如果移除的选项不存在于 `seed `或者未备份的话，将不能恢复
+
 ### `reset`/`resetWithSeed` 重置选项池
 
 #### 使用 `reset`重置选项池
@@ -233,17 +237,103 @@ picker.resetWithSeed();
 picker.take(seed.length); //  [1 ｜ 2 ｜ 3 , ...]
 ```
 
-#### 区别
+#### 两者区别
 
-|                                  | `reset` | `resetWithSeed`                             |
-| -------------------------------- | ------- | ------------------------------------------- |
-| 恢复被`take`的选项               | 是      | 是                                          |
-| 重置`option`/`options`添加的选项 | 是      | 否，会丢弃选项                              |
-| 恢复被`remove`的选项             | 否      | 如果是存在于`seed`的选项被 `remove`会被恢复 |
+|                                   | `reset` | `resetWithSeed`                              |
+| --------------------------------- | ------- | -------------------------------------------- |
+| 恢复被 `take`的选项               | 是      | 是                                           |
+| 重置 `option`/`options`添加的选项 | 是      | 否，会丢弃选项                               |
+| 恢复被 `remove`的选项             | 否      | 如果是存在于 `seed`的选项被 `remove`会被恢复 |
 
-### `export` / `exportPool`
+### `export` / `exportPool` 导出选项
 
-### `len` / `poolLen`
+#### `export`导出所有选项
+
+```typescript
+import { RandomPicker, Seed } from '@mxssfd/random-picker';
+const seed: Seed<number> = [1, 2, [3, (weights: number) => weights]];
+const picker = new RandomPicker(seed);
+
+// export 导出所有选项
+console.log(picker.export()); // [[1, 1], [2, 1], [3, (weights: number) => weights]]
+
+// take过的的选项也会导出
+picker.take(3);
+console.log(picker.export()); // [[1, 1], [2, 1], [3, (weights: number) => weights]]
+
+// 不会导出remove过的选项
+picker.remove(3);
+console.log(picker.export()); // [[1, 1], [2, 1]]
+```
+
+#### `export`导出剩余选项
+
+```typescript
+import { RandomPicker, Seed } from '@mxssfd/random-picker';
+const seed: Seed<number> = [1, 2, [3, (weights: number) => weights]];
+const picker = new RandomPicker(seed);
+
+// exportPool 导出剩余选项
+console.log(picker.exportPool()); // [[1, 1], [2, 1], [3, (weights: number) => weights]]
+
+// take过的选项不会导出
+picker.take(3);
+console.log(picker.exportPool()); // []
+
+picker.reset();
+// 不会导出remove过的选项
+picker.remove(3);
+console.log(picker.exportPool()); // [[1, 1], [2, 1]]
+```
+
+#### 两者区别
+
+|                          | `export`(导出未 `remove` 的所有选项) | `exportPool`(剩余可供选择的所有选项) |
+| ------------------------ | ------------------------------------ | ------------------------------------ |
+| 能导出 `take` 过的选项   | 是                                   | 否                                   |
+| 能导出 `remove` 过的选项 | 是                                   | 否                                   |
+
+### `poolOptions` 查看剩余选项
+
+```typescript
+import { RandomPicker } from '@mxssfd/random-picker';
+
+const picker = new RandomPicker([1, 2, [3, 98]]);
+
+picker.take(); // 3  98%几率会出现3
+
+console.log(picker.poolOptions); // [1|2, 1|2]
+
+picker.take();
+console.log(picker.poolOptions); // [1|2]
+
+picker.take();
+console.log(picker.poolOptions); // []
+
+```
+
+### `len` / `poolLen` 查看选项数量
+
+```typescript
+import { RandomPicker } from '@mxssfd/random-picker';
+
+const picker = new RandomPicker([1, 2, 3]);
+
+// 初始都有3个
+console.log(picker.len, picker.poolLen); // 3, 3
+
+picker.take(2); // 拿走两个
+
+console.log(picker.len, picker.poolLen); // 3, 1
+
+picker.remove(3); // 移除3
+
+console.log(picker.len, picker.poolLen); // 2, 2
+
+picker.take(2); // 拿走两个
+
+console.log(picker.len, picker.poolLen); // 2, 0
+```
 
 ## 代码测试覆盖率
 
@@ -251,9 +341,10 @@ picker.take(seed.length); //  [1 ｜ 2 ｜ 3 , ...]
 --------------------------|---------|----------|---------|---------|----------------------------------------------------------------------------------------
 File                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 --------------------------|---------|----------|---------|---------|----------------------------------------------------------------------------------------
- random-picker/src        |     100 |      100 |     100 |     100 |
-  OptionsPool.ts          |     100 |      100 |     100 |     100 |
-  RandomPicker.ts         |     100 |      100 |     100 |     100 |
+ random-picker/src        |     100 |      100 |     100 |     100 |                                                                                        
+  OptionsPool.ts          |     100 |      100 |     100 |     100 |                                                                                        
+  OptionsStore.ts         |     100 |      100 |     100 |     100 |                                                                                        
+  RandomPicker.ts         |     100 |      100 |     100 |     100 |  
 --------------------------|---------|----------|---------|---------|----------------------------------------------------------------------------------------
 ```
 
