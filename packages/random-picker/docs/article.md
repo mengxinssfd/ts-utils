@@ -14,8 +14,6 @@
 
 # 功能一览
 
-## 使用方法
-
 ## `pick` / `take`
 
 随机选取单个/多个选项
@@ -857,3 +855,5 @@ File                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered L
 源码测试覆盖率达到 100%，请放心食用
 
 # github 仓库
+
+<https://github.com/mengxinssfd/ts-utils/tree/master/packages/random-picker>
