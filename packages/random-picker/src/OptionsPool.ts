@@ -1,4 +1,4 @@
-import { OptionList, OptionWeightsTuple, PoolItem, WeightsFnItem } from './types';
+import type { OptionList, OptionWeightsTuple, PoolItem, WeightsFnItem } from './types';
 
 /**
  * 维护一个选项池
@@ -35,8 +35,8 @@ export class OptionsPool<T> {
     return [
       fnList.reduce((prev, cur) => {
         return prev + cur.weights(staticWeights);
-      }, staticWeights),
-      staticWeights,
+      }, staticWeights) || 1, // 总权重不能为0，当只有一个选项，且选项为动态权重的时候会有这种情况
+      staticWeights || 1, // 静态权重不能为0
     ];
   }
 
