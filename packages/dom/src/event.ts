@@ -414,7 +414,7 @@ export function eventProxy<K extends keyof HTMLElementEventMap>(
 export function onceEvent<K extends keyof HTMLElementEventMap>(
   el: Window | HTMLElement | string | null | void,
   eventType: K,
-  callback: (e: Event) => any,
+  callback: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
   capture = false,
 ) {
   let dom: HTMLElement | Window;
@@ -429,13 +429,13 @@ export function onceEvent<K extends keyof HTMLElementEventMap>(
   } else {
     dom = window;
   }
-  const handler = (e) => {
+  function handler(e: any) {
     // 移除的时候也要带上捕获还是冒泡
     dom.removeEventListener(eventType, handler, capture);
     if (callback && isFunction(callback)) {
-      return callback(e);
+      return callback.call(this, e);
     }
-  };
+  }
   // 使用捕获优先度高，冒泡的话会在同一个事件里执行
   dom.addEventListener(eventType, handler, capture);
 }
