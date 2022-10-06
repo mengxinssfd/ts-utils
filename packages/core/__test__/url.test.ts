@@ -1,4 +1,4 @@
-import { subString } from '../src/string';
+import { subString } from '../src';
 import * as u from '../src/url';
 
 const url =
@@ -115,7 +115,7 @@ test('queryStringify', () => {
   expect(u.stringifyUrlSearch(new A())).toBe('a=1&b=2');
 
   // TODO getUrlParamObj 不能解析成object
-  console.log(u.getUrlParamObj('a=1123&b[0]=1&b[1]=2&d[d]=1&d[e]=2'));
+  // console.log(u.getUrlParamObj('a=1123&b[0]=1&b[1]=2&d[d]=1&d[e]=2'));
 });
 
 test('getUrlParam', () => {

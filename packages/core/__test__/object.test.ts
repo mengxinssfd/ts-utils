@@ -346,10 +346,10 @@ test('omit', () => {
   const obj: { [k: string]: number } = {};
   forEachByLen(10000, (index) => (obj[index] = index));
   const keys = arr.createArray({ len: 500, fill: (v) => String(v) });
-  console.time('run');
+  // console.time('run');
   const result = fn(obj, keys);
   expect(Object.keys(result).length).toEqual(9500);
-  console.timeEnd('run');
+  // console.timeEnd('run');
 });
 test('createObj', () => {
   const fn = cm.createObj;

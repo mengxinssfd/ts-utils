@@ -1,6 +1,5 @@
 import * as arr from '../src/array';
-import { sleep } from '../src/time';
-import { objForEach } from '../src/object';
+import { sleep, objForEach } from '../src';
 
 test('forEach', () => {
   const fe = arr.forEach;
@@ -412,14 +411,14 @@ test('binaryFind', () => {
   expect(res.times).toBe(5);
   expect(res.value).toEqual({ id: 58 });
 
-  console.log('----min-----');
+  // console.log('----min-----');
   // 判断边缘 min
   const first = list[0];
   res = find(first.id);
   expect(res.times).toBe(7);
   expect(res.value).toEqual(first);
 
-  console.log('----max-----');
+  // console.log('----max-----');
   // 判断边缘 max
   const maxIndex = list.length - 1;
   const last = list[maxIndex];
@@ -452,14 +451,14 @@ test('binaryFind2', () => {
   expect(res.times).toBe(5);
   expect(res.value).toEqual({ id: 58 });
 
-  console.log('----min-----');
+  // console.log('----min-----');
   // 判断边缘 min
   const first = list[0];
   res = find(first.id);
   expect(res.times).toBe(7);
   expect(res.value).toEqual(first);
 
-  console.log('----max-----');
+  // console.log('----max-----');
   // 判断边缘 max
   const maxIndex = list.length - 1;
   const last = list[maxIndex];
@@ -474,7 +473,7 @@ test('binaryFind2', () => {
   expect(arr.binaryFind2([], (i) => i)).toBeUndefined();
 });
 test('binaryFindIndex', () => {
-  console.log('-----binaryFindIndex------');
+  // console.log('-----binaryFindIndex------');
 
   const list: { id: number }[] = [...Array(100).keys()].map((i) => ({ id: i * 2 }));
 
@@ -501,7 +500,7 @@ test('binaryFindIndex', () => {
   expect(res.times).toBe(5);
   expect(res.index).toBe(29);
 
-  console.log('--------min-------');
+  // console.log('--------min-------');
   // 判断边缘 min
   const minIndex = 0;
   const first = list[minIndex];
@@ -509,7 +508,7 @@ test('binaryFindIndex', () => {
   expect(res.times).toBe(7);
   expect(res.index).toBe(minIndex);
 
-  console.log('----max-----');
+  // console.log('----max-----');
   // 判断边缘 max
   const maxIndex = list.length - 1;
   const last = list[maxIndex];
