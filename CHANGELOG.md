@@ -1,3 +1,9 @@
+## 5.0.0-beta.12 (2022-10-14)
+
+* fix(random-picker): 命令行工具缺少脚本头 ([15ab7c9](https://github.com/mengxinssfd/ts-utils/commit/15ab7c9))
+
+
+
 ## 5.0.0-beta.11 (2022-10-14)
 
 * feat(dom): onceEvent callback绑定this为dom ([a1e3b4c](https://github.com/mengxinssfd/ts-utils/commit/a1e3b4c))
