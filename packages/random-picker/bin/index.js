@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { RandomPicker } = require('../dist/random-picker.cjs');
 
 /**
