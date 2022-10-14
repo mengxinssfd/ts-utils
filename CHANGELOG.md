@@ -1,3 +1,14 @@
+## 5.0.0-beta.11 (2022-10-14)
+
+* feat(dom): onceEvent callback绑定this为dom ([a1e3b4c](https://github.com/mengxinssfd/ts-utils/commit/a1e3b4c))
+* feat(random-picker): 添加命令行工具 ([1b43d32](https://github.com/mengxinssfd/ts-utils/commit/1b43d32))
+* test(dom): 移除掉测试中的log ([a5dd87f](https://github.com/mengxinssfd/ts-utils/commit/a5dd87f))
+* docs(random-picker): article.md ([19dc344](https://github.com/mengxinssfd/ts-utils/commit/19dc344))
+* docs(random-picker): article.md ([5118198](https://github.com/mengxinssfd/ts-utils/commit/5118198))
+* docs(random-picker): README.md ([9c7a643](https://github.com/mengxinssfd/ts-utils/commit/9c7a643))
+
+
+
 ## 5.0.0-beta.10 (2022-10-01)
 
 * style(random-picker): prettier ([8984229](https://github.com/mengxinssfd/ts-utils/commit/8984229))
