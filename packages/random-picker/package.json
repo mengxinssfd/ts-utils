@@ -4,6 +4,9 @@
   "description": "从数组中随机挑选出n个选项的js工具类库",
   "main": "index.js",
   "module": "dist/random-picker.esm-bundler.js",
+  "bin": {
+    "random-picker": "./bin/index.js"
+  },
   "exports": {
     ".": {
       "import": "./dist/random-picker.esm-bundler.js",

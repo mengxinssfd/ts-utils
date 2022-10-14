@@ -36,7 +36,7 @@ module.exports = {
       },
     },
     {
-      files: ['**/scripts/**.[jt]s', 'rollup.config.js'],
+      files: ['**/scripts/**.[jt]s', 'rollup.config.js', '**/bin/**'],
       rules: {
         '@typescript-eslint/no-var-requires': 'off',
       },
