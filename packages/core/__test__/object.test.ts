@@ -473,8 +473,7 @@ test('getInsKeys', () => {
   const obj2 = Object.create(new UpdateTestClass());
   expect(fn(obj2).sort()).toEqual(subKeys);
 });
-test('objUpdate', () => {
-  const fn = cm.updateObj;
+const commonUpdate = (fn: Function) => {
   expect(fn({ a: 12, b: undefined, c: 3 }, { a: 1 }, { b: 2 }, { d: 4 })).toEqual({
     a: 1,
     b: 2,
@@ -496,6 +495,28 @@ test('objUpdate', () => {
     b: undefined,
     c: 3,
   });
+};
+
+test('objUpdate', () => {
+  const fn = cm.updateObj;
+  commonUpdate(fn);
+
+  const ins = fn(new UpdateTestClass(), {
+    fn1() {
+      return 1.5;
+    },
+  });
+  expect(ins.fn1()).toBe(3);
+});
+test('updateIns', () => {
+  const fn = cm.updateIns;
+  // commonUpdate(fn);
+  const ins = fn(new UpdateTestClass(), {
+    fn1() {
+      return 2;
+    },
+  });
+  expect(ins.fn1()).toBe(2);
 });
 test('pickUpdated', () => {
   const fn = cm.pickUpdated;
