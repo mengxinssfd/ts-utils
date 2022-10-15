@@ -434,7 +434,7 @@ test('defaults', () => {
   });
 });
 test('objUpdate', () => {
-  const fn = cm.objUpdate;
+  const fn = cm.updateObj;
   expect(fn({ a: 12, b: undefined, c: 3 }, { a: 1 }, { b: 2 }, { d: 4 })).toEqual({
     a: 1,
     b: 2,
@@ -451,7 +451,7 @@ test('objUpdate', () => {
     c: undefined,
   });
 
-  expect(fn({ a: 12, b: undefined, c: 3 }, null, undefined as any)).toEqual({
+  expect(fn({ a: 12, b: undefined, c: 3 }, null as any, undefined as any)).toEqual({
     a: 12,
     b: undefined,
     c: 3,

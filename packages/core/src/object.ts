@@ -400,6 +400,11 @@ export function objUpdate<T extends object>(target: T, ...args: object[]): T {
 }
 
 /**
+ * @see objUpdate
+ */
+export const updateObj = objUpdate;
+
+/**
  * 根据与target对比，挑出与target同key不同value的key所组成的object
  * @param target
  * @param objs  相当于assign(...objs) 同样的key只会取最后一个
