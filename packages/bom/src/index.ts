@@ -3,4 +3,4 @@ export * from './clipboard';
 
 export * from './cookie';
 
-export * from './AbstractStorageProxy';
+export * from './StorageProxy';
