@@ -433,6 +433,46 @@ test('defaults', () => {
     c: 3,
   });
 });
+class UpdateTestSuperClass {
+  a = 1;
+  b = 2;
+  private test() {
+    return 'test';
+  }
+  fn1() {
+    return this.a + this.b;
+  }
+  get len() {
+    this.test();
+    return 0;
+  }
+}
+class UpdateTestClass extends UpdateTestSuperClass {
+  c = 3;
+  fn2() {
+    return 2;
+  }
+  get len() {
+    return 1;
+  }
+}
+test('getInsKeys', () => {
+  const fn = cm.getInsKeys;
+
+  const superKeys = ['a', 'b', 'fn1', 'len', 'test'].sort();
+  const subKeys = ['c', 'fn2', ...superKeys].sort();
+
+  expect(fn(new UpdateTestSuperClass()).sort()).toEqual(superKeys);
+
+  expect(fn(new UpdateTestClass()).sort()).toEqual(subKeys);
+
+  // 不会继承method
+  const obj = { a1: 1, b2: 2, c3: 3, ...new UpdateTestClass() };
+  expect(fn(obj).sort()).toEqual(['a', 'b', 'c', 'a1', 'b2', 'c3'].sort());
+
+  const obj2 = Object.create(new UpdateTestClass());
+  expect(fn(obj2).sort()).toEqual(subKeys);
+});
 test('objUpdate', () => {
   const fn = cm.updateObj;
   expect(fn({ a: 12, b: undefined, c: 3 }, { a: 1 }, { b: 2 }, { d: 4 })).toEqual({
