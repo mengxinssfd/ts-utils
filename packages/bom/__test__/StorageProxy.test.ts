@@ -1,4 +1,4 @@
-import { AbstractStorageProxy } from '../src/AbstractStorageProxy';
+import { StorageProxy } from '../src/StorageProxy';
 import CryptoJS from 'crypto-js';
 import { sleep } from '@mxssfd/core';
 
@@ -37,13 +37,18 @@ export function encrypt(value: string) {
   return encrypted.ciphertext.toString();
 }
 
-class StorageProxy extends AbstractStorageProxy {
+class CustomStorageProxy extends StorageProxy {
   constructor(storage: Storage) {
-    super(storage);
+    super(storage /*, { encodeKey: encrypt, encodeValue: encrypt, decodeValue: decrypt }*/);
   }
   protected encodeKey(key: string): string {
     return encrypt(key);
   }
+  protected decodeKey(key: string | null): string | null {
+    if (key === null) return null;
+    return decrypt(key) || null;
+  }
+
   protected encodeValue(value: string): string {
     return encrypt(value);
   }
@@ -53,35 +58,82 @@ class StorageProxy extends AbstractStorageProxy {
   }
 }
 
-function testBase(storage: Storage) {
-  const sp = new StorageProxy(storage);
+function testBase(storage: Storage, SProxy: { new (storage: Storage): StorageProxy }) {
+  storage.clear();
 
-  sp.setItem('test', '111');
-  expect(sp.getItem('test')).toBe('111');
+  const proxy = new SProxy(storage);
+  proxy.setItem('test', '111');
+  expect(proxy.getItem('test')).toBe('111');
   expect(storage.getItem('test')).not.toBe('111');
-  expect(sp.key(0)).not.toBe('111');
-  expect(sp.length).toBe(1);
+  expect(storage.key(0)).not.toBe('111');
+  expect(storage.length).toBe(1);
   expect(storage.length).toBe(1);
 
-  sp.clear();
-  expect(sp.getItem('test')).toBe(null);
-  expect(sp.length).toBe(0);
+  storage.clear();
+  expect(storage.getItem('test')).toBe(null);
+  expect(storage.length).toBe(0);
 
-  sp.setItem('test', '111');
-  expect(sp.length).toBe(1);
+  storage.setItem('test', '111');
+  expect(proxy.length).toBe(1);
 
-  sp.removeItem('test');
-  expect(sp.length).toBe(0);
+  storage.removeItem('test');
+  expect(proxy.length).toBe(0);
+
+  storage.setItem('test_3', '111');
+  expect(proxy.key(0)).toBe(
+    proxy['decodeKey'] === StorageProxy.prototype['decodeKey'] ? 'test_3' : null,
+  );
+
+  proxy.clear();
+
+  proxy.setItem('test_key', '333');
+  expect(proxy.getItem('test_key')).toBe('333');
+  expect(proxy.key(0)).toBe('test_key');
+
+  proxy.removeItem('test_key');
+  expect(proxy.key(0)).toBe(null);
+
+  proxy.clear();
+  expect(proxy.key(0)).toBe(null);
+
+  storage.clear();
 }
-describe('AbstractStorageProxy', () => {
+describe('StorageProxy', () => {
   test('base localStorage', () => {
-    testBase(localStorage);
+    testBase(localStorage, CustomStorageProxy);
   });
   test('base sessionStorage', () => {
-    testBase(sessionStorage);
+    testBase(sessionStorage, CustomStorageProxy);
+  });
+  test('constructor parameter', () => {
+    class CustomStorageProxy2 extends StorageProxy {
+      constructor(storage: Storage) {
+        super(storage, {
+          encodeKey: encrypt,
+          encodeValue: encrypt,
+          decodeKey: (key) => {
+            if (key === null) return null;
+            return decrypt(key) || null;
+          },
+          decodeValue: (value) => {
+            if (value === null) return null;
+            return decrypt(value);
+          },
+        });
+      }
+    }
+    testBase(localStorage, CustomStorageProxy2);
+  });
+  test('default', () => {
+    class CustomStorageProxy3 extends StorageProxy {
+      constructor(storage: Storage) {
+        super(storage);
+      }
+    }
+    testBase(localStorage, CustomStorageProxy3);
   });
   test('external storage', () => {
-    const storage = new StorageProxy(localStorage);
+    const storage = new CustomStorageProxy(localStorage);
     localStorage.setItem('test', '111');
     // 拿不到 因为原生的key未加密是未处理过的key
     expect(storage.getItem('test')).toBe(null);
@@ -91,7 +143,7 @@ describe('AbstractStorageProxy', () => {
     expect(storage.getItem('test')).toBe(null);
   });
   test('expire', async () => {
-    const storage = new StorageProxy(localStorage);
+    const storage = new CustomStorageProxy(localStorage);
 
     storage.setItemWithExp('test', '111', 10);
     storage.setItemWithExp('test2', '222', new Date(Date.now() + 20));
