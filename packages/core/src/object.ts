@@ -384,6 +384,11 @@ export function defaults(target, ...args) {
 /**
  * 使用target里面的key去查找其他的对象，如果其他对象里有该key，则把该值复制给target,如果多个对象都有同一个值，则以最后的为准
  * 会更新原对象
+ *
+ * 如果要更新某个class的实例，那么需要使用updateIns
+ * @see updateIns
+ *
+ *
  * @param target
  * @param args
  */
@@ -430,6 +435,24 @@ export function getInsKeys(ins: object): Array<string | symbol> {
 
   // 过滤掉构造方法,并去重
   return unique(result.filter((k) => k !== 'constructor'));
+}
+
+/**
+ * 更新实例对象
+ * @see objUpdate
+ */
+export function updateIns<T extends object>(target: T, ...args: object[]): T {
+  const keys = getInsKeys(target);
+
+  keys.forEach((k) => {
+    forEachRight(function (item): void | false {
+      if (item && hasOwn(item, k)) {
+        target[k] = item[k];
+        return false;
+      }
+    }, args);
+  });
+  return target;
 }
 
 /**
