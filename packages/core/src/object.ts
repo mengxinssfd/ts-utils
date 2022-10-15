@@ -1,5 +1,5 @@
-import { forEachRight } from './array';
-import { isArray, isBroadlyObj, isNaN, isObject, typeOf } from './dataType';
+import { forEachRight, unique } from './array';
+import { isArray, isBroadlyObj, isNaN, isNative, isObject, typeOf } from './dataType';
 import type {
   DotTrim,
   RemoveStrStart,
@@ -403,6 +403,34 @@ export function objUpdate<T extends object>(target: T, ...args: object[]): T {
  * @see objUpdate
  */
 export const updateObj = objUpdate;
+
+/**
+ * 获取class实例的key数组
+ * @param ins
+ */
+export function getInsKeys(ins: object): Array<string | symbol> {
+  const result: (string | symbol)[] = [];
+
+  let cur: object = ins;
+  while (cur) {
+    // 普通key
+    result.push(...Object.keys(cur));
+
+    if (isNative(cur['__proto__'].constructor)) {
+      // 构造器为原生函数的话就不是class
+      break;
+    } else {
+      // method key
+      const keys = Reflect.ownKeys(Object.getPrototypeOf(cur));
+      result.push(...keys);
+    }
+
+    cur = cur['__proto__'];
+  }
+
+  // 过滤掉构造方法,并去重
+  return unique(result.filter((k) => k !== 'constructor'));
+}
 
 /**
  * 根据与target对比，挑出与target同key不同value的key所组成的object
