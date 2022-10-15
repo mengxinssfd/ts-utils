@@ -691,10 +691,9 @@ export function objFilter(
 /**
  * 判断对象是否包含某个属性
  * 因为直接object.hasOwnProperty(key)的话object可能会是null,所以另外封装一个函数使用
- * @param {object} target
- * @param {string | number | symbol} key
- * @return {boolean}
+ * @param obj
+ * @param key
  */
-export function hasOwn(target: object, key: string | number | symbol): boolean {
-  return Object.prototype.hasOwnProperty.call(target, key);
+export function hasOwn<T extends object>(obj: T, key: any): key is keyof T {
+  return Object.prototype.hasOwnProperty.call(obj, key);
 }
