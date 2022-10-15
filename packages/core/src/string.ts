@@ -301,7 +301,7 @@ export function toCamel<
     : ToCamelCase<S, D>
   : string {
   const reg = typeof delimiter === 'string' ? new RegExp(delimiter + '+') : (delimiter as RegExp);
-  const join = value.split(reg).map((i) => capitalize(i));
+  const join = value.split(reg).map((i) => capitalize(i) as string);
   if (!toUpperCamelCase) {
     join[0] = join[0].toLowerCase();
   }
