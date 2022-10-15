@@ -387,7 +387,7 @@ export function defaults(target, ...args) {
  * @param target
  * @param args
  */
-export function objUpdate<T extends object>(target: T, ...args: T[]): T {
+export function objUpdate<T extends object>(target: T, ...args: object[]): T {
   objForEach(target, (v, k) => {
     forEachRight(function (item): void | false {
       if (item && hasOwn(item, k)) {
