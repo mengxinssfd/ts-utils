@@ -26,6 +26,7 @@ test('getTreeMaxDeep', () => {
 
   Fn.prototype.c = { a: { b: 2, c: { d: 123 } } };
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const fn = new Fn();
   expect(cm.getTreeMaxDeep(fn)).toBe(3);
@@ -66,6 +67,7 @@ test('getTreeNodeLen', () => {
 
   Fn.prototype.c = { a: { b: 2, c: { d: 123 } } };
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const fn = new Fn();
   expect(cm.getTreeNodeLen(fn, 2)).toBe(2);
@@ -88,6 +90,8 @@ test('deepMerge', () => {
   }
 
   Fn.prototype.b = 200;
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const d = new Fn();
   expect(cm.deepMerge(a, d)).toEqual(Object.assign({}, a, d));
@@ -119,6 +123,7 @@ const testPickByKeys = (fn: typeof cm.pickByKeys) => {
       }),
     ).toEqual({ a: 2, b: 'test' });
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     expect(fn(new TestExtends(), ['a', 'c'])).toEqual({ a: 1 });
   };
@@ -150,6 +155,7 @@ const testPickRename = (fn: typeof cm.pickRename) => {
       }),
     ).toEqual({ A: 2, B: 'test' });
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     expect(fn(new TestExtends(), { aa: 'a', cc: 'c' })).toEqual({ aa: 1 });
   };
@@ -290,6 +296,8 @@ test('assign', () => {
   const objArr2 = [{ a: 12, b: undefined, c: 3 }, { a: 1 }, { b: 2 }, { c: undefined }];
   expect(fn({}, ...objArr2)).toEqual(Object.assign({}, ...objArr2));
   expect(fn(objArr2[0]!, ...objArr2.slice(1))).toEqual({ a: 1, b: 2, c: undefined });
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   expect(fn({}, new TestExtends())).toEqual({ a: 1, b: 2 });
 

@@ -8,3 +8,6 @@
 
 /public/*
 /types/*
+**/dist/*
+/packages/**/index.js
+/packages/**/index.mjs
