@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/dom",
-  "version": "5.0.0-beta.12",
+  "version": "5.0.1-beta.0",
   "sideEffects": false,
   "main": "index.js",
   "module": "dist/dom.esm-bundler.js",
@@ -37,8 +37,8 @@
     ]
   },
   "dependencies": {
-    "@mxssfd/core": "5.0.0-beta.12",
-    "@mxssfd/types": "5.0.0-beta.12"
+    "@mxssfd/core": "5.0.1-beta.0",
+    "@mxssfd/types": "5.0.1-beta.0"
   },
   "author": "dyh",
   "license": "MIT",

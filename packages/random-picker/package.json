@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/random-picker",
-  "version": "5.0.0-beta.12",
+  "version": "5.0.1-beta.0",
   "description": "从数组中随机挑选出n个选项的js工具类库",
   "main": "index.js",
   "module": "dist/random-picker.esm-bundler.js",
@@ -51,7 +51,7 @@
     "apie": "api-extractor run"
   },
   "dependencies": {
-    "@mxssfd/types": "5.0.0-beta.12"
+    "@mxssfd/types": "5.0.1-beta.0"
   },
   "author": "dyh",
   "license": "MIT",

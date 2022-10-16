@@ -1,3 +1,31 @@
+## [5.0.1-beta.0](https://github.com/mengxinssfd/ts-utils/compare/v5.0.0-beta.12...v5.0.1-beta.0) (2022-10-16)
+
+
+### Bug Fixes
+
+* **core:** 修复toCamel内部类型错误 ([2156fc2](https://github.com/mengxinssfd/ts-utils/commit/2156fc2676c7eaf136ccaa1143005dfa5c2b9434))
+
+
+### Code Refactoring
+
+* **bom:** AbstractStorageProxy 重构为 StorageProxy ([d3e5d76](https://github.com/mengxinssfd/ts-utils/commit/d3e5d7687a20bb5a694806060a92d9a1684bf8b7))
+* 重构所有工具，使用更加严谨的ts规则 ([883e693](https://github.com/mengxinssfd/ts-utils/commit/883e693a8b98a7446938c77624d61eec67a55d64))
+
+
+### Features
+
+* **core:** getInsKeys 获取class实例的key数组 ([3a5193a](https://github.com/mengxinssfd/ts-utils/commit/3a5193af6ad0bcf5bd2952e4166914fe80aa99bb))
+* **core:** objUpdate别名updateObj ([2f7e86e](https://github.com/mengxinssfd/ts-utils/commit/2f7e86e32b0652fdb714f58aa87a625ae930b2e0))
+* **core:** updateIns 更新实例对象 ([da151bd](https://github.com/mengxinssfd/ts-utils/commit/da151bdfd18595fcea77d6816dd43ab2029e1dd8))
+
+
+### BREAKING CHANGES
+
+* 很多数组相关的工具函数以前是数组参数在后面，现在统一调整到第一个参数，且不再支持使用this当成数组
+* **bom:** AbstractStorageProxy已重构为StorageProxy，而且参数不是必须继承子类，也可以从构造方法里传参数
+
+
+
 ## 5.0.0-beta.12 (2022-10-14)
 
 * fix(random-picker): 命令行工具缺少脚本头 ([15ab7c9](https://github.com/mengxinssfd/ts-utils/commit/15ab7c9))
