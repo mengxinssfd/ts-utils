@@ -171,7 +171,7 @@ test('randomColor', () => {
   const arr = cm.randomColor(10);
   expect(arr.length === 10).toBeTruthy();
   forEachByLen(arr.length, (i) => {
-    expect(isHEXColor(arr[i])).toBeTruthy();
+    expect(isHEXColor(arr[i]!)).toBeTruthy();
   });
   expect(isHEXColor(cm.randomColor('HEX'))).toBeTruthy();
   expect(isRGBColor(cm.randomColor('RGB'))).toBeTruthy();

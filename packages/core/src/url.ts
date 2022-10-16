@@ -24,14 +24,14 @@ export const hostReg = /(?:\w+:\/\/|\/\/)((?:[\w\-\u4e00-\u9fa5]+\.?)+\w+)/;
  */
 export function getUrlHost(url: string = location.href): string {
   const exec = new RegExp(hostReg).exec(url);
-  return exec ? exec[1] : '';
+  return exec ? (exec[1] as string) : '';
 }
 
 /**
  * @param {string} [url = location.href]
  */
 export function getUrlPort(url: string = location.href): string {
-  url = url.split('?')[0];
+  url = url.split('?')[0] as string;
   if (/:(\d+)/.test(url)) {
     return RegExp.$1;
   }
@@ -43,7 +43,7 @@ export function getUrlPort(url: string = location.href): string {
  */
 export function getUrlPath(url: string = location.href): string {
   // 去掉query、hash
-  url = url.split(/[?#]/)[0];
+  url = url.split(/[?#]/)[0] as string;
   // 去掉schema
   return url.replace(new RegExp(`(${hostReg.source}(?::\\d+)?)|${protocolReg.source}`), '');
 }
@@ -120,7 +120,8 @@ export function getUrlParam(
   // 修改后不会获取到hash
   const re = new RegExp('(?:\\?|#|&)' + name + '=([^&#]*)(?:$|&|#)', 'i');
   const m = re.exec(url);
-  const ret = m ? m[1] : '';
+  if (m === null) return '';
+  const ret = m[1] || '';
   return noDecode ? ret : decodeURIComponent(ret);
 }
 

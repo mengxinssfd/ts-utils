@@ -11,7 +11,7 @@ export function randomFloat(max: number): number;
 export function randomFloat(min: number, max: number): number;
 // 生成min到end之间的随机数组 包含min不包含end len：数组长度
 export function randomFloat(min: number, max: number, len: number): number[];
-export function randomFloat(min?, max?, len?) {
+export function randomFloat(min?: number, max?: number, len?: number): number | number[] {
   // randomFloat()
   if (!arguments.length) return Math.random();
   // randomFloat(max)
@@ -24,9 +24,8 @@ export function randomFloat(min?, max?, len?) {
   if (len === undefined) {
     const dif = (max as number) - (min as number);
     return Math.random() * dif + (min as number);
-  } else {
-    return createArray({ len, fill: () => randomFloat(min, max) });
   }
+  return createArray({ len, fill: () => randomFloat(min as number, max as number) });
 }
 
 export function randomInt(): number;
@@ -36,7 +35,7 @@ export function randomInt(max: number): number;
 export function randomInt(min: number, max: number): number;
 // 生成min到max之间的随机数组 包含min不包含max len：数组长度
 export function randomInt(min: number, max: number, len: number): number[];
-export function randomInt(min?, max?, len?) {
+export function randomInt(min?: number, max?: number, len?: number): number | number[] {
   // randomInt()
   if (!arguments.length) return Math.random();
   // randomInt(max)
@@ -52,7 +51,7 @@ export function randomInt(min?, max?, len?) {
     //  return ~~(Math.random() * dif) + (min as number);
     return parseInt((Math.random() * dif) as any) + (min as number);
   } else {
-    return createArray({ len, fill: () => randomInt(min, max) });
+    return createArray({ len, fill: () => randomInt(min as number, max as number) });
   }
 }
 
@@ -62,7 +61,7 @@ export function randomInt(min?, max?, len?) {
  */
 export function randomItem<T>(arr: T[]): T {
   const index = randomInt(arr.length);
-  return arr[index];
+  return arr[index] as T;
 }
 
 /**
@@ -73,7 +72,7 @@ export function* randomItemsGen<T>(arr: T[]): Generator<T, any, never> {
   const list = arr.slice();
   while (list.length) {
     const index = randomInt(list.length);
-    yield list.splice(index, 1)[0];
+    yield list.splice(index, 1)[0] as T;
   }
 }
 
@@ -131,7 +130,7 @@ export function randomColor(): string;
 export function randomColor(type: ColorType): string;
 export function randomColor(len: number): string[];
 export function randomColor(type: ColorType, len: number): string[];
-export function randomColor(type?, len?) {
+export function randomColor(type?: string | number, len?: number): string[] | string {
   if (isNumber(type)) {
     len = type;
     type = 'HEX';

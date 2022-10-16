@@ -142,7 +142,7 @@ export const formatDate: formatDateInterface = function (
   for (const k in o) {
     if (new RegExp('(' + k + ')').test(format)) {
       const s1 = RegExp.$1;
-      const v = String(o[k]());
+      const v = String(o[k]?.());
       // const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
       format = format.replace(s1, strPadStart(v, s1.length, '0'));
     }
@@ -171,7 +171,7 @@ export function getDateFromStr(date: FormattedTimeStr): Date | null {
       arr[i] = i < 3 ? 1 : 0; // 年月日最小为1
     }
   }
-  return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
+  return new Date(arr[0] as number, (arr[1] as number) - 1, arr[2], arr[3], arr[4], arr[5]);
 }
 
 export const str2Date = getDateFromStr;

@@ -17,7 +17,7 @@ export class EventBus {
     if (!Array.isArray(this.events[eventName])) {
       this.events[eventName] = [];
     }
-    return this.events[eventName];
+    return this.events[eventName] || [];
   }
 
   on(eventName: string, callback: Callback) {
@@ -60,7 +60,7 @@ export class EventBus {
 
   off(eventName: string, callback: Callback) {
     const list = this.getCallbackList(eventName);
-    const index = findIndex((i) => i === callback, list);
+    const index = findIndex(list, (i) => i === callback);
     index > -1 && list.splice(index, 1);
   }
 

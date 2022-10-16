@@ -35,7 +35,7 @@ test('Pool', () => {
   expect(pool.recycleList.length).toBe(1);
   pool.push();
   expect(pool.aliveList.length).toBe(3);
-  expect(pool.aliveList[0].x).toBe(0);
+  expect(pool.aliveList[0]!.x).toBe(0);
   const first = pool.shift() as PoolItem;
   first.x = 100;
   first.y = 100;
@@ -62,7 +62,7 @@ test('Pool', () => {
   pool.forEach((v, k) => {
     v.x = k;
   });
-  expect(pool.aliveList[2].x).toBe(2);
+  expect(pool.aliveList[2]!.x).toBe(2);
 
   const item2 = pool.aliveList[2];
   pool.unshift(item2);

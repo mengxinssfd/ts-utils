@@ -89,11 +89,11 @@ describe('random-picker', function () {
       [0, 0, 0],
     );
     // 1
-    expect(rates[0] > 0 && rates[0] < 100).toBeTruthy();
+    expect(rates[0]! > 0 && rates[0]! < 100).toBeTruthy();
     // 2
-    expect(rates[1] > 300 && rates[0] < 500).toBeTruthy();
+    expect(rates[1]! > 300 && rates[0]! < 500).toBeTruthy();
     // 3
-    expect(rates[2] > 500 && rates[0] < 700).toBeTruthy();
+    expect(rates[2]! > 500 && rates[0]! < 700).toBeTruthy();
   });
   test('take/reset/len/poolLen', () => {
     const seed = [1, 2, 3];
@@ -209,8 +209,8 @@ describe('random-picker', function () {
       [1, 1],
       [2, 1],
     ]);
-    expect(exp1[2][0]).toBe(3);
-    expect(exp1[2][1]).toBe(seed[2][1]);
+    expect(exp1[2]![0]).toBe(3);
+    expect(exp1[2]![1]).toBe(seed[2]![1]);
 
     // take过的也会导出
     picker.take(3);
@@ -219,8 +219,8 @@ describe('random-picker', function () {
       [1, 1],
       [2, 1],
     ]);
-    expect(exp2[2][0]).toBe(3);
-    expect(exp2[2][1]).toBe(seed[2][1]);
+    expect(exp2[2]![0]).toBe(3);
+    expect(exp2[2]![1]).toBe(seed[2]![1]);
 
     // 不会导出remove过的选项
     picker.remove(3);
@@ -240,8 +240,8 @@ describe('random-picker', function () {
       [1, 1],
       [2, 1],
     ]);
-    expect(exp1[2][0]).toBe(3);
-    expect(exp1[2][1]).toBe(seed[2][1]);
+    expect(exp1[2]![0]).toBe(3);
+    expect(exp1[2]![1]).toBe(seed[2]![1]);
 
     // take过的选项不会导出
     picker.take(3);

@@ -27,7 +27,7 @@ export function debounce<CB extends (...args: any[]) => any>(
     clearTimeout(timer);
     timer = undefined;
   };
-  const debounced = function (...args: any[]) {
+  const debounced = function (this: any, ...args: any[]) {
     if (timer) {
       cancel();
     }
@@ -68,9 +68,9 @@ export function debounceAsync<T, CB extends (...args: any[]) => Promise<T>>(
   delay: number,
 ): CB {
   let timer: any = null;
-  let rej;
+  let rej: Function;
 
-  return function (...args: any[]) {
+  return function (this: any, ...args: any[]) {
     return new Promise<T>((resolve, reject) => {
       if (timer !== null) {
         clearTimeout(timer);
@@ -99,7 +99,7 @@ export function throttle<CB extends (...args: any[]) => void | any>(
   invalidCB: (interval: number) => void = () => void 0,
 ): CB {
   let countDown = () => 0;
-  return function (...args: any[]) {
+  return function (this: any, ...args: any[]) {
     const interval = countDown();
     if (interval > 0) {
       invalidCB(interval);
@@ -163,7 +163,7 @@ export function debounceCancelable(callback: (...args: any[]) => void, delay: nu
     timer = null;
   }
 
-  return function (...args: any[]) {
+  return function (this: any, ...args: any[]) {
     cancel();
     timer = setTimeout(() => {
       timer = null;
@@ -179,8 +179,8 @@ export function debounceCancelable(callback: (...args: any[]) => void, delay: nu
  * @param callback
  */
 export function debounceByPromise<T, CB extends (...args: any[]) => Promise<T>>(callback: CB): CB {
-  let rejectFn;
-  return function (...args: any[]): Promise<T> {
+  let rejectFn: Function;
+  return function (this: any, ...args: any[]): Promise<T> {
     rejectFn && rejectFn();
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (res, rej) => {
@@ -682,7 +682,7 @@ export function lazy() {
     /**
      * @param {((done: Function) => void) | (() => Promise<any>)} cb 回调返回一个值或返回一个promise 供下一个do回调调用
      */
-    do(cb: ((done: Function, value) => void) | ((done: Function, value) => Promise<any>)) {
+    do(cb: (done: Function, value: unknown) => void | Promise<any>) {
       then((done, value) => {
         const res = cb(done, value);
         if (res && res.then) {

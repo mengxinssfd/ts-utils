@@ -6,7 +6,7 @@ test('ResponsibilityChain', () => {
     [
       {
         desc: '获取第1个接口的数据',
-        handler(value, next, done, init) {
+        handler(value, next, _done, init) {
           expect(value).toBe(1);
           expect(init).toBe(1);
           expect(rc.status).toBe(ResponsibilityChain.State.running);
@@ -15,7 +15,7 @@ test('ResponsibilityChain', () => {
       },
       {
         desc: '获取第二个接口的数据',
-        handler(value, next, done, init) {
+        handler(value, next, _done, init) {
           expect(value).toBe(2);
           expect(init).toBe(1);
           expect(rc.status).toBe(ResponsibilityChain.State.running);
@@ -24,7 +24,7 @@ test('ResponsibilityChain', () => {
       },
       {
         desc: '获取第三个接口的数据',
-        handler(value, next, done, initValue) {
+        handler(value, next, _done, initValue) {
           expect(value).toBe(60);
           expect(initValue).toBe(1);
           expect(rc.status).toBe(ResponsibilityChain.State.running);
@@ -44,19 +44,19 @@ test('ResponsibilityChain', () => {
 test('ResponsibilityChain handler', () => {
   const rc = new ResponsibilityChain(
     [
-      (value, next, done, init) => {
+      (value, next, _done, init) => {
         expect(value).toBe(1);
         expect(init).toBe(1);
         expect(rc.status).toBe(ResponsibilityChain.State.running);
         next(2);
       },
-      (value, next, done, init) => {
+      (value, next, _done, init) => {
         expect(value).toBe(2);
         expect(init).toBe(1);
         expect(rc.status).toBe(ResponsibilityChain.State.running);
         next((value as number) * 30);
       },
-      (value, next, done, initValue) => {
+      (value, next, _done, initValue) => {
         expect(value).toBe(60);
         expect(initValue).toBe(1);
         expect(rc.status).toBe(ResponsibilityChain.State.running);
@@ -81,20 +81,20 @@ test('ResponsibilityChain handler item', async () => {
     [
       {
         desc: '获取第1个接口的数据',
-        handler(value, next, done, init) {
+        handler(value, next, _done, init) {
           expect(value).toBe(init);
           expect(init).toBe(initValue);
           expect(rc.status).toBe(ResponsibilityChain.State.running);
           next(2);
         },
       },
-      (value, next, done, init) => {
+      (value, next, _done, init) => {
         expect(value).toBe(2);
         expect(init).toBe(initValue);
         expect(rc.status).toBe(ResponsibilityChain.State.running);
         next((value as number) * 30);
       },
-      async (value, next, done, initValue) => {
+      async (value, next, _done, initValue) => {
         expect(value).toBe(60);
         expect(initValue).toBe(initValue);
         expect(rc.status).toBe(ResponsibilityChain.State.running);
@@ -128,16 +128,16 @@ test('ResponsibilityChain handler break', () => {
   const initValue = 1;
   const rc = new ResponsibilityChain(
     [
-      (value, next) => {
+      (_value, next) => {
         next(100);
       },
-      (value, next, done, init) => {
+      (_value, _next, done, init) => {
         // next((value as number) * 30);
         done(init);
       },
       {
         desc: '不执行',
-        handler(value, next, done, initValue) {
+        handler(value, next, _done, initValue) {
           next(Number(value) - Number(initValue));
         },
       },

@@ -61,7 +61,7 @@ export function addDragEventListener({
   function getXYWithTouch(e: TouchEvent): xy {
     const touches: TouchList =
       ['touchcancel', 'touchend'].indexOf(e.type) > -1 ? e.changedTouches : e.touches;
-    const touch: Touch = touches[0];
+    const touch = touches[0] as Touch;
     const xY = { x: touch.clientX, y: touch.clientY };
     xY.x = ~~xY.x;
     xY.y = ~~xY.y;
@@ -71,7 +71,7 @@ export function addDragEventListener({
   let getXY: typeof getXYWithMouse | typeof getXYWithTouch;
 
   // touch与mouse通用按下事件处理
-  function down(e: MouseEvent | TouchEvent, mouseOrTouch: 'mouse' | 'touch') {
+  function down(this: any, e: MouseEvent | TouchEvent, mouseOrTouch: 'mouse' | 'touch') {
     // 大于1个触点就不是拖动事件，而是缩放事件了
     if ((e as TouchEvent).touches && (e as TouchEvent).touches.length > 1) {
       removeMoveAndUpEventListener();
@@ -88,7 +88,7 @@ export function addDragEventListener({
   }
 
   // touch与mouse通用移动事件处理
-  function move(e: MouseEvent | TouchEvent) {
+  function move(this: any, e: MouseEvent | TouchEvent) {
     const moveXY = getXY(e as any);
     let backVal: any = void 0;
     if (onMove && isFunction(onMove)) {
@@ -99,7 +99,7 @@ export function addDragEventListener({
   }
 
   // touch与mouse通用移开事件处理
-  function up(e: MouseEvent | TouchEvent) {
+  function up(this: any, e: MouseEvent | TouchEvent) {
     // console.log("up", e);
     const upXY = getXY(e as any);
     let backVal: any = void 0;
@@ -111,14 +111,14 @@ export function addDragEventListener({
     return backVal;
   }
 
-  function mousedown(event: MouseEvent) {
+  function mousedown(this: any, event: MouseEvent) {
     const backVal = down.call(this, event, 'mouse');
     window.addEventListener('mousemove', move, capture.move);
     window.addEventListener('mouseup', up, capture.up);
     return backVal;
   }
 
-  function touchStart(event: TouchEvent) {
+  function touchStart(this: any, event: TouchEvent) {
     const backVal = down.call(this, event, 'touch');
     window.addEventListener('touchmove', move, capture.move);
     window.addEventListener('touchend', up, capture.up);
@@ -240,8 +240,8 @@ export function addScaleEventListener(
   let startDistance = 0;
 
   function getDis(touches: TouchList) {
-    const t1 = touches[0];
-    const t2 = touches[1];
+    const t1 = touches[0] as Touch;
+    const t2 = touches[1] as Touch;
     return getDistance([t1.pageX, t1.pageY], [t2.pageX, t2.pageY]);
   }
 
@@ -385,7 +385,7 @@ export function eventProxy<K extends keyof HTMLElementEventMap>(
     containsDom = document.querySelector(containerEl);
   }
 
-  function handle(e) {
+  function handle(e: Event) {
     e = e || window.event;
     // TODO 通过document.querySelectorAll匹配  并且该函数被滥用的话，会有性能问题
     const targetDom = isDom(targetEl) ? [targetEl] : document.querySelectorAll(targetEl);
@@ -429,7 +429,7 @@ export function onceEvent<K extends keyof HTMLElementEventMap>(
   } else {
     dom = window;
   }
-  function handler(e: any) {
+  function handler(this: any, e: any) {
     // 移除的时候也要带上捕获还是冒泡
     dom.removeEventListener(eventType, handler, capture);
     if (callback && isFunction(callback)) {

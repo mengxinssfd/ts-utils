@@ -4,7 +4,7 @@ function testCache(clazz: typeof Cache.Stack) {
   const c = new clazz();
   const objKey = {};
   const fnKey = () => 0;
-  const arrKey = [];
+  const arrKey: never[] = [];
   const symbolKey = Symbol('test');
   // eslint-disable-next-line no-sparse-arrays
   const arr = [

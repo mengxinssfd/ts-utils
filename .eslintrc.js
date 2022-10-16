@@ -32,7 +32,10 @@ module.exports = {
     {
       files: ['**/__test__/**'],
       rules: {
+        // 允许空函数
         '@typescript-eslint/no-empty-function': 'off',
+        // 允许使用'!'断空
+        '@typescript-eslint/no-non-null-assertion': 'off',
       },
     },
     {

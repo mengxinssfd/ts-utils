@@ -34,9 +34,9 @@ export function getAverageRGB(imgEl: HTMLImageElement) {
 
   while ((i += blockSize * 4) < length) {
     ++count;
-    rgb.r += data.data[i];
-    rgb.g += data.data[i + 1];
-    rgb.b += data.data[i + 2];
+    rgb.r += data.data[i] as number;
+    rgb.g += data.data[i + 1] as number;
+    rgb.b += data.data[i + 2] as number;
   }
 
   // ~~ used to floor values

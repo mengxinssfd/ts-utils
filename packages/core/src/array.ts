@@ -57,6 +57,14 @@ export function createArray<T = number>({
   return arr;
 }
 
+// 注意：写成下面这种方式(把ArrayLike<T>提取到范型A):
+// function forEach<T, A extends ArrayLike<T>>(
+//   arr: A,
+//   callbackFn: (value: T, index: number, array: A) => any | false,
+//   elseCB?: () => void,
+// ): boolean
+// 在使用时回调函数的value是不会有类型推导的，value类型将是 unknown
+
 // ie9支持
 // forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void;
 /**
@@ -75,7 +83,7 @@ export function forEach<T>(
   const len = arr.length || 0;
   // if (!isArrayLike(arr)) throw new TypeError();
   for (let i = 0; i < len; i++) {
-    if (callbackFn(arr[i], i, arr) === false) return false;
+    if (callbackFn(arr[i] as T, i, arr) === false) return false;
   }
   elseCB && elseCB();
   return true;
@@ -83,64 +91,96 @@ export function forEach<T>(
 
 /**
  * 跟promiseQueue类似，不过此函数是callback异步，重点在callback
+ * @param arr
  * @param cbAsync 异步回调
- * @param thisArg
  */
 export async function forEachAsync<T>(
+  arr: ArrayLike<T>,
   cbAsync: (value: T, index: number, array: ArrayLike<T>) => Promise<any | false>,
-  thisArg?: ArrayLike<T> | Iterable<T>,
 ): Promise<void> {
-  const arr = thisArg || this;
   // 不能直接把arr.length放进循环，否则在循环里新增的话length会变长,原生的不会变长
   const len = arr.length;
   // if (!isArrayLike(arr)) throw new TypeError();
   for (let i = 0; i < len; i++) {
-    const v = await cbAsync(arr[i], i, arr);
+    const v = await cbAsync(arr[i] as T, i, arr);
     if (v === false) break;
   }
 }
-
-export async function mapAsync<T, R, A extends ArrayLike<T>>(
-  cbAsync: (value: T, index: number, array: A) => Promise<R>,
-  thisArg?: A | Iterable<T>,
+export async function mapAsync<T, R>(
+  arr: ArrayLike<T>,
+  cbAsync: (value: T, index: number, array: ArrayLike<T>) => Promise<R>,
 ): Promise<R[]> {
-  const arr = thisArg || this;
   const result: any[] = [];
-  await forEachAsync<T>(async (v, k, a) => {
-    const item = await cbAsync(v, k, a as any);
+  await forEachAsync(arr, async (v: T, k, a) => {
+    const item = await cbAsync(v, k, a);
     result.push(item);
-  }, arr);
+  });
   return result;
 }
-
 /**
  * reduce promise 跟 promiseQueue差不多，此函数多了callbackFn
- * @param callbackfn
+ * @param arr 如果数组中的某一项返回的是false，那么会中断遍历
+ * @param callbackFn
  * @param initValue
- * @param thisArg
  */
-export async function reduceAsync<T, A extends ArrayLike<T>, I = A>(
-  callbackfn: (initValue: I, value: T, index: number, array: A) => Promise<I>,
-  initValue?: I,
-  thisArg?: A | Iterable<T>,
-): Promise<I> {
-  const arr = (thisArg || this).slice();
-  let previousValue = initValue ?? (await arr.shift()());
-  await forEachAsync<T>(async (v, k, a) => {
-    previousValue = await callbackfn(previousValue, v, k, a as any);
-  }, arr);
+export async function reduceAsync<T, I = T>(
+  arr: ArrayLike<T>,
+  callbackFn: (initValue: I, value: T, index: number, array: ArrayLike<T>) => Promise<I>,
+  initValue: I,
+): Promise<I>;
+export async function reduceAsync<T extends (...args: any[]) => Promise<any>>(
+  arr: ArrayLike<T>,
+  callbackFn: (
+    initValue: Awaited<ReturnType<T>>,
+    item: T,
+    index: number,
+    array: ArrayLike<T>,
+  ) => Promise<Awaited<ReturnType<T>>>,
+): Promise<Awaited<ReturnType<T>>>;
+export async function reduceAsync<T extends (...args: any[]) => any>(
+  arr: ArrayLike<T>,
+  callbackFn: (
+    initValue: ReturnType<T>,
+    item: T,
+    index: number,
+    array: ArrayLike<T>,
+  ) => ReturnType<T>,
+): Promise<ReturnType<T>>;
+export async function reduceAsync(
+  arr: ArrayLike<any>,
+  callbackFn: (
+    initValue: unknown,
+    item: unknown,
+    index: number,
+    array: ArrayLike<unknown>,
+  ) => Promise<unknown>,
+  initValue?: unknown,
+): Promise<unknown> {
+  const len = arr.length;
+
+  if (!len) {
+    if (initValue === void 0) throw new Error('Reduce of empty array with no initial value');
+    return Promise.resolve(initValue);
+  }
+
+  let previousValue: unknown = initValue ?? (await arr[0]());
+
+  for (let i = initValue ? 0 : 1; i < len; i++) {
+    const item = arr[i];
+    const curValue = await callbackFn(previousValue, item, i, arr);
+    if (curValue === false) break;
+    previousValue = curValue;
+  }
+
   return previousValue;
 }
 
 export function forEachRight<T>(
-  callbackfn: (value: T, index: number, array: ArrayLike<T>) => any | false,
-  thisArg?: ArrayLike<T> | Iterable<T>,
-) {
-  const arr = thisArg || this;
-  if (!isArray(arr)) throw new TypeError();
-  // if (!isArrayLike(arr)) throw new TypeError();
+  arr: ArrayLike<T>,
+  callbackFn: (value: T, index: number, array: ArrayLike<T>) => any | false,
+): void {
   for (let i = arr.length - 1; i > -1; i--) {
-    if (callbackfn(arr[i], i, arr) === false) break;
+    if (callbackFn(arr[i] as T, i, arr) === false) break;
   }
 }
 
@@ -164,16 +204,15 @@ export function from<T, U = T>(
 
 // filter<S extends T>(callbackfn: (value: T, index: number, array: T[]) => value is S, thisArg?: any): S[]
 export function filter<T>(
-  callbackfn: (value: T, index: number, array: ArrayLike<T>) => boolean,
-  thisArg?: ArrayLike<T>,
+  arr: ArrayLike<T>,
+  callbackFn: (value: T, index: number, array: ArrayLike<T>) => boolean,
 ): T[] {
-  const arr = thisArg || this;
   // if (!isArrayLike(arr)) throw new TypeError();
   const fList: T[] = [];
   const len = arr.length;
   for (let i = 0; i < len; i++) {
-    const value = arr[i];
-    if (callbackfn(value, i, arr)) {
+    const value = arr[i] as T;
+    if (callbackFn(value, i, arr)) {
       fList.push(value);
     }
   }
@@ -182,15 +221,14 @@ export function filter<T>(
 
 // @overload
 export function includes<T>(
-  thisArg: ArrayLike<T>,
+  arr: ArrayLike<T>,
   searchElement: (v: T, index: number, arr: ArrayLike<T>) => boolean,
   fromIndex?: number,
 ): boolean;
 // @overload
-export function includes<T>(thisArg: ArrayLike<T>, searchElement: T, fromIndex?: number): boolean;
+export function includes<T>(arr: ArrayLike<T>, searchElement: T, fromIndex?: number): boolean;
 // includes(searchElement: T, fromIndex?: number): boolean
-export function includes(thisArg, searchElement, fromIndex = 0) {
-  const arr = thisArg || this;
+export function includes(arr: ArrayLike<any>, searchElement: unknown, fromIndex = 0) {
   // if (!isArrayLike(arr)) throw new TypeError();
   const len = arr.length;
   for (let i = fromIndex; i < len; i++) {
@@ -208,54 +246,39 @@ export function includes(thisArg, searchElement, fromIndex = 0) {
 // find<S extends T>(predicate: (this: void, value: T, index: number, obj: T[]) => value is S, thisArg?: any): S | undefined;
 // find(predicate: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): T | undefined;
 export function find<T>(
-  predicate: (value: T, index: number, obj: T[]) => boolean,
-  thisArg?: ArrayLike<T>,
+  arr: ArrayLike<T>,
+  predicate: (value: T, index: number, obj: ArrayLike<T>) => boolean,
 ): T | void {
-  const arr = thisArg || this;
   // if (!isArrayLike(arr)) throw new TypeError();
   // if (!isFunction(predicate)) return; // 在typescript中有类型检查，不需要这一句
   const len = arr.length;
   for (let i = 0; i < len; i++) {
-    const item: T = arr[i];
+    const item = arr[i] as T;
     if (predicate(item, i, arr)) return item;
   }
 }
 
 export function findIndex<T>(
+  arr: ArrayLike<T>,
   predicate: (value: T, index: number, obj: ArrayLike<T>) => boolean,
-  thisArg: ArrayLike<T>,
-): number;
-export function findIndex<T, A extends ArrayLike<T>>(
-  this: A,
-  predicate: (value: T, index: number, obj: A) => boolean,
-): number;
-export function findIndex(predicate, thisArg?): number {
-  const arr = thisArg || this;
-  if (!isArrayLike(arr)) throw new TypeError();
-  if (!isFunction(predicate)) return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
+): number {
+  // if (!isFunction(predicate)) return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
   const len = arr.length;
   for (let i = 0; i < len; i++) {
-    const item = arr[i];
+    const item = arr[i] as T;
     if (predicate(item, i, arr as any)) return i;
   }
   return -1;
 }
 
 export function findIndexRight<T>(
+  arr: ArrayLike<T>,
   predicate: (value: T, index: number, obj: ArrayLike<T>) => boolean,
-  thisArg: ArrayLike<T>,
-): number;
-export function findIndexRight<T, A extends ArrayLike<T>>(
-  this: A,
-  predicate: (value: T, index: number, obj: A) => boolean,
-): number;
-export function findIndexRight(predicate, thisArg?) {
-  const arr = thisArg || this;
-  if (!isArrayLike(arr)) throw new TypeError();
-  if (!isFunction(predicate)) return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
+): number {
+  // if (!isFunction(predicate)) return -1; // 在typescript中有类型检查，不需要这一句(用call和apply调用无法检查，还是加上)
   const end = arr.length - 1;
   for (let i = end; i >= 0; i--) {
-    const item = arr[i];
+    const item = arr[i] as T;
     if (predicate(item, i, arr as any)) return i;
   }
   return -1;
@@ -289,7 +312,7 @@ export function binaryFind2<T>(
   if (arr.length === 0) return undefined;
   let result: T | undefined;
   let middleIndex = Math.floor(arr.length / 2);
-  const item = arr[middleIndex];
+  const item = arr[middleIndex] as T;
   // 当前index = middleIndex + pcz
   const value = handler(item, middleIndex + pcz, arr);
   if (value === 0) {
@@ -317,7 +340,7 @@ export function binaryFind<T>(
   let end = arr.length;
   while (start < end) {
     const mid = ~~((end + start) / 2);
-    const item = arr[mid];
+    const item = arr[mid] as T;
     const v = handler(item, mid, arr);
     if (v === 0) {
       return item;
@@ -345,7 +368,7 @@ export function binaryFindIndex<T>(
 
   do {
     const middleIndex = Math.floor((end - start) / 2) + start;
-    const value: number = handler(arr[middleIndex], middleIndex, start, end);
+    const value: number = handler(arr[middleIndex] as T, middleIndex, start, end);
 
     if (value === 0) {
       return middleIndex;
@@ -386,18 +409,18 @@ export function insertToArray<T>(
  * @param after 默认插到前面去
  * @param reverse 是否反向遍历
  */
-export function insertToArray<T>(
-  insert,
-  to,
-  array,
+export function insertToArray(
+  insert: unknown,
+  to: number | Function,
+  array: unknown[],
   { after = false, reverse = false } = {},
 ): number {
-  const inserts = castArray(insert) as T[];
+  const inserts = castArray(insert) as unknown[];
   let index = to as number;
   if (isFunction(to)) {
-    index = (reverse ? findIndexRight : findIndex)((v, k, a) => {
-      return to(v, k, a as T[], insert);
-    }, array);
+    index = (reverse ? findIndexRight : findIndex)(array, (v, k, a) => {
+      return to(v, k, a as unknown[], insert);
+    });
     if (index === -1) {
       return -1;
     }
@@ -421,20 +444,20 @@ export function arrayRemoveItem<T>(item: T, array: T[]): void | T {
 
 export function arrayRemoveItemsBy<T>(by: (v: T, k: number, a: T[]) => boolean, array: T[]): T[] {
   const removedItems: T[] = [];
-  forEachRight<T>((v, k, a) => {
+  forEachRight(array, (v: T, k, a) => {
     if (!by(v, k, a as T[])) return;
-    const item = array.splice(k, 1)[0];
+    const item = array.splice(k, 1)[0] as T;
     removedItems.unshift(item);
-  }, array);
+  });
   return removedItems;
 }
 
 export function unique<T>(target: T[], isRepeatFn?: (value: T, value2: T) => boolean) {
   if (!target.length) return target;
   const fn = isRepeatFn || ((v1, v2) => v1 === v2 || (isNaN(v1) && isNaN(v2)));
-  const result: T[] = [target[0]];
-  for (let i = 1; i < target.length; i++) {
-    const item = target[i];
+  const result = [target[0] as T];
+  for (let i = 1, len = target.length; i < len; i++) {
+    const item = target[i] as T;
     if (result.some((resItem) => fn(resItem, item))) continue;
     result.push(item);
   }
@@ -510,8 +533,8 @@ export function groupBy<T extends { [k: string]: any }, R extends { [k: string]:
   by: (it: T, result: any) => string | void,
   defaultKey?: number | string,
 ): R;
-export function groupBy(arr, key, defaultKey: number | string = '*') {
-  const cb = isFunction(key) ? key : (item) => item[key];
+export function groupBy(arr: any[], key: string | Function, defaultKey: number | string = '*') {
+  const cb = isFunction(key) ? key : (item: object) => item[key];
   return arr.reduce((result, item) => {
     const k = cb(item, result) ?? defaultKey;
     if (!hasOwn(result, k)) {
@@ -534,7 +557,7 @@ export function groupBy(arr, key, defaultKey: number | string = '*') {
 export function someInList<T>(
   items: T[],
   list: T[],
-  cb = (item: T, index: number, list: T[]) => includes(list, item),
+  cb: (item: T, index: number, list: T[]) => boolean = (v, _, arr) => includes(arr, v),
 ): boolean {
   return items.some((item, index) => {
     return cb(item, index, list);

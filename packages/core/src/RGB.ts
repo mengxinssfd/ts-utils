@@ -1,6 +1,7 @@
 import { isRGBColor } from './color';
 import { randomInt } from './random';
 import { isArray } from './dataType';
+import { Tuple } from '@mxssfd/types';
 
 function getLimitValue(value: number) {
   return Math.max(0, Math.min(value, 255));
@@ -64,7 +65,7 @@ export class RGB extends RGBSuper {
   static fromStr(color: string) {
     if (!RGB.validate(color)) throw new TypeError('color is not rgb');
     color = color.replace(/(rgba?\(|\))/g, '');
-    const rgb = color.split(',');
+    const rgb = color.split(',') as Tuple<string, 3>;
     const r = parseInt(rgb[0]);
     const g = parseInt(rgb[1]);
     const b = parseInt(rgb[2]);
@@ -73,12 +74,12 @@ export class RGB extends RGBSuper {
 
   static fromHEX(hexColor: string): RGB {
     const rgx = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    const hex = hexColor.replace(rgx, (m, r, g, b) => r + r + g + g + b + b);
+    const hex = hexColor.replace(rgx, (_m, r, g, b) => r + r + g + g + b + b);
     const rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) as string[];
     if (!isArray(rgb) || rgb.length < 4) throw new TypeError();
-    const r = parseInt(rgb[1], 16);
-    const g = parseInt(rgb[2], 16);
-    const b = parseInt(rgb[3], 16);
+    const r = parseInt(rgb[1] as string, 16);
+    const g = parseInt(rgb[2] as string, 16);
+    const b = parseInt(rgb[3] as string, 16);
     return new RGB(r, g, b);
   }
 
@@ -118,7 +119,7 @@ export class RGBA extends RGBSuper {
   static fromStr(color: string): RGBA {
     if (!RGBA.validate(color)) throw new TypeError('color is not rgb');
     color = color.replace(/(rgba?\(|\))/g, '');
-    const rgb = color.split(',');
+    const rgb = color.split(',') as Tuple<string, 4>;
     const r = parseInt(rgb[0]);
     const g = parseInt(rgb[1]);
     const b = parseInt(rgb[2]);

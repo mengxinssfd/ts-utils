@@ -4,18 +4,18 @@ import { sleep, objForEach } from '../src';
 test('forEach', () => {
   const fe = arr.forEach;
   const arr1: any[] = [1, 2, 3];
-  let rt = fe(arr1, (v, k) => (arr1[k] = k));
+  let rt = fe(arr1, (_v, k) => (arr1[k] = k));
   expect(arr1).toEqual([0, 1, 2]);
   expect(rt).toBeTruthy();
   // ArrayLike
-  rt = fe({ 0: 1, 1: 2, length: 2 }, (v, k) => (arr1[k] = k + k));
+  rt = fe({ 0: 1, 1: 2, length: 2 }, (_v, k) => (arr1[k] = k + k));
   expect(arr1).toEqual([0, 2, 2]);
   expect(rt).toBeTruthy();
   // const arr = thisArg || this;
   // fn.call(arr1, (v, k) => arr1[k] = k + 2);
   // expect(arr1).toEqual([2, 3, 4]);
   // if (callbackfn(arr[i], i, arr) === false) break;
-  rt = fe(arr1, (v, k) => {
+  rt = fe(arr1, (_v, k) => {
     arr1[k] = k + 1;
     return k !== 1;
   });
@@ -26,7 +26,7 @@ test('forEach', () => {
   rt = fe(arr2, (v, k) => (arr2[k] = 'a' + v));
   expect(rt).toBeTruthy();
   expect(arr2).toEqual(['a2', 'a3', 'a4']);
-  rt = fe(arr2, (v, k) => (arr2[k] = 'a' + k));
+  rt = fe(arr2, (_v, k) => (arr2[k] = 'a' + k));
   expect(arr2).toEqual(['a0', 'a1', 'a2']);
   expect(rt).toBeTruthy();
 
@@ -53,26 +53,26 @@ test('forEach', () => {
 });
 test('forEachAsync', async () => {
   const fn = arr.forEachAsync;
-  const arr1: any[] = [1, 2, 3];
-  await fn(async (v, k) => (arr1[k] = k), arr1);
+  const arr1: number[] = [1, 2, 3];
+  await fn(arr1, async (_v, k) => (arr1[k] = k));
   expect(arr1).toEqual([0, 1, 2]);
   // ArrayLike
-  await fn(async (v, k) => (arr1[k] = k + k), { 0: 1, 1: 2, length: 2 });
+  await fn({ 0: 1, 1: 2, length: 2 }, async (_v, k) => (arr1[k] = k + k));
   expect(arr1).toEqual([0, 2, 2]);
   // const arr = thisArg || this;
-  await fn.call(arr1, async (v, k) => (arr1[k] = k + 2));
+  await fn.call(arr1, arr1, async (_v, k) => (arr1[k] = k + 2));
   expect(arr1).toEqual([2, 3, 4]);
   // if (callbackfn(arr[i], i, arr) === false) break;
-  await fn(async (v, k) => {
+  await fn(arr1, async (_v, k) => {
     arr1[k] = k + 1;
     return k !== 1;
-  }, arr1);
+  });
   expect(arr1).toEqual([1, 2, 4]);
 
   const arr2: (number | string)[] = [2, 3, 4];
-  await fn(async (v, k) => (arr2[k] = 'a' + v), arr2);
+  await fn(arr2, async (v, k) => (arr2[k] = 'a' + v));
   expect(arr2).toEqual(['a2', 'a3', 'a4']);
-  await fn(async (v, k) => (arr2[k] = 'a' + k), arr2);
+  await fn(arr2, async (_v, k) => (arr2[k] = 'a' + k));
   expect(arr2).toEqual(['a0', 'a1', 'a2']);
 
   const res: any = [];
@@ -90,13 +90,13 @@ test('forEachAsync', async () => {
       res.push(3);
     },
   ];
-  await fn((v) => v(), asyncList);
+  await fn(asyncList, (v: Function) => v());
   expect(res).toEqual([1, 2, 3]);
 
   const list = [() => Promise.resolve('hello'), () => Promise.reject('im fine')];
 
   try {
-    await fn((v) => v(), list);
+    await fn(list, (v: Function) => v());
   } catch (e) {
     expect(e).toBe('im fine');
   }
@@ -118,96 +118,110 @@ test('mapAsync', async () => {
       return 3;
     },
   ];
-  const res = await fn((v) => v(), asyncList);
+  const res = await fn(asyncList, (v) => v());
   expect(res).toEqual([1, 2, 3]);
-  const res2 = await fn.call(asyncList, (v: any) => v());
-  expect(res2).toEqual([1, 2, 3]);
 });
 test('reduceAsync', async () => {
+  expect.assertions(9);
+
   const fn = arr.reduceAsync;
 
-  const v = await fn(
+  const v1 = await fn(
+    [
+      (v: string) => Promise.resolve(`${v} thank you`),
+      (v: string) => Promise.resolve(`${v} im fine`),
+    ],
     (initValue, value) => {
       return value(initValue);
     },
     'hello',
-    [(v) => Promise.resolve(`${v} thank you`), (v) => Promise.resolve(`${v} im fine`)] as Array<
-      (v: any) => Promise<string>
-    >,
   );
 
-  expect(v).toBe('hello thank you im fine');
+  expect(v1).toBe('hello thank you im fine');
+
   try {
     await fn(
+      [
+        (v: string) => Promise.resolve(`${v} thank you`),
+        (v: string) => Promise.reject(`${v} im fine`),
+      ],
       (initValue, value) => {
         return value(initValue);
       },
       'hello',
-      [(v) => Promise.resolve(`${v} thank you`), (v) => Promise.reject(`${v} im fine`)] as Array<
-        (v: any) => Promise<string>
-      >,
     );
   } catch (e) {
     expect(e).toBe('hello thank you im fine');
   }
 
-  const v2 = await fn(
+  const v3 = await fn(
+    [(v) => `${v} thank you`, (v) => `${v} im fine`] as Array<(v: string) => any>,
     (initValue, value) => {
       return value(initValue);
     },
     'hello',
-    [(v) => `${v} thank you`, (v) => `${v} im fine`] as Array<(v: any) => any>,
   );
+  expect(v3).toBe('hello thank you im fine');
 
-  expect(v2).toBe('hello thank you im fine');
-
-  const v3 = await fn.call(
-    [(v) => `${v} thank you`, (v) => `${v} im fine`] as Array<(v: any) => any>,
-    (initValue, value: any) => {
+  const v4 = await fn(
+    [() => `thank you`, (v) => `${v} im fine`] as Array<(v: string) => string>,
+    (initValue, value) => {
       return value(initValue);
+    },
+  );
+  expect(v4).toBe('thank you im fine');
+
+  const v5 = await fn(
+    [async () => `thank you`, async (v) => `${v} im fine`],
+    (initValue, value) => {
+      return value(initValue);
+    },
+  );
+  expect(v5).toBe('thank you im fine');
+
+  try {
+    await fn([], (initValue, value) => {
+      return (value as any)(initValue);
+    });
+  } catch (e: any) {
+    expect(e.message).toBe('Reduce of empty array with no initial value');
+  }
+
+  const v7 = await fn(
+    [],
+    (initValue, value) => {
+      return (value as any)(initValue);
     },
     'hello',
   );
+  expect(v7).toBe('hello');
 
-  expect(v3).toBe('hello thank you im fine');
+  // break
+  const v8 = await fn(
+    [async (v: string) => `${v} thank you`, () => false, async (v: string) => `${v} im fine`],
+    (initValue, value) => value(initValue) as any,
+    'hello',
+  );
+  expect(v8).toBe('hello thank you');
 
-  expect(
-    await fn.call(
-      [() => 1, () => 2] as Array<(v: any) => any>,
-      (initValue, value: any) => {
-        return initValue + value();
-      },
-      0,
-    ),
-  ).toBe(3);
-
-  expect(
-    await fn.call([() => 1, () => 2] as Array<(v: any) => any>, (initValue, value: any) => {
-      return initValue + value();
-    }),
-  ).toBe(3);
+  const v9 = await fn(
+    [async () => `thank you`, () => false, async (v: string) => `${v} im fine`] as Array<any>,
+    async (initValue, value) => value(initValue as string),
+  );
+  expect(v9).toBe('thank you');
 });
 test('forEachRight', () => {
   const fn = arr.forEachRight;
   const arr2: number[] = [];
-  fn((i) => arr2.push(i + 1), [1, 2, 3, 4]);
+  fn([1, 2, 3, 4], (i) => arr2.push(i + 1));
   expect(arr2).toEqual([5, 4, 3, 2]);
-  const nFn = fn.bind([1, 2, 3, 4]);
-
-  const arr3: number[] = [];
-  // 用call apply bind不会自动推导this的类型
-  nFn((i: number) => arr3.push(i + 1));
-
-  expect(arr3).toEqual([5, 4, 3, 2]);
-
-  expect(() => fn(() => {})).toThrowError();
 
   const result: any = {};
-  fn((v, k) => {
+  fn(arr.createArray({ len: 20 }), (v, k) => {
     result[k] = v;
     if (k === 10) return false;
     return;
-  }, arr.createArray({ len: 20 }));
+  });
   expect(result).toEqual(
     arr.createArray({ start: 10, end: 20 }).reduce((obj, v) => {
       obj[v] = v;
@@ -216,11 +230,11 @@ test('forEachRight', () => {
   );
 
   const result2: any[] = [];
-  fn((v, k) => {
+  fn(arr.createArray({ len: 20 }), (v, k) => {
     result2.push({ [k]: v });
     if (k === 15) return false;
     return;
-  }, arr.createArray({ len: 20 }));
+  });
 
   expect(result2).toEqual([{ 19: 19 }, { 18: 18 }, { 17: 17 }, { 16: 16 }, { 15: 15 }]);
 });
@@ -254,18 +268,18 @@ test('from', () => {
   ]);
 });
 test('includes', () => {
-  const list: any[] = ['', undefined, 0, NaN, null];
+  const list = ['', undefined, 0, NaN, null];
   expect(arr.includes([1, 2, 3], 10)).toBe(false);
   expect(arr.includes(list, NaN)).toBe(true);
   expect(arr.includes(list, null)).toBe(true);
   expect(arr.includes(list, 0)).toBe(true);
   expect(arr.includes(list, undefined)).toBe(true);
   expect(arr.includes(list, '')).toBe(true);
-  expect(arr.includes(list, true)).toBeFalsy();
-  expect(arr.includes(list, {})).toBeFalsy();
+  expect(arr.includes(list, true as unknown)).toBeFalsy();
+  expect(arr.includes(list, {} as unknown)).toBeFalsy();
   expect(arr.includes(list, (item) => !item)).toBe(true);
   expect(arr.includes(list, (item) => item === undefined)).toBe(true);
-  expect(arr.includes.call(list, undefined as any, NaN)).toBe(true);
+  expect(arr.includes.call(null, list, NaN)).toBe(true);
 });
 test('createArray', () => {
   expect(arr.createArray({ start: 0, end: 2 })).toEqual([0, 1]);
@@ -291,57 +305,34 @@ test('createArray', () => {
 test('filter', () => {
   // 未找到
   expect(
-    arr.filter(
-      (v) => {
-        return v > 10;
-      },
-      [1, 2, 3, 4, 5, 6, 7, 8],
-    ),
+    arr.filter([1, 2, 3, 4, 5, 6, 7, 8], (v) => {
+      return v > 10;
+    }),
   ).toEqual([]);
   // 找到
   expect(
-    arr.filter(
-      (v, k, arr) => {
-        return v < 7 && k > 2 && arr.length === 8;
-      },
-      [1, 2, 3, 4, 5, 6, 7, 8],
-    ),
-  ).toEqual([4, 5, 6]);
-  // call
-  expect(
-    arr.filter.call([1, 2, 3, 4, 5, 6, 7, 8], (v, k, arr) => {
-      return (v as number) < 7 && k > 2 && arr.length === 8;
+    arr.filter([1, 2, 3, 4, 5, 6, 7, 8], (v, k, arr) => {
+      return v < 7 && k > 2 && arr.length === 8;
     }),
   ).toEqual([4, 5, 6]);
 });
 
 test('find', () => {
   expect(
-    arr.find(
-      (v, k, arr) => {
-        return v === 3 && k === 2 && arr.length === 4;
-      },
-      [1, 2, 3, 4],
-    ),
+    arr.find([1, 2, 3, 4], (v, k, arr) => {
+      return v === 3 && k === 2 && arr.length === 4;
+    }),
   ).toBe(3);
   expect(
-    arr.find(
-      (v, k, arr) => {
-        return v === 3 && k === 2 && arr.length === 6;
-      },
-      [1, 2, 3, 4],
-    ),
-  ).toBe(undefined);
-  expect(
-    arr.find((v, k, arr) => {
-      return v === 3 && k === 2 && arr.length === 6;
-    }, []),
-  ).toBe(undefined);
-  expect(
-    arr.find((v, k, arr) => {
+    arr.find([1, 2, 3, 4], (v, k, arr) => {
       return v === 3 && k === 2 && arr.length === 6;
     }),
-  ).toBeUndefined();
+  ).toBe(undefined);
+  expect(
+    arr.find([], (v, k, arr) => {
+      return v === 3 && k === 2 && arr.length === 6;
+    }),
+  ).toBe(undefined);
 });
 test('flat', () => {
   expect([1, 2, 3, [1, 2, 3, [1, 2, 3]], [1, 2, 3, [1, 2, 3]]].flat(1)).toEqual([
@@ -413,7 +404,7 @@ test('binaryFind', () => {
 
   // console.log('----min-----');
   // 判断边缘 min
-  const first = list[0];
+  const first = list[0]!;
   res = find(first.id);
   expect(res.times).toBe(7);
   expect(res.value).toEqual(first);
@@ -421,7 +412,7 @@ test('binaryFind', () => {
   // console.log('----max-----');
   // 判断边缘 max
   const maxIndex = list.length - 1;
-  const last = list[maxIndex];
+  const last = list[maxIndex]!;
   res = find(last.id);
   expect(res.times).toBe(6);
   expect(res.value).toEqual(last);
@@ -453,7 +444,7 @@ test('binaryFind2', () => {
 
   // console.log('----min-----');
   // 判断边缘 min
-  const first = list[0];
+  const first = list[0]!;
   res = find(first.id);
   expect(res.times).toBe(7);
   expect(res.value).toEqual(first);
@@ -461,7 +452,7 @@ test('binaryFind2', () => {
   // console.log('----max-----');
   // 判断边缘 max
   const maxIndex = list.length - 1;
-  const last = list[maxIndex];
+  const last = list[maxIndex]!;
   res = find(last.id);
   expect(res.times).toBe(6);
   expect(res.value).toEqual(last);
@@ -503,7 +494,7 @@ test('binaryFindIndex', () => {
   // console.log('--------min-------');
   // 判断边缘 min
   const minIndex = 0;
-  const first = list[minIndex];
+  const first = list[minIndex]!;
   res = find(first.id);
   expect(res.times).toBe(7);
   expect(res.index).toBe(minIndex);
@@ -511,7 +502,7 @@ test('binaryFindIndex', () => {
   // console.log('----max-----');
   // 判断边缘 max
   const maxIndex = list.length - 1;
-  const last = list[maxIndex];
+  const last = list[maxIndex]!;
   res = find(last.id);
   expect(res.times).toBe(6);
   expect(res.index).toBe(maxIndex);
@@ -582,7 +573,7 @@ test('insertToArray', () => {
   expect(
     fn(
       3,
-      (v, k, a, inset) => {
+      (v, _k, _a, inset) => {
         a2.push(v);
         return v < inset;
       },
@@ -598,9 +589,9 @@ test('insertToArray', () => {
   expect(
     fn(
       [3, 3],
-      (v, k, a, insets) => {
+      (v, _k, _a, insets) => {
         a3.push(v);
-        return v > insets[0];
+        return v > insets[0]!;
       },
       arr8,
     ),
@@ -638,44 +629,34 @@ test('findIndex', () => {
     }),
   ).toEqual(3);
   expect(
-    fn(
-      (v, index, a) => {
-        if (v === 1) {
-          (a as number[]).splice(index, 1);
-        }
-        return v === 4;
-      },
-      [1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1],
-    ),
+    fn([1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1], (v, index, a) => {
+      if (v === 1) {
+        (a as number[]).splice(index, 1);
+      }
+      return v === 4;
+    }),
   ).toEqual(3);
-  expect(fn((v) => v === 4, [1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1])).toEqual(5);
-  expect(fn((v) => v.v === 4, [{ v: 1 }, { v: 2 }])).toEqual(-1);
-  expect(fn((v) => v.v === 2, [{ v: 1 }, { v: 2 }])).toEqual(1);
-  const nFn = fn.bind(undefined as any);
-  expect(() => {
-    nFn(function () {} as any);
-  }).toThrowError();
-  expect(fn(undefined as any, [])).toBe(-1);
+  expect(fn([1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1], (v) => v === 4)).toEqual(5);
+  expect(fn([{ v: 1 }, { v: 2 }], (v) => v.v === 4)).toEqual(-1);
+  expect(fn([{ v: 1 }, { v: 2 }], (v) => v.v === 2)).toEqual(1);
+
+  expect(fn([], undefined as any)).toBe(-1);
 });
 test('findIndexRight', () => {
   const fn = arr.findIndexRight;
   const list = [1, 1, 2, 1, 3, 4, 1, 1, 1, 1, 1];
   const result: number[] = [];
   expect(
-    fn((v) => {
+    fn(list, (v) => {
       result.push(v);
       return v === 4;
-    }, list),
+    }),
   ).toEqual(5);
   expect(result).toEqual([1, 1, 1, 1, 1, 4]);
-  expect(fn.call(list, (v) => v === 4)).toEqual(5);
-  expect(fn((v) => v.v === 4, [{ v: 1 }, { v: 2 }])).toEqual(-1);
-  expect(fn((v) => v.v === 2, [{ v: 1 }, { v: 2 }])).toEqual(1);
-  const nFn = fn.bind(undefined as any);
-  expect(() => {
-    nFn(function () {} as any);
-  }).toThrowError();
-  expect(fn(undefined as any, [])).toBe(-1);
+  expect(fn([{ v: 1 }, { v: 2 }], (v) => v.v === 4)).toEqual(-1);
+  expect(fn([{ v: 1 }, { v: 2 }], (v) => v.v === 2)).toEqual(1);
+
+  expect(fn([], undefined as any)).toBe(-1);
 });
 test('castArray', () => {
   const fn = arr.castArray;
@@ -698,7 +679,7 @@ test('chunk', () => {
     [0, 1, 2],
     [3, 4],
   ]);
-  const emptyArr = [];
+  const emptyArr: any[] = [];
   expect(fn(emptyArr, 3)).toEqual([]);
   expect(fn(emptyArr, 3)).not.toBe(emptyArr);
   expect(() => {
@@ -728,14 +709,14 @@ test('arrayRemoveItemsBy', () => {
 });
 test('inRange', () => {
   const fn = arr.inRange;
-  expect(fn(0, [undefined, 100])).toBeTruthy();
+  expect(fn(0, [undefined as any, 100])).toBeTruthy();
   expect(fn(0, [0])).toBeTruthy();
   expect(fn(0, [1])).toBeFalsy();
   expect(fn(0, [1, 2])).toBeFalsy();
 });
 test('inRanges', () => {
   const fn = arr.inRanges;
-  expect(fn(0, [undefined, 100])).toBeTruthy();
+  expect(fn(0, [undefined as any, 100])).toBeTruthy();
   expect(fn(0, [0])).toBeTruthy();
   expect(fn(0, [1])).toBeFalsy();
   expect(fn(0, [1, 2])).toBeFalsy();
@@ -836,7 +817,7 @@ test('groupBy', () => {
     let result = '';
     objForEach(
       obj,
-      (v, k): false | void => {
+      (_v, k): false | void => {
         if (new RegExp((k as string) + '_.+').test(item.code)) {
           result = k as string;
           return false;
@@ -858,7 +839,7 @@ test('someInList', () => {
   expect(fn([500, 20], Array.from({ length: 10 }))).toBeFalsy();
   expect(fn([{ id: 1 }], [{ id: 1 }, { id: 2 }, { id2: 3 }])).toBeFalsy();
   expect(
-    fn([{ id: 1 }], [{ id: 1 }, { id: 2 }, { id: 3 }], (item, i, list) => {
+    fn([{ id: 1 }], [{ id: 1 }, { id: 2 }, { id: 3 }], (item, _i, list) => {
       return list.some((s) => s.id === item.id);
     }),
   ).toBeTruthy();

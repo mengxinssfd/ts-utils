@@ -58,7 +58,7 @@ export class ResponsibilityChain<T> {
 
   private run() {
     const { chain, index, next, done, value, initValue } = this;
-    const { handler } = chain[index];
+    const { handler } = chain[index] as ChainItem<T>;
     handler(value, next, done, initValue);
   }
 

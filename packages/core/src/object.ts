@@ -217,7 +217,7 @@ export function pick<T extends object, K extends keyof T, O extends { [k: string
 /**
  * 合并pickByKeys与pickRename两者的功能
  */
-export function pick(originObj, picks, cb) {
+export function pick(originObj: object, picks: any[], cb?: Function) {
   const isObj = isObject(picks);
   // ------- 第一种写法 -------
   // const callback = cb || (v => v);
@@ -233,7 +233,9 @@ export function pick(originObj, picks, cb) {
   // ------- 第二种写法 -------
   // 更简洁 减少判断次数
   // TODO 需要判断返回值类型是否改变了  改变则抛出异常
-  return isObj ? pickRename(originObj, picks as any, cb) : pickByKeys(originObj, picks, cb);
+  return isObj
+    ? pickRename(originObj, picks as any, cb as any)
+    : pickByKeys(originObj, picks, cb as any);
 }
 
 // pick({a: 132, b: "123123"}, ["a", "b"]);
@@ -280,7 +282,7 @@ export function pickAdditional(origin: object, ...others: object[]) {
   //     return result;
   // }, {});
 
-  return pickDiff(origin, others, (originV, objV, k) => hasOwn(origin, k));
+  return pickDiff(origin, others, (_originV, _objV, k) => hasOwn(origin, k));
 }
 
 /**
@@ -347,8 +349,8 @@ export function omit<T extends object, K extends keyof T>(
 export function assign<T, U>(target: T, source: U): T & U;
 export function assign<T, U, V>(target: T, source1: U, source2: V): T & U & V;
 export function assign<T, U, V, W>(target: T, source1: U, source2: V, source3: W): T & U & V & W;
-export function assign(target: object, ...args: object[]);
-export function assign(target, ...args) {
+export function assign(target: object, ...args: object[]): object;
+export function assign(target: object, ...args: any[]) {
   args.forEach((arg) => {
     // forEachObj(arg, (v, k) => target[k] = v);  // 不能返回“target[k] = v”值，v可能会为false，为false会中断循环
     forEachObj(arg, (v, k) => {
@@ -361,7 +363,7 @@ export function assign(target, ...args) {
 export function defaults<T, U>(target: T, source: U): T & U;
 export function defaults<T, U, V>(target: T, source1: U, source2: V): T & U & V;
 export function defaults<T, U, V, W>(target: T, source1: U, source2: V, source3: W): T & U & V & W;
-export function defaults(target: object, ...args: object[]);
+export function defaults(target: object, ...args: object[]): object;
 /**
  * 与lodash defaults一样 只替换target里面的值为undefined的属性
  * 类型推导会以前面的为准
@@ -371,7 +373,7 @@ export function defaults(target: object, ...args: object[]);
  * @param target
  * @param args
  */
-export function defaults(target, ...args) {
+export function defaults(target: object, ...args: any[]) {
   args.forEach((arg) => {
     forEachObj(arg, (v, k) => {
       if (v === undefined || target[k] !== undefined) return;
@@ -393,13 +395,13 @@ export function defaults(target, ...args) {
  * @param args
  */
 export function objUpdate<T extends object>(target: T, ...args: object[]): T {
-  objForEach(target, (v, k) => {
-    forEachRight(function (item): void | false {
+  objForEach(target, (_v, k) => {
+    forEachRight(args, function (item): void | false {
       if (item && hasOwn(item, k)) {
         target[k] = item[k];
         return false;
       }
-    }, args);
+    });
   });
   return target;
 }
@@ -445,12 +447,12 @@ export function updateIns<T extends object>(target: T, ...args: object[]): T {
   const keys = getInsKeys(target);
 
   keys.forEach((k) => {
-    forEachRight(function (item): void | false {
+    forEachRight(args, function (item): void | false {
       if (item && hasOwn(item, k)) {
         target[k] = item[k];
         return false;
       }
-    }, args);
+    });
   });
   return target;
 }
@@ -464,19 +466,19 @@ export function updateIns<T extends object>(target: T, ...args: object[]): T {
 export function pickUpdated<T extends object>(
   target: T,
   objs: object[],
-  compareFn: (a, b) => boolean = (a, b) => a === b || (isNaN(a) && isNaN(b)),
+  compareFn: (a: unknown, b: unknown) => boolean = (a, b) => a === b || (isNaN(a) && isNaN(b)),
 ): Partial<{ [k in keyof T]: any }> {
   return objReduce(
     target,
-    (result, v, k) => {
-      forEachRight(function (item: any): void | false {
+    (result, _v, k) => {
+      forEachRight(objs, function (item: any): void | false {
         if (item && hasOwn(item, k)) {
           if (!compareFn(target[k], item[k])) {
             result[k] = item[k];
           }
           return false;
         }
-      }, objs);
+      });
       return result;
     },
     {} as any,
@@ -525,7 +527,7 @@ export function objKeys<T extends object, K extends keyof T>(obj: T): K[] {
   // Object.keys es5可以使用
   return reduceObj(
     obj,
-    (init, v, k) => {
+    (init, _v, k) => {
       init.push(k as K);
       return init;
     },
@@ -625,7 +627,7 @@ export function setObjValueByPath<
   obj: T,
   path: TransferPathOf<T, P, S>,
   value: TypeOfPath<T, Path>,
-  onExist: SetObjValueByPathOnExist = (a, b): any => b,
+  onExist: SetObjValueByPathOnExist = (_a, b): any => b,
   objName: S = '' as S,
 ): T {
   const p = translateObjPath(path, objName);
@@ -679,7 +681,7 @@ export function getObjPathEntries(obj: object, objName = ''): Array<[string, any
 // 根据路径还原整个object
 export function revertObjFromPath(pathArr: string[]): object {
   function getKV(path: string): { key: string; value: string; innerKey: string } {
-    const [k, value] = path.split('=').map((item) => decodeURIComponent(item));
+    const [k, value] = path.split('=').map((item) => decodeURIComponent(item)) as [string, string];
     let key = k;
     let innerKey = '';
     const reg = /(?:\[([^[\]]*)])|(?:\.\[?([^[\]]*)]?)/g;
@@ -701,7 +703,7 @@ export function revertObjFromPath(pathArr: string[]): object {
         if (!innerKey) {
           result[key] = value;
         } else {
-          const arr = [];
+          const arr: any[] = [];
           arr[innerKey] = value;
           result[key] = arr;
         }

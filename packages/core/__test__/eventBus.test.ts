@@ -14,7 +14,7 @@ test('EventBus', () => {
   let cb;
   eb.on(
     'test',
-    (cb = function (...params) {
+    (cb = function (...params: any[]) {
       result2 = (result2 + ' ' + params.join(' ')).trim();
     }),
   );

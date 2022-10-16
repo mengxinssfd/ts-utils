@@ -2,7 +2,7 @@ import { debounce, throttle } from './common';
 import type { OmitFirstParameters } from '@mxssfd/types';
 
 export function decoratorfy(callback: (descriptor: PropertyDescriptor) => Function) {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
     // 在babel的网站编译的是target包含key，descriptor
     if (target.descriptor) {
       descriptor = target.descriptor;
@@ -100,7 +100,7 @@ export const Polling = (interval: number, immediate = true) =>
       clearTimeout(timer);
     }
 
-    function start() {
+    function start(this: any) {
       stop();
       const p = new Promise<void>((res, rej) => {
         let times = 0;

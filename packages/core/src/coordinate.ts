@@ -14,8 +14,8 @@ function inRange(a: number, [x1, x2]: Point): boolean {
 export function isPointInPath(point: Point, path: Point[]): boolean {
   const [x, y] = point;
   for (let i = 1; i < path.length; i++) {
-    const [x1, y1] = path[i - 1];
-    const [x2, y2] = path[i];
+    const [x1, y1] = path[i - 1] as Point;
+    const [x2, y2] = path[i] as Point;
 
     // 根据向量的坐标运算  判断是否平行
     // 对于非0向量a,b 设a=(x1,y1) b=(x2,y2) 则a平行b <=>  x1/x2 = y1/y2

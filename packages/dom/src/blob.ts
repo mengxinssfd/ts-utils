@@ -1,3 +1,5 @@
+import { Tuple } from '@mxssfd/types';
+
 export function blobToBase64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const fileReader = new FileReader();
@@ -13,8 +15,8 @@ export function blobToBase64(blob: Blob): Promise<string> {
 }
 
 export function base64ToBlob(dataURL: string): Blob {
-  const arr: string[] = dataURL.split(',');
-  const mime = (arr[0].match(/:(.*?);/) ?? [])[1];
+  const arr = dataURL.split(',') as Tuple<string, 2>;
+  const mime = (arr[0].match(/:(.*?);/) ?? [])[1] as string;
   const atob1 = window.atob(arr[1]);
   let n = atob1.length;
   const u8arr = new Uint8Array(n);

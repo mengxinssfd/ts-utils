@@ -23,25 +23,28 @@ interface CloneStrategies {
   [key: string]: (target: any) => any;
 }
 const cloneStrategies: CloneStrategies = (function () {
-  const st: CloneStrategies = {
-    array(target) {
+  const st = {
+    array(target: any) {
       return new target.constructor();
     },
-    function: function (target) {
+    function(target: any) {
       // 复制的函数作用域不再是原函数的作用域
       // (如复制一个闭包函数，作用域会提升到script顶层，将不能访问原闭包函数外的变量)，
       // 不再复制函数
       // return cloneFunction(target);
       return target;
     },
-    date(target) {
+    date(target: any) {
       return new target.constructor(target);
     },
   };
-  st.object = st.array;
-  st.regexp = st.date;
+  const strategies: CloneStrategies = {
+    ...st,
+    object: st.array,
+    regexp: st.date,
+  };
 
-  return st;
+  return strategies;
 })();
 
 // 对象深拷贝办法(深度优先)

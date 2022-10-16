@@ -3,6 +3,7 @@ import * as dc from '../src/decorator';
 
 test('Debounce', async () => {
   expect.assertions(3);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Debounce = dc.Debounce;
 
   const now = Date.now();
@@ -37,6 +38,7 @@ test('Debounce', async () => {
 });
 test('Throttle', async () => {
   expect.assertions(2);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Throttle = dc.Throttle;
 
   // const now = Date.now();
@@ -72,6 +74,7 @@ test('Throttle', async () => {
 
 test('Polling', async () => {
   expect.assertions(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Polling = dc.Polling;
 
   class Test {
@@ -99,6 +102,7 @@ test('Polling', async () => {
 });
 test('Polling 2', async () => {
   expect.assertions(2);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Polling = dc.Polling;
 
   class Test {

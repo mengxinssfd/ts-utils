@@ -34,10 +34,10 @@ test('deepClone', () => {
   expect(newArr2[0] === arr2[0]).toBeTruthy();
   expect(newArr2[1] === arr2[1]).toBeTruthy();
   // copy[0]() === arr2[0]()
-  expect(newArr2[1]() === arr2[1]()).toBeTruthy();
-  expect(newArr2[1]()).toEqual(arr2[1]());
+  expect(newArr2[1]!() === arr2[1]!()).toBeTruthy();
+  expect(newArr2[1]!()).toEqual(arr2[1]!());
 
-  function Foo() {
+  function Foo(this: any) {
     this.name = 'foo';
     this.sayHi = function () {
       console.log('Say Hi');
@@ -47,6 +47,8 @@ test('deepClone', () => {
   Foo.prototype.sayGoodBy = function () {
     console.log('Say Good By');
   };
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const myPro = new Foo();
   expect(hasOwn(myPro, 'name')).toBeTruthy(); //true
   expect(hasOwn(myPro, 'toString')).toBeFalsy(); //false
@@ -100,13 +102,13 @@ test('deepClone', () => {
 test('cloneFunction', () => {
   const fn = clone.cloneFunction;
 
-  function test(a, b) {
+  function test(a: number, b: number) {
     return a + b;
   }
 
   expect(fn(test)(50, 50)).toBe(100);
 
-  const test2 = (a, b) => a + b;
+  const test2 = (a: number, b: number) => a + b;
   expect(fn(test2)(50, 50)).toBe(100);
   expect(
     (function (a, b) {
@@ -167,12 +169,14 @@ test('deepCloneBfs', () => {
   // 0 === 0
   expect(clone.deepCloneBfs(0)).toBe(0);
 
-  function Ext() {
+  function Ext(this: any) {
     this.a = 1;
   }
 
   Ext.prototype.b = '2';
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   expect(clone.deepCloneBfs(new Ext())).toEqual({ a: 1 });
 
   const obj2 = { a: 1, b: [1, 2] };

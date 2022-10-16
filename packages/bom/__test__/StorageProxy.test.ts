@@ -1,4 +1,6 @@
 import { StorageProxy } from '../src/StorageProxy';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import CryptoJS from 'crypto-js';
 import { sleep } from '@mxssfd/core';
 
@@ -41,18 +43,18 @@ class CustomStorageProxy extends StorageProxy {
   constructor(storage: Storage) {
     super(storage /*, { encodeKey: encrypt, encodeValue: encrypt, decodeValue: decrypt }*/);
   }
-  protected encodeKey(key: string): string {
+  protected override encodeKey(key: string): string {
     return encrypt(key);
   }
-  protected decodeKey(key: string | null): string | null {
+  protected override decodeKey(key: string | null): string | null {
     if (key === null) return null;
     return decrypt(key) || null;
   }
 
-  protected encodeValue(value: string): string {
+  protected override encodeValue(value: string): string {
     return encrypt(value);
   }
-  protected decodeValue(value: string | null): string | null {
+  protected override decodeValue(value: string | null): string | null {
     if (value === null) return null;
     return decrypt(value);
   }

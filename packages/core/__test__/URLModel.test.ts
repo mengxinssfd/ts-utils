@@ -9,12 +9,12 @@ test('UrlModel', () => {
   expect(urlParse.protocol).toBe('http');
   expect(urlParse.port).toBe('112332');
   expect(urlParse.host).toBe('www.baidu.com');
-  expect(urlParse.query.pname).toBe('环球贸易项目基坑地铁2号线隧道结构自动化监测');
-  expect(urlParse.query.pid).toBe('19');
-  expect(urlParse.query.a).toEqual(['123', 'on']);
-  expect(urlParse.query.b).toEqual(['on', 'on']);
-  expect(urlParse.query.c).toEqual(['1', '2', '3']);
-  expect(urlParse.query.d).toBe('1,2,3,4,5');
+  expect(urlParse.query['pname']).toBe('环球贸易项目基坑地铁2号线隧道结构自动化监测');
+  expect(urlParse.query['pid']).toBe('19');
+  expect(urlParse.query['a']).toEqual(['123', 'on']);
+  expect(urlParse.query['b']).toEqual(['on', 'on']);
+  expect(urlParse.query['c']).toEqual(['1', '2', '3']);
+  expect(urlParse.query['d']).toBe('1,2,3,4,5');
   expect(urlParse.hash).toBe('#test');
   expect(urlParse.path).toBe('/index.php/admin/MonitorResultManager/monitorData');
 
@@ -39,10 +39,10 @@ test('UrlModel', () => {
   expect(empty.toString()).toBe('');
 
   const m = new UrlModel('https://www.test.com/detail?id=15#app-parameter');
-  m.query.id = undefined;
+  m.query['id'] = undefined;
   expect(m.toString()).toBe('https://www.test.com/detail#app-parameter');
   const m2 = new UrlModel('https://www.test.com/detail?id=15&name=test#app-parameter');
-  m2.query.id = undefined;
+  m2.query['id'] = undefined;
   m2.hash = '';
   expect(m2.toString()).toBe('https://www.test.com/detail?name=test');
 

@@ -1,4 +1,4 @@
-import type { StrTemplate } from '@mxssfd/types';
+import type { StrTemplate, Tuple, TupleM2N } from '@mxssfd/types';
 import { ToCamelCase } from '@mxssfd/types';
 
 /**
@@ -15,7 +15,7 @@ export function thousandFormat(
 ): string {
   // 123123.1111 => 123,123.1,111
   // return String(num).replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
-  const split = String(num).split('.');
+  const split = String(num).split('.') as TupleM2N<string, 1, 2>;
   split[0] = split[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, delimiter);
   if (split.length === 1 || !isFormatDecimalPlaces) return split.join('.');
   split[1] = split[1].replace(/(\d{3})/g, `$1${delimiter}`);
@@ -92,28 +92,28 @@ export function strPadEnd(target: string, maxLen: number, fill = ' ', clearMore 
   return target + end;
 }
 
-const numberArr: any = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+const numberArr: Tuple<string, 10> = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
 const sbq = ['十', '百', '千'];
-const units: any = ['', ...sbq, '万', ...sbq, '亿'];
+const units: any = ['', ...sbq, '万', ...sbq, '亿'] as const;
 const unitLen: number = units.length;
 
 export interface Number2Chinese {
   (number: number): string;
 
   units: string[];
-  numbers: string[];
+  numbers: Tuple<string, 10>;
 }
 
 /**
  * 阿拉伯数字转为中文数字
  * @param number
  */
-export const number2Chinese: Number2Chinese = function (number) {
+export const number2Chinese: Number2Chinese = function (number): string {
   let key = ~~number;
   let chineseNumber = '';
   let times = 0;
   // 个位数
-  if (number >= 0 && number < 10) return number2Chinese.numbers[number];
+  if (number >= 0 && number < 10) return number2Chinese.numbers[number] as string;
   while (key >= 1 && times < unitLen) {
     const unit = number2Chinese.units[times];
     // 11 % 10 => 一
@@ -164,7 +164,7 @@ export const chinese2Number: Chinese2Number = function (chineseNumber) {
     let unit = 1;
     // 从个位数往大数累加
     for (let i = it.length - 1; i > -1; i--) {
-      const item = it[i];
+      const item = it[i] as string;
 
       const number = chinese2Number.numbers.indexOf(item);
       if (number > 0) {
@@ -248,7 +248,7 @@ export function smartRepeat(format: string): string {
   while ((exec = re.exec(format))) {
     const [, count, repeatValue] = exec;
     // 第一种方式
-    format = format.replace(re, strRepeat(repeatValue, count));
+    format = format.replace(re, strRepeat(repeatValue as string, Number(count)));
     // 第二种方式
     // const start = format.substring(0, exec.index);
     // const end = format.substring(exec.index + exec[0].length);
@@ -262,7 +262,8 @@ export function smartRepeat(format: string): string {
  * @param  value
  */
 export function capitalize<S extends string>(value: S): Capitalize<S> {
-  const first = value[0];
+  if (!value.length) return value as any;
+  const first = value[0] as string;
   return `${first.toUpperCase()}${value.substring(1).toLowerCase()}` as any;
 }
 
@@ -274,7 +275,7 @@ export function capitalize<S extends string>(value: S): Capitalize<S> {
  * @return {string}
  */
 export function fromCamel(value: string, delimiter = '_', toUpperCase = false) {
-  const res = value.replace(/([A-Z]+)/g, (p1, p2, index) => {
+  const res = value.replace(/([A-Z]+)/g, (_p1, p2, index) => {
     return (index > 0 ? delimiter : '') + p2.toLowerCase();
   });
   return toUpperCase ? res.toUpperCase() : res;
@@ -300,10 +301,12 @@ export function toCamel<
     ? Capitalize<ToCamelCase<S, D>>
     : ToCamelCase<S, D>
   : string {
+  if (!value.length) return value as any;
   const reg = typeof delimiter === 'string' ? new RegExp(delimiter + '+') : (delimiter as RegExp);
   const join = value.split(reg).map((i) => capitalize(i) as string);
-  if (!toUpperCamelCase) {
-    join[0] = join[0].toLowerCase();
+
+  if (!toUpperCamelCase && join.length) {
+    join[0] = (join[0] as string).toLowerCase();
   }
   return join.join('') as any;
 }

@@ -26,7 +26,7 @@ export class Cookie {
       const reg = new RegExp(`(?:^${name}|; ${name})=([^;]+)`, 'g');
       let exec: RegExpExecArray | null = null;
       while ((exec = reg.exec(document.cookie))) {
-        res.push(decodeURIComponent(exec[1]));
+        res.push(decodeURIComponent(exec[1] as string));
       }
     }
     return res;

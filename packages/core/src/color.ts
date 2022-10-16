@@ -28,21 +28,21 @@ export function isHEXColor(color: string) {
 
 export function rgbToHex(color: string) {
   if (!isRGBColor(color)) throw new TypeError();
-  const rgb = color.split(',');
-  const r = parseInt(rgb[0].split('(')[1]);
+  const rgb = color.split(',') as [string, string, string];
+  const r = parseInt(rgb[0].split('(')[1] as string);
   const g = parseInt(rgb[1]);
-  const b = parseInt(rgb[2].split(')')[0]);
+  const b = parseInt(rgb[2].split(')')[0] as string);
 
   return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
 
 export function hslToRgb(hslValue: string): string {
   const hsl = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(hslValue) as string[];
-  const h = +hsl[1] / 360;
-  const s = +hsl[2] / 100;
-  const l = +hsl[3] / 100;
+  const h = Number(hsl[1]) / 360;
+  const s = Number(hsl[2]) / 100;
+  const l = Number(hsl[3]) / 100;
 
-  function hue2rgb(p, q, t) {
+  function hue2rgb(p: number, q: number, t: number) {
     if (t < 0) t += 1;
     if (t > 1) t -= 1;
     if (t < 1 / 6) return p + (q - p) * 6 * t;

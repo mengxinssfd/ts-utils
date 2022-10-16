@@ -123,7 +123,7 @@ test('createUUID', () => {
   const hexDigits = '0123456789abcdef';
   // 判断每个字符是否在范围内
   for (let i = 0; i < uuid.length; i++) {
-    expect(hexDigits.indexOf(uuid[i]) > -1).toBeTruthy();
+    expect(hexDigits.indexOf(uuid[i]!) > -1).toBeTruthy();
   }
 
   // 判断100次循环中是否有相同的
@@ -149,14 +149,18 @@ test('formatJSON', () => {
   }).toThrowError();
   let obj;
   eval('obj={test:function(){}}');
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   expect(formatJSON(obj, 4)).toBe('{\r\n' + '    "test":"function(){}"\r\n' + '}');
 
-  function Ext() {
+  function Ext(this: any) {
     this.a = 1;
   }
 
   Ext.prototype.b = '2';
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   expect(formatJSON(new Ext(), 4)).toBe(`{\r\n    "a":1\r\n}`);
 });
 
@@ -411,7 +415,7 @@ test('promiseQueue', async () => {
     expect(e).toBe('hello thank you im fine');
   }
 
-  const v2 = await fn([(v) => `${v} thank you`, (v) => `${v} im fine`] as any, 'hello');
+  const v2 = await fn([(v: any) => `${v} thank you`, (v: any) => `${v} im fine`] as any, 'hello');
   expect(v2).toBe('hello thank you im fine');
 });
 test('syncPromiseAll', async () => {

@@ -106,7 +106,7 @@ export class OptionsPool<T> {
     const index = pool.findIndex((it) => it.option === option);
     if (index === -1) return 0;
     const w = 10_000;
-    const currentRange = ~~(pool[index].range * w);
+    const currentRange = ~~((pool[index] as PoolItem<T>).range * w);
     const prevRange = ~~((pool[index - 1]?.range ?? 0) * w);
     const diff = currentRange - prevRange;
     return diff / w;

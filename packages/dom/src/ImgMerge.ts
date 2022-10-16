@@ -54,8 +54,8 @@ abstract class Node {
     return (this.parent as Node).root;
   }
 
-  get ctx() {
-    return this.parent.ctx;
+  get ctx(): CanvasRenderingContext2D {
+    return this.parent.ctx as CanvasRenderingContext2D;
   }
 
   render() {
@@ -163,7 +163,7 @@ abstract class Node {
     };
   }
 
-  protected abstract _render();
+  protected abstract _render(): void;
 }
 
 class ImgElement extends Node {
@@ -204,7 +204,7 @@ class Layer extends Node {
   declare parent: MergeImg;
   children: Node[] = [];
 
-  constructor(parent: MergeImg, public style: Style) {
+  constructor(parent: MergeImg, public override style: Style) {
     super(parent);
     this.setStyle(style);
   }
@@ -229,7 +229,7 @@ class Layer extends Node {
   async addImg(img: HTMLImageElement, style?: ImgStyle): Promise<ImgElement>;
   async addImg(url: string, style?: ImgStyle): Promise<ImgElement>;
   async addImg(promiseImg: Promise<HTMLImageElement>, style?: ImgStyle): Promise<ImgElement>;
-  async addImg(urlOrPromiseImg, style: ImgStyle = {}) {
+  async addImg(urlOrPromiseImg: any, style: ImgStyle = {}) {
     let img: HTMLImageElement;
     if (isImgElement(urlOrPromiseImg)) {
       img = urlOrPromiseImg;
@@ -259,7 +259,7 @@ class Layer extends Node {
 
   remove(el: ImgElement): ImgElement | void;
   remove(index: number): ImgElement | void;
-  remove(value) {
+  remove(value: ImgElement | number) {
     if (isNumber(value)) {
       return this.children.splice(value, 1)[0];
     }
@@ -273,8 +273,8 @@ class Layer extends Node {
 }
 
 export class MergeImg {
-  private _ctx?: CanvasRenderingContext2D;
-  private canvas?: HTMLCanvasElement;
+  private _ctx?: CanvasRenderingContext2D | undefined;
+  private canvas?: HTMLCanvasElement | undefined;
   private readonly parent: Element;
   private layers: Layer[] = [];
 

@@ -16,7 +16,7 @@ test('getUrlParamObj', () => {
 
   const url =
     'test/aaa=1213123?a=1123&b[0]=1&b[1]=2&d[d]=1&d[e]=2?t=1231&b=123123&a%5B%5D=123&a%5B%5D=on&b%5B0%5D=on&b%5B1%5D=on&c=1&c=2&c=3&d=1,2,3,4,5&pid=19&pname=%E7%8E%AF%E7%90%83%E8%B4%B8%E6%98%93%E9%A1%B9%E7%9B%AE%E5%9F%BA%E5%9D%91%E5%9C%B0%E9%93%812%E5%8F%B7%E7%BA%BF%E9%9A%A7%E9%81%93%E7%BB%93%E6%9E%84%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9B%91%E6%B5%8B#test?hash=1&hash2=2';
-  const obj = fn(url);
+  const obj = fn(url) as any;
   expect(obj).toEqual({
     aaa: '1213123',
     a: ['1123', '123', 'on'],
@@ -105,13 +105,15 @@ test('queryStringify', () => {
     'a=1123&b[0]=1&b[1]=2&d[d]=1',
   );
 
-  function A() {
+  function A(this: any) {
     this.a = 1;
     this.b = 2;
   }
 
   A.prototype.c = 3;
   A.prototype.d = 4;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   expect(u.stringifyUrlSearch(new A())).toBe('a=1&b=2');
 
   // TODO getUrlParamObj 不能解析成object

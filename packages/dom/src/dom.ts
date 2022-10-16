@@ -14,7 +14,7 @@ import {
   getSafeNum,
   times,
 } from '@mxssfd/core';
-import type { SettableProps, SettableStyle } from '@mxssfd/types';
+import type { SettableProps, SettableStyle, Tuple } from '@mxssfd/types';
 import { isDom, isNodeList } from './domType';
 import { onceEvent } from './event';
 // 所有主要浏览器都支持 createElement() 方法
@@ -167,11 +167,12 @@ export function cssSupport<K extends keyof CSSStyleDeclaration, V extends CSSSty
  * @returns setStyle.bind(el)
  */
 export function setStyle(
+  this: HTMLElement | void,
   style: Array<SettableStyle> | SettableStyle,
   { toCssText = true, el }: { toCssText?: boolean; el?: HTMLElement | string } = {},
 ): typeof setStyle {
   if (isString(el)) el = document.querySelector(el) as HTMLDivElement;
-  const target: HTMLElement = el || this;
+  const target: HTMLElement = el || (this as HTMLElement);
   if (!isDom(target)) throw new TypeError('setStyle param el | this is not HTMLElement');
   toCssText = isArray(style) ? false : toCssText;
   if (toCssText) {
@@ -180,7 +181,7 @@ export function setStyle(
       .replace(/; ?$/, '')
       .split(';')
       .reduce((init, v) => {
-        const [key, value] = v.split(/: ?/);
+        const [key, value] = v.split(/: ?/) as Tuple<string, 2>;
         init[key] = value;
         return init;
       }, {});
@@ -210,7 +211,7 @@ export function loadImg(
 ): Promise<HTMLImageElement> {
   return new Promise<HTMLImageElement>(function (resolve, reject) {
     // const img = new Image();
-    const onerror = (ev) => {
+    const onerror = (ev: Event) => {
       reject(ev);
     };
     const img = createHtmlElement('img', {
@@ -257,15 +258,15 @@ export function loadScript(param: {
  * @param param
  * @param props
  */
-export function loadScript(param, props?) {
+export function loadScript(param: any, props?: any) {
   let url = '';
-  let onLoad, onError, attrs;
+  let onLoad, onError, attrs: any;
   if (typeof param === 'string') {
     url = param;
   } else {
     ({ url, onLoad, onError, props, attrs } = param);
   }
-  const cb = (successFn, errorFn) => {
+  const cb = (successFn: Function, errorFn: Function) => {
     const script = createElement('script', {
       props: {
         onload: () => successFn && successFn(script),
@@ -274,7 +275,7 @@ export function loadScript(param, props?) {
         src: url,
         ...props,
       },
-      attrs: attrs,
+      attrs,
       parent: document.body, // 插到body上是最后执行的，未插到dom上是不会下载的，所以不用在意props的设置顺序
     });
   };
@@ -384,7 +385,7 @@ export function createHiddenHtmlElement<
  * @param props
  * @param tagName
  */
-export function createHiddenHtmlElement(props?, tagName = 'div') {
+export function createHiddenHtmlElement(props?: any, tagName = 'div') {
   return createHtmlElement(tagName as keyof HTMLElementTagNameMap, {
     props: {
       ...props,
@@ -464,7 +465,7 @@ export function scrollFixedWatcher(
 
   const rect = target.getBoundingClientRect();
   const distanceTop = rect.top + getScrollTop() - top;
-  let handler;
+  let handler: Function;
   // 立即判断一次
   cb(getScrollTop() >= distanceTop);
   container.addEventListener(
@@ -475,7 +476,7 @@ export function scrollFixedWatcher(
     }),
   );
   return function () {
-    container.removeEventListener('scroll', handler);
+    container.removeEventListener('scroll', handler as any);
   };
 }
 
@@ -817,7 +818,7 @@ export function getCurrentScriptTag(): HTMLScriptElement | null {
   // 由于script加载会中断浏览器渲染(未设置async和defer的情况下)，所以当前的script一定是最后一个script
   const scripts = document.scripts;
   if (!scripts.length) return null;
-  return scripts[scripts.length - 1];
+  return scripts[scripts.length - 1] as HTMLScriptElement;
 }
 
 /**

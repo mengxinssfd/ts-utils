@@ -11,7 +11,7 @@ export function strip(num: number, precision = 12): number {
 export function getNumberLenAfterDot(num: number | string): number {
   Number(1000).toPrecision();
   const eSplit = String(num).split(/[eE]/);
-  const len = (eSplit[0].split('.')[1] || '').length - +(eSplit[1] || 0);
+  const len = (eSplit[0]?.split('.')[1] || '').length - +(eSplit[1] || 0);
   return len > 0 ? len : 0;
 }
 
