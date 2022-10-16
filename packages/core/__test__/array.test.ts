@@ -226,7 +226,7 @@ test('forEachRight', () => {
     arr.createArray({ start: 10, end: 20 }).reduce((obj, v) => {
       obj[v] = v;
       return obj;
-    }, {}),
+    }, {} as Record<string, any>),
   );
 
   const result2: any[] = [];

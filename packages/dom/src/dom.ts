@@ -184,7 +184,7 @@ export function setStyle(
         const [key, value] = v.split(/: ?/) as Tuple<string, 2>;
         init[key] = value;
         return init;
-      }, {});
+      }, {} as Record<string, any>);
     assign(cssTextObj, style);
     target.style.cssText = objReduce(
       cssTextObj,
@@ -739,13 +739,13 @@ export function scrollTo(
     scrollSize: 'scrollHeight',
     inner: 'innerHeight',
     offset: 'offsetHeight',
-  };
+  } as const;
   const horizontal = {
     scrollTo: 'scrollLeft',
     scrollSize: 'scrollWidth',
     inner: 'innerWidth',
     offset: 'offsetWidth',
-  };
+  } as const;
   const directKey = direct === 'horizontal' ? horizontal : vertical;
   const topOrLeft = directKey.scrollTo;
   let current = 0;

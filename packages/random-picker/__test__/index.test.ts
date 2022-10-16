@@ -210,7 +210,7 @@ describe('random-picker', function () {
       [2, 1],
     ]);
     expect(exp1[2]![0]).toBe(3);
-    expect(exp1[2]![1]).toBe(seed[2]![1]);
+    expect(exp1[2]![1]).toBe((seed[2] as number[])[1]);
 
     // take过的也会导出
     picker.take(3);
@@ -220,7 +220,7 @@ describe('random-picker', function () {
       [2, 1],
     ]);
     expect(exp2[2]![0]).toBe(3);
-    expect(exp2[2]![1]).toBe(seed[2]![1]);
+    expect(exp2[2]![1]).toBe((seed[2] as number[])[1]);
 
     // 不会导出remove过的选项
     picker.remove(3);
@@ -241,7 +241,7 @@ describe('random-picker', function () {
       [2, 1],
     ]);
     expect(exp1[2]![0]).toBe(3);
-    expect(exp1[2]![1]).toBe(seed[2]![1]);
+    expect(exp1[2]![1]).toBe((seed[2] as number[])[1]);
 
     // take过的选项不会导出
     picker.take(3);

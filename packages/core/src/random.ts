@@ -145,7 +145,7 @@ export function randomColor(type?: string | number, len?: number): string[] | st
       RGB: randomRGB,
       RGBA: randomRGBA,
     };
-    return (map[type] || map.HEX)();
+    return (map[type as keyof typeof map] || map.HEX)();
   } else {
     return createArray({ len, fill: () => randomColor(type as ColorType) });
   }

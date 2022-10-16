@@ -42,8 +42,11 @@ export function getTreeNodeLen(tree: object, nodeNumber = 1): number {
 }
 
 // 合并两个object TODO 可优化
-export function deepMerge<T extends object, U extends object>(first: T, second: U): T & U {
-  function assign(receive: object, obj: any) {
+export function deepMerge<T extends Record<string, any>, U extends Record<string, any>>(
+  first: T,
+  second: U,
+): T & U {
+  function assign(receive: Record<string, any>, obj: any) {
     for (const k in obj) {
       if (!hasOwn(obj, k)) continue;
       const v = obj[k];
@@ -97,7 +100,7 @@ export function getReverseObj(obj: { [k: string]: string }): { [k: string]: stri
       res[v] = k;
       return res;
     },
-    {},
+    {} as Record<string, any>,
   );
 }
 
@@ -349,12 +352,15 @@ export function omit<T extends object, K extends keyof T>(
 export function assign<T, U>(target: T, source: U): T & U;
 export function assign<T, U, V>(target: T, source1: U, source2: V): T & U & V;
 export function assign<T, U, V, W>(target: T, source1: U, source2: V, source3: W): T & U & V & W;
-export function assign(target: object, ...args: object[]): object;
-export function assign(target: object, ...args: any[]) {
+export function assign(
+  target: Record<string, any>,
+  ...args: Record<string, any>[]
+): Record<string, any>;
+export function assign(target: Record<string, any>, ...args: any[]) {
   args.forEach((arg) => {
     // forEachObj(arg, (v, k) => target[k] = v);  // 不能返回“target[k] = v”值，v可能会为false，为false会中断循环
     forEachObj(arg, (v, k) => {
-      target[k] = v;
+      target[k as string] = v;
     });
   });
   return target;
@@ -373,11 +379,11 @@ export function defaults(target: object, ...args: object[]): object;
  * @param target
  * @param args
  */
-export function defaults(target: object, ...args: any[]) {
+export function defaults(target: Record<string, any>, ...args: any[]) {
   args.forEach((arg) => {
     forEachObj(arg, (v, k) => {
-      if (v === undefined || target[k] !== undefined) return;
-      target[k] = v;
+      if (v === undefined || target[k as string] !== undefined) return;
+      target[k as string] = v;
     });
   });
   return target;
@@ -415,10 +421,10 @@ export const updateObj = objUpdate;
  * 获取class实例的key数组
  * @param ins
  */
-export function getInsKeys(ins: object): Array<string | symbol> {
+export function getInsKeys(ins: Record<string, any>): Array<string | symbol> {
   const result: (string | symbol)[] = [];
 
-  let cur: object = ins;
+  let cur: Record<string, any> = ins;
   while (cur) {
     // 普通key
     result.push(...Object.keys(cur));
@@ -511,7 +517,7 @@ export function createObj(entries: Array<[string, any]>): { [k: string]: any } {
       initValue[key] = value;
     }
     return initValue;
-  }, {});
+  }, {} as Record<string, any>);
 }
 
 /**
@@ -590,7 +596,11 @@ export function translateObjPath<P extends string, S extends string = ''>(
  * @param path
  * @param [objName = ""]
  */
-export function getObjValueByPath<T extends object, P extends string, S extends string = ''>(
+export function getObjValueByPath<
+  T extends Record<string, any>,
+  P extends string,
+  S extends string = '',
+>(
   obj: T,
   path: TransferPathOf<T, P, S>,
   objName: S = '' as S,
@@ -598,7 +608,7 @@ export function getObjValueByPath<T extends object, P extends string, S extends 
   const p = translateObjPath(path, objName);
   return p.split('.').reduce((init, v) => {
     if (!isBroadlyObj(init)) return undefined;
-    return init[v];
+    return init[v as keyof typeof init];
   }, obj as any);
 }
 
@@ -649,7 +659,7 @@ export function setObjValueByPath<
       }
       return [init[key], currentPath];
     },
-    [obj, ''] as [object, string],
+    [obj, ''] as [Record<string, any>, string],
   );
   return obj;
 }
@@ -704,7 +714,7 @@ export function revertObjFromPath(pathArr: string[]): object {
           result[key] = value;
         } else {
           const arr: any[] = [];
-          arr[innerKey] = value;
+          arr[innerKey as any] = value;
           result[key] = arr;
         }
         break;
@@ -719,7 +729,7 @@ export function revertObjFromPath(pathArr: string[]): object {
         }
     }
     return result;
-  }, {});
+  }, {} as Record<string, any>);
 }
 
 // ie9+ 支持，不需要实现
@@ -742,13 +752,28 @@ export function objFilter(
       }
       return init;
     },
-    {},
+    {} as Record<string, any>,
   );
 }
 
 /**
- * 判断对象是否包含某个属性
- * 因为直接object.hasOwnProperty(key)的话object可能会是null,所以另外封装一个函数使用
+ * 判断对象是否包含某个属性。
+ * 因为直接object.hasOwnProperty(key)的话object可能会是null,所以另外封装一个函数使用。
+ * 可以用作类型守卫：见example。
+ *
+ * @example
+ *
+ * const o = { a: 1 };
+ * let k = 'a';
+ * k = 'c';
+ * // 报错需要在tsconfig.json设置
+ * // "suppressImplicitAnyIndexErrors": false,
+ * // "noImplicitAny": true,
+ * o[k] = 2; // 此处没有类型守卫会报错
+ * if (hasOwn(o, k)) {
+ *   o[k] = 3; // 有类型守卫，安全
+ * }
+ *
  * @param obj
  * @param key
  */

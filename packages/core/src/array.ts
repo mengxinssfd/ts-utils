@@ -534,7 +534,7 @@ export function groupBy<T extends { [k: string]: any }, R extends { [k: string]:
   defaultKey?: number | string,
 ): R;
 export function groupBy(arr: any[], key: string | Function, defaultKey: number | string = '*') {
-  const cb = isFunction(key) ? key : (item: object) => item[key];
+  const cb = isFunction(key) ? key : (item: Record<string, any>) => item[key];
   return arr.reduce((result, item) => {
     const k = cb(item, result) ?? defaultKey;
     if (!hasOwn(result, k)) {
@@ -543,7 +543,7 @@ export function groupBy(arr: any[], key: string | Function, defaultKey: number |
       result[k].push(item);
     }
     return result;
-  }, {});
+  }, {} as Record<string, any>);
 }
 
 /**

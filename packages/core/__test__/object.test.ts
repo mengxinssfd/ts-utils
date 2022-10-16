@@ -251,7 +251,7 @@ test('reduceObj', () => {
       r[k] = v;
       return r;
     },
-    {},
+    {} as Record<string, any>,
   );
 
   expect(result).toEqual(obj);
@@ -263,13 +263,13 @@ test('reduceObj', () => {
       r[k] = v + '1';
       return r;
     },
-    {},
+    {} as Record<string, any>,
   );
   const result3 = Object.keys(obj).reduce((r, key) => {
-    const v = obj[key];
+    const v = obj[key as keyof typeof obj];
     r[key] = v + '1';
     return r;
-  }, {});
+  }, {} as Record<string, any>);
 
   expect(result2).toEqual({
     a: '11',

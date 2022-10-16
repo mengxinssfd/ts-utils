@@ -153,7 +153,7 @@ export function isEqual(a: any, b: any): boolean {
   }
 }
 
-export function objectIsEqual(obj1: object, obj2: object): boolean {
+export function objectIsEqual(obj1: Record<string, any>, obj2: Record<string, any>): boolean {
   if (obj1 === obj2) return true;
   for (const key in obj1) {
     const value1 = obj1[key];
