@@ -15,7 +15,6 @@
     //    "rootDir": "src",
     "forceConsistentCasingInFileNames": false,
     "importHelpers": true,
-    "suppressImplicitAnyIndexErrors": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "strict": true,
@@ -26,6 +25,7 @@
       "@mxssfd/*": ["packages/*/src"]
     },
 
+    "suppressImplicitAnyIndexErrors": false,
     "alwaysStrict": true,
     "strictPropertyInitialization": true,
     "strictBindCallApply": true,
