@@ -487,6 +487,11 @@ test('getInsKeys', () => {
 
   const obj2 = Object.create(new UpdateTestClass());
   expect(fn(obj2).sort()).toEqual(subKeys);
+
+  const obj3 = Object.create(null);
+  obj3.a = 1;
+  obj3.b = 2;
+  expect(fn(obj3).sort()).toEqual(['a', 'b']);
 });
 const commonUpdate = (fn: Function) => {
   expect(fn({ a: 12, b: undefined, c: 3 }, { a: 1 }, { b: 2 }, { d: 4 })).toEqual({
