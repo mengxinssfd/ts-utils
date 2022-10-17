@@ -521,6 +521,7 @@ test('objUpdate', () => {
   const fn = cm.updateObj;
   commonUpdate(fn);
 
+  // objUpdate 不会更新实例的方法
   const ins = fn(new UpdateTestClass(), {
     fn1() {
       return 1.5;
@@ -530,7 +531,9 @@ test('objUpdate', () => {
 });
 test('updateIns', () => {
   const fn = cm.updateIns;
-  // commonUpdate(fn);
+  commonUpdate(fn);
+
+  // updateIns 会更新实例的方法
   const ins = fn(new UpdateTestClass(), {
     fn1() {
       return 2;

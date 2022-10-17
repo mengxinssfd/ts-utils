@@ -450,7 +450,11 @@ export function getInsKeys(ins: Record<string, any>): Array<string | symbol> {
 }
 
 /**
- * 更新实例对象
+ * 更新实例对象属性
+ *
+ * updateIns可以代替updateObj使用，
+ * 不过由于遍历了实例及原型的key，所以理论上updateIns会比updateObj慢一点
+ *
  * @see objUpdate
  */
 export function updateIns<T extends object>(target: T, ...args: object[]): T {
