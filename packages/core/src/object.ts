@@ -1,5 +1,5 @@
 import { forEachRight, unique } from './array';
-import { isArray, isBroadlyObj, isNaN, isNative, isObject, typeOf } from './dataType';
+import { isArray, isBroadlyObj, isNaN, isObject, typeOf } from './dataType';
 import type {
   DotTrim,
   RemoveStrStart,
@@ -422,23 +422,27 @@ export const updateObj = objUpdate;
  * @param ins
  */
 export function getInsKeys(ins: Record<string, any>): Array<string | symbol> {
-  const result: (string | symbol)[] = [];
+  const result: Array<string | symbol> = [];
 
   let cur: Record<string, any> = ins;
   while (cur) {
     // 普通key
     result.push(...Object.keys(cur));
 
-    if (isNative(cur['__proto__'].constructor)) {
+    // 使用 Object.getPrototypeOf 代替 cur.__proto__
+    const proto = Object.getPrototypeOf(cur);
+
+    if (!proto || proto === Object.prototype) {
       // 构造器为原生函数的话就不是class
+      // 或者对象原型和 Object 的原型一样则不是class
+      // 或者 Object.create(null) 创建的纯对象，prototype为null, __proto__为undefined
       break;
     } else {
       // method key
-      const keys = Reflect.ownKeys(Object.getPrototypeOf(cur));
-      result.push(...keys);
+      result.push(...Reflect.ownKeys(proto));
     }
 
-    cur = cur['__proto__'];
+    cur = proto;
   }
 
   // 过滤掉构造方法,并去重
