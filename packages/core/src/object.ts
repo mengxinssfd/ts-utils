@@ -390,30 +390,39 @@ export function defaults(target: Record<string, any>, ...args: any[]) {
 }
 
 /**
- * 使用target里面的key去查找其他的对象，如果其他对象里有该key，则把该值复制给target,如果多个对象都有同一个值，则以最后的为准
+ * 内部更新对象函数
+ */
+function _updateObj<T extends object>(target: T, others: object[], k: keyof T): void {
+  // 从后往前查起
+  forEachRight(others, (item): void | false => {
+    if (item && hasOwn(item, k)) {
+      target[k] = item[k];
+      // 某个对象有这个key，那么就不再往前查
+      return false;
+    }
+  });
+}
+
+/**
+ * 使用target里面的key去查找其他的对象，如果其他对象里有该key，则把该值赋给target,如果多个对象都有同一个值，则以最后的为准
  * 会更新原对象
  *
  * 如果要更新某个class的实例，那么需要使用updateIns
  * @see updateIns
- *
+ * @alias updateObj
  *
  * @param target
- * @param args
+ * @param others
  */
-export function objUpdate<T extends object>(target: T, ...args: object[]): T {
-  objForEach(target, (_v, k) => {
-    forEachRight(args, function (item): void | false {
-      if (item && hasOwn(item, k)) {
-        target[k] = item[k];
-        return false;
-      }
-    });
-  });
+export function objUpdate<T extends object>(target: T, ...others: object[]): T {
+  if (others[others.length - 1] === target) return target;
+  objForEach(target, (_v, k) => _updateObj(target, others, k));
   return target;
 }
 
 /**
  * @see objUpdate
+ * @alias objUpdate
  */
 export const updateObj = objUpdate;
 
@@ -457,17 +466,12 @@ export function getInsKeys(ins: Record<string, any>): Array<string | symbol> {
  *
  * @see objUpdate
  */
-export function updateIns<T extends object>(target: T, ...args: object[]): T {
-  const keys = getInsKeys(target);
+export function updateIns<T extends object>(target: T, ...others: object[]): T {
+  if (others[others.length - 1] === target) return target;
 
-  keys.forEach((k) => {
-    forEachRight(args, function (item): void | false {
-      if (item && hasOwn(item, k)) {
-        target[k] = item[k];
-        return false;
-      }
-    });
-  });
+  const keys = getInsKeys(target);
+  keys.forEach((k) => _updateObj(target, others, k as keyof T));
+
   return target;
 }
 
