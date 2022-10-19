@@ -1,4 +1,4 @@
-import { Cookie } from '../src/cookie';
+import * as Cookie from '../src/cookie';
 import { sleep } from '../../core/src/time';
 
 describe('cookie', () => {
