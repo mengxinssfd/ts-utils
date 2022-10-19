@@ -47,8 +47,9 @@ export class UrlModel {
       '{hash}': () => this.hash || '',
     };
     for (const k in match) {
-      const fn = match[k as keyof typeof match];
-      template = template.replace(new RegExp(k, 'g'), fn());
+      const replacer = match[k as keyof typeof match];
+      const pattern = new RegExp(k, 'g');
+      template = template.replace(pattern, replacer);
     }
     return template;
   }
