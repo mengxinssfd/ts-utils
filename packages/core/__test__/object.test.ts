@@ -451,10 +451,10 @@ class UpdateTestSuperClass {
   a = 1;
   b = 2;
   private test() {
-    return 'test';
+    return 'super test';
   }
   fn1() {
-    return this.a + this.b;
+    return 'super fn1';
   }
   get len() {
     this.test();
@@ -464,7 +464,7 @@ class UpdateTestSuperClass {
 class UpdateTestClass extends UpdateTestSuperClass {
   c = 3;
   fn2() {
-    return 2;
+    return 'sub fn2';
   }
 
   override get len() {
@@ -524,10 +524,14 @@ test('objUpdate', () => {
   // objUpdate 不会更新实例的方法
   const ins = fn(new UpdateTestClass(), {
     fn1() {
-      return 1.5;
+      return 'replace fn1';
+    },
+    fn2() {
+      return 'replace fn2';
     },
   });
-  expect(ins.fn1()).toBe(3);
+  expect(ins.fn1()).toBe('super fn1');
+  expect(ins.fn2()).toBe('sub fn2');
 });
 test('updateIns', () => {
   const fn = cm.updateIns;
@@ -536,10 +540,14 @@ test('updateIns', () => {
   // updateIns 会更新实例的方法
   const ins = fn(new UpdateTestClass(), {
     fn1() {
-      return 2;
+      return 'replace fn1';
+    },
+    fn2() {
+      return 'replace fn2';
     },
   });
-  expect(ins.fn1()).toBe(2);
+  expect(ins.fn1()).toBe('replace fn1');
+  expect(ins.fn2()).toBe('replace fn2');
 });
 test('pickUpdated', () => {
   const fn = cm.pickUpdated;
