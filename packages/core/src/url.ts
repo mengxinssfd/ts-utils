@@ -121,8 +121,8 @@ export function getUrlParam(
   const re = new RegExp('(?:\\?|#|&)' + name + '=([^&#]*)(?:$|&|#)', 'i');
   const m = re.exec(url);
   if (m === null) return '';
-  const ret = m[1] || '';
-  return noDecode ? ret : decodeURIComponent(ret);
+  const result = m[1] as string;
+  return noDecode ? result : decodeURIComponent(result);
 }
 
 /**

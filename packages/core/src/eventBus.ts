@@ -17,7 +17,7 @@ export class EventBus {
     if (!Array.isArray(this.events[eventName])) {
       this.events[eventName] = [];
     }
-    return this.events[eventName] || [];
+    return this.events[eventName] as Callback[];
   }
 
   on(eventName: string, callback: Callback) {

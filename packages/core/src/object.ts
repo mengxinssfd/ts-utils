@@ -419,6 +419,19 @@ export function objUpdate<T extends object>(target: T, ...others: object[]): T {
   objForEach(target, (_v, k) => _updateObj(target, others, k));
   return target;
 }
+// export function updateObj<T extends object>(target: T, ...others: object[]): T {
+//   for (const k in target) {
+//     for (let i = others.length - 1; i > -1; i--) {
+//       const item = others[i];
+//       if (item && hasOwn(item, k)) {
+//         target[k] = item[k];
+//         break;
+//       }
+//     }
+//   }
+//
+//   return target;
+// }
 
 /**
  * @see objUpdate

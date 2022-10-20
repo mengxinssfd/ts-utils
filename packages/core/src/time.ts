@@ -99,7 +99,7 @@ export function dateDiff(first: Date, second: Date, format: string = "Y年d天 H
 */
 
 export interface formatDateInterface {
-  (date: Date, format?: string, options?: { seasonText?: string[]; weekText?: string[] }): string;
+  (date: Date, formular?: string, options?: { seasonText?: string[]; weekText?: string[] }): string;
 
   seasonText: string[];
   weekText: string[];
@@ -107,7 +107,7 @@ export interface formatDateInterface {
 
 /**
  * 格式化日期
- * @param [format="yyyy-MM-dd hh:mm:ss"]
+ * @param [formular="yyyy-MM-dd hh:mm:ss"]
  * @param date {Date}
  * @param seasonText {string[]}
  * @param weekText {string[]}
@@ -115,7 +115,7 @@ export interface formatDateInterface {
  */
 export const formatDate: formatDateInterface = function (
   date,
-  format = 'yyyy-MM-dd hh:mm:ss',
+  formular = 'yyyy-MM-dd hh:mm:ss',
   { seasonText = formatDate.seasonText, weekText = formatDate.weekText } = {},
 ) {
   const o: Record<string, Function> = {
@@ -133,21 +133,21 @@ export const formatDate: formatDateInterface = function (
     'S+': () => date.getMilliseconds(), //毫秒
     w: () => weekText[date.getDay()], //周
   };
-  if (/(y+)/.test(format)) {
-    format = format.replace(
+  if (/(y+)/.test(formular)) {
+    formular = formular.replace(
       RegExp.$1,
       strPadStart(String(date.getFullYear()), RegExp.$1.length, '0', true),
     );
   }
   for (const k in o) {
-    if (new RegExp('(' + k + ')').test(format)) {
+    if (new RegExp('(' + k + ')').test(formular)) {
       const s1 = RegExp.$1;
       const v = String(o[k]?.());
       // const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
-      format = format.replace(s1, strPadStart(v, s1.length, '0'));
+      formular = formular.replace(s1, strPadStart(v, s1.length, '0'));
     }
   }
-  return format;
+  return formular;
 };
 formatDate.weekText = ['日', '一', '二', '三', '四', '五', '六'];
 formatDate.seasonText = ['春', '夏', '秋', '冬'];
