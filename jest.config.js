@@ -12,6 +12,8 @@ module.exports = {
     'packages/**/src/**',
     '!**/packages/**/dist/**',
     '!**/packages/**/src/index.ts',
+    '!**/packages/dom/**',
+    '!**/packages/ts-utils/**',
     // "!packages/**/node_modules",
   ],
   transform: {
