@@ -318,6 +318,9 @@ test('inSameWeek', async () => {
   expect(fn({ now: monday, date: curSunday })).toBeTruthy();
   expect(fn({ now: monday, date: curSunday, weekStart: 'Mon' })).toBeTruthy();
   expect(fn({ now: monday, date: curSunday, weekStart: 'Sun' })).toBeFalsy();
+
+  // edge
+  expect(fn({ date: new Date() })).toBeTruthy();
 });
 
 test('yearDiff', () => {
@@ -327,4 +330,20 @@ test('yearDiff', () => {
   expect(fn(new Date('2022-07-01'), new Date('2022-1-1'))).toBe(0.5);
   expect(fn(new Date('2022-1-1'), new Date('2022-07-01'))).toBe(-0.5);
   expect(fn(new Date('2022-1-30'), new Date('2022-01-31'))).toBe(-0.002);
+});
+test('calcRelativeDate', async () => {
+  const fn = t.calcRelativeDate;
+  const now = new Date();
+
+  const d = fn(now);
+
+  expect(d().getTime()).toBe(now.getTime());
+
+  await t.sleep(100);
+  expect(d().getTime()).toBeLessThanOrEqual(now.getTime() + 110);
+  expect(d().getTime()).toBeGreaterThanOrEqual(now.getTime() + 90);
+
+  await t.sleep(100);
+  expect(d().getTime()).toBeLessThanOrEqual(now.getTime() + 210);
+  expect(d().getTime()).toBeGreaterThanOrEqual(now.getTime() + 190);
 });

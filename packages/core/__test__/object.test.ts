@@ -515,6 +515,10 @@ const commonUpdate = (fn: Function) => {
     b: undefined,
     c: 3,
   });
+
+  const obj = { a: 1, b: 2 };
+  expect(fn(obj, obj)).toBe(obj);
+  expect(fn(obj, obj)).toEqual({ a: 1, b: 2 });
 };
 
 test('objUpdate', () => {

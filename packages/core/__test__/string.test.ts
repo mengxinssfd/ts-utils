@@ -214,6 +214,8 @@ test('capitalizeFirstChar', () => {
   expect(fn('ab')).toBe('Ab');
   expect(fn('Ab')).toBe('Ab');
   expect(fn('aa')).toBe('Aa');
+  // edge
+  expect(fn('')).toBe('');
 });
 
 test('fromCamel', () => {
@@ -243,4 +245,7 @@ test('toCamel', () => {
   expect(fn('test__camel_string')).toBe('testCamelString');
   expect(fn('test_camel_string', undefined, true)).toBe('TestCamelString');
   expect(fn('test-camel_string', /[-_]/)).toBe('testCamelString');
+
+  // edge
+  expect(fn('', '')).toBe('');
 });

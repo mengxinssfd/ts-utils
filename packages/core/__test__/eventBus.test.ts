@@ -25,6 +25,23 @@ test('EventBus', () => {
 
   expect(result).toBe('hello world hello world');
   expect(result2).toBe('world');
+
+  // edge
+  const eb2 = EventBus.Ins;
+  eb2.on(
+    'test',
+    (cb = function (...params: any[]) {
+      result2 = (result2 + ' ' + params.join(' ')).trim();
+    }),
+  );
+  eb2.emit('test', 'world');
+  expect(result2).toBe('world world');
+
+  eb2.offAll();
+  eb2.emit('test', 'world');
+  expect(result2).toBe('world world');
+
+  expect(eb2.getCallbackList('test2')).toEqual([]);
 });
 test('once', () => {
   let result = '';
