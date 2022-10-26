@@ -35,7 +35,9 @@
     "strictNullChecks": true,
     "useUnknownInCatchVariables": true,
     "noUnusedLocals": true,
+    // 开启了在函数未使用的参数前要加上'_'，模版类不能开，否则意思就不对了
     "noUnusedParameters": true,
+    // 开了以后 ?:type 后面都要加上一个｜undefined， 有点多此一举
     "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
     // "noFallthroughCasesInSwitch": true,
