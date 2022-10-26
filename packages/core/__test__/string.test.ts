@@ -249,3 +249,64 @@ test('toCamel', () => {
   // edge
   expect(fn('', '')).toBe('');
 });
+describe('getStringLen', function () {
+  const fn = cm.getStringLen;
+  test('base', () => {
+    let value = '123';
+    expect(value.length).toBe(3);
+    expect(fn(value)).toBe(3);
+
+    value = '一二三';
+    expect(value.length).toBe(3);
+    expect(fn(value)).toBe(3);
+
+    value = '123一二三';
+    expect(value.length).toBe(6);
+    expect(fn(value)).toBe(6);
+
+    value = '1一2二3三 &';
+    expect(value.length).toBe(8);
+    expect(fn(value)).toBe(8);
+
+    value = '😜';
+    expect(value.length).toBe(2);
+    expect(fn(value)).toBe(1);
+
+    value = '鬱哉華夏，新流水繼';
+    expect(value.length).toBe(9);
+    expect(fn(value)).toBe(9);
+  });
+  test('multiple symbols', () => {
+    let value = '👨‍👩‍👧‍👦'; // 苹果emoji符号'爸爸、妈妈和儿女一家'
+    expect(value.length).toBe(11);
+    expect(fn(value)).toBe(1);
+
+    value = '👬';
+    expect(value.length).toBe(2);
+    expect(fn(value)).toBe(1);
+
+    value = '1一😂2二👱3👬 &';
+    expect(value.length).toBe(13);
+    expect(fn(value)).toBe(10);
+
+    value = '😂👱👬';
+    expect(value.length).toBe(6);
+    expect(fn(value)).toBe(3);
+
+    value = '😂👱👬👨‍👩‍👧👨‍👩‍👧‍👦👨‍👩‍👧‍👦👨‍👧👩‍👧‍👧';
+    expect(value.length).toBe(49);
+    expect(fn(value)).toBe(8);
+
+    value = '𠮷好';
+    expect(value.length).toBe(3);
+    expect(fn(value)).toBe(2);
+
+    value = '🙎🏿';
+    expect(value.length).toBe(4);
+    expect(fn(value)).toBe(1);
+
+    value = '👩🙎🏿👱🏿';
+    expect(value.length).toBe(10);
+    expect(fn(value)).toBe(3);
+  });
+});
