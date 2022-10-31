@@ -14,16 +14,26 @@ export function blobToBase64(blob: Blob): Promise<string> {
   });
 }
 
-export function base64ToBlob(dataURL: string): Blob {
+export function parseBase64(dataURL: string): { mime: string; uint8Array: Uint8Array } {
   const arr = dataURL.split(',') as Tuple<string, 2>;
   const mime = (arr[0].match(/:(.*?);/) ?? [])[1] as string;
   const atob1 = window.atob(arr[1]);
   let n = atob1.length;
-  const u8arr = new Uint8Array(n);
+  const uint8Array = new Uint8Array(n);
   while (n--) {
-    u8arr[n] = atob1.charCodeAt(n);
+    uint8Array[n] = atob1.charCodeAt(n);
   }
-  return new Blob([u8arr], { type: mime });
+  return { mime, uint8Array };
+}
+
+export function base64ToBlob(dataURL: string): Blob {
+  const { mime, uint8Array } = parseBase64(dataURL);
+  return new Blob([uint8Array], { type: mime });
+}
+export function base64ToFile(dataURL: string, filename?: string): File {
+  const { mime, uint8Array } = parseBase64(dataURL);
+  const fileName = filename ? filename : Date.now() + '.' + mime.replace(/^.*\//, '');
+  return new File([uint8Array], fileName, { type: mime });
 }
 
 export function imgToBlob(url: string): Promise<Blob> {
