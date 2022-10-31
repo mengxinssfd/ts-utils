@@ -850,3 +850,50 @@ export function isChildHTMLElement(
 
   return find(childNode, parentNode);
 }
+
+/**
+ * 普通图片url转base64的webp，可通过base64ToFile转为File
+ *@see base64ToFile
+ *
+ * 注意：并不是所有图片转webp都能比原图小；在chrome和edge对一些上m的图片比较有效；在safari上基本没效果
+ *
+ * @param  url
+ * @param  quality
+ */
+export function toWebp(url: string, quality?: number): Promise<string>;
+/**
+ * 普通图片File转base64的webp，可通过base64ToFile转为File
+ * @see base64ToFile
+ *
+ * 注意：并不是所有图片转webp都能比原图小；在chrome和edge对一些上m的图片比较有效；在safari上基本没效果
+ *
+ * @param  file
+ * @param  quality
+ */
+export function toWebp(file: Blob, quality?: number): Promise<string>;
+export function toWebp(input: string | Blob, quality = 1): Promise<string> {
+  const handle = (img: HTMLImageElement) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    canvas.getContext('2d')?.drawImage(img, 0, 0);
+    // type如果改成自动识别的，函数名就可以改为叫压缩图片了
+    return canvas.toDataURL('image/webp', quality);
+  };
+
+  // url
+  if (typeof input === 'string') return loadImg(input).then(handle);
+
+  // Blob|file
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+
+    fileReader.onabort = fileReader.onerror = reject;
+    fileReader.onload = (e) =>
+      loadImg(e.target?.result as any)
+        .then(handle)
+        .then(resolve);
+
+    fileReader.readAsDataURL(input);
+  });
+}
