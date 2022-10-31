@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>index</title>
+  </head>
+  <body>
+    <ul id="list"></ul>
+
+    <script>
+      const list = ['merge-img', 'build-test', 'layer', 'time', 'touch', 'toWebp'];
+      const pathPrefix = './test';
+      document.querySelector('#list').innerHTML = list.reduce((html, cur) => {
+        html += `<li><a href="${pathPrefix}/${cur}/index.html">${cur}</a></li>`;
+        return html;
+      }, '');
+    </script>
+  </body>
+</html>
