@@ -856,6 +856,7 @@ export function isChildHTMLElement(
  *@see base64ToFile
  *
  * 注意：并不是所有图片转webp都能比原图小；在chrome和edge对一些上m的图片比较有效；在safari上基本没效果
+ * @see https://developer.aliyun.com/article/74634
  *
  * @param  url
  * @param  quality
@@ -866,6 +867,7 @@ export function toWebp(url: string, quality?: number): Promise<string>;
  * @see base64ToFile
  *
  * 注意：并不是所有图片转webp都能比原图小；在chrome和edge对一些上m的图片比较有效；在safari上基本没效果
+ * @see https://developer.aliyun.com/article/74634
  *
  * @param  file
  * @param  quality
