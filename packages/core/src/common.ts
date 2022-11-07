@@ -488,7 +488,17 @@ export async function promiseQueue<T>(
     return lastValue;
 }*/
 
-export const root = Function('return this')();
+export const root = (function () {
+  try {
+    // 像electron会禁用这种方法
+    return Function('return this')();
+  } catch (e) {
+    if (typeof globalThis !== 'undefined') return globalThis;
+    if (typeof self !== 'undefined') return self;
+    if (typeof window !== 'undefined') return window;
+    if (typeof global !== 'undefined') return global;
+  }
+})();
 
 /**
  * 原来的函数四舍五入不准确
