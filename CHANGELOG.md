@@ -1,3 +1,41 @@
+## [5.0.1-beta.1](https://github.com/mengxinssfd/ts-utils/compare/v5.0.1-beta.0...v5.0.1-beta.1) (2022-11-07)
+
+
+### Bug Fixes
+
+* **core:** root在electron环境下会报错 ([e023acd](https://github.com/mengxinssfd/ts-utils/commit/e023acd4c385c9e7e913e3b7147e189b47c1fd6f))
+
+
+### Code Refactoring
+
+* **ts-utils:** 重构RandomPicker导出,export * from '@mxssfd/random-picker'; 改为import * as RandomPicker from '@mxssfd/random-picker';export { RandomPicker }; ([cbcca8b](https://github.com/mengxinssfd/ts-utils/commit/cbcca8b5dcc57cc066bdd3a254f0673b587c0ad6))
+
+
+### Features
+
+* **dom:** base64ToFile ([f649b50](https://github.com/mengxinssfd/ts-utils/commit/f649b5097a9a44f7126534294c3a389e300fd102))
+* **dom:** toWebp ([8f2bc49](https://github.com/mengxinssfd/ts-utils/commit/8f2bc495a5e6b2419e35a6c678ca5b60a995f619))
+* getStringLen 获取字符串实际长度 ([9f68c4a](https://github.com/mengxinssfd/ts-utils/commit/9f68c4a4eee99241640d31e762a6e39d97581929))
+
+
+### Performance Improvements
+
+* **core:** 优化UrlModel toString ([e36ab00](https://github.com/mengxinssfd/ts-utils/commit/e36ab00265f49415bff7dab81e8226723b97e66b))
+
+
+### Reverts
+
+* Revert "test(bom): 重构Cookie工具类，不再使用静态类方法的结构，使用方式不变" ([6f71448](https://github.com/mengxinssfd/ts-utils/commit/6f71448531ec924469422e3da5a6613e61bc6d08))
+* Revert "refactor(bom): 重构Cookie工具类，不再使用静态类方法的结构，使用方式不变" ([c271e8c](https://github.com/mengxinssfd/ts-utils/commit/c271e8ce471c35d4c7dd273ad2488d7112a283d0))
+
+
+### BREAKING CHANGES
+
+* **ts-utils:** 外部引用需要import {RandomPicker} from 'ts-utils';
+RandomPicker.RandomPicker
+
+
+
 ## [5.0.1-beta.0](https://github.com/mengxinssfd/ts-utils/compare/v5.0.0-beta.12...v5.0.1-beta.0) (2022-10-16)
 
 

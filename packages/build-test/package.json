@@ -1,6 +1,6 @@
 {
   "name": "build-test",
-  "version": "0.0.0",
+  "version": "5.0.1-beta.1",
   "description": "测试作为 npm 包时的打包情况",
   "private": true,
   "scripts": {
@@ -8,12 +8,12 @@
     "build-test": "vue-tsc --noEmit && vite build"
   },
   "dependencies": {
-    "@mxssfd/bom": "workspace:^",
-    "@mxssfd/core": "workspace:^",
-    "@mxssfd/dom": "workspace:^",
-    "@mxssfd/random-picker": "workspace:^",
-    "@mxssfd/ts-utils": "workspace:^",
-    "@mxssfd/types": "workspace:^",
+    "@mxssfd/bom": "5.0.1-beta.1",
+    "@mxssfd/core": "5.0.1-beta.1",
+    "@mxssfd/dom": "5.0.1-beta.1",
+    "@mxssfd/random-picker": "5.0.1-beta.1",
+    "@mxssfd/ts-utils": "5.0.1-beta.1",
+    "@mxssfd/types": "5.0.1-beta.1",
     "vue-tsc": "^1.0.8"
   },
   "peerDependencies": {
