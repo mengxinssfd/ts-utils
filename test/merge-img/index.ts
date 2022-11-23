@@ -190,6 +190,7 @@ declare const Vue: any;
 })();
 */
 import { debounce } from '@mxssfd/core';
+import { loadImg, MergeImg, Download } from '@mxssfd/dom';
 
 let time = Date.now();
 addEventListener(
@@ -200,3 +201,22 @@ addEventListener(
     time = now;
   }, 1000),
 );
+
+(async function () {
+  // const mi = new MergeImg(256, 256);
+  const mi = new MergeImg(1024, 1024);
+  const icon = await MergeImg.createWithBg('./icon.svg');
+
+  await icon.drawRoundRect((40 / 256) * 1024);
+  const margin = 0;
+  await mi
+    .addLayer()
+    .addImg(icon.toDataURL(), { left: margin, top: margin, right: margin, bottom: margin });
+
+  const img = await loadImg(mi.toDataURL());
+
+  img.addEventListener('click', () => {
+    Download.download('icon.png', mi.toDataURL());
+  });
+  document.body.appendChild(img);
+})();
