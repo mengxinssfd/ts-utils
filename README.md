@@ -25,6 +25,8 @@
 0 依赖
 目前有 200 多个工具函数。
 
+[api文档](https://mengxinssfd.github.io/ts-utils/modules/mxssfd_core.html)
+
 ## 使用方法
 
 `npm`引入
