@@ -15,6 +15,12 @@
     "./": "./dist"
   },
   "types": "dist/random-picker.d.ts",
+  "typedoc": {
+    "entryPoint": "./src/index.ts",
+    "readmeFile": "./README.md",
+    "displayName": "mxssfd/random-picker",
+    "tsconfig": "../../tsconfig.json"
+  },
   "keywords": [
     "random",
     "choose",

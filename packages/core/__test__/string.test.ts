@@ -154,7 +154,7 @@ test('chinese2Number', () => {
     th();
     expect(interval).toBe(0);
 });*/
-test('removeSlashByNum', () => {
+test('removeStrByNum', () => {
   const fn = cm.removeStrByNum;
   expect(fn('123/456/78', 2, '/')).toBe('123/45678');
   expect(fn('123,456,,78', 2, ',')).toBe('123,456,78');

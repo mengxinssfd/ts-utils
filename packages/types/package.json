@@ -5,6 +5,12 @@
   "types": "dist/types.d.ts",
   "main": "index.js",
   "module": "dist/types.esm-bundler.js",
+  "typedoc": {
+    "entryPoint": "./src/index.ts",
+    "readmeFile": "./README.md",
+    "displayName": "mxssfd/types",
+    "tsconfig": "../../tsconfig.json"
+  },
   "keywords": [
     "typscript",
     "javascript",

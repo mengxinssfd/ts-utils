@@ -1,0 +1,29 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "htmlLang": "zh-CN",
+  "includeVersion": true,
+  "name": "ts-utils",
+  "customCss": "./typedoc.theme.css",
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "packages/core",
+    "packages/dom",
+    "packages/bom",
+    "packages/types",
+    "packages/random-picker"
+  ],
+  "sort": ["static-first", "kind", "enum-value-ascending"],
+  "categoryOrder": ["file"],
+  "out": "./docs-html",
+  "categorizeByGroup": true,
+  "searchCategoryBoosts": {
+    "Component": 2,
+    "Model": 1.2
+  },
+  "searchGroupBoosts": {
+    "Classes": 1.5
+  },
+  "navigationLinks": {
+    "GitHub": "https://github.com/mengxinssfd/ts-utils"
+  }
+}
