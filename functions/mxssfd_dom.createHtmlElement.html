@@ -1,0 +1,349 @@
+<!DOCTYPE html><html class="default" lang="zh-CN"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>createHtmlElement | ts-utils - v5.0.1-beta.1</title><meta name="description" content="Documentation for ts-utils - v5.0.1-beta.1"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><style>.container {
+  padding: 0 2rem;
+}
+.tsd-page-toolbar {
+  border: 0;
+}
+.container-main {
+  padding: 2.5rem 0 0;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.menu-sticky-wrap {
+}
+.tsd-navigation.settings .tsd-accordion-details {
+  padding: 1rem;
+  background: var(--color-background-secondary);
+}
+.tsd-navigation.settings {
+  display: inline-block;
+  vertical-align: top;
+}
+.tsd-navigation.settings .tsd-index-accordion {
+  position: relative;
+}
+.tsd-navigation.settings .tsd-accordion-summary {
+  display: inline-flex;
+  vertical-align: top;
+  align-items: center;
+  margin-left: 1rem;
+}
+.col-menu,
+.col-content {
+  position: static;
+  margin: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+.col-menu {
+  flex: 0 0 20rem;
+  border-left: 0;
+  padding-left: 1rem;
+  padding-right: 0.1rem;
+}
+.col-content {
+  padding-top: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  overflow-x: hidden;
+  flex: 1;
+}
+.menu-item-desc {
+  color: #5d5d5d;
+  font-size: 12px;
+  line-height: 1.26;
+  font-weight: normal;
+}
+
+:root[data-theme='dark'] .menu-item-desc {
+  color: #989898;
+}
+@media (prefers-color-scheme: dark) {
+  .menu-item-desc {
+    color: #989898;
+  }
+}
+
+a.tsd-index-link {
+  align-items: flex-start;
+}
+pre {
+  border: 0;
+}
+.tsd-signature {
+  background: var(--code-background);
+  border: 0;
+}
+code.tsd-tag {
+  border: 0;
+}
+
+#tsd-search.has-focus .tsd-navigation.settings {
+  visibility: hidden;
+}
+.tsd-navigation.primary ul li li a {
+  margin-left: 0.5rem;
+}
+</style><link rel="stylesheet" href="../assets/custom.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>console.log(`Loaded ${location.href}`)</script><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base="..">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"><a href="https://github.com/mengxinssfd/ts-utils">GitHub</a></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">ts-utils - v5.0.1-beta.1</a>
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">Settings <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div></div>
+<div class="table-cell" id="tsd-widgets"><a href="src/template/toolbar#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-menu menu-sticky-wrap menu-highlight">
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul class="modules">
+<li class="current module">
+<ul>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_core.html">
+<div>mxssfd/core -<wbr/> v5.0.1-<wbr/>beta.1</div></a>
+<ul>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.strRepeat.html">
+<div>str<wbr/>Repeat</div></a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.number2Chinese.html">
+<div>number2<wbr/>Chinese</div></a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.chinese2Number.html">
+<div>chinese2<wbr/>Number</div></a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.formatDate.html">
+<div>format<wbr/>Date</div></a></li></ul></li>
+<li class="current tsd-kind-module"><a href="../modules/mxssfd_dom.html">
+<div>mxssfd/dom -<wbr/> v5.0.1-<wbr/>beta.1</div></a></li>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_bom.html">
+<div>mxssfd/bom -<wbr/> v5.0.1-<wbr/>beta.1</div></a>
+<ul>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_bom.copy2Clipboard.html">
+<div>copy2<wbr/>Clipboard</div></a></li></ul></li>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_types.html">
+<div>mxssfd/types -<wbr/> v5.0.1-<wbr/>beta.1</div></a></li>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_random_picker.html">
+<div>mxssfd/random-<wbr/>picker -<wbr/> v5.0.1-<wbr/>beta.1
+<div class="menu-item-desc">@mxssfd/random-picker</div></div></a></li></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_dom.Download.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>
+<div>Download</div></a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_dom.MergeImg.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>
+<div>Merge<wbr/>Img</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.supportClassList.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg>
+<div>support<wbr/>Class<wbr/>List</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.hasClassIe8.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>has<wbr/>Class<wbr/>Ie8</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.hasClassStandard.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>has<wbr/>Class<wbr/>Standard</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.addClassStandard.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>add<wbr/>Class<wbr/>Standard</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.addClassIe8.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>add<wbr/>Class<wbr/>Ie8</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.removeClassIe8.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>remove<wbr/>Class<wbr/>Ie8</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.removeClassStandard.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>remove<wbr/>Class<wbr/>Standard</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.toggleClass.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>toggle<wbr/>Class</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.prefixStyle.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>prefix<wbr/>Style
+<div class="menu-item-desc">判断是什么种类的浏览器并返回拼接前缀后的数据</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.cssSupport.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>css<wbr/>Support
+<div class="menu-item-desc">判断是否支持css</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.setStyle.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>set<wbr/>Style</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.loadImg.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>load<wbr/>Img
+<div class="menu-item-desc">手动添加img标签下载图片</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.loadScript.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>load<wbr/>Script
+<div class="menu-item-desc">手动添加script</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.noScroll.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>no<wbr/>Scroll</div></a></li>
+<li class="current tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.createHtmlElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>create<wbr/>Html<wbr/>Element
+<div class="menu-item-desc">通过object来生成html元素</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.createHiddenHtmlElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>create<wbr/>Hidden<wbr/>Html<wbr/>Element
+<div class="menu-item-desc">创建一个隐藏的html元素</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.getFontScale.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Font<wbr/>Scale
+<div class="menu-item-desc">获取文字缩放大小</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.inIframe.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>in<wbr/>Iframe
+<div class="menu-item-desc">是否在iframe中</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.scrollFixedWatcher.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>scroll<wbr/>Fixed<wbr/>Watcher
+<div class="menu-item-desc">判断是否固定在顶部的条件</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.get1rem.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get1rem
+<div class="menu-item-desc">获取等于1rem的像素值</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.rem2px.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>rem2px
+<div class="menu-item-desc">rem转像素</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.px2rem.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>px2rem
+<div class="menu-item-desc">像素转rem</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.percent2px.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>percent2px</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.px2Percent.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>px2<wbr/>Percent
+<div class="menu-item-desc">像素转百分比</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.rem2Percent.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>rem2<wbr/>Percent
+<div class="menu-item-desc">rem转百分比</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.percent2Rem.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>percent2<wbr/>Rem
+<div class="menu-item-desc">百分百转rem</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.toggleWidthOrHeight.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>toggle<wbr/>Width<wbr/>Or<wbr/>Height
+<div class="menu-item-desc">用于类似手风琴的伸缩效果</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.animateTo.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>animate<wbr/>To</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.scrollTo.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>scroll<wbr/>To
+<div class="menu-item-desc">滚动到目标处</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.getCurrentScriptTag.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Current<wbr/>Script<wbr/>Tag
+<div class="menu-item-desc">获取当前js所在的script标签</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isChildHTMLElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>ChildHTMLElement
+<div class="menu-item-desc">判断是否子元素</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.toWebp.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>to<wbr/>Webp
+<div class="menu-item-desc">普通图片url转base64的webp，可通过base64ToFile转为File</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.hasClass.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>has<wbr/>Class
+<div class="menu-item-desc">判断是否有class  必须全都存在才为true</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.addClass.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>add<wbr/>Class</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.removeClass.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>remove<wbr/>Class</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.createElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>create<wbr/>Element</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isDomIe8.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Dom<wbr/>Ie8</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isDomStandard.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Dom<wbr/>Standard</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isElementOf.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Element<wbr/>Of</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isSelectElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Select<wbr/>Element</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isInputElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Input<wbr/>Element</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isTextAreaElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Text<wbr/>Area<wbr/>Element</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isImgElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Img<wbr/>Element</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isDivElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Div<wbr/>Element</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isSpanElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Span<wbr/>Element</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isUlElement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Ul<wbr/>Element</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.supportTouch.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>support<wbr/>Touch</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isNodeList.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Node<wbr/>List</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isDom.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Dom</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.addDragEventListener.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>add<wbr/>Drag<wbr/>Event<wbr/>Listener
+<div class="menu-item-desc">拖动事件 返回取消事件</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.onDragEvent.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>on<wbr/>Drag<wbr/>Event
+<div class="menu-item-desc">addDragEventListener的函数式用法.</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.addScaleEventListener.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>add<wbr/>Scale<wbr/>Event<wbr/>Listener
+<div class="menu-item-desc">缩放</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.addResizeListener.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>add<wbr/>Resize<wbr/>Listener
+<div class="menu-item-desc">dom resize event</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.eventProxy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>event<wbr/>Proxy
+<div class="menu-item-desc">事件代理</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.onceEvent.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>once<wbr/>Event
+<div class="menu-item-desc">一次性事件</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isVisible.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Visible</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isScrollEnd.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Scroll<wbr/>End
+<div class="menu-item-desc">判断dom是否滚动到底了</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.isScrollStart.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Scroll<wbr/>Start
+<div class="menu-item-desc">判断dom是否滚动到顶了</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.blobToBase64.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>blob<wbr/>To<wbr/>Base64</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.parseBase64.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>parse<wbr/>Base64</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.base64ToBlob.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>base64<wbr/>To<wbr/>Blob</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.base64ToFile.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>base64<wbr/>To<wbr/>File</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.imgToBlob.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>img<wbr/>To<wbr/>Blob</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_dom.getAverageRGB.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>AverageRGB
+<div class="menu-item-desc">获取平均色</div></div></a></li></ul></nav></div>
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb">
+<li><a href="../modules.html">ts-utils - v5.0.1-beta.1</a></li>
+<li><a href="../modules/mxssfd_dom.html">mxssfd/dom</a></li>
+<li><a href="mxssfd_dom.createHtmlElement.html">createHtmlElement</a></li></ul>
+<h1>Function createHtmlElement</h1></div>
+<section class="tsd-panel">
+<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+<li class="tsd-signature tsd-anchor-link" id="createHtmlElement">create<wbr/>Html<wbr/>Element<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">R</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>tagName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span>, params<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span>attrs<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span>[k: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>props<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">SettableProps</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">R</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>parent<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>children<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">NodeList</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">R</span><a href="#createHtmlElement" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>通过object来生成html元素
+@tips: attribute（特性），是我们赋予某个事物的特质或对象。property（属性），是早已存在的不需要外界赋予的特质。</p>
+</div>
+<section class="tsd-panel tsd-type-parameters">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameters">
+<li>
+<h4>K<span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">HTMLElementTagNameMap</span></h4></li>
+<li>
+<h4>R<span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLCanvasElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLVideoElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLAnchorElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLScriptElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLEmbedElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLFormElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLHeadElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLAreaElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLObjectElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLLinkElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLMapElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLInputElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLDataElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLProgressElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTrackElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLSourceElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLButtonElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLAudioElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLBaseElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLQuoteElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLBodyElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLBRElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTableCaptionElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTableColElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLDataListElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLModElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLDetailsElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLDialogElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLDivElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLDListElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLFieldSetElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLHeadingElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLHRElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLHtmlElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLIFrameElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLLabelElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLLegendElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLLIElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLMenuElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLMetaElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLMeterElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLOListElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLOptGroupElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLOptionElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLOutputElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLParagraphElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLPictureElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLPreElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLSelectElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLSlotElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLSpanElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLStyleElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTableElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTableSectionElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTableCellElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTemplateElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTextAreaElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTimeElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTitleElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTableRowElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLUListElement</span></h4></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>tagName: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5></li>
+<li>
+<h5>params: <span class="tsd-signature-symbol">{ </span><br/><span>    </span>attrs<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span>[k: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>props<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">SettableProps</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">R</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>parent<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>children<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">NodeList</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol"> = {}</span></h5>
+<ul class="tsd-parameters">
+<li class="tsd-parameter">
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> attrs<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span>[k: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h5>
+<ul class="tsd-parameters">
+<li class="tsd-parameter-index-signature">
+<h5><span class="tsd-signature-symbol">[</span>k: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5></li></ul></li>
+<li class="tsd-parameter">
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> props<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">SettableProps</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">R</span><span class="tsd-signature-symbol">&gt;</span></h5></li>
+<li class="tsd-parameter">
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> parent<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span></h5></li>
+<li class="tsd-parameter">
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> children<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">NodeList</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">R</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/dom/src/dom.ts#L326">packages/dom/src/dom.ts:326</a></li></ul></aside></li></ul></section></div></div>
+<div class="overlay"></div><script src="../assets/main.js"></script></body></html>

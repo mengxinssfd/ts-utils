@@ -1,0 +1,582 @@
+<!DOCTYPE html><html class="default" lang="zh-CN"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>RandomPicker | ts-utils - v5.0.1-beta.1</title><meta name="description" content="Documentation for ts-utils - v5.0.1-beta.1"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><style>.container {
+  padding: 0 2rem;
+}
+.tsd-page-toolbar {
+  border: 0;
+}
+.container-main {
+  padding: 2.5rem 0 0;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.menu-sticky-wrap {
+}
+.tsd-navigation.settings .tsd-accordion-details {
+  padding: 1rem;
+  background: var(--color-background-secondary);
+}
+.tsd-navigation.settings {
+  display: inline-block;
+  vertical-align: top;
+}
+.tsd-navigation.settings .tsd-index-accordion {
+  position: relative;
+}
+.tsd-navigation.settings .tsd-accordion-summary {
+  display: inline-flex;
+  vertical-align: top;
+  align-items: center;
+  margin-left: 1rem;
+}
+.col-menu,
+.col-content {
+  position: static;
+  margin: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+.col-menu {
+  flex: 0 0 20rem;
+  border-left: 0;
+  padding-left: 1rem;
+  padding-right: 0.1rem;
+}
+.col-content {
+  padding-top: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  overflow-x: hidden;
+  flex: 1;
+}
+.menu-item-desc {
+  color: #5d5d5d;
+  font-size: 12px;
+  line-height: 1.26;
+  font-weight: normal;
+}
+
+:root[data-theme='dark'] .menu-item-desc {
+  color: #989898;
+}
+@media (prefers-color-scheme: dark) {
+  .menu-item-desc {
+    color: #989898;
+  }
+}
+
+a.tsd-index-link {
+  align-items: flex-start;
+}
+pre {
+  border: 0;
+}
+.tsd-signature {
+  background: var(--code-background);
+  border: 0;
+}
+code.tsd-tag {
+  border: 0;
+}
+
+#tsd-search.has-focus .tsd-navigation.settings {
+  visibility: hidden;
+}
+.tsd-navigation.primary ul li li a {
+  margin-left: 0.5rem;
+}
+</style><link rel="stylesheet" href="../assets/custom.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>console.log(`Loaded ${location.href}`)</script><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base="..">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"><a href="https://github.com/mengxinssfd/ts-utils">GitHub</a></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">ts-utils - v5.0.1-beta.1</a>
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">Settings <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div></div>
+<div class="table-cell" id="tsd-widgets"><a href="src/template/toolbar#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-menu menu-sticky-wrap menu-highlight">
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul class="modules">
+<li class="current module">
+<ul>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_core.html">
+<div>mxssfd/core -<wbr/> v5.0.1-<wbr/>beta.1</div></a>
+<ul>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.strRepeat.html">
+<div>str<wbr/>Repeat</div></a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.number2Chinese.html">
+<div>number2<wbr/>Chinese</div></a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.chinese2Number.html">
+<div>chinese2<wbr/>Number</div></a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.formatDate.html">
+<div>format<wbr/>Date</div></a></li></ul></li>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_dom.html">
+<div>mxssfd/dom -<wbr/> v5.0.1-<wbr/>beta.1</div></a></li>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_bom.html">
+<div>mxssfd/bom -<wbr/> v5.0.1-<wbr/>beta.1</div></a>
+<ul>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_bom.copy2Clipboard.html">
+<div>copy2<wbr/>Clipboard</div></a></li></ul></li>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_types.html">
+<div>mxssfd/types -<wbr/> v5.0.1-<wbr/>beta.1</div></a></li>
+<li class="current tsd-kind-module"><a href="../modules/mxssfd_random_picker.html">
+<div>mxssfd/random-<wbr/>picker -<wbr/> v5.0.1-<wbr/>beta.1
+<div class="menu-item-desc">@mxssfd/random-picker</div></div></a></li></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="current tsd-kind-class tsd-parent-kind-module"><a href="mxssfd_random_picker.RandomPicker.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>
+<div>Random<wbr/>Picker
+<div class="menu-item-desc">工具类库：从选项池中随机挑选n个选项</div></div></a>
+<ul>
+<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#constructor" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#4D7FFF" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-512-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-512-text"></path></svg>
+<div>constructor</div></a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="mxssfd_random_picker.RandomPicker.html#pool" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg>
+<div>pool
+<div class="menu-item-desc">选项池</div></div></a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="mxssfd_random_picker.RandomPicker.html#store" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>
+<div>store
+<div class="menu-item-desc">选项存储</div></div></a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="mxssfd_random_picker.RandomPicker.html#seed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>
+<div>seed
+<div class="menu-item-desc">初始选项，不包含后面option添加的</div></div></a></li>
+<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#len" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4D4D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-262144-path"></rect><path d="M8.85 16L11.13 7.24H12.582L14.85 16H13.758L13.182 13.672H10.53L9.954 16H8.85ZM10.746 12.76H12.954L12.282 10.06C12.154 9.548 12.054 9.12 11.982 8.776C11.91 8.432 11.866 8.208 11.85 8.104C11.834 8.208 11.79 8.432 11.718 8.776C11.646 9.12 11.546 9.544 11.418 10.048L10.746 12.76Z" fill="var(--color-text)" id="icon-262144-text"></path></svg>
+<div>len</div></a></li>
+<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#poolLen" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-262144-path"></use><use href="#icon-262144-text"></use></svg>
+<div>pool<wbr/>Len</div></a></li>
+<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#poolOptions" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-262144-path"></use><use href="#icon-262144-text"></use></svg>
+<div>pool<wbr/>Options</div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="mxssfd_random_picker.RandomPicker.html#refreshStore" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg>
+<div>refresh<wbr/>Store
+<div class="menu-item-desc">刷新选项存储</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="mxssfd_random_picker.RandomPicker.html#refreshPool" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>refresh<wbr/>Pool
+<div class="menu-item-desc">刷新选项池</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#option" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>option
+<div class="menu-item-desc">添加单个选项，如果需要添加多个则推荐使用options</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#options" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>options
+<div class="menu-item-desc">添加多个选项</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#pick" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>pick
+<div class="menu-item-desc">获取随机可能会重复的1个选项</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#take" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>take
+<div class="menu-item-desc">获取随机不会重复的1个选项。</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#remove" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>remove
+<div class="menu-item-desc">移除一个选项</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#resetWithSeed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>reset<wbr/>With<wbr/>Seed
+<div class="menu-item-desc">重置选项池：通过初始选项重置所有选项，并重置选项池，如果有需要可以先export备份</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#reset" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>reset
+<div class="menu-item-desc">重置选项池：恢复被take移除的选项</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#rateOf" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>rate<wbr/>Of
+<div class="menu-item-desc">获取选项选中的几率</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#export" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>export
+<div class="menu-item-desc">导出所有选项</div></div></a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="mxssfd_random_picker.RandomPicker.html#exportPool" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>
+<div>export<wbr/>Pool
+<div class="menu-item-desc">导出选项池的所有选项</div></div></a></li></ul></li></ul></nav></div>
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb">
+<li><a href="../modules.html">ts-utils - v5.0.1-beta.1</a></li>
+<li><a href="../modules/mxssfd_random_picker.html">mxssfd/random-picker</a></li>
+<li><a href="mxssfd_random_picker.RandomPicker.html">RandomPicker</a></li></ul>
+<h1>Class RandomPicker&lt;T&gt;</h1></div>
+<section class="tsd-panel tsd-comment">
+<div class="tsd-comment tsd-typography"><p>工具类库：从选项池中随机挑选n个选项</p>
+
+<h3>Example</h3><pre><code class="language-ts"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-13">picker</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">RandomPicker</span><span class="hl-0">([</span><span class="hl-6">1</span><span class="hl-0">, </span><span class="hl-6">2</span><span class="hl-0">, </span><span class="hl-6">3</span><span class="hl-0">, </span><span class="hl-6">4</span><span class="hl-0">, </span><span class="hl-6">5</span><span class="hl-0">]);</span><br/><br/><span class="hl-12">// 从选项池中随机挑选1个选项</span><br/><span class="hl-2">picker</span><span class="hl-0">.</span><span class="hl-4">pick</span><span class="hl-0">(); </span><span class="hl-12">// 返回1,2,3,4,5中的1个</span><br/><span class="hl-12">// 从选项池中随机挑选2个选项</span><br/><span class="hl-2">picker</span><span class="hl-0">.</span><span class="hl-4">pick</span><span class="hl-0">(</span><span class="hl-6">2</span><span class="hl-0">); </span><span class="hl-12">// 返回1,2,3,4,5中的2个,可供选则的有5个，多个可能会出现重复的</span><br/><br/><span class="hl-12">// 从中随机挑选出选项。每拿走一个选项，都会对剩余的选项重新计算选中几率，可选数量减1</span><br/><span class="hl-2">picker</span><span class="hl-0">.</span><span class="hl-4">take</span><span class="hl-0">(); </span><span class="hl-12">// 返回1,2,3,4,5中的1个，之后pick或take可供选择的只剩下4个</span><br/><span class="hl-2">picker</span><span class="hl-0">.</span><span class="hl-4">take</span><span class="hl-0">(</span><span class="hl-6">2</span><span class="hl-0">); </span><span class="hl-12">// 返回1,2,3,4,5中的2个，之后pick或take可供选择的只剩下2个，多个不会出现重复的</span><br/><br/><span class="hl-12">// 重置后，会恢复选项池</span><br/><span class="hl-2">picker</span><span class="hl-0">.</span><span class="hl-4">reset</span><span class="hl-0">();</span><br/><br/><span class="hl-12">// 添加选项</span><br/><span class="hl-2">picker</span><span class="hl-0">.</span><span class="hl-4">option</span><span class="hl-0">(</span><span class="hl-6">6</span><span class="hl-0">); </span><span class="hl-2">lottery</span><span class="hl-0">-</span><span class="hl-2">pool</span><br/><br/><span class="hl-12">// 恢复初始选项，去除picker.option方法添加的选项</span><br/><span class="hl-2">picker</span><span class="hl-0">.</span><span class="hl-4">resetWithSeed</span><span class="hl-0">();</span>
+</code></pre>
+</div></section> 
+<section class="tsd-panel tsd-type-parameters">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameters">
+<li>
+<h4>T</h4></li></ul></section> 
+<section class="tsd-panel tsd-hierarchy">
+<h4>Hierarchy</h4>
+<ul class="tsd-hierarchy">
+<li><span class="target">RandomPicker</span></li></ul></section><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L31">packages/random-picker/src/RandomPicker.ts:31</a></li></ul></aside>
+<section class="tsd-panel-group tsd-index-group">
+<section class="tsd-panel tsd-index-panel">
+<details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
+<h5 class="tsd-index-heading uppercase" role="button" aria-expanded="false" tabIndex=0><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1.5 5.50969L8 11.6609L14.5 5.50969L12.5466 3.66086L8 7.96494L3.45341 3.66086L1.5 5.50969Z" fill="var(--color-text)"></path></svg> Index</h5></summary>
+<div class="tsd-accordion-details">
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Constructors</h3>
+<div class="tsd-index-list"><a href="mxssfd_random_picker.RandomPicker.html#constructor" class="tsd-index-link tsd-kind-constructor tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-512-path"></use><use href="#icon-512-text"></use></svg><span>constructor</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Properties</h3>
+<div class="tsd-index-list"><a href="mxssfd_random_picker.RandomPicker.html#pool" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-protected"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>pool</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#store" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-protected"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>store</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#seed" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-protected"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>seed</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Accessors</h3>
+<div class="tsd-index-list"><a href="mxssfd_random_picker.RandomPicker.html#len" class="tsd-index-link tsd-kind-accessor tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-262144-path"></use><use href="#icon-262144-text"></use></svg><span>len</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#poolLen" class="tsd-index-link tsd-kind-accessor tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-262144-path"></use><use href="#icon-262144-text"></use></svg><span>pool<wbr/>Len</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#poolOptions" class="tsd-index-link tsd-kind-accessor tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-262144-path"></use><use href="#icon-262144-text"></use></svg><span>pool<wbr/>Options</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Methods</h3>
+<div class="tsd-index-list"><a href="mxssfd_random_picker.RandomPicker.html#refreshStore" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-protected"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>refresh<wbr/>Store</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#refreshPool" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-protected"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>refresh<wbr/>Pool</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#option" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>option</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#options" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>options</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#pick" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>pick</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#take" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>take</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#remove" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>remove</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#resetWithSeed" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>reset<wbr/>With<wbr/>Seed</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#reset" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>reset</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#rateOf" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>rate<wbr/>Of</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#export" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>export</span></a>
+<a href="mxssfd_random_picker.RandomPicker.html#exportPool" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>export<wbr/>Pool</span></a>
+</div></section></div></details></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Constructors</h2>
+<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class"><a id="constructor" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_RandomPicker">new <wbr/>Random<wbr/>Picker<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>seed<span class="tsd-signature-symbol">?: </span><a href="../types/mxssfd_random_picker.Seed.html" class="tsd-signature-type" data-tsd-kind="Type alias">Seed</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="mxssfd_random_picker.RandomPicker.html" class="tsd-signature-type" data-tsd-kind="Class">RandomPicker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#constructor.new_RandomPicker" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<section class="tsd-panel tsd-type-parameters">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameters">
+<li>
+<h4>T</h4></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>seed: <a href="../types/mxssfd_random_picker.Seed.html" class="tsd-signature-type" data-tsd-kind="Type alias">Seed</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = []</span></h5>
+<div class="tsd-comment tsd-typography"><p>初始选项，不包含后面option添加的</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="mxssfd_random_picker.RandomPicker.html" class="tsd-signature-type" data-tsd-kind="Class">RandomPicker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L42">packages/random-picker/src/RandomPicker.ts:42</a></li></ul></aside></li></ul></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Properties</h2>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a id="pool" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>pool</span><a href="#pool" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">pool<span class="tsd-signature-symbol">:</span> <a href="mxssfd_random_picker.OptionsPool.html" class="tsd-signature-type" data-tsd-kind="Class">OptionsPool</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></div>
+<div class="tsd-comment tsd-typography"><p>选项池</p>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L35">packages/random-picker/src/RandomPicker.ts:35</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a id="store" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>store</span><a href="#store" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">store<span class="tsd-signature-symbol">:</span> <a href="mxssfd_random_picker.OptionsStore.html" class="tsd-signature-type" data-tsd-kind="Class">OptionsStore</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></div>
+<div class="tsd-comment tsd-typography"><p>选项存储
+全部选项，包含后面option添加的</p>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L40">packages/random-picker/src/RandomPicker.ts:40</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a id="seed" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>seed</span><a href="#seed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">seed<span class="tsd-signature-symbol">:</span> <a href="../types/mxssfd_random_picker.Seed.html" class="tsd-signature-type" data-tsd-kind="Type alias">Seed</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = []</span></div>
+<div class="tsd-comment tsd-typography"><p>初始选项，不包含后面option添加的</p>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L46">packages/random-picker/src/RandomPicker.ts:46</a></li></ul></aside></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Accessors</h2>
+<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class"><a id="len" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>len</span><a href="#len" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+<li class="tsd-signature" id="len.len-1"><span class="tsd-signature-symbol">get</span> len<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>Returns</h3><p>选项数组长度</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L184">packages/random-picker/src/RandomPicker.ts:184</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class"><a id="poolLen" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>pool<wbr/>Len</span><a href="#poolLen" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+<li class="tsd-signature" id="poolLen.poolLen-1"><span class="tsd-signature-symbol">get</span> poolLen<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>Returns</h3><p>选项池数组长度</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L191">packages/random-picker/src/RandomPicker.ts:191</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class"><a id="poolOptions" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>pool<wbr/>Options</span><a href="#poolOptions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+<li class="tsd-signature" id="poolOptions.poolOptions-1"><span class="tsd-signature-symbol">get</span> poolOptions<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">[]</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>获取选项池剩余的选项</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L198">packages/random-picker/src/RandomPicker.ts:198</a></li></ul></aside></li></ul></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Methods</h2>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a id="refreshStore" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>refresh<wbr/>Store</span><a href="#refreshStore" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+<li class="tsd-signature tsd-anchor-link" id="refreshStore.refreshStore-1">refresh<wbr/>Store<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#refreshStore.refreshStore-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description"><code class="tsd-tag ts-flagProtected">Protected</code> 
+<div class="tsd-comment tsd-typography"><p>刷新选项存储</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L60">packages/random-picker/src/RandomPicker.ts:60</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a id="refreshPool" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>refresh<wbr/>Pool</span><a href="#refreshPool" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+<li class="tsd-signature tsd-anchor-link" id="refreshPool.refreshPool-1">refresh<wbr/>Pool<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#refreshPool.refreshPool-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description"><code class="tsd-tag ts-flagProtected">Protected</code> 
+<div class="tsd-comment tsd-typography"><p>刷新选项池</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L68">packages/random-picker/src/RandomPicker.ts:68</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="option" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>option</span><a href="#option" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="option.option-1">option<span class="tsd-signature-symbol">(</span>option<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span>, weights<span class="tsd-signature-symbol">??: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><a href="../types/mxssfd_random_picker.WeightFn.html" class="tsd-signature-type" data-tsd-kind="Type alias">WeightFn</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="mxssfd_random_picker.RandomPicker.html" class="tsd-signature-type" data-tsd-kind="Class">RandomPicker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#option.option-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>添加单个选项，如果需要添加多个则推荐使用options</p>
+
+<h3>Returns</h3></div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>option: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5>
+<div class="tsd-comment tsd-typography"><p>选项</p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> weights: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><a href="../types/mxssfd_random_picker.WeightFn.html" class="tsd-signature-type" data-tsd-kind="Type alias">WeightFn</a><span class="tsd-signature-symbol"> = 1</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="mxssfd_random_picker.RandomPicker.html" class="tsd-signature-type" data-tsd-kind="Class">RandomPicker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L78">packages/random-picker/src/RandomPicker.ts:78</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="options" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>options</span><a href="#options" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="options.options-1">options<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../types/mxssfd_random_picker.Seed.html" class="tsd-signature-type" data-tsd-kind="Type alias">Seed</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="mxssfd_random_picker.RandomPicker.html" class="tsd-signature-type" data-tsd-kind="Class">RandomPicker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#options.options-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>添加多个选项</p>
+
+<h3>Returns</h3></div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>options: <a href="../types/mxssfd_random_picker.Seed.html" class="tsd-signature-type" data-tsd-kind="Type alias">Seed</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<div class="tsd-comment tsd-typography"><p>[[选项, 权重], [选项, 权重], ...]</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="mxssfd_random_picker.RandomPicker.html" class="tsd-signature-type" data-tsd-kind="Class">RandomPicker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L86">packages/random-picker/src/RandomPicker.ts:86</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="pick" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>pick</span><a href="#pick" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="pick.pick-1">pick<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#pick.pick-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>获取随机可能会重复的1个选项</p>
+<p>会被take影响到</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L97">packages/random-picker/src/RandomPicker.ts:97</a></li></ul></aside></li>
+<li class="tsd-signature tsd-anchor-link" id="pick.pick-2">pick<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#pick.pick-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>See</h3><p><a href="mxssfd_random_picker.RandomPicker.html#pick">pick</a></p>
+</div>
+<section class="tsd-panel tsd-type-parameters">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameters">
+<li>
+<h4>N<span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">1</span></h4></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>count: <span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L101">packages/random-picker/src/RandomPicker.ts:101</a></li></ul></aside></li>
+<li class="tsd-signature tsd-anchor-link" id="pick.pick-3">pick<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Tuple</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><a href="#pick.pick-3" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>获取随机可能会重复的count个选项</p>
+
+<h3>See</h3><p><a href="mxssfd_random_picker.RandomPicker.html#pick">pick</a></p>
+</div>
+<section class="tsd-panel tsd-type-parameters">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameters">
+<li>
+<h4>N<span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">number</span></h4></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>count: <span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Tuple</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L107">packages/random-picker/src/RandomPicker.ts:107</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="take" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>take</span><a href="#take" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="take.take-1">take<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#take.take-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>获取随机不会重复的1个选项。</p>
+<p>取出以后不能在次获取，除非reset</p>
+<p>会影响到pick</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L125">packages/random-picker/src/RandomPicker.ts:125</a></li></ul></aside></li>
+<li class="tsd-signature tsd-anchor-link" id="take.take-2">take<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#take.take-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>See</h3><p><a href="mxssfd_random_picker.RandomPicker.html#take">take</a></p>
+</div>
+<section class="tsd-panel tsd-type-parameters">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameters">
+<li>
+<h4>N<span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">1</span></h4></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>count: <span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L129">packages/random-picker/src/RandomPicker.ts:129</a></li></ul></aside></li>
+<li class="tsd-signature tsd-anchor-link" id="take.take-3">take<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Tuple</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><a href="#take.take-3" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>获取随机不会重复的count个选项</p>
+
+<h3>See</h3><p><a href="mxssfd_random_picker.RandomPicker.html#take">take</a></p>
+</div>
+<section class="tsd-panel tsd-type-parameters">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameters">
+<li>
+<h4>N<span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">number</span></h4></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>count: <span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Tuple</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">N</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L134">packages/random-picker/src/RandomPicker.ts:134</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="remove" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>remove</span><a href="#remove" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="remove.remove-1">remove<span class="tsd-signature-symbol">(</span>option<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#remove.remove-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>移除一个选项</p>
+
+<h3>Returns</h3><p>操作成功或失败</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>option: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5>
+<div class="tsd-comment tsd-typography"><p>选项</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L156">packages/random-picker/src/RandomPicker.ts:156</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="resetWithSeed" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>reset<wbr/>With<wbr/>Seed</span><a href="#resetWithSeed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="resetWithSeed.resetWithSeed-1">reset<wbr/>With<wbr/>Seed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="mxssfd_random_picker.RandomPicker.html" class="tsd-signature-type" data-tsd-kind="Class">RandomPicker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#resetWithSeed.resetWithSeed-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>重置选项池：通过初始选项重置所有选项，并重置选项池，如果有需要可以先export备份</p>
+
+<h3>Returns</h3></div>
+<h4 class="tsd-returns-title">Returns <a href="mxssfd_random_picker.RandomPicker.html" class="tsd-signature-type" data-tsd-kind="Class">RandomPicker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L166">packages/random-picker/src/RandomPicker.ts:166</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="reset" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>reset</span><a href="#reset" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="reset.reset-1">reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="mxssfd_random_picker.RandomPicker.html" class="tsd-signature-type" data-tsd-kind="Class">RandomPicker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#reset.reset-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>重置选项池：恢复被take移除的选项</p>
+
+<h3>Returns</h3></div>
+<h4 class="tsd-returns-title">Returns <a href="mxssfd_random_picker.RandomPicker.html" class="tsd-signature-type" data-tsd-kind="Class">RandomPicker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L176">packages/random-picker/src/RandomPicker.ts:176</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="rateOf" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>rate<wbr/>Of</span><a href="#rateOf" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="rateOf.rateOf-1">rate<wbr/>Of<span class="tsd-signature-symbol">(</span>option<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#rateOf.rateOf-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>获取选项选中的几率</p>
+
+<h3>Returns</h3><p>几率：100分满值</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>option: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5>
+<div class="tsd-comment tsd-typography"><p>选项</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L207">packages/random-picker/src/RandomPicker.ts:207</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="export" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>export</span><a href="#export" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="export.export-1">export<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/mxssfd_random_picker.OptionWeightsTuple.html" class="tsd-signature-type" data-tsd-kind="Type alias">OptionWeightsTuple</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><a href="#export.export-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>导出所有选项</p>
+
+<h3>Returns</h3><p>由option、weights组成的元组所组成的选项数组，可以用于new RandomPicker(picker.export())</p>
+</div>
+<h4 class="tsd-returns-title">Returns <a href="../types/mxssfd_random_picker.OptionWeightsTuple.html" class="tsd-signature-type" data-tsd-kind="Type alias">OptionWeightsTuple</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L215">packages/random-picker/src/RandomPicker.ts:215</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="exportPool" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>export<wbr/>Pool</span><a href="#exportPool" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="exportPool.exportPool-1">export<wbr/>Pool<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/mxssfd_random_picker.OptionWeightsTuple.html" class="tsd-signature-type" data-tsd-kind="Type alias">OptionWeightsTuple</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><a href="#exportPool.exportPool-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>导出选项池的所有选项</p>
+
+<h3>Returns</h3><p>由option、weights组成的元组所组成的选项数组，可以用于new RandomPicker(picker.export())</p>
+</div>
+<h4 class="tsd-returns-title">Returns <a href="../types/mxssfd_random_picker.OptionWeightsTuple.html" class="tsd-signature-type" data-tsd-kind="Type alias">OptionWeightsTuple</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/random-picker/src/RandomPicker.ts#L223">packages/random-picker/src/RandomPicker.ts:223</a></li></ul></aside></li></ul></section></section></div></div>
+<div class="overlay"></div><script src="../assets/main.js"></script></body></html>

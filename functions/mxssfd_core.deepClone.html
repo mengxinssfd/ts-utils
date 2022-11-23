@@ -1,0 +1,680 @@
+<!DOCTYPE html><html class="default" lang="zh-CN"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>deepClone | ts-utils - v5.0.1-beta.1</title><meta name="description" content="Documentation for ts-utils - v5.0.1-beta.1"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><style>.container {
+  padding: 0 2rem;
+}
+.tsd-page-toolbar {
+  border: 0;
+}
+.container-main {
+  padding: 2.5rem 0 0;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.menu-sticky-wrap {
+}
+.tsd-navigation.settings .tsd-accordion-details {
+  padding: 1rem;
+  background: var(--color-background-secondary);
+}
+.tsd-navigation.settings {
+  display: inline-block;
+  vertical-align: top;
+}
+.tsd-navigation.settings .tsd-index-accordion {
+  position: relative;
+}
+.tsd-navigation.settings .tsd-accordion-summary {
+  display: inline-flex;
+  vertical-align: top;
+  align-items: center;
+  margin-left: 1rem;
+}
+.col-menu,
+.col-content {
+  position: static;
+  margin: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+.col-menu {
+  flex: 0 0 20rem;
+  border-left: 0;
+  padding-left: 1rem;
+  padding-right: 0.1rem;
+}
+.col-content {
+  padding-top: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  overflow-x: hidden;
+  flex: 1;
+}
+.menu-item-desc {
+  color: #5d5d5d;
+  font-size: 12px;
+  line-height: 1.26;
+  font-weight: normal;
+}
+
+:root[data-theme='dark'] .menu-item-desc {
+  color: #989898;
+}
+@media (prefers-color-scheme: dark) {
+  .menu-item-desc {
+    color: #989898;
+  }
+}
+
+a.tsd-index-link {
+  align-items: flex-start;
+}
+pre {
+  border: 0;
+}
+.tsd-signature {
+  background: var(--code-background);
+  border: 0;
+}
+code.tsd-tag {
+  border: 0;
+}
+
+#tsd-search.has-focus .tsd-navigation.settings {
+  visibility: hidden;
+}
+.tsd-navigation.primary ul li li a {
+  margin-left: 0.5rem;
+}
+</style><link rel="stylesheet" href="../assets/custom.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>console.log(`Loaded ${location.href}`)</script><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base="..">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"><a href="https://github.com/mengxinssfd/ts-utils">GitHub</a></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">ts-utils - v5.0.1-beta.1</a>
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">Settings <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div></div>
+<div class="table-cell" id="tsd-widgets"><a href="src/template/toolbar#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-menu menu-sticky-wrap menu-highlight">
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul class="modules">
+<li class="current module">
+<ul>
+<li class="current tsd-kind-module"><a href="../modules/mxssfd_core.html">
+<div>mxssfd/core -<wbr/> v5.0.1-<wbr/>beta.1</div></a>
+<ul>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.strRepeat.html">
+<div>str<wbr/>Repeat</div></a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.number2Chinese.html">
+<div>number2<wbr/>Chinese</div></a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.chinese2Number.html">
+<div>chinese2<wbr/>Number</div></a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_core.formatDate.html">
+<div>format<wbr/>Date</div></a></li></ul></li>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_dom.html">
+<div>mxssfd/dom -<wbr/> v5.0.1-<wbr/>beta.1</div></a></li>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_bom.html">
+<div>mxssfd/bom -<wbr/> v5.0.1-<wbr/>beta.1</div></a>
+<ul>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="../modules/mxssfd_bom.copy2Clipboard.html">
+<div>copy2<wbr/>Clipboard</div></a></li></ul></li>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_types.html">
+<div>mxssfd/types -<wbr/> v5.0.1-<wbr/>beta.1</div></a></li>
+<li class="tsd-kind-module"><a href="../modules/mxssfd_random_picker.html">
+<div>mxssfd/random-<wbr/>picker -<wbr/> v5.0.1-<wbr/>beta.1
+<div class="menu-item-desc">@mxssfd/random-picker</div></div></a></li></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/mxssfd_core.Direct.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-8-path"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)" id="icon-8-text"></path></svg>
+<div>Direct</div></a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_core.OneByOne.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>
+<div>One<wbr/>By<wbr/>One</div></a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_core.UrlModel.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>
+<div>Url<wbr/>Model
+<div class="menu-item-desc">解析url</div></div></a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_core.EventBus.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>
+<div>Event<wbr/>Bus</div></a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_core.Pool.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>
+<div>Pool</div></a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_core.RGB.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>
+<div>RGB</div></a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_core.RGBA.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>
+<div>RGBA</div></a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_core.ListCache.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>
+<div>List<wbr/>Cache</div></a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_core.SetCache.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>
+<div>Set<wbr/>Cache</div></a></li>
+<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mxssfd_core.ResponsibilityChain.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>
+<div>Responsibility<wbr/>Chain
+<div class="menu-item-desc">责任链</div></div></a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/mxssfd_core.Number2Chinese-1.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>
+<div>Number2<wbr/>Chinese</div></a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/mxssfd_core.Chinese2Number-1.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>
+<div>Chinese2<wbr/>Number</div></a></li>
+<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/mxssfd_core.formatDateInterface.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>
+<div>format<wbr/>Date<wbr/>Interface</div></a></li>
+<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="../types/mxssfd_core.Point.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg>
+<div>Point</div></a></li>
+<li class="tsd-kind-variable tsd-parent-kind-module"><a href="../variables/mxssfd_core.root.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-variable)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-32-path"></rect><path d="M11.106 16L8.85 7.24H9.966L11.454 13.192C11.558 13.608 11.646 13.996 11.718 14.356C11.79 14.708 11.842 14.976 11.874 15.16C11.906 14.976 11.954 14.708 12.018 14.356C12.09 13.996 12.178 13.608 12.282 13.192L13.758 7.24H14.85L12.582 16H11.106Z" fill="var(--color-text)" id="icon-32-text"></path></svg>
+<div>root</div></a></li>
+<li class="tsd-kind-variable tsd-parent-kind-module"><a href="../variables/mxssfd_core.hostReg.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>
+<div>host<wbr/>Reg</div></a></li>
+<li class="tsd-kind-variable tsd-parent-kind-module"><a href="../variables/mxssfd_core.UrlRegExp.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>
+<div>Url<wbr/>Reg<wbr/>Exp</div></a></li>
+<li class="tsd-kind-variable tsd-parent-kind-module"><a href="../variables/mxssfd_core.Stack.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>
+<div>Stack</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isNative.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg>
+<div>is<wbr/>Native</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.typeOf.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>type<wbr/>Of</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isObject.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Object</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isObjectLike.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Object<wbr/>Like</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isArray.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Array</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isArrayLike.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Array<wbr/>Like</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isString.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>String</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isNumber.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Number</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isFunction.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Function</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isBoolean.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Boolean</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isUndefined.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Undefined</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.inTypes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>in<wbr/>Types
+<div class="menu-item-desc">用typeIn(&quot;123&quot;, [&quot;string&quot;, &quot;number&quot;]) 代替  typeOf(&quot;123&quot;) === &quot;string&quot; || typeOf(&quot;123&quot;) === &quot;number&quot;</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isPromiseLike.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Promise<wbr/>Like</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isNaN.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>NaN</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isEmptyObject.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Empty<wbr/>Object</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isEmpty.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Empty</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isEqual.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Equal</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.objectIsEqual.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>object<wbr/>Is<wbr/>Equal</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isSameType.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Same<wbr/>Type</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isIterable.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Iterable</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isPercent.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Percent</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isIncludeChinese.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Include<wbr/>Chinese
+<div class="menu-item-desc">是否包含中文</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isInteger.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Integer
+<div class="menu-item-desc">是否正数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isArrayObj.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Array<wbr/>Obj</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isBroadlyObj.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Broadly<wbr/>Obj</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.thousandFormat.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>thousand<wbr/>Format
+<div class="menu-item-desc">Number.prototype.toLocaleString 也能转成千位分隔数字字符串</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.strTemplate.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>str<wbr/>Template</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.strPadStart.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>str<wbr/>Pad<wbr/>Start
+<div class="menu-item-desc">给长度不满足要求的字符串添加前缀 strFillPrefix</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.strPadEnd.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>str<wbr/>Pad<wbr/>End
+<div class="menu-item-desc">给长度不满足要求的字符串添加后缀 strFillPrefix</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.removeStrByNum.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>remove<wbr/>Str<wbr/>By<wbr/>Num
+<div class="menu-item-desc">从字符串中删除指定字符串(from)中重复的第n(num)个字符串(str)</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.subString.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>sub<wbr/>String
+<div class="menu-item-desc">切割字符串</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.strRepeat-1.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>str<wbr/>Repeat
+<div class="menu-item-desc">与String.prototype.repeat相同</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.smartRepeat.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>smart<wbr/>Repeat
+<div class="menu-item-desc">根据模板创建出字符串  除了面试题找不到应用场景的函数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.capitalize.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>capitalize
+<div class="menu-item-desc">首字母大写</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.fromCamel.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>from<wbr/>Camel
+<div class="menu-item-desc">从驼峰转其他命名格式</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.toCamel.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>to<wbr/>Camel
+<div class="menu-item-desc">其他转驼峰</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getStringLen.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>String<wbr/>Len
+<div class="menu-item-desc">获取字符串实际长度，String.prototype.length获取的是utf-16的长度</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.number2Chinese-2.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>number2<wbr/>Chinese
+<div class="menu-item-desc">阿拉伯数字转为中文数字</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.chinese2Number-2.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>chinese2<wbr/>Number
+<div class="menu-item-desc">中文转为阿拉伯数字</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.strip.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>strip
+<div class="menu-item-desc">把错误的数据转正  from number-precision</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getNumberLenAfterDot.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Number<wbr/>Len<wbr/>After<wbr/>Dot</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getCommonPow.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Common<wbr/>Pow</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.calcArr.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>calc<wbr/>Arr</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.toNonExponential.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>to<wbr/>Non<wbr/>Exponential
+<div class="menu-item-desc">科学计数法转普通小数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.plus.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>plus</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.minus.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>minus</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.times.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>times</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.divide.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>divide</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getSafeNum.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Safe<wbr/>Num
+<div class="menu-item-desc">安全数字</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getTreeMaxDeep.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Tree<wbr/>Max<wbr/>Deep</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getTreeNodeLen.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Tree<wbr/>Node<wbr/>Len</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.deepMerge.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>deep<wbr/>Merge</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.forEachObj.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>for<wbr/>Each<wbr/>Obj
+<div class="menu-item-desc">代替Object.keys(obj).forEach，减少循环次数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getReverseObj.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Reverse<wbr/>Obj
+<div class="menu-item-desc">object key-value翻转</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.reduceObj.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>reduce<wbr/>Obj
+<div class="menu-item-desc">代替Object.keys(obj).reduce，减少循环次数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.pickByKeys.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>pick<wbr/>By<wbr/>Keys</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.pickRename.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>pick<wbr/>Rename</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.pick.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>pick
+<div class="menu-item-desc">功能与pickByKeys函数一致</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.pickDiff.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>pick<wbr/>Diff
+<div class="menu-item-desc">从其他对象中挑出与原对象值不一样的或原对象中不存在的键值对所组成的新对象</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.pickAdditional.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>pick<wbr/>Additional
+<div class="menu-item-desc">从其他对象中挑出与原对象中不存在的键值对所组成的新对象</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.renameObjKey.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>rename<wbr/>Obj<wbr/>Key
+<div class="menu-item-desc">根据新键值对重命名对象的key，并生成一个新的对象</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.omit.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>omit
+<div class="menu-item-desc">Omit 省略</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.assign.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>assign</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.defaults.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>defaults
+<div class="menu-item-desc">与lodash defaults一样 只替换target里面的值为undefined的属性</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.objUpdate.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>obj<wbr/>Update
+<div class="menu-item-desc">使用target里面的key去查找其他的对象，如果其他对象里有该key，则把该值赋给target,如果多个对象都有同一个值，则以最后的为准</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getInsKeys.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Ins<wbr/>Keys
+<div class="menu-item-desc">获取class实例的key数组</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.updateIns.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>update<wbr/>Ins
+<div class="menu-item-desc">更新实例对象属性</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.pickUpdated.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>pick<wbr/>Updated
+<div class="menu-item-desc">根据与target对比，挑出与target同key不同value的key所组成的object</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.createObj.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>create<wbr/>Obj
+<div class="menu-item-desc">创建一个object 代替es6的动态key object 与Object.fromEntries一样</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.objKeys.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>obj<wbr/>Keys
+<div class="menu-item-desc">Object.keys</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.objValues.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>obj<wbr/>Values
+<div class="menu-item-desc">Object.values</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.objEntries.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>obj<wbr/>Entries
+<div class="menu-item-desc">Object.entries</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.translateObjPath.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>translate<wbr/>Obj<wbr/>Path
+<div class="menu-item-desc">obj[a] =&gt; obj.a 从getObjValueByPath中分离出来</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getObjValueByPath.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Obj<wbr/>Value<wbr/>By<wbr/>Path
+<div class="menu-item-desc">通过object路径获取值</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.setObjValueByPath.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>set<wbr/>Obj<wbr/>Value<wbr/>By<wbr/>Path
+<div class="menu-item-desc">通过object路径设置值 如果路径中不存在则会自动创建对应的对象</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getObjPathEntries.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Obj<wbr/>Path<wbr/>Entries
+<div class="menu-item-desc">获取object的路径数组</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.revertObjFromPath.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>revert<wbr/>Obj<wbr/>From<wbr/>Path</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.objFilter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>obj<wbr/>Filter</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.hasOwn.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>has<wbr/>Own
+<div class="menu-item-desc">判断对象是否包含某个属性。</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.objForEach.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>obj<wbr/>For<wbr/>Each</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.objReduce.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>obj<wbr/>Reduce</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.updateObj.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>update<wbr/>Obj</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.ObjFromEntries.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>Obj<wbr/>From<wbr/>Entries</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.createArray.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>create<wbr/>Array</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.forEach.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>for<wbr/>Each</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.forEachAsync.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>for<wbr/>Each<wbr/>Async
+<div class="menu-item-desc">跟promiseQueue类似，不过此函数是callback异步，重点在callback</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.mapAsync.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>map<wbr/>Async</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.reduceAsync.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>reduce<wbr/>Async
+<div class="menu-item-desc">reduce promise 跟 promiseQueue差不多，此函数多了callbackFn</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.forEachRight.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>for<wbr/>Each<wbr/>Right</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.from.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>from</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.filter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>filter</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.includes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>includes</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.find.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>find</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.findIndex.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>find<wbr/>Index</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.findIndexRight.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>find<wbr/>Index<wbr/>Right</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.flat.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>flat</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.binaryFind2.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>binary<wbr/>Find2
+<div class="menu-item-desc">二分查找item</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.binaryFind.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>binary<wbr/>Find</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.binaryFindIndex.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>binary<wbr/>Find<wbr/>Index
+<div class="menu-item-desc">二分查找item index</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.insertToArray.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>insert<wbr/>To<wbr/>Array
+<div class="menu-item-desc">item插入到数组，在原数组中改变</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.arrayRemoveItem.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>array<wbr/>Remove<wbr/>Item</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.arrayRemoveItemsBy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>array<wbr/>Remove<wbr/>Items<wbr/>By</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.unique.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>unique</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.castArray.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>cast<wbr/>Array</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.chunk.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>chunk
+<div class="menu-item-desc">数组分片</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.inRange.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>in<wbr/>Range
+<div class="menu-item-desc">判断min &lt;= num &lt;= max</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.inRanges.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>in<wbr/>Ranges</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.groupBy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>group<wbr/>By
+<div class="menu-item-desc">数组分组</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.someInList.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>some<wbr/>In<wbr/>List
+<div class="menu-item-desc">查找是否items中任何一个在list中</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.debounce.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>debounce
+<div class="menu-item-desc">防抖函数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.debounceAsync.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>debounce<wbr/>Async
+<div class="menu-item-desc">如果callback执行了的话，那么不论是否resolved都不会再被reject</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.throttle.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>throttle
+<div class="menu-item-desc">节流函数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.debounceCancelable.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>debounce<wbr/>Cancelable
+<div class="menu-item-desc">可取消防抖函数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.debounceByPromise.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>debounce<wbr/>By<wbr/>Promise
+<div class="menu-item-desc">前一个promise未完成即reject，最后一个或者中断前调用的才会执行</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.polling.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>polling
+<div class="menu-item-desc">轮询函数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.forEachByLen.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>for<wbr/>Each<wbr/>By<wbr/>Len</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.forEachByLenRight.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>for<wbr/>Each<wbr/>By<wbr/>Len<wbr/>Right</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.oneByOne-1.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>one<wbr/>By<wbr/>One
+<div class="menu-item-desc">每隔一段事件返回字符串中的一个单词</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.generateFunctionCode.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>generate<wbr/>Function<wbr/>Code</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.functionApply.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>function<wbr/>Apply</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.createUUID.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>createUUID
+<div class="menu-item-desc">生成不重复的字符串</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.formatJSON.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>formatJSON
+<div class="menu-item-desc">格式化json</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.createEnum.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>create<wbr/>Enum</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.createEnumByObj.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>create<wbr/>Enum<wbr/>By<wbr/>Obj</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.promiseAny.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>promise<wbr/>Any
+<div class="menu-item-desc">Promise.prototype.any list中任意一个promise resolve都会resolve，如果全是reject，那么reject</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.syncPromiseAll.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>sync<wbr/>Promise<wbr/>All
+<div class="menu-item-desc">串行版promise.all，执行完一个才会去执行下一个</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.promiseQueue.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>promise<wbr/>Queue
+<div class="menu-item-desc">promise队列  任何一个reject都会中断队列 (跟reduceAsync类似)</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.numToFixed.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>num<wbr/>To<wbr/>Fixed
+<div class="menu-item-desc">原来的函数四舍五入不准确</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.at.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>at
+<div class="menu-item-desc">从arr获取index处的item，支持负数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.likeKeys.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>like<wbr/>Keys
+<div class="menu-item-desc">查找对象中与param key类似的key</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.parseCmdParams.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>parse<wbr/>Cmd<wbr/>Params
+<div class="menu-item-desc">命令行的参数转为Map</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.idGen.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>id<wbr/>Gen
+<div class="menu-item-desc">创建一个自增id生成器</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.lazy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>lazy</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.swap.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>swap</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.number2Date.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>number2<wbr/>Date</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.dateDiff.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>date<wbr/>Diff
+<div class="menu-item-desc">比较两个日期相差年天时分秒  用于倒计时等</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getDateFromStr.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Date<wbr/>From<wbr/>Str
+<div class="menu-item-desc">字符串转为date对象 因为苹果手机无法直接new Date(&quot;2018-08-01 10:20:10&quot;)获取date</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.sleep.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>sleep</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.createTimeCountUp.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>create<wbr/>Time<wbr/>Count<wbr/>Up</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.createTimeCountDown.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>create<wbr/>Time<wbr/>Count<wbr/>Down
+<div class="menu-item-desc">创建一个倒计时函数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getTheLastDateOfAMonth.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>The<wbr/>Last<wbr/>Date<wbr/>OfAMonth
+<div class="menu-item-desc">获取某月最后一天的date</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getMonthTheNthWeekday.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Month<wbr/>The<wbr/>Nth<wbr/>Weekday
+<div class="menu-item-desc">获取指定某年月份(month)第n(nth)个星期几(weekday)的Date</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getMilliseconds.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Milliseconds
+<div class="menu-item-desc">获取毫秒数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isSameTime.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Same<wbr/>Time
+<div class="menu-item-desc">判断时间是否相同</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.inSameWeek.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>in<wbr/>Same<wbr/>Week
+<div class="menu-item-desc">判断两个日期是否在同一个星期内</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.yearDiff.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>year<wbr/>Diff
+<div class="menu-item-desc">计算两个日期间相差的年数 a - b</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.calcRelativeDate.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>calc<wbr/>Relative<wbr/>Date
+<div class="menu-item-desc">比如根据服务器与本地时间的差值计算实际日期</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.formatDate-1.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>format<wbr/>Date
+<div class="menu-item-desc">格式化日期</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.str2Date.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>str2<wbr/>Date
+<div class="menu-item-desc">字符串转为date对象 因为苹果手机无法直接new Date(&quot;2018-08-01 10:20:10&quot;)获取date</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getUrlProtocol.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Url<wbr/>Protocol</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getUrlHost.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Url<wbr/>Host</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getUrlPort.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Url<wbr/>Port</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getUrlPath.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Url<wbr/>Path</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getUrlHash.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Url<wbr/>Hash</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getUrlHashParam.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Url<wbr/>Hash<wbr/>Param
+<div class="menu-item-desc">获取hash中的param</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getUrlParamObj.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Url<wbr/>Param<wbr/>Obj</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.stringifyUrlSearch.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>stringify<wbr/>Url<wbr/>Search</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getUrlParam.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Url<wbr/>Param
+<div class="menu-item-desc">来源于网页调起qq 只获取url参数的话可以使用这个</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.updateUrlParam.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>update<wbr/>Url<wbr/>Param
+<div class="menu-item-desc">修改url参数，不能新增或删除参数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.setUrlParam.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>set<wbr/>Url<wbr/>Param
+<div class="menu-item-desc">设置url参数，可新增或删除参数</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isUrl.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Url</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getUrlQuery.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Url<wbr/>Query</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isRGBColor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>isRGBColor</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isHEXColor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>isHEXColor</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.rgbToHex.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>rgb<wbr/>To<wbr/>Hex</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.hslToRgb.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>hsl<wbr/>To<wbr/>Rgb</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.randomFloat.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>random<wbr/>Float</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.randomInt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>random<wbr/>Int</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.randomItem.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>random<wbr/>Item
+<div class="menu-item-desc">随机获取数组中的一个</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.randomItemsGen.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>random<wbr/>Items<wbr/>Gen
+<div class="menu-item-desc">创建一个数组随机item的生成器，直到遍历完为止</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.shuffle.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>shuffle
+<div class="menu-item-desc">洗牌</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.randomRGB.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>randomRGB</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.randomRGBA.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>randomRGBA</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.randomHEX.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>randomHEX</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.randomColor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>random<wbr/>Color
+<div class="menu-item-desc">随机颜色</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.cloneFunction.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>clone<wbr/>Function</div></a></li>
+<li class="current tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.deepClone.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>deep<wbr/>Clone</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.deepCloneBfs.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>deep<wbr/>Clone<wbr/>Bfs</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.isPointInPath.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>is<wbr/>Point<wbr/>In<wbr/>Path</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getDistance.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Distance
+<div class="menu-item-desc">根据三角函数求两点的距离</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getAngle.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Angle
+<div class="menu-item-desc">根据目标点获取相对于原点的角度</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getRotatePoint.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Rotate<wbr/>Point
+<div class="menu-item-desc">根据半径与角度获取点</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.twoBezier.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>two<wbr/>Bezier
+<div class="menu-item-desc">fixme 无法单元测试</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getBorderWidthByCos.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Border<wbr/>Width<wbr/>By<wbr/>Cos
+<div class="menu-item-desc">根据余弦定理(c^2 = a^2 + b^2 - 2 * a * b * cosA)获取任意边长</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.getBorderWidthBySin.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>get<wbr/>Border<wbr/>Width<wbr/>By<wbr/>Sin
+<div class="menu-item-desc">根据正弦定理(a/sinA = b/sinB = c/sinC)获取对应边长</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.decoratorfy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>decoratorfy</div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.Debounce-1.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>Debounce
+<div class="menu-item-desc">防抖装饰器</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.Throttle-1.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>Throttle
+<div class="menu-item-desc">节流装饰器</div></div></a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="mxssfd_core.Polling-1.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>
+<div>Polling
+<div class="menu-item-desc">比setInterval好的地方在于使用promise判断一回执行完毕情况</div></div></a></li></ul></nav></div>
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb">
+<li><a href="../modules.html">ts-utils - v5.0.1-beta.1</a></li>
+<li><a href="../modules/mxssfd_core.html">mxssfd/core</a></li>
+<li><a href="mxssfd_core.deepClone.html">deepClone</a></li></ul>
+<h1>Function deepClone</h1></div>
+<section class="tsd-panel">
+<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+<li class="tsd-signature tsd-anchor-link" id="deepClone">deep<wbr/>Clone<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#deepClone" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
+<li class="tsd-description">
+<section class="tsd-panel tsd-type-parameters">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameters">
+<li>
+<h4>T</h4></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>target: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/mengxinssfd/ts-utils/blob/981d9d2/packages/core/src/clone.ts#L51">packages/core/src/clone.ts:51</a></li></ul></aside></li></ul></section></div></div>
+<div class="overlay"></div><script src="../assets/main.js"></script></body></html>
